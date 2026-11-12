@@ -56,6 +56,11 @@ def center_square(img: Image.Image, crop: tuple[int, int, int] | None = None) ->
         y = (img.height - side) // 2
     else:
         x, y, side = crop
+        # Le recadrage reste toujours dans l'image (sinon des bandes noires
+        # seraient interprétées comme des zones à remplir de fil).
+        side = max(1, min(side, img.width, img.height))
+        x = min(max(0, x), img.width - side)
+        y = min(max(0, y), img.height - side)
     return img.crop((x, y, x + side, y + side))
 
 

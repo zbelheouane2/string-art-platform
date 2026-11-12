@@ -106,6 +106,13 @@ def test_prepare_outputs(tmp_path):
     assert len(prepared.source_sha256) == 64
 
 
+def test_crop_is_clamped_inside_image():
+    img = Image.new("RGB", (648, 621), (255, 255, 255))
+    out = imaging.center_square(img, (150, 0, 540))
+    assert out.size == (540, 540)
+    assert np.asarray(out).min() == 255  # aucune bande noire ajoutée
+
+
 def test_rejects_small_image(tmp_path):
     p = tmp_path / "small.png"
     Image.new("RGB", (100, 100)).save(p)
