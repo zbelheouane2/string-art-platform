@@ -361,7 +361,7 @@ Le nombre de clous sera déterminé par les essais de qualité et les contrainte
 - Les instructions, le PDF, l'assistant et le marquage physique du support utilisent les repères de secteur (A1 à D60), plus faciles à retrouver qu'un numéro de 1 à 240.
 - Les 4 secteurs sont **peints en alternance noir / blanc / noir / blanc** pour être repérés d'un coup d'œil, et le support porte des marques visibles au début de chaque secteur.
 - Les instructions sont de la forme « A1 → D56 ».
-- Convention à figer (proposition) : numérotation dans le sens horaire, A1 à 9 h, avec des secteurs **A, B, C, D dans l'ordre horaire** (plus simple que l'ordre A, B, D, C observé chez la référence).
+- **Convention retenue** : numérotation dans le **sens horaire**, **A1 à 9 h**. Secteurs dans l'ordre horaire : **A** (9 h → 12 h, fond noir), **B** (12 h → 3 h, fond blanc), **C** (3 h → 6 h, fond noir), **D** (6 h → 9 h, fond blanc). Index interne i (0 à 239) → lettre « ABCD »[i div 60], numéro (i mod 60) + 1.
 
 Le moteur doit rester paramétrable (nombre de secteurs, clous par secteur) pour tester d'autres configurations sans refonte.
 
