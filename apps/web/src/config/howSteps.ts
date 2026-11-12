@@ -2,11 +2,11 @@ import type { Step } from "@/components/StepsCarousel";
 
 /** Les 5 étapes « Comment ça marche », partagées par l'accueil et la page du kit. */
 export const HOW_STEPS = [
-  { key: "open", icon: "box", img: null },
+  { key: "open", icon: "box", img: "/visuels/etapes/ouvrir.webp" },
   { key: "code", icon: "code", img: "/visuels/astronaute-photo.webp" },
   { key: "photo", icon: "photo", img: "/visuels/chat-photo.webp" },
-  { key: "thread", icon: "voice", img: "/visuels/chat-fil.webp" },
-  { key: "hang", icon: "frame", img: "/visuels/photographe-fil.webp" },
+  { key: "thread", icon: "voice", img: "/visuels/etapes/preparer.webp" },
+  { key: "hang", icon: "frame", img: "/visuels/etapes/accrocher.webp" },
 ] as const;
 
 export function howSteps(t: (key: string) => string): Step[] {
