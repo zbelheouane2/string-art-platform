@@ -1,0 +1,81 @@
+{
+  "meta": {
+    "title": "{brand} — votre portrait en fil, fait main",
+    "description": "Un kit pour réaliser vous-même le portrait d'un proche avec un seul fil noir et 240 clous. Notre logiciel calcule chaque passage du fil à partir de votre photo."
+  },
+  "a11y": { "skip": "Aller au contenu" },
+  "announcement": "Paiement à la livraison disponible en Algérie",
+  "nav": {
+    "menu": "Menu",
+    "close": "Fermer le menu",
+    "home": "Accueil",
+    "how": "Comment ça marche",
+    "kit": "Le kit",
+    "gift": "Offrir",
+    "faq": "Questions",
+    "activate": "Activer mon code",
+    "cart": "Panier",
+    "language": "Langue"
+  },
+  "hero": {
+    "title": "Votre photo, tissée fil à fil.",
+    "lead": "Un kit pour réaliser vous-même le portrait d'un proche, avec un seul fil noir et 240 clous. Notre logiciel calcule chaque passage du fil à partir de votre photo.",
+    "cta": "Découvrir le kit",
+    "secondary": "Voir comment ça marche",
+    "boardLabel": "Portrait en cours de tissage, calculé par notre logiciel",
+    "progress": "Fil {current} sur {total}",
+    "segment": "de {from} à {to}",
+    "replay": "Revoir le tissage",
+    "pause": "Mettre en pause",
+    "play": "Reprendre",
+    "credit": "Photo : NASA, domaine public"
+  },
+  "how": {
+    "title": "De la photo au tableau",
+    "lead": "Pas besoin de savoir dessiner : il suffit de suivre les numéros des clous.",
+    "steps": {
+      "order": { "title": "Commandez le kit", "text": "Vous recevez la planche avec les clous déjà posés, le fil et votre code personnel." },
+      "photo": { "title": "Ajoutez votre photo", "text": "Entrez votre code puis choisissez une photo. Le visage est cadré automatiquement, vous pouvez ajuster." },
+      "choose": { "title": "Choisissez votre version", "text": "Comparez les aperçus doux, standard et contrasté, puis validez celui qui vous plaît." },
+      "make": { "title": "Tendez le fil, guidé à la voix", "text": "Le guide annonce chaque clou : A1, puis C47, puis B12… Réglez la vitesse, faites une pause quand vous voulez." }
+    }
+  },
+  "kit": {
+    "title": "Ce que contient le kit",
+    "lead": "Tout ce qu'il faut pour un portrait de 50 × 50 cm.",
+    "items": {
+      "board": { "title": "La planche 50 × 50 cm", "text": "240 clous déjà posés en cercle, répartis en quatre zones A, B, C et D." },
+      "thread": { "title": "Le fil noir", "text": "Une bobine prévue pour toute la longueur de votre portrait." },
+      "code": { "title": "Votre code personnel", "text": "Il permet de créer votre portrait à partir de votre photo." },
+      "guide": { "title": "Le guide de réalisation", "text": "Sur téléphone, en français, en anglais ou en arabe, avec la voix." }
+    },
+    "numbersTitle": "Le portrait ci-dessus en chiffres",
+    "lines": "passages de fil",
+    "length": "mètres de fil",
+    "nails": "clous"
+  },
+  "gift": {
+    "title": "Un cadeau qu'on fabrique soi-même",
+    "text": "Offrez le kit avec le code : la personne choisit sa photo et réalise son portrait. Ou créez-le vous-même et offrez le tableau terminé.",
+    "cta": "Offrir un kit"
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "items": {
+      "skills": { "q": "Faut-il savoir dessiner ?", "a": "Non. Vous tendez le fil d'un clou à l'autre dans l'ordre annoncé par le guide. Aucun geste artistique n'est nécessaire." },
+      "photo": { "q": "Quelle photo choisir ?", "a": "Une photo nette, de face, bien éclairée, avec un seul visage. Le logiciel vous prévient si elle est floue, trop sombre ou trop claire." },
+      "privacy": { "q": "Que devient ma photo ?", "a": "Elle sert uniquement à calculer votre portrait. Elle n'est jamais publiée et elle est supprimée après un délai limité." },
+      "time": { "q": "Combien de temps faut-il ?", "a": "Plusieurs heures, à votre rythme. Le guide garde votre progression : vous reprenez là où vous vous êtes arrêté." },
+      "payment": { "q": "Comment payer ?", "a": "En Algérie, le paiement à la livraison est proposé. Les autres moyens de paiement dépendent de votre pays." }
+    }
+  },
+  "sticky": { "name": "Kit portrait 50 × 50 cm", "cta": "Découvrir" },
+  "footer": {
+    "tagline": "Portraits en fil à réaliser chez soi.",
+    "legal": "Mentions légales",
+    "privacy": "Confidentialité",
+    "terms": "Conditions de vente",
+    "rights": "© {year} {brand}"
+  },
+  "notFound": { "title": "Cette page n'existe pas", "back": "Retour à l'accueil" }
+}

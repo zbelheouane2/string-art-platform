@@ -9,6 +9,13 @@
 - Visage (v0.2) : détection et repères sur photo réelle, cadrage auto (proportion, reste dans l'image, visage centré), repli centré sans visage, priorité au recadrage manuel, fond éclairci sans toucher au visage, pénalité zones claires, document JSON avec cadrage et visage.
 - Instructions : longueur de fil exacte sur un cas simple, cohérence séquence ↔ étapes lisibles.
 
+## Service moteur
+`tests/test_api.py` : santé, génération (document + aperçu PNG), refus image trop petite, fichier non image, recadrage invalide, jeton obligatoire si configuré.
+
+## Site (`apps/web`)
+- `npm test` — 13 tests unitaires : repères de clous identiques au moteur, cohérence du portrait de démonstration, mêmes clés de traduction dans les trois langues.
+- `npm run test:e2e` — 34 tests navigateur (bureau 1440 px et mobile 390 px) : choix de langue selon le navigateur, `lang` et `dir` (RTL en arabe), pas de défilement horizontal, accessibilité WCAG 2.1 A/AA (axe) en FR/EN/AR, sélecteur de langue, tissage complet, FAQ au clavier, santé base + moteur.
+
 ## Essais visuels
 Photo libre de droits (scikit-image « astronaut », recadrée sur le visage) : portrait reconnaissable, 1 800–2 300 fils, ~0,7–0,9 km de fil, ~1 s de calcul + ~2 s de rendu.
 

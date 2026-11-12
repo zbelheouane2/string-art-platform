@@ -7,6 +7,7 @@ masquée au disque des clous.
 from __future__ import annotations
 
 import hashlib
+import io
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -18,6 +19,8 @@ from . import faces as facemod
 
 MAX_FILE_BYTES = 15 * 1024 * 1024
 MIN_SIDE_PX = 400
+ACCEPTED_FORMATS = {"JPEG", "PNG", "WEBP", "MPO"}
+Image.MAX_IMAGE_PIXELS = 50_000_000  # refuse les « bombes » de décompression
 
 
 @dataclass(frozen=True)
@@ -50,9 +53,20 @@ def load_image(path: str | Path) -> tuple[Image.Image, str]:
     path = Path(path)
     if path.stat().st_size > MAX_FILE_BYTES:
         raise ValueError("fichier trop volumineux (15 Mo maximum)")
-    raw = path.read_bytes()
-    img = Image.open(path)
-    img = ImageOps.exif_transpose(img).convert("RGB")
+    return load_image_bytes(path.read_bytes())
+
+
+def load_image_bytes(raw: bytes) -> tuple[Image.Image, str]:
+    """Décode une photo reçue (fichier ou envoi). Lève ValueError si elle est refusée."""
+    if len(raw) > MAX_FILE_BYTES:
+        raise ValueError("fichier trop volumineux (15 Mo maximum)")
+    try:
+        img = Image.open(io.BytesIO(raw))
+        if img.format not in ACCEPTED_FORMATS:
+            raise ValueError(f"format non pris en charge ({img.format}), utilisez JPEG, PNG ou WebP")
+        img = ImageOps.exif_transpose(img).convert("RGB")
+    except (OSError, Image.DecompressionBombError) as exc:
+        raise ValueError("image illisible ou trop grande") from exc
     if min(img.size) < MIN_SIDE_PX:
         raise ValueError(f"image trop petite ({img.size[0]}x{img.size[1]}), minimum {MIN_SIDE_PX} px")
     return img, hashlib.sha256(raw).hexdigest()
