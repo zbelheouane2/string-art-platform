@@ -1,0 +1,12 @@
+{
+  "id": "board-50x50-240-v1",
+  "description": "Planche carrée 50 x 50 cm, 240 clous en cercle, 4 secteurs A-D de 60 clous, sens horaire, A1 à 9 h.",
+  "board_size_mm": 500.0,
+  "circle_diameter_mm": 470.0,
+  "nail_count": 240,
+  "sectors": ["A", "B", "C", "D"],
+  "sector_backgrounds": ["black", "white", "black", "white"],
+  "start_angle_deg": 180.0,
+  "clockwise": true,
+  "nail_diameter_mm": 1.5
+}
