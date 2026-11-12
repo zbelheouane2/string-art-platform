@@ -1,13 +1,14 @@
 import { getTranslations } from "next-intl/server";
 import { brand } from "@/config/brand";
+import { Link } from "@/i18n/navigation";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Logo } from "./Logo";
 
 const LINKS = [
-  ["#acheter", "kit"],
-  ["#comment", "how"],
-  ["#cadeaux", "gift"],
-  ["#faq", "faq"],
+  ["acheter", "kit"],
+  ["comment", "how"],
+  ["cadeaux", "gift"],
+  ["faq", "faq"],
 ] as const;
 
 export async function SiteFooter() {
@@ -24,12 +25,26 @@ export async function SiteFooter() {
           <ul>
             {LINKS.map(([href, key]) => (
               <li key={key}>
-                <a href={href}>{t(`links.${key}`)}</a>
+                <Link href={{ pathname: "/", hash: href }}>{t(`links.${key}`)}</Link>
               </li>
             ))}
           </ul>
         </nav>
-        <div>
+        <nav aria-labelledby="footer-info">
+          <h2 id="footer-info">{t("info")}</h2>
+          <ul>
+            <li>
+              <Link href="/kit">{t("infoLinks.kitPage")}</Link>
+            </li>
+            <li>
+              <Link href={{ pathname: "/", hash: "faq" }}>{t("infoLinks.privacy")}</Link>
+            </li>
+            <li>
+              <Link href={{ pathname: "/", hash: "faq" }}>{t("infoLinks.payment")}</Link>
+            </li>
+          </ul>
+        </nav>
+        <div id="contact">
           <h2>{t("contact")}</h2>
           <p>{t("contactText")}</p>
           {brand.supportEmail && <a href={`mailto:${brand.supportEmail}`}>{brand.supportEmail}</a>}

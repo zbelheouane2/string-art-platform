@@ -4,14 +4,16 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { CloseIcon, MenuIcon } from "./Icons";
+import { LanguageMenu } from "./LanguageMenu";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Logo } from "./Logo";
 
 const LINKS = [
-  { href: "#acheter", key: "kit" },
-  { href: "#comment", key: "how" },
-  { href: "#cadeaux", key: "gift" },
-  { href: "#faq", key: "faq" },
+  { href: { pathname: "/", hash: "acheter" }, key: "kit" },
+  { href: { pathname: "/kit" }, key: "kitPage" },
+  { href: { pathname: "/", hash: "comment" }, key: "how" },
+  { href: { pathname: "/", hash: "cadeaux" }, key: "gift" },
+  { href: { pathname: "/", hash: "faq" }, key: "faq" },
 ] as const;
 
 export function SiteHeader() {
@@ -44,13 +46,13 @@ export function SiteHeader() {
           <Logo />
         </Link>
         <div className="header-end">
-          <LanguageSwitcher />
-          <a className="icon-btn" href="#acheter" aria-label={t("cart")}>
+          <LanguageMenu />
+          <Link className="icon-btn" href={{ pathname: "/", hash: "acheter" }} aria-label={t("cart")}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M6 8h12l-1 12H7L6 8z" />
               <path d="M9 8V6a3 3 0 0 1 6 0v2" />
             </svg>
-          </a>
+          </Link>
         </div>
       </div>
       {open && (
@@ -58,9 +60,9 @@ export function SiteHeader() {
           <ul className="wrap">
             {LINKS.map((l) => (
               <li key={l.key}>
-                <a href={l.href} onClick={() => setOpen(false)}>
+                <Link href={l.href} onClick={() => setOpen(false)}>
                   {t(l.key)}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

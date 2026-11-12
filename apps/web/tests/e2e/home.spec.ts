@@ -77,7 +77,7 @@ test("la page interne du design est masquée par défaut", async ({ request }) =
 
 test("les blocs apparaissent au défilement", async ({ page }) => {
   await page.goto("/fr");
-  const card = page.locator(".gift-card").first();
+  const card = page.locator("#cadeaux .gift-grid > li").first();
   await card.scrollIntoViewIfNeeded();
   await expect(card).toHaveClass(/is-visible/);
   await expect(card).toHaveCSS("opacity", "1");
@@ -90,4 +90,37 @@ test("avec « réduire les animations », tout est visible sans défiler", async
   await expect(page.locator("#faq .faq-list")).toHaveCSS("opacity", "1");
   await expect(page.locator(".marquee-track").first()).toHaveCSS("animation-name", "none");
   await context.close();
+});
+
+for (const [locale, dir] of [["fr", "ltr"], ["en", "ltr"], ["ar", "rtl"]] as const) {
+  test(`page du kit ${locale} : titre, sens, accessibilité`, async ({ page }) => {
+    // Mouvement réduit : axe mesure les couleurs finales, pas un fondu en cours.
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto(`/${locale}/kit`);
+    await expect(page.locator("html")).toHaveAttribute("dir", dir);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(page.locator(".how-grid > li")).toHaveCount(5);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
+    const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
+    expect(results.violations.map((v) => `${v.id}: ${v.nodes.length}`)).toEqual([]);
+  });
+}
+
+test("la galerie produit glisse avec les flèches et les vignettes", async ({ page }) => {
+  await page.goto("/fr/kit");
+  const count = page.locator(".gallery-count");
+  await expect(count).toHaveText("1 / 6");
+  await page.getByRole("button", { name: "Visuel suivant" }).click();
+  await expect(count).toHaveText("2 / 6");
+  await page.locator(".gallery-thumbs button").nth(4).click();
+  await expect(count).toHaveText("5 / 6");
+  await page.getByRole("button", { name: "Visuel précédent" }).click();
+  await expect(count).toHaveText("4 / 6");
+});
+
+test("le bouton « Comment ça marche ? » mène à la page du kit", async ({ page }) => {
+  await page.goto("/fr");
+  await page.locator("#hero-actions").getByRole("link", { name: "Comment ça marche ?" }).click();
+  await expect(page).toHaveURL(/\/fr\/kit$/);
 });

@@ -1,6 +1,7 @@
 # Historique
 
 ## 2026-11-12
+- **Relevé point par point de la référence** (`replica/recon.md`) et rattrapage : ligne de preuves du héros, en-tête de section scindé, cartes cadeaux cliquables avec œuvre superposée, encadré matériaux et puces, bandeau « l'offrir » complet, galerie produit en carrousel (défilement aimanté, flèches, vignettes), colonne d'achat collante avec accordéon, menu de langue déroulant, pied de page foncé à 5 colonnes, appel final en ligne. **Nouvelle page « Le kit »** (`/kit`) : achat, planche animée, avant/après + 3 exemples, « Comment ça marche » en 5 étapes, guide sur téléphone, « pour offrir », « pourquoi nous », FAQ. 50 tests navigateur.
 - **Animations de la page d'accueil** : apparitions au défilement, bandeau qui défile, effets au survol ; désactivées avec « réduire les animations ». 2 tests navigateur ajoutés.
 - **Système de design** : jetons mesurés sur la boutique de référence (`replica/design/`), génération de `tokens.css`, fiches composants, page interne `/design`, contrôle des contrastes (0 échec AA). Pied de page passé en blanc comme la référence.
 - **Page d'accueil v2** : mise en page, couleurs et polices alignées sur la boutique de référence à la demande du propriétaire ; logo, textes et visuels propres (FR/EN/AR). Nouvelles sections : idées cadeaux, curseur photo/fil, « l'offrir », fiche produit avec galerie, barre d'achat mobile.

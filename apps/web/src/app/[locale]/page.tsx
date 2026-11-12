@@ -2,56 +2,37 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
 import { BeforeAfter } from "@/components/BeforeAfter";
-import { Gallery } from "@/components/Gallery";
 import { PlusIcon } from "@/components/Icons";
+import { NailRing } from "@/components/NailRing";
+import { ProductSection } from "@/components/ProductSection";
 import { Reveal } from "@/components/Reveal";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { StickyBar } from "@/components/StickyBar";
 import { WeavingBoard } from "@/components/WeavingBoard";
+import { brand } from "@/config/brand";
 import { kitOffer } from "@/config/catalog";
+import { Link } from "@/i18n/navigation";
 import type { DemoPortrait } from "@/lib/board";
 
 const TRUST = ["cod", "delivery", "voice", "nails"] as const;
+const PROOF = ["cod", "nails", "voice"] as const;
 const GIFTS = [
-  { key: "couples", img: null },
-  { key: "parents", img: "/visuels/photographe-fil.webp" },
-  { key: "grandparents", img: null },
-  { key: "pets", img: "/visuels/chat-fil.webp" },
-  { key: "memory", img: null },
-  { key: "self", img: "/visuels/astronaute-fil.webp" },
+  { key: "couples", name: null },
+  { key: "parents", name: "photographe" },
+  { key: "grandparents", name: null },
+  { key: "pets", name: "chat" },
+  { key: "memory", name: null },
+  { key: "self", name: "astronaute" },
 ] as const;
 const WHAT_STEPS = ["photo", "model", "thread"] as const;
+const WHAT_CHIPS = ["box", "nails", "voice"] as const;
 const GIFT_STEPS = ["box", "choose", "make"] as const;
-const INCLUDES = ["board", "thread", "code", "guide"] as const;
 const FAQ = ["who", "skills", "photo", "time", "privacy", "payment"] as const;
 
 async function loadDemo(): Promise<DemoPortrait> {
   const file = path.join(process.cwd(), "public", "demo", "portrait-demo.json");
   return JSON.parse(await readFile(file, "utf-8"));
-}
-
-/** Visuel provisoire : motif de fil classique (cardioïde) sur un cercle de clous. */
-function NailRing() {
-  const n = 120;
-  const pt = (i: number) => {
-    const a = (i / n) * Math.PI * 2 - Math.PI / 2;
-    return [50 + 44 * Math.cos(a), 50 + 44 * Math.sin(a)] as const;
-  };
-  const chords = Array.from({ length: n }, (_, i) => {
-    const [x1, y1] = pt(i);
-    const [x2, y2] = pt((i * 2) % n);
-    return `M${x1.toFixed(2)} ${y1.toFixed(2)}L${x2.toFixed(2)} ${y2.toFixed(2)}`;
-  }).join("");
-  return (
-    <svg viewBox="0 0 100 100" className="ring" aria-hidden="true" focusable="false">
-      <path d={chords} fill="none" stroke="currentColor" strokeWidth="0.18" />
-      {Array.from({ length: n }, (_, i) => {
-        const [cx, cy] = pt(i);
-        return <circle key={i} cx={cx} cy={cy} r="0.55" />;
-      })}
-    </svg>
-  );
 }
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
@@ -72,7 +53,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <p className="announcement">{t("announcement")}</p>
       <SiteHeader />
       <main id="main">
-        {/* Héros : visuel arrondi avec badge et médaillon, puis le texte. */}
+        {/* Héros : carte visuelle (pastille + médaillon) et texte avec ligne de preuves. */}
         <section className="hero" aria-labelledby="hero-title">
           <div className="wrap hero-grid">
             <div className="hero-media" data-reveal>
@@ -98,10 +79,15 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 <a className="btn btn-primary btn-lg" href="#acheter">
                   {t("hero.cta")}
                 </a>
-                <a className="btn btn-outline btn-lg" href="#comment">
+                <Link className="btn btn-outline btn-lg" href="/kit">
                   {t("hero.secondary")}
-                </a>
+                </Link>
               </div>
+              <ul className="proof">
+                {PROOF.map((k) => (
+                  <li key={k}>{t(`hero.proof.${k}`)}</li>
+                ))}
+              </ul>
             </div>
           </div>
         </section>
@@ -123,39 +109,51 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </div>
         </section>
 
+        {/* Idées cadeaux : en-tête scindé, cartes-liens avec petite œuvre superposée. */}
         <section className="section bg-cream" id="cadeaux" aria-labelledby="gifts-title">
           <div className="wrap">
-            <header className="section-head center" data-reveal>
-              <p className="eyebrow">{t("gifts.eyebrow")}</p>
-              <h2 id="gifts-title">{t("gifts.title")}</h2>
+            <header className="section-head split-head" data-reveal>
+              <div>
+                <p className="eyebrow">{t("gifts.eyebrow")}</p>
+                <h2 id="gifts-title">{t("gifts.title")}</h2>
+              </div>
               <p>{t("gifts.lead")}</p>
             </header>
             <ul className="gift-grid">
               {GIFTS.map((g, i) => (
-                <li key={g.key} className="gift-card" data-reveal style={{ ["--i" as string]: i % 3 }}>
-                  <div className="gift-img">
-                    {g.img ? <img src={g.img} alt="" width={600} height={600} loading="lazy" /> : <NailRing />}
-                    <span className="gift-placeholder">{t("gifts.placeholder")}</span>
-                  </div>
-                  <h3>{t(`gifts.items.${g.key}.title`)}</h3>
-                  <p>{t(`gifts.items.${g.key}.text`)}</p>
+                <li key={g.key} data-reveal style={{ ["--i" as string]: i % 3 }}>
+                  <a className="gift-card" href="#acheter">
+                    <div className="gift-img">
+                      {g.name ? <img src={`/visuels/${g.name}-photo.webp`} alt="" width={600} height={600} loading="lazy" /> : <NailRing />}
+                      <span className="gift-placeholder">{t("gifts.placeholder")}</span>
+                      {g.name && (
+                        <span className="gift-art" aria-hidden="true">
+                          <img src={`/visuels/${g.name}-fil.webp`} alt="" width={240} height={240} loading="lazy" />
+                        </span>
+                      )}
+                    </div>
+                    <h3>{t(`gifts.items.${g.key}.title`)}</h3>
+                    <p>{t(`gifts.items.${g.key}.text`)}</p>
+                  </a>
                 </li>
               ))}
             </ul>
           </div>
         </section>
 
+        {/* Dans la boîte : avant/après, étapes, encadré matériaux, puces, lien vers le kit. */}
         <section className="section bg-sand" id="comment" aria-labelledby="what-title">
           <div className="wrap split">
             <div data-reveal>
               <BeforeAfter photo="/visuels/astronaute-photo.webp" thread="/visuels/astronaute-fil.webp" />
+              <p className="ba-hint-below">{t("what.slider.hint")}</p>
             </div>
             <div>
               <header className="section-head" data-reveal>
                 <p className="eyebrow">{t("what.eyebrow")}</p>
                 <h2 id="what-title">{t("what.title")}</h2>
               </header>
-              <ol className="num-steps">
+              <ol className="num-steps soft">
                 {WHAT_STEPS.map((s, i) => (
                   <li key={s} data-reveal style={{ ["--i" as string]: i }}>
                     <h3>{t(`what.steps.${s}.title`)}</h3>
@@ -163,10 +161,31 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                   </li>
                 ))}
               </ol>
+              <div className="premium" data-reveal>
+                <span className="premium-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3.5" y="3.5" width="17" height="17" rx="1.5" />
+                    <circle cx="12" cy="12" r="5.5" />
+                  </svg>
+                </span>
+                <div>
+                  <h3>{t("what.premiumTitle")}</h3>
+                  <p>{t("what.premiumText")}</p>
+                </div>
+              </div>
+              <ul className="chips" data-reveal>
+                {WHAT_CHIPS.map((c) => (
+                  <li key={c}>{t(`what.chips.${c}`)}</li>
+                ))}
+              </ul>
+              <Link className="btn btn-outline btn-lg" href="/kit">
+                {t("what.more")}
+              </Link>
             </div>
           </div>
         </section>
 
+        {/* L'offrir : 3 étapes et bandeau blanc. */}
         <section className="section bg-blush" aria-labelledby="howgift-title">
           <div className="wrap">
             <header className="section-head center" data-reveal>
@@ -174,7 +193,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               <h2 id="howgift-title">{t("howGift.title")}</h2>
               <p>{t("howGift.lead")}</p>
             </header>
-            <ol className="num-steps cols-3">
+            <ol className="num-steps soft cols-3">
               {GIFT_STEPS.map((s, i) => (
                 <li key={s} data-reveal style={{ ["--i" as string]: i }}>
                   <h3>{t(`howGift.steps.${s}.title`)}</h3>
@@ -187,47 +206,27 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               <div>
                 <h3>{t("howGift.togetherTitle")}</h3>
                 <p>{t("howGift.togetherText")}</p>
+                <p>{t("howGift.togetherText2")}</p>
               </div>
+              <a className="btn btn-primary btn-lg" href="#acheter">
+                {t("howGift.cta")}
+              </a>
             </div>
           </div>
         </section>
 
-        <section className="section bg-cream" id="acheter" aria-labelledby="shop-title">
-          <div className="wrap shop-grid">
-            <div data-reveal>
-              <Gallery
-              images={[
-                { src: "/visuels/astronaute-fil.webp", alt: t("gifts.placeholder") },
-                { src: "/visuels/astronaute-photo.webp", alt: t("gifts.placeholder") },
-                { src: "/visuels/chat-fil.webp", alt: t("gifts.placeholder") },
-                { src: "/visuels/photographe-fil.webp", alt: t("gifts.placeholder") },
-              ]}
-              />
-            </div>
-            <div className="shop-info" data-reveal style={{ ["--i" as string]: 1 }}>
-              <h2 id="shop-title">{t("shop.title")}</h2>
-              <p className="shop-lead">{t("shop.lead")}</p>
-              <p className="shop-price">{price ?? t("shop.priceSoon")}</p>
-              <h3>{t("shop.includesTitle")}</h3>
-              <ul className="check-list">
-                {INCLUDES.map((k) => (
-                  <li key={k}>{t(`shop.includes.${k}`)}</li>
-                ))}
-              </ul>
-              <button type="button" className="btn btn-primary btn-lg btn-block" disabled={!price}>
-                {price ? t("shop.cta") : t("shop.ctaSoon")}
-              </button>
-              <p className="shop-note">{t("shop.payment")}</p>
-            </div>
-          </div>
-        </section>
+        <ProductSection price={price} />
 
+        {/* FAQ : intro avec bouton contour, accordéon. */}
         <section className="section bg-sand" id="faq" aria-labelledby="faq-title">
           <div className="wrap faq-grid">
             <header className="section-head" data-reveal>
               <p className="eyebrow">{t("faq.eyebrow")}</p>
               <h2 id="faq-title">{t("faq.title")}</h2>
               <p>{t("faq.lead")}</p>
+              <a className="btn btn-outline btn-lg faq-contact" href={brand.supportEmail ? `mailto:${brand.supportEmail}` : "#contact"}>
+                {t("faq.contact")}
+              </a>
             </header>
             <div className="faq-list" data-reveal style={{ ["--i" as string]: 1 }}>
               {FAQ.map((q) => (
@@ -243,14 +242,20 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </div>
         </section>
 
+        {/* Appel final : œuvre ronde + titre, prix, bouton. */}
         <section className="section bg-cream final" aria-labelledby="final-title">
           <div className="wrap final-inner" data-reveal>
             <img src="/visuels/astronaute-fil.webp" alt="" width={240} height={240} loading="lazy" className="final-img" />
-            <h2 id="final-title">{t("final.title")}</h2>
-            <p>{t("final.text")}</p>
-            <a className="btn btn-primary btn-lg" href="#acheter">
-              {t("final.cta")}
-            </a>
+            <div className="final-content">
+              <h2 id="final-title">{t("final.title")}</h2>
+              <p>
+                {t("final.priceLine")} · {price ?? t("shop.priceSoon")}
+              </p>
+              <p>{t("final.text")}</p>
+              <a className="btn btn-primary btn-lg" href="#acheter">
+                {t("final.cta")}
+              </a>
+            </div>
           </div>
         </section>
       </main>
