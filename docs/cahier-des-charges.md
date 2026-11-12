@@ -359,7 +359,8 @@ Le nombre de clous sera déterminé par les essais de qualité et les contrainte
 - **240 clous**, répartis en **4 secteurs de 60 clous**, nommés A, B, C et D.
 - Chaque clou a un repère lisible par l'humain (par exemple **B17**) et un index technique unique (1 à 240) utilisé par l'algorithme. La correspondance entre les deux est fixe.
 - Les instructions, le PDF, l'assistant et le marquage physique du support utilisent les repères de secteur (A1 à D60), plus faciles à retrouver qu'un numéro de 1 à 240.
-- Le support porte des marques visibles au début de chaque secteur.
+- Les 4 secteurs sont **peints en alternance noir / blanc / noir / blanc** pour être repérés d'un coup d'œil, et le support porte des marques visibles au début de chaque secteur.
+- Les instructions sont de la forme « A1 → D56 ».
 
 Le moteur doit rester paramétrable (nombre de secteurs, clous par secteur) pour tester d'autres configurations sans refonte.
 

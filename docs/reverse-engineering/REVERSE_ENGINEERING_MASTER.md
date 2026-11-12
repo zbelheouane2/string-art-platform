@@ -31,6 +31,7 @@ Un **kit générique** à 119 € (planche MDF de 50 × 50 cm, 240 clous pré-po
 | Sujet | Valeur | Statut |
 |---|---|---|
 | Clous | **240**, en cercle (ellipse dans un carré) | 🔍 |
+| Repères | **4 zones A à D de 60 clous, fond alterné noir/blanc**, instructions « A1 → D56 » | 📄 (porteur de projet) |
 | Lignes | **3 500** | 🔍 📄 |
 | Mode | Monochrome (le mode couleur existe dans le code, non utilisé) | 🔍 |
 | Reproductibilité | Graine fixe (`seed: 30`) | 🔍 |

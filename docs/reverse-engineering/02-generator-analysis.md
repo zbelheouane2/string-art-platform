@@ -54,7 +54,7 @@ Génération serveur : points 240, steps 3500, seed 30, width 2, weight 10,
 ### C.2 Fonctionnement déduit
 
 1. **Clous** : 240 positions régulières sur une ellipse (un cercle quand la zone est carrée). 🔍 Le code contient aussi une option rectangle, non utilisée. 🔍
-2. **Numérotation** : de 1 à 240 (ou de 0 à 239) dans l'application. **Aucun système de secteurs A, B, C, D n'a été trouvé.** 🔍 (absence) Le marquage physique sur la planche reste ❓.
+2. **Numérotation** : de 1 à 240 (ou de 0 à 239) dans l'application. **Aucun système de secteurs A, B, C, D n'a été trouvé.** 🔍 (absence) Le marquage physique est connu grâce au porteur de projet 📄 : **4 zones A, B, C, D de 60 clous, fond alterné noir / blanc / noir / blanc**, instructions de la forme « A1 → D56 ». L'application convertit donc l'index interne (0 à 239) en repère de zone.
 3. **Variantes** : plusieurs aperçus s'affichent en grille, avec une sélection et un rendu progressif (dessin animé, intervalle de 2 à 6 ms). Les variantes diffèrent par le paramètre `quality` et par l'opacité ou l'épaisseur. 🔍
 4. **Génération définitive** : côté serveur, avec une **graine fixe (`seed: 30`)**, ce qui la rend reproductible. L'écran indique « La génération peut prendre **5 à 10 minutes** ». 🔍
 5. **Algorithme** : les noms de paramètres de l'aperçu (`pegsCount`, `quality`, `lineOpacity`, `displayPegs`, `invertColors`, `ELLIPSIS`, `lowerNbSegmentsForThread`) **correspondent à ceux d'un projet open source publié sous licence GPL-3.0** (piellardj, *image-stylization-threading*). 💭 À confirmer, et sans conséquence pour nous puisque nous développerons notre propre moteur.

@@ -8,7 +8,7 @@ Les écrans après la saisie du code n'ont **pas** été utilisés. Aucun code n
 |---|---|---|
 | 1 | Déroulé exact : recadrage (carré ou rond ?), nombre de variantes affichées | Acheter un kit ou un code supplémentaire (25 €) et faire le parcours, avec captures |
 | 2 | Contenu et mise en page du PDF | Idem |
-| 3 | Marquage physique des clous : 1 à 240, secteurs, couleurs ? Repère de départ ? | Kit physique |
+| 3 | ~~Marquage physique des clous~~ **Résolu (info du porteur de projet)** : 4 zones A, B, C, D de 60 clous (1 à 60), **fond alterné noir / blanc / noir / blanc**, instructions du type « A1 → D56 ». Reste à confirmer : position de A1 et sens de numérotation (horaire ou antihoraire) | Kit physique ou photo |
 | 4 | Diamètre et type du fil, diamètre des clous, diamètre réel du cercle | Kit physique (mesures) |
 | 5 | Comportement de « Je suis perdu » | Kit ou code |
 | 6 | Règle exacte : « 3 envois d'email, puis code inactif ». Un code = un portrait ? Comment « jusqu'à 3 tableaux » se combine-t-il avec la vente de codes à 25 € ? | Kit ou code ; question au support |
@@ -24,7 +24,7 @@ Les écrans après la saisie du code n'ont **pas** été utilisés. Aucun code n
 | # | Décision | Recommandation |
 |---|---|---|
 | D1 | Commerce sur mesure ou Shopify (voir `05` §8) | Sur mesure (option A) |
-| D2 | Numérotation 1 à 240 ou secteurs A1 à D60 | A1 à D60 |
+| D2 | Numérotation | **Validé : secteurs A à D, 1 à 60, zones alternées noir/blanc** |
 | D3 | Règle d'usage d'un code (portraits, essais, PDF) | 1 portrait validé, essais libres, PDF illimité |
 | D4 | Planche noire en plus de la blanche au lancement ? | Non, blanche seule au lancement |
 | D5 | Galerie de modèles prêts au lancement ? | Oui, 10 à 20 modèles libres de droits |
