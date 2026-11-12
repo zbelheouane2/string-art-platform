@@ -1,14 +1,20 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
-import { Alexandria, Figtree, Noto_Naskh_Arabic, Young_Serif } from "next/font/google";
+import { Alexandria, DM_Sans, DM_Serif_Display, Noto_Naskh_Arabic } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { brand } from "@/config/brand";
 import { direction, routing } from "@/i18n/routing";
 import "@/styles/globals.css";
 
-const youngSerif = Young_Serif({ weight: "400", subsets: ["latin"], variable: "--font-young-serif", display: "swap" });
-const figtree = Figtree({ subsets: ["latin"], variable: "--font-figtree", display: "swap" });
+const dmSerif = DM_Serif_Display({
+  weight: "400",
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+  variable: "--font-dm-serif",
+  display: "swap",
+});
+const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans", display: "swap" });
 const naskh = Noto_Naskh_Arabic({ weight: ["500", "600"], subsets: ["arabic"], variable: "--font-naskh", display: "swap" });
 const alexandria = Alexandria({ subsets: ["arabic", "latin"], variable: "--font-alexandria", display: "swap" });
 
@@ -26,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
 }
 
-export const viewport: Viewport = { themeColor: "#ffffff" };
+export const viewport: Viewport = { themeColor: "#2a1f1a" };
 
 export default async function LocaleLayout({
   children,
@@ -38,7 +44,7 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const fonts = [youngSerif, figtree, naskh, alexandria].map((f) => f.variable).join(" ");
+  const fonts = [dmSerif, dmSans, naskh, alexandria].map((f) => f.variable).join(" ");
   return (
     <html lang={locale} dir={direction(locale)} className={fonts}>
       <body>

@@ -1,33 +1,39 @@
 # Design
 
-Système visuel de la plateforme (étape 1, page d'accueil). Inspiré de la **structure** de la boutique de référence (bandeau, en-tête avec logo et langues, grand visuel arrondi, sections produit, barre d'achat mobile), avec une **identité propre** : aucune couleur, police, photo ni texte de la référence (cahier des charges §1.3).
+Système visuel de la page d'accueil (étape 1, version 2).
 
-## Monde
+**Décision du propriétaire (2026-11-12)** : la page doit être « identique » à la boutique de référence, sauf le logo et des visuels. Cela remplace la règle de distinction du cahier des charges §1.3 pour la **mise en page, les couleurs et le style des polices**. Restent à nous, pour des raisons de droit d'auteur et de concurrence déloyale : le **logo**, les **textes** (mêmes idées, nos mots), les **photos/visuels** et le **code**. Aucun avis, note, presse ni vidéo de réaction n'est affiché tant qu'on n'en a pas de vrais.
 
-L'objet du produit : une planche blanche, des clous laiton, un fil noir. La couleur d'accent, émeraude, évoque le cadeau et l'Algérie sans reprendre le rouge brique de la référence.
+## Structure (même ordre que la référence)
+
+Bandeau d'annonce → en-tête (menu, logo centré, langues, panier) → héros (carte visuelle avec pastille « Idée cadeau » et médaillon photo, sur-titre rouge, titre avec accent italique rouge, deux boutons pilule) → bande de réassurance → idées cadeaux (6 cartes) → « dans la boîte » (curseur photo/fil + 3 étapes numérotées) → « l'offrir » (3 étapes + bloc « seul, ou à deux ») → fiche produit (galerie « 1 / 4 », inclus, bouton) → FAQ en deux colonnes → appel final → pied de page → barre d'achat collante sur mobile.
+
+## Jetons
 
 | Jeton | Valeur | Rôle |
 |---|---|---|
-| `--paper` | `#ffffff` | Fond principal, la planche |
-| `--plaster` | `#f1f0ec` | Sections secondaires |
-| `--ink` | `#1a1916` | Texte, fil, bandeau, pied de page |
-| `--ink-soft` | `#55524c` | Texte secondaire (contraste 7,6:1 sur blanc) |
-| `--emerald` | `#0e5443` | Actions principales, champ « cadeau » |
-| `--brass` | `#a9803f` | Clous et repères A–D (décoratif, jamais pour du texte courant) |
+| `--white` | `#ffffff` | Héros, en-tête |
+| `--cream` | `#fffaf5` | Sections cadeaux, produit, appel final |
+| `--sand` | `#f6ece2` | Sections « dans la boîte », FAQ, carte du héros |
+| `--blush` | `#f3ded3` | Section « l'offrir » |
+| `--beige` | `#eadbcd` | Fonds de visuels, bouton désactivé |
+| `--ink` | `#2a1f1a` | Texte, bandeau, pied de page |
+| `--ink-soft` | `#6b5a50` | Texte secondaire |
+| `--accent` | `#a8322d` | Boutons, sur-titres, accent du titre, puces |
+| `--brass` | `#a9803f` | Clous et repères A–D (décoratif) |
 
 ## Typographie
 
-- Titres : **Young Serif** (latin), **Noto Naskh Arabic** (arabe).
-- Texte : **Figtree** (latin), **Alexandria** (arabe).
-- Échelle fluide `--step--1` à `--step-4` ; titres sans capitales ni mot isolé en italique.
+- Titres : **DM Serif Display** (accent en italique) ; arabe : **Noto Naskh Arabic**.
+- Texte : **DM Sans** ; arabe : **Alexandria**.
+- Boutons pilule de 56 px, 17 px, graisse 600.
 
-## Signature
+## Visuels provisoires
 
-La planche du héros tisse en direct le **vrai calcul du moteur** (séquence de 1 913 fils, repères A1–D60). Mouvement unique de la page ; en « mouvement réduit », le portrait apparaît terminé.
+Rendus réels du moteur (astronaute, chat, photographe) et motif de fil décoratif, marqués « Visuel provisoire ». À remplacer par les photos du kit.
 
 ## Règles
 
-- Propriétés CSS logiques partout : la page se retourne en arabe ; la planche, objet physique, ne se retourne pas, et les repères de clous restent écrits de gauche à droite.
-- Boutons en pilule, cartes à grand rayon (1,75 rem) seulement pour les objets (la planche), listes à filets pour le contenu.
-- Étapes numérotées uniquement parce qu'il s'agit d'une vraie séquence.
-- Accessibilité : WCAG 2.1 AA vérifié automatiquement (axe) en FR, EN, AR, mobile et bureau.
+- Propriétés CSS logiques partout : la page se retourne en arabe ; la planche et le curseur photo/fil ne se retournent pas, les repères de clous restent écrits de gauche à droite.
+- Prix, devise, pays : jamais en dur (`src/config/catalog.ts`, base de données). Sans prix, le bouton d'achat est désactivé.
+- WCAG 2.1 AA vérifié par axe dans les tests navigateur.

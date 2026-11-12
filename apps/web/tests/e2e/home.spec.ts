@@ -17,9 +17,9 @@ for (const [accept, expected] of [
 }
 
 for (const [locale, dir, title] of [
-  ["fr", "ltr", "Votre photo, tissée fil à fil."],
-  ["en", "ltr", "Your photo, woven thread by thread."],
-  ["ar", "rtl", "صورتك، منسوجة خيطًا بخيط."],
+  ["fr", "ltr", "Le cadeau qu'on ne range pas au placard"],
+  ["en", "ltr", "The gift that never ends up in a drawer"],
+  ["ar", "rtl", "الهدية التي لا تُنسى في الخزانة"],
 ] as const) {
   test(`accueil ${locale} : langue, sens d'écriture, titre`, async ({ page }) => {
     await page.goto(`/${locale}`);
@@ -44,7 +44,7 @@ for (const [locale, dir, title] of [
 
 test("le sélecteur de langue garde la page", async ({ page }) => {
   await page.goto("/fr");
-  await page.locator(".site-header").getByRole("link", { name: /العربية/ }).click();
+  await page.locator(".site-footer").getByRole("link", { name: /العربية/ }).click();
   await expect(page).toHaveURL(/\/ar$/);
   await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
 });

@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 
-/** Barre d'action mobile : apparaît quand les boutons du haut ne sont plus visibles. */
-export function StickyBar({ watchId }: { watchId: string }) {
+/** Barre d'achat : apparaît quand le bouton du haut n'est plus visible. */
+export function StickyBar({ watchId, price }: { watchId: string; price: string | null }) {
   const t = useTranslations("sticky");
   const [visible, setVisible] = useState(false);
 
@@ -18,9 +18,13 @@ export function StickyBar({ watchId }: { watchId: string }) {
 
   return (
     <div className="sticky-bar" data-visible={visible} aria-hidden={!visible} inert={!visible}>
-      <strong>{t("name")}</strong>
-      <a className="btn btn-primary" href="#kit">
-        {t("cta")}
+      <img src="/visuels/astronaute-fil.webp" alt="" width={48} height={48} className="sticky-thumb" />
+      <div className="sticky-text">
+        <strong>{t("name")}</strong>
+        {price && <span>{price}</span>}
+      </div>
+      <a className="btn btn-primary" href="#acheter">
+        {price ? t("cta") : t("ctaSoon")}
       </a>
     </div>
   );

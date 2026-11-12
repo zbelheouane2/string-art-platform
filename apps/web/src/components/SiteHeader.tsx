@@ -3,14 +3,14 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { brand } from "@/config/brand";
 import { CloseIcon, MenuIcon } from "./Icons";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { Logo } from "./Logo";
 
 const LINKS = [
-  { href: "#how", key: "how" },
-  { href: "#kit", key: "kit" },
-  { href: "#gift", key: "gift" },
+  { href: "#acheter", key: "kit" },
+  { href: "#comment", key: "how" },
+  { href: "#cadeaux", key: "gift" },
   { href: "#faq", key: "faq" },
 ] as const;
 
@@ -27,37 +27,34 @@ export function SiteHeader() {
 
   return (
     <header className="site-header">
-      <div className="wrap">
+      <div className="wrap header-row">
         <div className="header-start">
           <button
             type="button"
-            className="icon-btn menu-toggle"
+            className="icon-btn"
             aria-expanded={open}
-            aria-controls="mobile-menu"
+            aria-controls="nav-drawer"
             aria-label={open ? t("close") : t("menu")}
             onClick={() => setOpen((v) => !v)}
           >
             {open ? <CloseIcon /> : <MenuIcon />}
           </button>
-          <Link href="/" className="wordmark">
-            {brand.name}
-          </Link>
         </div>
-        <nav className="main-nav" aria-label={t("menu")}>
-          <ul>
-            {LINKS.map((l) => (
-              <li key={l.key}>
-                <a href={l.href}>{t(l.key)}</a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <Link href="/" className="header-logo">
+          <Logo />
+        </Link>
         <div className="header-end">
           <LanguageSwitcher />
+          <a className="icon-btn" href="#acheter" aria-label={t("cart")}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M6 8h12l-1 12H7L6 8z" />
+              <path d="M9 8V6a3 3 0 0 1 6 0v2" />
+            </svg>
+          </a>
         </div>
       </div>
       {open && (
-        <div id="mobile-menu" className="mobile-menu">
+        <nav id="nav-drawer" className="nav-drawer" aria-label={t("menu")}>
           <ul className="wrap">
             {LINKS.map((l) => (
               <li key={l.key}>
@@ -67,7 +64,10 @@ export function SiteHeader() {
               </li>
             ))}
           </ul>
-        </div>
+          <div className="wrap drawer-lang">
+            <LanguageSwitcher />
+          </div>
+        </nav>
       )}
     </header>
   );
