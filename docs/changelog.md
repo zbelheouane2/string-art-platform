@@ -23,3 +23,4 @@
 - Étape « Préparez le kit » ajoutée (6 étapes) avec la photo des mains qui assemblent. Étapes code, photo et guide vocal : maquettes d'écrans maison par langue (`scripts/make-step-mockups.cjs`, sortie `public/visuels/etapes/{code,photo,voice}-{fr,en,ar}.webp`). Aucune image Let's String utilisée.
 - Étape « Entrez votre code » en français : photo fournie par Zaki (`code-photo-fr.webp`) ; maquette conservée en anglais et en arabe car l'écran de la photo est en français.
 - Galerie produit : photo du dévidoir en bois (fournie par Zaki) en 2e position (7 visuels). Photo « Suivez la voix » reçue mais non utilisée : écran et logo d'une marque tierce, image trop proche de la leur.
+- Étape « Suivez la voix » : photo fournie par Zaki avec notre propre écran incrusté sur le téléphone, une version par langue (`voice-photo-{fr,en,ar}.webp`, `scripts/incruste-ecran-voix.py`). L'écran et le logo d'origine ne sont plus visibles.

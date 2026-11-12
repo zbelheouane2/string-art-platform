@@ -157,6 +157,11 @@ const screens = {
       const png = path.join(OUT, `${key}-${loc}.png`);
       await p.locator("#mk .stage").screenshot({ path: png });
       execFileSync("python3", ["-c", `from PIL import Image;import os;Image.open('${png}').convert('RGB').save('${png.replace(".png", ".webp")}',quality=82);os.remove('${png}')`]);
+      if (process.env.SCREEN_DIR) {
+        // Écran seul, à plat (pour l'incruster sur une photo).
+        await p.evaluate(() => { document.querySelector("#mk .phone").style.transform = "none"; document.querySelector("#mk .scr").style.borderRadius = "0"; });
+        await p.locator("#mk .scr").screenshot({ path: path.join(process.env.SCREEN_DIR, `ecran-${key}-${loc}.png`) });
+      }
       console.log(key, loc);
     }
   }

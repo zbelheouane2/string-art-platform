@@ -11,7 +11,7 @@ export const HOW_STEPS = [
   { key: "prepare", icon: "spool", img: "/visuels/etapes/preparer.webp" },
   { key: "code", icon: "code", img: "/visuels/etapes/code-{locale}.webp" },
   { key: "photo", icon: "photo", img: "/visuels/etapes/photo-{locale}.webp" },
-  { key: "thread", icon: "voice", img: "/visuels/etapes/voice-{locale}.webp" },
+  { key: "thread", icon: "voice", img: "/visuels/etapes/voice-photo-{locale}.webp" },
   { key: "hang", icon: "frame", img: "/visuels/etapes/accrocher.webp" },
 ] as const;
 
