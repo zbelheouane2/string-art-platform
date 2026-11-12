@@ -91,7 +91,7 @@ Le kit doit pouvoir comprendre :
 - Une carte comportant un code d'activation unique (voir section 2.3).
 - Un support de téléphone, si retenu dans la composition commerciale, pour suivre l'assistant pendant la réalisation.
 
-Le support doit pouvoir être livré avec les clous déjà posés selon le gabarit standard, afin d'éviter au client l'étape de préparation. La version « clous à poser soi-même » reste possible comme variante commerciale. Ce choix dépend du prototype de fabrication et doit être validé par le porteur de projet.
+**Choix retenu :** le support est livré avec les clous déjà posés aux positions standards du gabarit, identiques pour tous les kits. Le client n'a qu'à tendre le fil selon la séquence générée. Les supports peuvent ainsi être fabriqués en série, indépendamment de la photo du client.
 
 Le support doit comporter un repère d'orientation (par exemple « haut » et clou n° 1 marqués) et un QR code menant à l'assistant de réalisation.
 
@@ -1385,7 +1385,7 @@ Le développement doit être progressif, documenté, testé et validé à chaque
 
 Améliorations issues de l'analyse concurrentielle du marché et de l'expertise technique :
 - Ajout du kit générique avec code d'activation (sections 2.3 et 3.3) et des entités associées.
-- Support livrable avec clous pré-posés, repère d'orientation et QR code (section 2.2).
+- Support livré avec clous pré-posés (choix validé), repère d'orientation et QR code (section 2.2).
 - Ajout des accessoires et consommables (section 2.2 D) et du parcours cadeau (section 3.4).
 - Vérification automatique de la photo avant génération (section 5.3).
 - Reproductibilité et versionnement du moteur (section 5.8 bis).
