@@ -2371,3 +2371,179 @@ h1 em {
     display: none;
   }
 }
+
+/* ---------- Accueil : « Qu'est-ce que c'est ? » ---------- */
+.intro-card {
+  display: grid;
+  gap: 2rem;
+  padding: 1.75rem;
+  border-radius: var(--radius-2xl);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+@media (min-width: 60rem) {
+  .intro-card {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 3.5rem;
+    padding: 3rem;
+  }
+}
+
+.intro-copy > h2 {
+  margin-block-end: 1.5rem;
+}
+
+.intro-block {
+  display: flex;
+  gap: 1rem;
+  padding-block: 1.25rem;
+  border-block-start: 1px solid var(--color-border);
+}
+
+.intro-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: 3.2rem;
+  block-size: 3.2rem;
+  border-radius: 50%;
+  background: var(--color-surface-blush);
+  color: var(--color-accent);
+}
+
+.intro-block h3 {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 400;
+  margin-block-end: 0.35rem;
+}
+
+.intro-block p,
+.transform-text,
+.box-grid p,
+.app-scroller p {
+  color: var(--color-text-muted);
+}
+
+.intro-img {
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-xl);
+}
+
+/* ---------- Accueil : de la photo au fil ---------- */
+.transform .split {
+  align-items: center;
+}
+
+.transform h2 {
+  margin-block: 0.5rem 1rem;
+}
+
+.transform-text {
+  font-size: var(--text-lead);
+  margin-block-end: 1.75rem;
+}
+
+/* ---------- Accueil : que contient le kit ---------- */
+.box-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.75rem 1rem;
+}
+
+@media (min-width: 60rem) {
+  .box-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem 1.75rem;
+  }
+}
+
+.box-media {
+  aspect-ratio: 1;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-surface-beige);
+  display: grid;
+  place-items: center;
+  margin-block-end: 0.9rem;
+}
+
+.box-media img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  transition: transform 300ms ease-in-out;
+}
+
+.box-grid li:hover .box-media img {
+  transform: scale(1.04);
+}
+
+.box-ring {
+  inline-size: 70%;
+  block-size: auto;
+  color: var(--color-text);
+}
+
+.box-grid h3 {
+  font-family: var(--font-body);
+  font-size: var(--text-lead);
+  font-weight: 700;
+  line-height: 1.25;
+  margin-block-end: 0.35rem;
+}
+
+.box-grid p {
+  font-size: 0.95rem;
+}
+
+/* ---------- Accueil : générateur en ligne (défilement horizontal) ---------- */
+.app-scroller {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(78%, 22rem);
+  gap: 1.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-block-end: 1rem;
+  margin-block-end: 1.5rem;
+  scrollbar-width: thin;
+}
+
+@media (min-width: 60rem) {
+  .app-scroller {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow: visible;
+  }
+}
+
+.app-scroller li {
+  scroll-snap-align: start;
+}
+
+.app-scroller img {
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 1;
+  border-radius: var(--radius-xl);
+  margin-block-end: 1rem;
+}
+
+.app-scroller h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: var(--text-lead);
+  font-weight: 700;
+  margin-block-end: 0.35rem;
+}
+
+.app-scroller .num-badge {
+  background: var(--color-surface);
+}

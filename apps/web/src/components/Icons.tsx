@@ -104,3 +104,18 @@ export const SpoolIcon = (p: SVGProps<SVGSVGElement>) => (
     <path d="M3.5 21.5h17" />
   </svg>
 );
+
+export const GiftIcon = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...step} {...p}>
+    <rect x="3.5" y="9" width="17" height="11.5" rx="1.5" />
+    <path d="M2.5 9h19M12 9v11.5" />
+    <path d="M12 9c-1.6-3.6-5.6-3.9-5.6-1.6C6.4 9 9.6 9 12 9zm0 0c1.6-3.6 5.6-3.9 5.6-1.6 0 1.6-3.2 1.6-5.6 1.6z" />
+  </svg>
+);
+
+export const HeartThreadIcon = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...step} {...p}>
+    <path d="M12 20s-7.5-4.6-7.5-10.1A4.2 4.2 0 0112 7.4a4.2 4.2 0 017.5 2.5C19.5 15.4 12 20 12 20z" />
+    <path d="M7.5 10.5l9 3.5M8.5 14l7.5-5" />
+  </svg>
+);

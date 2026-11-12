@@ -24,3 +24,9 @@
 - Étape « Entrez votre code » en français : photo fournie par Zaki (`code-photo-fr.webp`) ; maquette conservée en anglais et en arabe car l'écran de la photo est en français.
 - Galerie produit : photo du dévidoir en bois (fournie par Zaki) en 2e position (7 visuels). Photo « Suivez la voix » reçue mais non utilisée : écran et logo d'une marque tierce, image trop proche de la leur.
 - Étape « Suivez la voix » : photo fournie par Zaki avec notre propre écran incrusté sur le téléphone, une version par langue (`voice-photo-{fr,en,ar}.webp`, `scripts/incruste-ecran-voix.py`). L'écran et le logo d'origine ne sont plus visibles.
+
+## Accueil réorganisé dans l'ordre de la boutique de référence
+
+Ordre : héros, bandeau de confiance, « Qu'est-ce que {marque} ? » (cadeau / loisir + photo), carrousel « Comment ça marche », « De la photo au fil » (avant/après), « Que contient le kit ? » (6 éléments : boîte-support, planche 240 clous, fil et dévidoir, support de téléphone, code, guide vocal), « Comment fonctionne notre générateur en ligne ? » (écrans qui défilent), fiche produit, idées cadeaux, FAQ, appel final.
+Retirés de l'accueil : l'ancien bloc « Dans la boîte » (étapes + encadré, remplacé par la grille) et « L'offrir » (déjà sur la page du kit). Non repris : avis clients, vidéos clients, offre 2 kits (aucun contenu réel).
+Nouveaux textes sous `home.*` (fr, en, ar).

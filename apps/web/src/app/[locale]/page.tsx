@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
 import { BeforeAfter } from "@/components/BeforeAfter";
-import { PlusIcon } from "@/components/Icons";
+import { GiftIcon, HeartThreadIcon, PlusIcon } from "@/components/Icons";
 import { NailRing } from "@/components/NailRing";
 import { ProductSection } from "@/components/ProductSection";
 import { Reveal } from "@/components/Reveal";
@@ -27,9 +27,21 @@ const GIFTS = [
   { key: "memory", name: null },
   { key: "self", name: "astronaute" },
 ] as const;
-const WHAT_STEPS = ["photo", "model", "thread"] as const;
-const WHAT_CHIPS = ["box", "nails", "voice"] as const;
-const GIFT_STEPS = ["box", "choose", "make"] as const;
+const INTRO = ["gift", "hobby"] as const;
+const BOX = [
+  { key: "box", img: "/visuels/etapes/ouvrir.webp" },
+  { key: "board", img: null },
+  { key: "spool", img: "/visuels/devidoir.webp" },
+  { key: "stand", img: "/visuels/etapes/preparer.webp" },
+  { key: "code", img: "/visuels/etapes/code-{locale}.webp" },
+  { key: "voice", img: "/visuels/etapes/voice-photo-{locale}.webp" },
+] as const;
+const APP_SCREENS = [
+  { key: "code", img: "code" },
+  { key: "photo", img: "photo" },
+  { key: "thread", img: "voice" },
+] as const;
+const APP_CHIPS = ["voice", "speed", "pause", "progress"] as const;
 const FAQ = ["who", "skills", "photo", "time", "privacy", "payment"] as const;
 
 async function loadDemo(): Promise<DemoPortrait> {
@@ -111,6 +123,30 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </div>
         </section>
 
+        {/* Qu'est-ce que c'est : deux blocs (cadeau, loisir) et une photo. */}
+        <section className="section bg-sand" id="decouvrir" aria-labelledby="intro-title">
+          <div className="wrap">
+            <div className="intro-card" data-reveal>
+              <div className="intro-copy">
+                <p className="eyebrow">{t("home.intro.eyebrow")}</p>
+                <h2 id="intro-title">{t("home.intro.title", { brand: brand.name })}</h2>
+                {INTRO.map((k) => (
+                  <div key={k} className="intro-block">
+                    <span className="intro-icon" aria-hidden="true">
+                      {k === "gift" ? <GiftIcon /> : <HeartThreadIcon />}
+                    </span>
+                    <div>
+                      <h3>{t(`home.intro.${k}.title`)}</h3>
+                      <p>{t(`home.intro.${k}.text`)}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <img className="intro-img" src="/visuels/etapes/accrocher.webp" alt={t("home.intro.imgAlt")} width={1000} height={1000} loading="lazy" />
+            </div>
+          </div>
+        </section>
+
         {/* Comment ça marche : carrousel, grande image + onglets à icônes. */}
         <section className="section bg-cream" id="comment" aria-labelledby="how-title">
           <div className="wrap">
@@ -124,6 +160,80 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             </div>
           </div>
         </section>
+
+        {/* De la photo au fil : grand avant/après. */}
+        <section className="section bg-sand transform" aria-labelledby="transform-title">
+          <div className="wrap split">
+            <div data-reveal>
+              <BeforeAfter photo="/visuels/astronaute-photo.webp" thread="/visuels/astronaute-fil.webp" />
+              <p className="ba-hint-below">{t("what.slider.hint")}</p>
+            </div>
+            <div data-reveal style={{ ["--i" as string]: 1 }}>
+              <p className="eyebrow">{t("home.transform.eyebrow")}</p>
+              <h2 id="transform-title">{t("home.transform.title")}</h2>
+              <p className="transform-text">{t("home.transform.text")}</p>
+              <a className="btn btn-primary btn-lg" href="#acheter">
+                {t("home.transform.cta")}
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* Que contient le kit : grille de 6 éléments. */}
+        <section className="section bg-cream" id="contenu" aria-labelledby="box-title">
+          <div className="wrap">
+            <header className="section-head center" data-reveal>
+              <p className="eyebrow">{t("home.box.eyebrow")}</p>
+              <h2 id="box-title">{t("home.box.title")}</h2>
+              <p>{t("home.box.lead")}</p>
+            </header>
+            <ul className="box-grid">
+              {BOX.map((b, i) => (
+                <li key={b.key} data-reveal style={{ ["--i" as string]: i % 3 }}>
+                  <div className="box-media">
+                    {b.img ? <img src={b.key === "code" && locale === "fr" ? "/visuels/etapes/code-photo-fr.webp" : b.img.replace("{locale}", locale)} alt="" width={1000} height={1000} loading="lazy" /> : <NailRing className="box-ring" />}
+                  </div>
+                  <h3>{t(`home.box.items.${b.key}.title`)}</h3>
+                  <p>{t(`home.box.items.${b.key}.text`)}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* Le générateur en ligne : écrans de téléphone qui défilent à l'horizontale. */}
+        <section className="section bg-blush" aria-labelledby="app-title">
+          <div className="wrap">
+            <header className="section-head split-head" data-reveal>
+              <div>
+                <p className="eyebrow">{t("kit.app.eyebrow")}</p>
+                <h2 id="app-title">{t("home.app.title")}</h2>
+              </div>
+              <p>{t("kit.app.lead")}</p>
+            </header>
+            <ol className="app-scroller" aria-label={t("home.app.scroll")} tabIndex={0}>
+              {APP_SCREENS.map((a, i) => (
+                <li key={a.key}>
+                  <img src={`/visuels/etapes/${a.img}-${locale}.webp`} alt="" width={1000} height={1000} loading="lazy" />
+                  <h3>
+                    <span className="num-badge" aria-hidden="true">
+                      {i + 1}
+                    </span>
+                    {t(`kit.app.steps.${a.key}.title`)}
+                  </h3>
+                  <p>{t(`kit.app.steps.${a.key}.text`)}</p>
+                </li>
+              ))}
+            </ol>
+            <ul className="chips" data-reveal>
+              {APP_CHIPS.map((c) => (
+                <li key={c}>{t(`kit.app.chips.${c}`)}</li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <ProductSection price={price} />
 
         {/* Idées cadeaux : en-tête scindé, cartes-liens avec petite œuvre superposée. */}
         <section className="section bg-cream" id="cadeaux" aria-labelledby="gifts-title">
@@ -156,82 +266,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             </ul>
           </div>
         </section>
-
-        {/* Dans la boîte : avant/après, étapes, encadré matériaux, puces, lien vers le kit. */}
-        <section className="section bg-sand" id="contenu" aria-labelledby="what-title">
-          <div className="wrap split">
-            <div data-reveal>
-              <BeforeAfter photo="/visuels/astronaute-photo.webp" thread="/visuels/astronaute-fil.webp" />
-              <p className="ba-hint-below">{t("what.slider.hint")}</p>
-            </div>
-            <div>
-              <header className="section-head" data-reveal>
-                <p className="eyebrow">{t("what.eyebrow")}</p>
-                <h2 id="what-title">{t("what.title")}</h2>
-              </header>
-              <ol className="num-steps soft">
-                {WHAT_STEPS.map((s, i) => (
-                  <li key={s} data-reveal style={{ ["--i" as string]: i }}>
-                    <h3>{t(`what.steps.${s}.title`)}</h3>
-                    <p>{t(`what.steps.${s}.text`)}</p>
-                  </li>
-                ))}
-              </ol>
-              <div className="premium" data-reveal>
-                <span className="premium-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3.5" y="3.5" width="17" height="17" rx="1.5" />
-                    <circle cx="12" cy="12" r="5.5" />
-                  </svg>
-                </span>
-                <div>
-                  <h3>{t("what.premiumTitle")}</h3>
-                  <p>{t("what.premiumText")}</p>
-                </div>
-              </div>
-              <ul className="chips" data-reveal>
-                {WHAT_CHIPS.map((c) => (
-                  <li key={c}>{t(`what.chips.${c}`)}</li>
-                ))}
-              </ul>
-              <Link className="btn btn-outline btn-lg" href="/kit">
-                {t("what.more")}
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* L'offrir : 3 étapes et bandeau blanc. */}
-        <section className="section bg-blush" aria-labelledby="howgift-title">
-          <div className="wrap">
-            <header className="section-head center" data-reveal>
-              <p className="eyebrow">{t("howGift.eyebrow")}</p>
-              <h2 id="howgift-title">{t("howGift.title")}</h2>
-              <p>{t("howGift.lead")}</p>
-            </header>
-            <ol className="num-steps soft cols-3">
-              {GIFT_STEPS.map((s, i) => (
-                <li key={s} data-reveal style={{ ["--i" as string]: i }}>
-                  <h3>{t(`howGift.steps.${s}.title`)}</h3>
-                  <p>{t(`howGift.steps.${s}.text`)}</p>
-                </li>
-              ))}
-            </ol>
-            <div className="together" data-reveal>
-              <img src="/visuels/photographe-fil.webp" alt="" width={600} height={600} loading="lazy" />
-              <div>
-                <h3>{t("howGift.togetherTitle")}</h3>
-                <p>{t("howGift.togetherText")}</p>
-                <p>{t("howGift.togetherText2")}</p>
-              </div>
-              <a className="btn btn-primary btn-lg" href="#acheter">
-                {t("howGift.cta")}
-              </a>
-            </div>
-          </div>
-        </section>
-
-        <ProductSection price={price} />
 
         {/* FAQ : intro avec bouton contour, accordéon. */}
         <section className="section bg-sand" id="faq" aria-labelledby="faq-title">

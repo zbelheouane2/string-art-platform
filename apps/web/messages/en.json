@@ -421,5 +421,61 @@
     "stepOf": "Step {n} of {total}",
     "pause": "Pause the slideshow",
     "play": "Play the slideshow"
+  },
+  "home": {
+    "intro": {
+      "eyebrow": "The idea",
+      "title": "What is {brand}?",
+      "gift": {
+        "title": "A gift that means something",
+        "text": "Give a thread portrait made from a photo that matters: a loved face, a pet, a memory. You make it yourself, and that's what makes it unique."
+      },
+      "hobby": {
+        "title": "A calming pastime",
+        "text": "A few quiet hours, one thread, a voice that guides you. No drawing skills needed: just follow the nails as they are called out, one by one."
+      },
+      "imgAlt": "A woman sitting next to her finished thread portrait"
+    },
+    "transform": {
+      "eyebrow": "From photo to thread",
+      "title": "Your photo becomes a thread portrait",
+      "text": "Each line is the thread passing from one nail to another. Our software works out the exact order for your photo; you just follow it.",
+      "cta": "Order the kit"
+    },
+    "box": {
+      "eyebrow": "In the box",
+      "title": "What does the kit contain?",
+      "lead": "Everything you need for one portrait, ready to use.",
+      "items": {
+        "box": {
+          "title": "The box stand",
+          "text": "It folds out to hold the board at an angle while you weave."
+        },
+        "board": {
+          "title": "The board and its 240 nails",
+          "text": "50 × 50 cm, nails already in place and numbered A1 to D60."
+        },
+        "spool": {
+          "title": "Thread and spool holder",
+          "text": "A spool of black thread on a wooden holder you assemble, so the thread unwinds without tangling."
+        },
+        "stand": {
+          "title": "The phone stand",
+          "text": "Made of wood, it keeps the screen in view while your hands work."
+        },
+        "code": {
+          "title": "Your personal code",
+          "text": "It unlocks your portrait on our online generator."
+        },
+        "voice": {
+          "title": "The voice guide",
+          "text": "In French, English or Arabic, it calls out each nail at your pace."
+        }
+      }
+    },
+    "app": {
+      "title": "How does our online generator work?",
+      "scroll": "Scroll to see the screens"
+    }
   }
 }

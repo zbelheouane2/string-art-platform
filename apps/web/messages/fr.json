@@ -421,5 +421,61 @@
     "stepOf": "Étape {n} sur {total}",
     "pause": "Mettre le défilement en pause",
     "play": "Relancer le défilement"
+  },
+  "home": {
+    "intro": {
+      "eyebrow": "Le concept",
+      "title": "Qu'est-ce que {brand} ?",
+      "gift": {
+        "title": "Un cadeau qui a du sens",
+        "text": "Offrez un portrait en fil tiré d'une photo qui compte : un visage aimé, un animal, un souvenir. On le fabrique soi-même, et c'est ce qui le rend unique."
+      },
+      "hobby": {
+        "title": "Un loisir apaisant",
+        "text": "Quelques heures de calme, un fil, une voix qui guide. Pas besoin de savoir dessiner : il suffit de suivre les clous annoncés, un par un."
+      },
+      "imgAlt": "Une femme assise à côté de son portrait en fil terminé"
+    },
+    "transform": {
+      "eyebrow": "De la photo au fil",
+      "title": "Votre photo devient un portrait en fil",
+      "text": "Chaque trait est un passage du fil d'un clou à l'autre. Notre logiciel calcule l'ordre exact pour votre photo ; vous n'avez qu'à le suivre.",
+      "cta": "Commander le kit"
+    },
+    "box": {
+      "eyebrow": "Dans la boîte",
+      "title": "Que contient le kit ?",
+      "lead": "Tout le nécessaire pour un portrait, prêt à l'emploi.",
+      "items": {
+        "box": {
+          "title": "La boîte-support",
+          "text": "Elle se déplie pour tenir la planche inclinée pendant le tissage."
+        },
+        "board": {
+          "title": "La planche et ses 240 clous",
+          "text": "50 × 50 cm, clous déjà posés et numérotés de A1 à D60."
+        },
+        "spool": {
+          "title": "Le fil et son dévidoir",
+          "text": "Une bobine de fil noir sur un dévidoir en bois à monter : le fil se déroule sans s'emmêler."
+        },
+        "stand": {
+          "title": "Le support de téléphone",
+          "text": "En bois, il garde l'écran sous vos yeux pendant que vos mains travaillent."
+        },
+        "code": {
+          "title": "Votre code personnel",
+          "text": "Il active votre portrait sur notre générateur en ligne."
+        },
+        "voice": {
+          "title": "Le guide vocal",
+          "text": "En français, en anglais ou en arabe, il annonce chaque clou à votre rythme."
+        }
+      }
+    },
+    "app": {
+      "title": "Comment fonctionne notre générateur en ligne ?",
+      "scroll": "Faites défiler pour voir les écrans"
+    }
   }
 }
