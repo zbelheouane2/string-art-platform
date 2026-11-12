@@ -8,10 +8,12 @@ import { ProductSection } from "@/components/ProductSection";
 import { Reveal } from "@/components/Reveal";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { StepsCarousel } from "@/components/StepsCarousel";
 import { StickyBar } from "@/components/StickyBar";
 import { WeavingBoard } from "@/components/WeavingBoard";
 import { brand } from "@/config/brand";
 import { kitOffer } from "@/config/catalog";
+import { howSteps } from "@/config/howSteps";
 import { Link } from "@/i18n/navigation";
 import type { DemoPortrait } from "@/lib/board";
 
@@ -109,6 +111,20 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </div>
         </section>
 
+        {/* Comment ça marche : carrousel, grande image + onglets à icônes. */}
+        <section className="section bg-cream" id="comment" aria-labelledby="how-title">
+          <div className="wrap">
+            <header className="section-head center" data-reveal>
+              <p className="eyebrow">{t("kit.how.eyebrow")}</p>
+              <h2 id="how-title">{t("kit.how.title")}</h2>
+              <p>{t("kit.how.lead")}</p>
+            </header>
+            <div data-reveal>
+              <StepsCarousel id="how-home" title={t("kit.how.eyebrow")} steps={howSteps(t)} />
+            </div>
+          </div>
+        </section>
+
         {/* Idées cadeaux : en-tête scindé, cartes-liens avec petite œuvre superposée. */}
         <section className="section bg-cream" id="cadeaux" aria-labelledby="gifts-title">
           <div className="wrap">
@@ -142,7 +158,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </section>
 
         {/* Dans la boîte : avant/après, étapes, encadré matériaux, puces, lien vers le kit. */}
-        <section className="section bg-sand" id="comment" aria-labelledby="what-title">
+        <section className="section bg-sand" id="contenu" aria-labelledby="what-title">
           <div className="wrap split">
             <div data-reveal>
               <BeforeAfter photo="/visuels/astronaute-photo.webp" thread="/visuels/astronaute-fil.webp" />

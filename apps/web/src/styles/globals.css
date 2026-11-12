@@ -2118,3 +2118,238 @@ h1 em {
     grid-template-columns: 1fr;
   }
 }
+
+/* ---------- Carrousel « Comment ça marche » ---------- */
+.steps {
+  --steps-delay: 5.5s;
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 60rem) {
+  .steps {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: 3.5rem;
+    align-items: center;
+  }
+}
+
+.steps-stage {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: var(--color-surface-beige);
+  box-shadow: var(--shadow-card);
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.steps-slide {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transform: scale(1.04);
+  transition: opacity 600ms ease-in-out, transform 900ms ease-out;
+}
+
+.steps-slide[data-active] {
+  opacity: 1;
+  transform: none;
+}
+
+.steps-slide img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.steps-ring {
+  inline-size: 62%;
+  block-size: auto;
+  color: var(--color-text);
+}
+
+.steps-count {
+  position: absolute;
+  inset-block-start: 1rem;
+  inset-inline-start: 1rem;
+  background: rgb(255 255 255 / 0.9);
+  border-radius: var(--radius-pill);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.steps-toggle {
+  position: absolute;
+  inset-block-end: 1rem;
+  inset-inline-end: 1rem;
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.92);
+  color: var(--color-text);
+  cursor: pointer;
+  box-shadow: var(--shadow-pop);
+}
+
+.steps-toggle svg {
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+}
+
+.steps-tabs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.steps-tab {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  justify-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.1rem 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  font: inherit;
+  cursor: pointer;
+  text-align: center;
+}
+
+.steps-icon {
+  display: grid;
+  place-items: center;
+  inline-size: 3.6rem;
+  block-size: 3.6rem;
+  border-radius: 50%;
+  border: 1px solid var(--color-border-strong);
+  background: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color 300ms ease-in-out, color 300ms ease-in-out, border-color 300ms ease-in-out, transform 300ms ease-in-out;
+}
+
+.steps-tab:hover .steps-icon {
+  border-color: var(--color-accent);
+}
+
+.steps-tab[aria-selected="true"] {
+  color: var(--color-text);
+}
+
+.steps-tab[aria-selected="true"] .steps-icon {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-inverse);
+  transform: translateY(-3px);
+}
+
+.steps-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.steps-bar {
+  display: block;
+  inline-size: 70%;
+  block-size: 3px;
+  border-radius: 3px;
+  background: var(--color-border);
+  overflow: hidden;
+}
+
+.steps-fill {
+  display: block;
+  block-size: 100%;
+  inline-size: 100%;
+  background: var(--color-accent);
+  transform-origin: left;
+  animation: steps-progress var(--steps-delay) linear forwards;
+}
+
+[dir="rtl"] .steps-fill {
+  transform-origin: right;
+}
+
+@keyframes steps-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.steps[data-paused] .steps-fill,
+.steps:hover .steps-fill,
+.steps:focus-within .steps-fill {
+  animation-play-state: paused;
+}
+
+.steps-panel {
+  margin-block-start: 1.75rem;
+  min-block-size: 9rem;
+}
+
+.steps-num {
+  color: var(--color-accent);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.steps-panel h3 {
+  margin-block: 0.4rem 0.5rem;
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 400;
+  line-height: 1.15;
+  animation: steps-in 500ms ease-out both;
+}
+
+.steps-panel p:not(.steps-num) {
+  color: var(--color-text-muted);
+  font-size: var(--text-lead);
+  animation: steps-in 500ms 80ms ease-out both;
+}
+
+@keyframes steps-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@media (min-width: 60rem) {
+  .steps-label {
+    font-size: 0.85rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .steps-slide,
+  .steps-icon {
+    transition: none;
+  }
+  .steps-panel h3,
+  .steps-panel p:not(.steps-num) {
+    animation: none;
+  }
+  .steps-fill {
+    animation: none;
+    transform: none;
+  }
+  .steps-toggle {
+    display: none;
+  }
+}

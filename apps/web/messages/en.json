@@ -409,5 +409,12 @@
       }
     },
     "faqTitle": "Questions about the kit"
+  },
+  "carousel": {
+    "roledescription": "carousel",
+    "tablist": "Steps",
+    "stepOf": "Step {n} of {total}",
+    "pause": "Pause the slideshow",
+    "play": "Play the slideshow"
   }
 }

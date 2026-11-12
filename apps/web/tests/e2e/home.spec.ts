@@ -99,13 +99,47 @@ for (const [locale, dir] of [["fr", "ltr"], ["en", "ltr"], ["ar", "rtl"]] as con
     await page.goto(`/${locale}/kit`);
     await expect(page.locator("html")).toHaveAttribute("dir", dir);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(page.locator(".how-grid > li")).toHaveCount(5);
+    await expect(page.locator("#comment [role=tab]")).toHaveCount(5);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow).toBeLessThanOrEqual(0);
     const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
     expect(results.violations.map((v) => `${v.id}: ${v.nodes.length}`)).toEqual([]);
   });
 }
+
+test("le carrousel « Comment ça marche » : onglets, clavier, avance seul, pause", async ({ page }) => {
+  await page.goto("/fr");
+  const how = page.locator("#comment");
+  const tabs = how.getByRole("tab");
+  await expect(tabs).toHaveCount(5);
+  await how.scrollIntoViewIfNeeded();
+  await page.mouse.move(0, 0);
+  await expect(tabs.nth(0)).toHaveAttribute("aria-selected", "true");
+  // Avance seul après environ 5,5 s.
+  await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true", { timeout: 9000 });
+  await tabs.nth(3).click();
+  await expect(how.getByRole("tabpanel")).toContainText("Suivez la voix");
+  await expect(how.locator(".steps-slide").nth(3)).toHaveAttribute("data-active", "true");
+  await page.keyboard.press("ArrowRight");
+  await expect(tabs.nth(4)).toBeFocused();
+  await expect(how.getByRole("tabpanel")).toContainText("Accrochez-le");
+  await page.keyboard.press("ArrowRight");
+  await expect(tabs.nth(0)).toHaveAttribute("aria-selected", "true");
+  await how.getByRole("button", { name: "Mettre le défilement en pause" }).click();
+  await expect(how.locator(".steps")).toHaveAttribute("data-paused", "true");
+  await expect(how.getByRole("button", { name: "Relancer le défilement" })).toHaveAttribute("aria-pressed", "true");
+});
+
+test("le carrousel ne défile pas seul avec « réduire les animations »", async ({ browser }) => {
+  const context = await browser.newContext({ reducedMotion: "reduce" });
+  const page = await context.newPage();
+  await page.goto("/fr");
+  const how = page.locator("#comment");
+  await how.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(7000);
+  await expect(how.getByRole("tab").nth(0)).toHaveAttribute("aria-selected", "true");
+  await context.close();
+});
 
 test("la galerie produit glisse avec les flèches et les vignettes", async ({ page }) => {
   await page.goto("/fr/kit");

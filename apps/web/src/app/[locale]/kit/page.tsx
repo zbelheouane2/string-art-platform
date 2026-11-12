@@ -9,10 +9,12 @@ import { ProductSection } from "@/components/ProductSection";
 import { Reveal } from "@/components/Reveal";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { StepsCarousel } from "@/components/StepsCarousel";
 import { StickyBar } from "@/components/StickyBar";
 import { WeavingBoard } from "@/components/WeavingBoard";
 import { brand } from "@/config/brand";
 import { kitOffer } from "@/config/catalog";
+import { howSteps } from "@/config/howSteps";
 import { Link } from "@/i18n/navigation";
 import type { DemoPortrait } from "@/lib/board";
 
@@ -21,13 +23,6 @@ const EXAMPLES = [
   { key: "portrait", name: "astronaute" },
   { key: "pet", name: "chat" },
   { key: "group", name: "photographe" },
-] as const;
-const HOW = [
-  { key: "open", img: null },
-  { key: "code", img: "/visuels/astronaute-photo.webp" },
-  { key: "photo", img: "/visuels/chat-photo.webp" },
-  { key: "thread", img: "/visuels/chat-fil.webp" },
-  { key: "hang", img: "/visuels/photographe-fil.webp" },
 ] as const;
 const APP = [
   { key: "site", img: null },
@@ -128,33 +123,17 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
           </div>
         </section>
 
-        {/* Comment ça marche : 5 étapes illustrées. */}
+        {/* Comment ça marche : carrousel, grande image + onglets à icônes. */}
         <section className="section bg-sand" id="comment" aria-labelledby="kit-how-title">
           <div className="wrap">
-            <header className="section-head split-head" data-reveal>
-              <div>
-                <p className="eyebrow">{t("kit.how.eyebrow")}</p>
-                <h2 id="kit-how-title">{t("kit.how.title")}</h2>
-              </div>
+            <header className="section-head center" data-reveal>
+              <p className="eyebrow">{t("kit.how.eyebrow")}</p>
+              <h2 id="kit-how-title">{t("kit.how.title")}</h2>
               <p>{t("kit.how.lead")}</p>
             </header>
-            <ol className="how-grid">
-              {HOW.map((s, i) => (
-                <li key={s.key} data-reveal style={{ ["--i" as string]: i }}>
-                  <div className="how-media">
-                    {s.img ? <img src={s.img} alt="" width={400} height={500} loading="lazy" /> : <NailRing />}
-                    <span className="gift-placeholder">{t("gifts.placeholder")}</span>
-                  </div>
-                  <div className="how-title">
-                    <span className="num-badge" aria-hidden="true">
-                      {i + 1}
-                    </span>
-                    <h3>{t(`kit.how.steps.${s.key}.title`)}</h3>
-                  </div>
-                  <p>{t(`kit.how.steps.${s.key}.text`)}</p>
-                </li>
-              ))}
-            </ol>
+            <div data-reveal>
+              <StepsCarousel id="how-kit" title={t("kit.how.eyebrow")} steps={howSteps(t)} />
+            </div>
           </div>
         </section>
 

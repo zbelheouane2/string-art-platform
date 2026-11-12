@@ -409,5 +409,12 @@
       }
     },
     "faqTitle": "أسئلة عن العلبة"
+  },
+  "carousel": {
+    "roledescription": "عرض متتابع",
+    "tablist": "الخطوات",
+    "stepOf": "الخطوة {n} من {total}",
+    "pause": "إيقاف العرض مؤقتًا",
+    "play": "تشغيل العرض"
   }
 }

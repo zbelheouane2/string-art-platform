@@ -58,6 +58,49 @@ const runtime = (locale) => `
     r.value = 50; upd(); r.addEventListener("input", upd);
   });
 
+  // Carrousel « Comment ça marche »
+  D.querySelectorAll("[data-steps]").forEach((root) => {
+    const tabs = [...root.querySelectorAll("[data-step-tab]")], slides = [...root.querySelectorAll("[data-step-slide]")];
+    const panel = root.querySelector("[data-step-panel]"), count = root.querySelector(".steps-count"), toggle = root.querySelector("[data-steps-toggle]");
+    const rtl = () => !!root.closest("[dir=rtl]");
+    const n = tabs.length; let i = 0, user = false, off = true;
+    const ICON_PAUSE = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M9 6v12M15 6v12"/></svg>';
+    const ICON_PLAY = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>';
+    const sync = () => { if (user || off) root.dataset.paused = "true"; else delete root.dataset.paused; };
+    const go = (k, focus) => {
+      i = (k + n) % n;
+      tabs.forEach((t, j) => {
+        const on = j === i; t.setAttribute("aria-selected", on); t.tabIndex = on ? 0 : -1;
+        const bar = t.querySelector(".steps-bar"); bar.innerHTML = "";
+        if (on) { const f = D.createElement("span"); f.className = "steps-fill"; f.addEventListener("animationend", () => go(i + 1)); bar.appendChild(f); }
+      });
+      slides.forEach((s, j) => { if (j === i) { s.dataset.active = "true"; s.removeAttribute("aria-hidden"); } else { delete s.dataset.active; s.setAttribute("aria-hidden", "true"); } });
+      if (count) count.textContent = (i + 1) + " / " + n;
+      const t = tabs[i];
+      panel.setAttribute("aria-labelledby", t.id);
+      panel.querySelector(".steps-num").textContent = t.dataset.num;
+      const h = panel.querySelector("h3"), p = panel.querySelector("p:not(.steps-num)");
+      const h2 = h.cloneNode(); h2.textContent = t.dataset.title; h.replaceWith(h2);
+      const p2 = p.cloneNode(); p2.textContent = t.dataset.text; p.replaceWith(p2);
+      if (focus) t.focus();
+    };
+    tabs.forEach((t, j) => t.addEventListener("click", () => go(j)));
+    root.querySelector("[role=tablist]").addEventListener("keydown", (e) => {
+      const fwd = rtl() ? "ArrowLeft" : "ArrowRight", back = rtl() ? "ArrowRight" : "ArrowLeft";
+      if (e.key === fwd) go(i + 1, true); else if (e.key === back) go(i - 1, true); else if (e.key === "Home") go(0, true); else if (e.key === "End") go(n - 1, true); else return;
+      e.preventDefault();
+    });
+    if (toggle) toggle.addEventListener("click", () => {
+      user = !user; sync(); toggle.setAttribute("aria-pressed", user);
+      toggle.setAttribute("aria-label", user ? toggle.dataset.play : toggle.dataset.pause); toggle.innerHTML = user ? ICON_PLAY : ICON_PAUSE;
+    });
+    const stage = root.querySelector(".steps-stage"); let x0 = null;
+    stage.addEventListener("pointerdown", (e) => (x0 = e.clientX));
+    stage.addEventListener("pointerup", (e) => { if (x0 === null) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) < 40) return; go(i + ((rtl() ? dx > 0 : dx < 0) ? 1 : -1)); });
+    new IntersectionObserver(([e]) => { off = !e.isIntersecting; sync(); }, { threshold: 0.35 }).observe(root);
+    go(0);
+  });
+
   // Galerie qui glisse
   D.querySelectorAll(".gallery").forEach((g) => {
     const list = g.querySelector(".gallery-track"), slides = [...list.children], count = g.querySelector(".gallery-count"), thumbs = [...g.querySelectorAll(".gallery-thumbs button")];

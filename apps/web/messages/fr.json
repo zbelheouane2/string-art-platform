@@ -409,5 +409,12 @@
       }
     },
     "faqTitle": "Questions sur le kit"
+  },
+  "carousel": {
+    "roledescription": "carrousel",
+    "tablist": "Étapes",
+    "stepOf": "Étape {n} sur {total}",
+    "pause": "Mettre le défilement en pause",
+    "play": "Relancer le défilement"
   }
 }
