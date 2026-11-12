@@ -2,7 +2,7 @@
 // Prérequis : le site tourne sur http://localhost:3000 (npm run build && npm start dans apps/web).
 // Usage : node scripts/export-demo.mjs <dossier-de-sortie>
 import { createRequire } from "node:module";
-import { cpSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 const require = createRequire(import.meta.url);
@@ -176,8 +176,27 @@ for (const [url, file, locale] of PAGES) {
     .replace("</head>", `<style>${style}</style></head>`)
     .replace(/<body([^>]*)>/, `<body$1>${banner}`)
     .replace("</body>", `<script>${runtime(locale)}</script></body>`);
+  // Images et polices intégrées dans la page : elle s'affiche même ouverte seule
+  // (aperçu d'un zip, téléphone, fichier copié sans ses dossiers).
+  const MIME = { webp: "image/webp", png: "image/png", jpg: "image/jpeg", svg: "image/svg+xml", woff2: "font/woff2", woff: "font/woff" };
+  const cache = new Map();
+  const inline = (rel) => {
+    if (!cache.has(rel)) {
+      const f = path.join(out, rel);
+      cache.set(rel, existsSync(f) ? `data:${MIME[rel.split(".").pop()] ?? "application/octet-stream"};base64,${readFileSync(f).toString("base64")}` : rel);
+    }
+    return cache.get(rel);
+  };
+  // Chaque image n'est stockée qu'une fois (table en tête de page) puis posée sur
+  // toutes les balises qui l'utilisent ; les chemins relatifs restent en secours.
+  const used = [...new Set([...page.matchAll(/src="(visuels\/[^"]+)"/g)].map((m) => m[1]))];
+  const table = Object.fromEntries(used.map((rel) => [rel, inline(rel)]));
+  const setImgs = `<script>(()=>{const T=${JSON.stringify(table)};document.querySelectorAll("img").forEach((i)=>{const k=i.getAttribute("src");if(T[k])i.src=T[k];});})();</script>`;
+  page = page
+    .replace(/url\((assets\/media\/[^)]+)\)/g, (_, rel) => `url(${inline(rel)})`)
+    .replace("</body>", `${setImgs}</body>`);
   writeFileSync(path.join(out, file), page);
   console.log(file, Math.round(page.length / 1024) + " Ko");
 }
 await b.close();
-writeFileSync(path.join(out, "LISEZ-MOI.txt"), "Démo hors ligne du site.\nOuvrez index.html (français), ar.html (arabe) ou en.html (anglais) par double-clic.\nLe dossier visuels/ et assets/ doit rester à côté des fichiers HTML.\nLes polices et images sont incluses ; aucune connexion n'est nécessaire.\n");
+writeFileSync(path.join(out, "LISEZ-MOI.txt"), "Démo hors ligne du site.\nOuvrez index.html (français), ar.html (arabe) ou en.html (anglais) par double-clic.\nChaque page contient ses images et ses polices : elle s'affiche même ouverte seule.\nLes polices et images sont incluses ; aucune connexion n'est nécessaire.\n");
