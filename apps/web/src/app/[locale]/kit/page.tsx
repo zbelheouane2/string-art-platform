@@ -132,7 +132,7 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
               <p>{t("kit.how.lead")}</p>
             </header>
             <div data-reveal>
-              <StepsCarousel id="how-kit" title={t("kit.how.eyebrow")} steps={howSteps(t)} />
+              <StepsCarousel id="how-kit" title={t("kit.how.eyebrow")} steps={howSteps(t, locale)} />
             </div>
           </div>
         </section>

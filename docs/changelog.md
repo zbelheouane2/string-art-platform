@@ -20,3 +20,4 @@
 - Démo HTML : le carrousel fonctionne aussi hors ligne.
 - Tests : 2 nouveaux tests e2e (onglets, clavier, défilement auto, pause ; mouvement réduit).
 - Photos fournies par Zaki (générées par IA) pour les étapes 1, 4 et 5 : `public/visuels/etapes/` (ouvrir, preparer, accrocher), recadrées en carré 1000 px. Marquage du couvercle de la boîte et gravure du support de téléphone (ressemblant à une marque tierce) effacés par flou local.
+- Étape « Préparez le kit » ajoutée (6 étapes) avec la photo des mains qui assemblent. Étapes code, photo et guide vocal : maquettes d'écrans maison par langue (`scripts/make-step-mockups.cjs`, sortie `public/visuels/etapes/{code,photo,voice}-{fr,en,ar}.webp`). Aucune image Let's String utilisée.

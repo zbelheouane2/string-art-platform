@@ -95,3 +95,12 @@ export const FrameIcon = (p: SVGProps<SVGSVGElement>) => (
     <path d="M9.4 13.8l5.2 2.9M9.4 16.7l5.2-2.9" />
   </svg>
 );
+
+export const SpoolIcon = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...step} {...p}>
+    <path d="M6.5 4.5h11M6.5 19.5h11" />
+    <path d="M8.5 4.5v15M15.5 4.5v15" />
+    <path d="M8.5 8.5l7-1.5M8.5 12l7-1.5M8.5 15.5l7-1.5" />
+    <path d="M3.5 21.5h17" />
+  </svg>
+);

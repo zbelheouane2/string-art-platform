@@ -2207,8 +2207,9 @@ h1 em {
 
 .steps-tabs {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0.4rem;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 0.3rem;
 }
 
 .steps-tab {
@@ -2228,8 +2229,8 @@ h1 em {
 .steps-icon {
   display: grid;
   place-items: center;
-  inline-size: 3.6rem;
-  block-size: 3.6rem;
+  inline-size: 3rem;
+  block-size: 3rem;
   border-radius: 50%;
   border: 1px solid var(--color-border-strong);
   background: var(--color-bg);
@@ -2330,9 +2331,26 @@ h1 em {
   }
 }
 
-@media (min-width: 60rem) {
+.steps-icon svg {
+  inline-size: 1.6rem;
+  block-size: 1.6rem;
+}
+
+.steps-label {
+  font-size: 0.72rem;
+}
+
+@media (min-width: 30rem) {
+  .steps-icon {
+    inline-size: 3.6rem;
+    block-size: 3.6rem;
+  }
+  .steps-icon svg {
+    inline-size: 30px;
+    block-size: 30px;
+  }
   .steps-label {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
 }
 

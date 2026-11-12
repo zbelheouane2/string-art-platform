@@ -283,11 +283,15 @@
     "how": {
       "eyebrow": "How it works",
       "title": "From the box to the wall",
-      "lead": "Five steps, no artistic skill. You can pause at any time and pick up later.",
+      "lead": "Six steps, no artistic skill. You can pause at any time and pick up later.",
       "steps": {
         "open": {
           "title": "Open the box",
           "text": "The board, the nails already set, the thread and your personal code."
+        },
+        "prepare": {
+          "title": "Set up the kit",
+          "text": "Fold the box into a stand, assemble the wooden spool holder and put your phone on its stand."
         },
         "code": {
           "title": "Enter your code",

@@ -99,7 +99,7 @@ for (const [locale, dir] of [["fr", "ltr"], ["en", "ltr"], ["ar", "rtl"]] as con
     await page.goto(`/${locale}/kit`);
     await expect(page.locator("html")).toHaveAttribute("dir", dir);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(page.locator("#comment [role=tab]")).toHaveCount(5);
+    await expect(page.locator("#comment [role=tab]")).toHaveCount(6);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow).toBeLessThanOrEqual(0);
     const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
@@ -111,17 +111,17 @@ test("le carrousel « Comment ça marche » : onglets, clavier, avance seul, pau
   await page.goto("/fr");
   const how = page.locator("#comment");
   const tabs = how.getByRole("tab");
-  await expect(tabs).toHaveCount(5);
+  await expect(tabs).toHaveCount(6);
   await how.scrollIntoViewIfNeeded();
   await page.mouse.move(0, 0);
   await expect(tabs.nth(0)).toHaveAttribute("aria-selected", "true");
   // Avance seul après environ 5,5 s.
   await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true", { timeout: 9000 });
-  await tabs.nth(3).click();
+  await tabs.nth(4).click();
   await expect(how.getByRole("tabpanel")).toContainText("Suivez la voix");
-  await expect(how.locator(".steps-slide").nth(3)).toHaveAttribute("data-active", "true");
+  await expect(how.locator(".steps-slide").nth(4)).toHaveAttribute("data-active", "true");
   await page.keyboard.press("ArrowRight");
-  await expect(tabs.nth(4)).toBeFocused();
+  await expect(tabs.nth(5)).toBeFocused();
   await expect(how.getByRole("tabpanel")).toContainText("Accrochez-le");
   await page.keyboard.press("ArrowRight");
   await expect(tabs.nth(0)).toHaveAttribute("aria-selected", "true");

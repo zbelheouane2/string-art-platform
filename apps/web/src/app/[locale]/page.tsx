@@ -120,7 +120,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               <p>{t("kit.how.lead")}</p>
             </header>
             <div data-reveal>
-              <StepsCarousel id="how-home" title={t("kit.how.eyebrow")} steps={howSteps(t)} />
+              <StepsCarousel id="how-home" title={t("kit.how.eyebrow")} steps={howSteps(t, locale)} />
             </div>
           </div>
         </section>

@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { BoxOpenIcon, FrameIcon, PauseIcon, PhoneCodeIcon, PhotoIcon, PlayIcon, VoiceIcon } from "@/components/Icons";
+import { BoxOpenIcon, FrameIcon, PauseIcon, PhoneCodeIcon, PhotoIcon, PlayIcon, SpoolIcon, VoiceIcon } from "@/components/Icons";
 import { NailRing } from "@/components/NailRing";
 
-const ICONS = { box: BoxOpenIcon, code: PhoneCodeIcon, photo: PhotoIcon, voice: VoiceIcon, frame: FrameIcon } as const;
+const ICONS = { box: BoxOpenIcon, code: PhoneCodeIcon, photo: PhotoIcon, voice: VoiceIcon, frame: FrameIcon, spool: SpoolIcon } as const;
 
 export interface Step {
   key: string;
