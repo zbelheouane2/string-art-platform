@@ -15,7 +15,7 @@ export function Gallery({ images }: { images: GalleryImage[] }) {
   return (
     <section className="gallery" aria-label={t("gallery")} aria-roledescription="carousel">
       <div className="gallery-main">
-        <img src={images[i].src} alt={images[i].alt} width={900} height={900} />
+        <img key={images[i].src} src={images[i].src} alt={images[i].alt} width={900} height={900} />
         <span className="gallery-count" dir="ltr">{t("galleryCount", { current: i + 1, total: images.length })}</span>
         <button type="button" className="gallery-nav gallery-prev" onClick={() => go(-1)} aria-label={t("galleryPrev")}>
           <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>

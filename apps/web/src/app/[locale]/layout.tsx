@@ -46,8 +46,10 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
   const fonts = [dmSerif, dmSans, naskh, alexandria].map((f) => f.variable).join(" ");
   return (
-    <html lang={locale} dir={direction(locale)} className={fonts}>
+    <html lang={locale} dir={direction(locale)} className={fonts} suppressHydrationWarning>
       <body>
+        {/* Active les animations d'apparition seulement si JavaScript tourne (évite le contenu invisible). */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
     </html>

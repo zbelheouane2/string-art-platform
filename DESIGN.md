@@ -36,6 +36,13 @@ Source unique : `replica/design/tokens.json` (valeurs mesurées sur la boutique 
 
 Rendus réels du moteur (astronaute, chat, photographe) et motif de fil décoratif, marqués « Visuel provisoire ». À remplacer par les photos du kit.
 
+## Mouvement
+
+- Apparition douce au défilement des titres, cartes et étapes (`[data-reveal]`, composant `Reveal`), en cascade de 110 ms.
+- Bandeau de réassurance qui défile en continu (pause au survol), sens inversé en arabe.
+- Survols : zoom léger des images cadeaux, boutons qui montent de 2 px, médaillon du héros qui flotte.
+- Sans JavaScript ou avec « réduire les animations » : tout est visible et immobile, le bandeau devient une liste fixe.
+
 ## Règles
 
 - Propriétés CSS logiques partout : la page se retourne en arabe ; la planche et le curseur photo/fil ne se retournent pas, les repères de clous restent écrits de gauche à droite.

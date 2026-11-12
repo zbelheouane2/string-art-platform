@@ -1240,3 +1240,163 @@ h1 em {
 .ds-static {
   position: static;
 }
+
+/* ---------- Mouvement ---------- */
+
+/* Bandeau de réassurance qui défile (comme la référence). */
+.marquee {
+  display: flex;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  flex: none;
+  gap: 3rem;
+  padding-block: 1.1rem;
+  padding-inline-end: 3rem;
+  font-size: var(--step--1);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.marquee-track li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.marquee-track svg {
+  color: var(--accent);
+  flex: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .marquee-track {
+    animation: marquee 32s linear infinite;
+  }
+
+  [dir="rtl"] .marquee-track {
+    animation-name: marquee-rtl;
+  }
+
+  .marquee:hover .marquee-track,
+  .marquee:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marquee-rtl {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    justify-content: center;
+    mask-image: none;
+  }
+
+  .marquee-track {
+    flex-wrap: wrap;
+    justify-content: center;
+    white-space: normal;
+    gap: 0.75rem 2rem;
+    padding-inline: var(--gutter);
+  }
+
+  .marquee-track[aria-hidden="true"],
+  .marquee-track li[aria-hidden="true"] {
+    display: none;
+  }
+}
+
+/* Apparitions au défilement : seulement avec JavaScript et sans « réduire les animations ». */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(1.5rem);
+    transition:
+      opacity 0.7s var(--motion-ease),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--i, 0) * 110ms);
+  }
+
+  .js [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Survols */
+  .gift-img img {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .gift-card:hover .gift-img img {
+    transform: scale(1.05);
+  }
+
+  .gift-card .ring {
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .gift-card:hover .ring {
+    transform: rotate(30deg);
+  }
+
+  .btn-primary:hover,
+  .btn-outline:hover {
+    transform: translateY(-2px);
+  }
+
+  .btn:active {
+    transform: translateY(0);
+  }
+
+  .gallery-nav {
+    transition: transform var(--motion-fast) var(--motion-ease);
+  }
+
+  .gallery-nav:hover {
+    transform: translateY(-50%) scale(1.08);
+  }
+
+  .gallery-main img {
+    animation: fade-in 0.4s var(--motion-ease);
+  }
+
+  .medallion {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .faq-list details[open] p {
+    animation: fade-down 0.35s var(--motion-ease);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-down {
+  from {
+    opacity: 0;
+    transform: translateY(-0.4rem);
+  }
+}
+
+@keyframes float {
+  50% {
+    transform: translateY(-8px);
+  }
+}

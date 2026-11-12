@@ -74,3 +74,20 @@ test("la page interne du design est masquée par défaut", async ({ request }) =
   const res = await request.get("/fr/design");
   expect(res.status()).toBe(404);
 });
+
+test("les blocs apparaissent au défilement", async ({ page }) => {
+  await page.goto("/fr");
+  const card = page.locator(".gift-card").first();
+  await card.scrollIntoViewIfNeeded();
+  await expect(card).toHaveClass(/is-visible/);
+  await expect(card).toHaveCSS("opacity", "1");
+});
+
+test("avec « réduire les animations », tout est visible sans défiler", async ({ browser }) => {
+  const context = await browser.newContext({ reducedMotion: "reduce" });
+  const page = await context.newPage();
+  await page.goto("/fr");
+  await expect(page.locator("#faq .faq-list")).toHaveCSS("opacity", "1");
+  await expect(page.locator(".marquee-track").first()).toHaveCSS("animation-name", "none");
+  await context.close();
+});

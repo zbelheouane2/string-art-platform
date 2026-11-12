@@ -4,6 +4,7 @@ import { getFormatter, getTranslations, setRequestLocale } from "next-intl/serve
 import { BeforeAfter } from "@/components/BeforeAfter";
 import { Gallery } from "@/components/Gallery";
 import { PlusIcon } from "@/components/Icons";
+import { Reveal } from "@/components/Reveal";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { StickyBar } from "@/components/StickyBar";
@@ -74,7 +75,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         {/* Héros : visuel arrondi avec badge et médaillon, puis le texte. */}
         <section className="hero" aria-labelledby="hero-title">
           <div className="wrap hero-grid">
-            <div className="hero-media">
+            <div className="hero-media" data-reveal>
               <span className="badge">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <rect x="3" y="8" width="18" height="13" rx="1.5" />
@@ -87,7 +88,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 <img src="/visuels/astronaute-photo.webp" alt={t("hero.medallion")} width={300} height={300} />
               </figure>
             </div>
-            <div className="hero-copy">
+            <div className="hero-copy" data-reveal style={{ ["--i" as string]: 1 }}>
               <p className="eyebrow">{t("hero.eyebrow")}</p>
               <h1 id="hero-title">
                 {t("hero.titleStart")} <em>{t("hero.titleAccent")}</em>
@@ -106,28 +107,32 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </section>
 
         <section className="trust" aria-label={t("trust.cod")}>
-          <ul className="wrap trust-list">
-            {TRUST.map((k) => (
-              <li key={k}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M5 12.5l4.5 4.5L19 7.5" />
-                </svg>
-                {t(`trust.${k}`)}
-              </li>
+          <div className="marquee">
+            {[0, 1].map((copy) => (
+              <ul key={copy} className="marquee-track" aria-hidden={copy === 1 ? true : undefined}>
+                {[...TRUST, ...TRUST].map((k, i) => (
+                  <li key={`${k}-${i}`} aria-hidden={i >= TRUST.length ? true : undefined}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M5 12.5l4.5 4.5L19 7.5" />
+                    </svg>
+                    {t(`trust.${k}`)}
+                  </li>
+                ))}
+              </ul>
             ))}
-          </ul>
+          </div>
         </section>
 
         <section className="section bg-cream" id="cadeaux" aria-labelledby="gifts-title">
           <div className="wrap">
-            <header className="section-head center">
+            <header className="section-head center" data-reveal>
               <p className="eyebrow">{t("gifts.eyebrow")}</p>
               <h2 id="gifts-title">{t("gifts.title")}</h2>
               <p>{t("gifts.lead")}</p>
             </header>
             <ul className="gift-grid">
-              {GIFTS.map((g) => (
-                <li key={g.key} className="gift-card">
+              {GIFTS.map((g, i) => (
+                <li key={g.key} className="gift-card" data-reveal style={{ ["--i" as string]: i % 3 }}>
                   <div className="gift-img">
                     {g.img ? <img src={g.img} alt="" width={600} height={600} loading="lazy" /> : <NailRing />}
                     <span className="gift-placeholder">{t("gifts.placeholder")}</span>
@@ -142,15 +147,17 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
         <section className="section bg-sand" id="comment" aria-labelledby="what-title">
           <div className="wrap split">
-            <BeforeAfter photo="/visuels/astronaute-photo.webp" thread="/visuels/astronaute-fil.webp" />
+            <div data-reveal>
+              <BeforeAfter photo="/visuels/astronaute-photo.webp" thread="/visuels/astronaute-fil.webp" />
+            </div>
             <div>
-              <header className="section-head">
+              <header className="section-head" data-reveal>
                 <p className="eyebrow">{t("what.eyebrow")}</p>
                 <h2 id="what-title">{t("what.title")}</h2>
               </header>
               <ol className="num-steps">
-                {WHAT_STEPS.map((s) => (
-                  <li key={s}>
+                {WHAT_STEPS.map((s, i) => (
+                  <li key={s} data-reveal style={{ ["--i" as string]: i }}>
                     <h3>{t(`what.steps.${s}.title`)}</h3>
                     <p>{t(`what.steps.${s}.text`)}</p>
                   </li>
@@ -162,20 +169,20 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
         <section className="section bg-blush" aria-labelledby="howgift-title">
           <div className="wrap">
-            <header className="section-head center">
+            <header className="section-head center" data-reveal>
               <p className="eyebrow">{t("howGift.eyebrow")}</p>
               <h2 id="howgift-title">{t("howGift.title")}</h2>
               <p>{t("howGift.lead")}</p>
             </header>
             <ol className="num-steps cols-3">
-              {GIFT_STEPS.map((s) => (
-                <li key={s}>
+              {GIFT_STEPS.map((s, i) => (
+                <li key={s} data-reveal style={{ ["--i" as string]: i }}>
                   <h3>{t(`howGift.steps.${s}.title`)}</h3>
                   <p>{t(`howGift.steps.${s}.text`)}</p>
                 </li>
               ))}
             </ol>
-            <div className="together">
+            <div className="together" data-reveal>
               <img src="/visuels/photographe-fil.webp" alt="" width={600} height={600} loading="lazy" />
               <div>
                 <h3>{t("howGift.togetherTitle")}</h3>
@@ -187,15 +194,17 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
         <section className="section bg-cream" id="acheter" aria-labelledby="shop-title">
           <div className="wrap shop-grid">
-            <Gallery
+            <div data-reveal>
+              <Gallery
               images={[
                 { src: "/visuels/astronaute-fil.webp", alt: t("gifts.placeholder") },
                 { src: "/visuels/astronaute-photo.webp", alt: t("gifts.placeholder") },
                 { src: "/visuels/chat-fil.webp", alt: t("gifts.placeholder") },
                 { src: "/visuels/photographe-fil.webp", alt: t("gifts.placeholder") },
               ]}
-            />
-            <div className="shop-info">
+              />
+            </div>
+            <div className="shop-info" data-reveal style={{ ["--i" as string]: 1 }}>
               <h2 id="shop-title">{t("shop.title")}</h2>
               <p className="shop-lead">{t("shop.lead")}</p>
               <p className="shop-price">{price ?? t("shop.priceSoon")}</p>
@@ -215,12 +224,12 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
         <section className="section bg-sand" id="faq" aria-labelledby="faq-title">
           <div className="wrap faq-grid">
-            <header className="section-head">
+            <header className="section-head" data-reveal>
               <p className="eyebrow">{t("faq.eyebrow")}</p>
               <h2 id="faq-title">{t("faq.title")}</h2>
               <p>{t("faq.lead")}</p>
             </header>
-            <div className="faq-list">
+            <div className="faq-list" data-reveal style={{ ["--i" as string]: 1 }}>
               {FAQ.map((q) => (
                 <details key={q}>
                   <summary>
@@ -235,7 +244,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </section>
 
         <section className="section bg-cream final" aria-labelledby="final-title">
-          <div className="wrap final-inner">
+          <div className="wrap final-inner" data-reveal>
             <img src="/visuels/astronaute-fil.webp" alt="" width={240} height={240} loading="lazy" className="final-img" />
             <h2 id="final-title">{t("final.title")}</h2>
             <p>{t("final.text")}</p>
@@ -247,6 +256,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       </main>
       <SiteFooter />
       <StickyBar watchId="hero-actions" price={price} />
+      <Reveal />
     </>
   );
 }
