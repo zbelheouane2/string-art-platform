@@ -16,6 +16,7 @@ export async function ProductSection({ price, headingLevel = 2 }: { price: strin
           <Gallery
             images={[
               { src: "/visuels/astronaute-fil.webp", alt: t("galleryAlt.thread") },
+              { src: "/visuels/devidoir.webp", alt: t("galleryAlt.spool") },
               { src: "/visuels/astronaute-photo.webp", alt: t("galleryAlt.photo") },
               { src: "/visuels/chat-fil.webp", alt: t("galleryAlt.pet") },
               { src: "/visuels/chat-photo.webp", alt: t("galleryAlt.petPhoto") },

@@ -22,3 +22,4 @@
 - Photos fournies par Zaki (générées par IA) pour les étapes 1, 4 et 5 : `public/visuels/etapes/` (ouvrir, preparer, accrocher), recadrées en carré 1000 px. Marquage du couvercle de la boîte et gravure du support de téléphone (ressemblant à une marque tierce) effacés par flou local.
 - Étape « Préparez le kit » ajoutée (6 étapes) avec la photo des mains qui assemblent. Étapes code, photo et guide vocal : maquettes d'écrans maison par langue (`scripts/make-step-mockups.cjs`, sortie `public/visuels/etapes/{code,photo,voice}-{fr,en,ar}.webp`). Aucune image Let's String utilisée.
 - Étape « Entrez votre code » en français : photo fournie par Zaki (`code-photo-fr.webp`) ; maquette conservée en anglais et en arabe car l'écran de la photo est en français.
+- Galerie produit : photo du dévidoir en bois (fournie par Zaki) en 2e position (7 visuels). Photo « Suivez la voix » reçue mais non utilisée : écran et logo d'une marque tierce, image trop proche de la leur.
