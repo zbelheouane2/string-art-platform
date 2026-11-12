@@ -23,7 +23,7 @@ Les écrans après la saisie du code n'ont **pas** été utilisés. Aucun code n
 
 | # | Décision | Recommandation |
 |---|---|---|
-| D1 | Commerce sur mesure ou Shopify (voir `05` §8) | Sur mesure (option A) |
+| D1 | Commerce sur mesure ou Shopify (voir `05` §8) | **Validé (2026-11-12)** : sur mesure |
 | D2 | Numérotation | **Validé** : secteurs A à D de 1 à 60, zones alternées noir/blanc, sens horaire, A1 à 9 h, ordre horaire A → B → C → D |
 | D3 | Règle d'usage d'un code (portraits, essais, PDF) | 1 portrait validé, essais libres, PDF illimité |
 | D4 | Planche noire en plus de la blanche au lancement ? | Non, blanche seule au lancement |
