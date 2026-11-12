@@ -3,7 +3,8 @@ import type { Step } from "@/components/StepsCarousel";
 /**
  * Les 6 étapes « Comment ça marche », partagées par l'accueil et la page du kit.
  * `{locale}` dans une image : maquette d'écran déclinée par langue
- * (générée par scripts/make-step-mockups.cjs).
+ * (générée par scripts/make-step-mockups.cjs). Étape « code » en français :
+ * photo réelle (son écran est en français), maquette pour les autres langues.
  */
 export const HOW_STEPS = [
   { key: "open", icon: "box", img: "/visuels/etapes/ouvrir.webp" },
@@ -17,7 +18,7 @@ export const HOW_STEPS = [
 export function howSteps(t: (key: string) => string, locale: string): Step[] {
   return HOW_STEPS.map((s) => ({
     ...s,
-    img: s.img.replace("{locale}", locale),
+    img: (s.key === "code" && locale === "fr" ? "/visuels/etapes/code-photo-fr.webp" : s.img).replace("{locale}", locale),
     title: t(`kit.how.steps.${s.key}.title`),
     text: t(`kit.how.steps.${s.key}.text`),
   }));
