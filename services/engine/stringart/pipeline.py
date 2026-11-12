@@ -69,6 +69,13 @@ def generate(
         quality=prepared.quality,
     )
     timings = {"prepare_s": round(t1 - t0, 2), "solve_s": round(t2 - t1, 2), "render_s": round(t3 - t2, 2)}
+    doc["crop_box"] = list(prepared.crop_box)
+    face = prepared.face
+    doc["face"] = (
+        {"box_rel": [round(v / preprocess.resolution, 4) for v in (face.x, face.y, face.w, face.h)], "score": round(face.score, 3)}
+        if face is not None
+        else None
+    )
     doc["timings"] = timings
     return GenerationOutput(doc, preview, timings)
 

@@ -6,7 +6,7 @@ import math
 
 from .geometry import BoardGeometry
 
-ENGINE_VERSION = "0.1.0"
+ENGINE_VERSION = "0.2.0"
 
 
 def thread_length_mm(geometry: BoardGeometry, sequence: list[int]) -> float:

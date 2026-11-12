@@ -26,7 +26,9 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--line-weight", type=float, default=SolverParams.line_weight)
     p.add_argument("--min-gap", type=int, default=SolverParams.min_gap)
     p.add_argument("--resolution", type=int, default=500)
-    p.add_argument("--crop", help="recadrage carré en pixels source : x,y,cote")
+    p.add_argument("--crop", help="recadrage carré en pixels source : x,y,cote (sinon cadrage auto sur le visage)")
+    p.add_argument("--no-auto-crop", action="store_true", help="recadrage centré au lieu du cadrage sur le visage")
+    p.add_argument("--background", choices=["light", "keep"], default="light", help="éclaircir ou garder le fond")
     args = p.parse_args(argv)
 
     img, sha = imaging.load_image(args.image)
@@ -34,7 +36,12 @@ def main(argv: list[str] | None = None) -> None:
     crop = tuple(int(v) for v in args.crop.split(",")) if args.crop else None
     names = sorted(pipeline.VARIANTS) if args.variants else [args.variant]
     for name in names:
-        pre = replace(pipeline.VARIANTS[name], resolution=args.resolution)
+        pre = replace(
+            pipeline.VARIANTS[name],
+            resolution=args.resolution,
+            auto_crop=not args.no_auto_crop,
+            background=args.background,
+        )
         out = pipeline.generate(img, image_sha256=sha, preprocess=pre, solver_params=solver, crop=crop)
         stem = f"{args.image.stem}-{name}"
         pipeline.save(out, args.out, stem)

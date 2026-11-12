@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "stringart-engine"
-version = "0.1.0"
-description = "Moteur de génération String Art (prototype phase 1a)"
+version = "0.2.0"
+description = "Moteur de génération String Art (prototype phases 1a-1b)"
 requires-python = ">=3.11"
 dependencies = [
   "numpy>=1.26",
@@ -18,6 +18,9 @@ dev = ["pytest>=8", "scikit-image>=0.22"]
 
 [tool.setuptools]
 packages = ["stringart"]
+
+[tool.setuptools.package-data]
+stringart = ["models/*.onnx", "models/*.txt"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

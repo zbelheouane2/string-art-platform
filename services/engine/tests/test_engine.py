@@ -181,3 +181,89 @@ def test_document_is_consistent(geo):
     for step, (a, b) in zip(doc["steps"], zip(doc["sequence"][:-1], doc["sequence"][1:])):
         assert geo.index(step["from"]) == a and geo.index(step["to"]) == b
     assert out.preview.size == (300, 300)
+
+
+# --- visage, cadrage automatique, fond (phase 1b) ---------------------------------
+
+from stringart import faces  # noqa: E402
+
+
+@pytest.fixture(scope="module")
+def astronaut():
+    data = pytest.importorskip("skimage.data")
+    return Image.fromarray(data.astronaut()).convert("RGB")
+
+
+def test_face_detection_with_landmarks(astronaut):
+    face = faces.detect_main_face(np.asarray(astronaut))
+    assert face is not None
+    cx, cy = face.center
+    assert 180 < cx < 260 and 80 < cy < 160          # visage en haut au centre
+    if face.landmarks:                                # YuNet : yeux au-dessus de la bouche
+        (rex, rey), (lex, ley), _, (rmx, rmy), _ = face.landmarks
+        assert rex < lex and max(rey, ley) < rmy
+
+
+def test_auto_crop_frames_face():
+    face = faces.Face(400, 300, 200, 240, 0.9)
+    x, y, side = faces.auto_crop((1600, 1200), face, face_fraction=0.5)
+    assert side == 480
+    assert x == 500 - 240 and y == round(420 - 0.45 * 480)
+
+
+def test_auto_crop_stays_inside_and_keeps_face_centered():
+    face = faces.Face(500, 100, 150, 180, 0.9)       # visage près du bord droit
+    x, y, side = faces.auto_crop((700, 600), face)
+    assert 0 <= x and x + side <= 700 and 0 <= y and y + side <= 600
+    cx = face.center[0]
+    assert abs((cx - x) / side - 0.5) < 0.15
+
+
+def test_no_face_falls_back_to_center_crop():
+    img = _portrait()  # disque synthétique : aucun visage détecté
+    prepared = imaging.prepare_pil(img, imaging.PreprocessParams(resolution=120))
+    assert prepared.face is None and prepared.crop_box == (0, 0, 600)
+
+
+def test_manual_crop_has_priority(astronaut):
+    prepared = imaging.prepare_pil(astronaut, imaging.PreprocessParams(resolution=120), crop=(0, 0, 300))
+    assert prepared.crop_box == (0, 0, 300)
+
+
+def test_auto_crop_zooms_on_face(astronaut):
+    prepared = imaging.prepare_pil(astronaut, imaging.PreprocessParams(resolution=200))
+    x, y, side = prepared.crop_box
+    assert side < 300                                  # recadré sur le visage
+    assert prepared.face is not None
+    assert prepared.face.h / 200 > 0.4                 # le visage occupe une bonne part du cercle
+
+
+def test_background_light_keeps_face_darkness(astronaut):
+    keep = imaging.prepare_pil(astronaut, imaging.PreprocessParams(resolution=200, background="keep"))
+    light = imaging.prepare_pil(astronaut, imaging.PreprocessParams(resolution=200, background="light"))
+    f = keep.face
+    face_box = (slice(int(f.y + 0.2 * f.h), int(f.y + 0.8 * f.h)), slice(int(f.x + 0.2 * f.w), int(f.x + 0.8 * f.w)))
+    assert np.allclose(keep.target[face_box], light.target[face_box], atol=0.05)
+    assert light.target[keep.mask].sum() < keep.target[keep.mask].sum()
+
+
+def test_light_penalty_reduces_threads_in_light_areas(geo, cache):
+    prepared = imaging.prepare_pil(_portrait(), imaging.PreprocessParams(resolution=160))
+    dens = {}
+    for lp in (0.0, 0.3):
+        seq = solve(prepared.target, prepared.importance, cache, SolverParams(max_lines=300, light_penalty=lp)).sequence
+        dens[lp] = render.thread_density(geo, seq, 160)
+    light = (prepared.target < 0.2) & prepared.mask
+    assert dens[0.3][light].mean() < dens[0.0][light].mean()
+
+
+def test_document_records_crop_and_face(astronaut):
+    out = pipeline.generate(
+        astronaut,
+        preprocess=imaging.PreprocessParams(resolution=160),
+        solver_params=SolverParams(max_lines=100),
+        render_resolution=200,
+    )
+    doc = out.document
+    assert len(doc["crop_box"]) == 3 and doc["face"] is not None
+    assert all(0 <= v <= 1 for v in doc["face"]["box_rel"][2:])

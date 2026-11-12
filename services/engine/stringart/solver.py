@@ -22,6 +22,7 @@ class SolverParams:
     tabu: int = 3                  # nombre de derniers clous interdits
     start_nail: int = 0            # A1
     min_score: float = 0.0         # arrêt si plus aucune amélioration
+    light_penalty: float = 0.2     # coût d'un fil sur une zone claire (réduit le « voile »)
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -36,7 +37,11 @@ class SolverResult:
 
 def solve(target: np.ndarray, importance: np.ndarray, cache: LineCache, params: SolverParams = SolverParams()) -> SolverResult:
     n = cache.geometry.nail_count
-    residual = (target * importance).astype(np.float32).ravel().copy()
+    imp = importance.astype(np.float32).ravel()
+    # Résidu pondéré : importance x (noirceur restante). Une zone claire part
+    # d'un résidu négatif si light_penalty > 0 : y passer coûte des points.
+    lightness = np.clip(1.0 - target, 0, 1).astype(np.float32).ravel()
+    residual = imp * (target.astype(np.float32).ravel() - params.light_penalty * lightness**2)
     used = np.zeros((n, n), dtype=bool)
     gap_ok = np.array(
         [[cache.geometry.circular_distance(a, b) >= params.min_gap for b in range(n)] for a in range(n)]
@@ -61,7 +66,8 @@ def solve(target: np.ndarray, importance: np.ndarray, cache: LineCache, params: 
             stopped_early = True
             break
         nxt = int(fan.others[k])
-        residual[cache.segment(current, nxt)] -= params.line_weight
+        seg = cache.segment(current, nxt)
+        residual[seg] -= params.line_weight
         used[current, nxt] = used[nxt, current] = True
         sequence.append(nxt)
         scores.append(best)
