@@ -354,6 +354,15 @@ Les positions doivent être reproductibles et identiques entre le rendu, le PDF 
 
 Le nombre de clous sera déterminé par les essais de qualité et les contraintes de fabrication.
 
+**Hypothèse de départ (à valider par le prototype) :**
+- Les clous sont disposés en **cercle**, inscrit dans le support carré.
+- **240 clous**, répartis en **4 secteurs de 60 clous**, nommés A, B, C et D.
+- Chaque clou a un repère lisible par l'humain (par exemple **B17**) et un index technique unique (1 à 240) utilisé par l'algorithme. La correspondance entre les deux est fixe.
+- Les instructions, le PDF, l'assistant et le marquage physique du support utilisent les repères de secteur (A1 à D60), plus faciles à retrouver qu'un numéro de 1 à 240.
+- Le support porte des marques visibles au début de chaque secteur.
+
+Le moteur doit rester paramétrable (nombre de secteurs, clous par secteur) pour tester d'autres configurations sans refonte.
+
 ## 5.6. Étape 4 : Calcul des connexions
 
 Le moteur doit déterminer les connexions entre les différents clous.
@@ -1393,4 +1402,5 @@ Améliorations issues de l'analyse concurrentielle du marché et de l'expertise 
 - Guidage audio simple intégré au MVP et améliorations mobiles de l'assistant (section 8).
 - Exemples de moyens de paiement par marché, dont le paiement à la livraison en Algérie (section 9.5).
 - Livraison à domicile ou en point relais et connecteurs transporteurs (section 9.6).
+- Hypothèse de géométrie : cercle de 240 clous en 4 secteurs A à D de 60 clous (section 5.5).
 - Mise à jour du périmètre MVP (section 20).
