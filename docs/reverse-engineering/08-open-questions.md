@@ -8,7 +8,7 @@ Les écrans après la saisie du code n'ont **pas** été utilisés. Aucun code n
 |---|---|---|
 | 1 | Déroulé exact : recadrage (carré ou rond ?), nombre de variantes affichées | Acheter un kit ou un code supplémentaire (25 €) et faire le parcours, avec captures |
 | 2 | Contenu et mise en page du PDF | Idem |
-| 3 | ~~Marquage physique des clous~~ **Résolu (info du porteur de projet)** : 4 zones A, B, C, D de 60 clous (1 à 60), **fond alterné noir / blanc / noir / blanc**, instructions du type « A1 → D56 ». Reste à confirmer : position de A1 et sens de numérotation (horaire ou antihoraire) | Kit physique ou photo |
+| 3 | ~~Marquage physique des clous~~ **Résolu (info du porteur de projet)** : 4 zones A, B, C, D de 60 clous (1 à 60), **fond alterné noir / blanc / noir / blanc**, instructions du type « A1 → D56 ». **Position et sens observés sur photo** (voir `02` §C) : A1 à 9 h, sens horaire ; ordre horaire A, B, D, C | Kit physique ou photo |
 | 4 | Diamètre et type du fil, diamètre des clous, diamètre réel du cercle | Kit physique (mesures) |
 | 5 | Comportement de « Je suis perdu » | Kit ou code |
 | 6 | Règle exacte : « 3 envois d'email, puis code inactif ». Un code = un portrait ? Comment « jusqu'à 3 tableaux » se combine-t-il avec la vente de codes à 25 € ? | Kit ou code ; question au support |

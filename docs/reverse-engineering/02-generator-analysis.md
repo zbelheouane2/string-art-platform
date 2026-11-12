@@ -66,6 +66,28 @@ Génération serveur : points 240, steps 3500, seed 30, width 2, weight 10,
 
 `art/verify`, `art/start`, `art/create`, `art/generate`, `art/save`, `art/resume/:id`, `art/send`, `art/pdf/download`, `admin/auth`, `admin/coupons`, `admin/coupons/generate/:n`. Base : `https://www.letsstring.art/v1/`. 🔍 Les formats de requête et de réponse en détail restent ❓ (non appelés).
 
+## Plan de numérotation de la planche (observé sur les photos produit officielles)
+
+✅ Observé sur les photos de la fiche produit (captures `planche-*.jpg`), avec zoom :
+
+```
+                 12 h
+        A60 ──────┼────── B1
+   A (noir)       │       B (blanc)
+  A1 ── 9 h ──────┼────── 3 h ── B60 / D1
+   C (blanc)      │       D (noir)
+        C1 ───────┼────── D60
+                 6 h
+```
+
+- 4 quarts de cercle de 60 clous, **numérotés de 1 à 60 dans le sens des aiguilles d'une montre**, chaque numéro imprimé à côté de son clou (une dizaine sur dix en gras).
+- **A** (haut gauche, fond noir) : A1 à 9 h, puis A60 à midi.
+- **B** (haut droit, fond blanc) : B1 juste après midi, puis B60 à 3 h.
+- **D** (bas droit, fond noir) : D1 à 3 h, puis D60 à 6 h.
+- **C** (bas gauche, fond blanc) : C1 à 6 h, puis C60 à 9 h.
+- Les lettres sont posées **dans les coins** de la planche, en ordre de lecture (A en haut à gauche, B en haut à droite, C en bas à gauche, D en bas à droite). En tournant dans le sens horaire, l'ordre est donc **A → B → D → C** 💭 (déduit d'une seule photo, à confirmer).
+- Les fonds sont alternés en damier : noir, blanc, noir, blanc dans le sens horaire.
+
 ## D. Interface de réalisation (assistant)
 
 | Fonction | Constat | Statut |
