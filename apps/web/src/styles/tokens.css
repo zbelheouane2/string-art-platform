@@ -1,0 +1,78 @@
+/* Généré par replica/design/gen_tokens.py depuis tokens.json. Ne pas modifier à la main. */
+:root {
+  --color-bg: #ffffff;
+  --color-surface: #fffaf5;
+  --color-surface-sand: #f6ece2;
+  --color-surface-blush: #f3ded3;
+  --color-surface-beige: #eadbcd;
+  --color-border: #eadbcd;
+  --color-border-strong: #d9c7b7;
+  --color-border-input: #6b5a50;
+  --color-text: #2a1f1a;
+  --color-text-muted: #5a4a40;
+  --color-inverse: #2a1f1a;
+  --color-on-inverse: #fffaf5;
+  --color-on-inverse-muted: #e9dcd0;
+  --color-accent: #a8322d;
+  --color-accent-hover: #8c2823;
+  --color-on-accent: #ffffff;
+  --color-danger: #b42318;
+  --color-success: #2f6b3a;
+  --color-brass: #a9803f;
+  --font-display: var(--font-dm-serif), "DM Serif Display", Georgia, serif;
+  --font-sans: var(--font-dm-sans), "DM Sans", system-ui, sans-serif;
+  --text-eyebrow: 0.8125rem;
+  --leading-eyebrow: 1.308;
+  --text-sm: 0.875rem;
+  --leading-sm: 1.429;
+  --text-body: 0.9375rem;
+  --leading-body: 1.533;
+  --text-base: 1rem;
+  --leading-base: 1.562;
+  --text-lead: 1.125rem;
+  --leading-lead: 1.556;
+  --text-button: 1.0625rem;
+  --leading-button: 1.176;
+  --text-h3: 1.625rem;
+  --leading-h3: 1.154;
+  --text-h2: 3rem;
+  --leading-h2: 1.083;
+  --text-h2-lg: 3.25rem;
+  --leading-h2-lg: 1.077;
+  --text-h1: 4rem;
+  --leading-h1: 1.062;
+  --space-0: 0rem;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 2rem;
+  --space-8: 3.5rem;
+  --space-9: 6rem;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --radius-2xl: 28px;
+  --radius-pill: 999px;
+  --radius-round: 50%;
+  --shadow-pop: 0 4px 14px rgba(42,31,26,.2);
+  --shadow-card: 0 14px 30px -16px rgba(42,31,26,.5);
+  --shadow-hero: 0 30px 60px -28px rgba(42,31,26,.55);
+  --shadow-sticky: 0 -10px 30px -18px rgba(42,31,26,.35);
+  --motion-fast: 200ms;
+  --motion-base: 300ms;
+  --motion-ease: ease-in-out;
+  --layout-max: 77.5rem;
+  --layout-header: 77px;
+  --control-height: 3.5rem;
+  --control-pad-x: 1.875rem;
+  --border-outline: 1.5px;
+}
+
+:root:lang(ar) {
+  --font-display: var(--font-naskh), "Noto Naskh Arabic", serif;
+  --font-sans: var(--font-alexandria), Alexandria, system-ui, sans-serif;
+}

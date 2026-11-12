@@ -69,3 +69,8 @@ test("santé : base et moteur", async ({ request }) => {
   expect(res.status()).toBe(200);
   expect(await res.json()).toMatchObject({ status: "ok", database: "ok", engine: { status: "ok" } });
 });
+
+test("la page interne du design est masquée par défaut", async ({ request }) => {
+  const res = await request.get("/fr/design");
+  expect(res.status()).toBe(404);
+});

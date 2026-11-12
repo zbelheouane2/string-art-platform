@@ -6,9 +6,13 @@ Système visuel de la page d'accueil (étape 1, version 2).
 
 ## Structure (même ordre que la référence)
 
-Bandeau d'annonce → en-tête (menu, logo centré, langues, panier) → héros (carte visuelle avec pastille « Idée cadeau » et médaillon photo, sur-titre rouge, titre avec accent italique rouge, deux boutons pilule) → bande de réassurance → idées cadeaux (6 cartes) → « dans la boîte » (curseur photo/fil + 3 étapes numérotées) → « l'offrir » (3 étapes + bloc « seul, ou à deux ») → fiche produit (galerie « 1 / 4 », inclus, bouton) → FAQ en deux colonnes → appel final → pied de page → barre d'achat collante sur mobile.
+Bandeau d'annonce → en-tête (menu, logo centré, langues, panier) → héros (carte visuelle avec pastille « Idée cadeau » et médaillon photo, sur-titre rouge, titre avec accent italique rouge, deux boutons pilule) → bande de réassurance → idées cadeaux (6 cartes) → « dans la boîte » (curseur photo/fil + 3 étapes numérotées) → « l'offrir » (3 étapes + bloc « seul, ou à deux ») → fiche produit (galerie « 1 / 4 », inclus, bouton) → FAQ en deux colonnes → appel final → pied de page blanc → barre d'achat collante sur mobile.
 
 ## Jetons
+
+Source unique : `replica/design/tokens.json` (valeurs mesurées sur la boutique de référence), transformé en `apps/web/src/styles/tokens.css` par `replica/design/gen_tokens.py`. Fiches composants : `replica/design/components.md`. Page de contrôle : `/fr/design` avec `ENABLE_DESIGN_PAGE=1`. Contrastes : `python3 replica/design/contrast.py replica/design/tokens.json` (24 paires, 0 échec AA).
+
+**À faire avant le lancement public** : remplacer la couleur d'accent (couleur signature de la référence) par la nôtre.
 
 | Jeton | Valeur | Rôle |
 |---|---|---|
@@ -18,7 +22,7 @@ Bandeau d'annonce → en-tête (menu, logo centré, langues, panier) → héros 
 | `--blush` | `#f3ded3` | Section « l'offrir » |
 | `--beige` | `#eadbcd` | Fonds de visuels, bouton désactivé |
 | `--ink` | `#2a1f1a` | Texte, bandeau, pied de page |
-| `--ink-soft` | `#6b5a50` | Texte secondaire |
+| `--ink-soft` | `#5a4a40` | Texte secondaire |
 | `--accent` | `#a8322d` | Boutons, sur-titres, accent du titre, puces |
 | `--brass` | `#a9803f` | Clous et repères A–D (décoratif) |
 
