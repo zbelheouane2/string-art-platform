@@ -17,6 +17,8 @@ export interface OrderRow {
   delivery: string;
   payment: string;
   quantity: number;
+  /** Options ajoutées (ex. « Support chevalet en bois ; Bougie parfumée »), vide sinon. */
+  options: string;
   /** null : frais à confirmer par téléphone. */
   deliveryFee: number | null;
   total: number;

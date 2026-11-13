@@ -3158,3 +3158,240 @@ h1 em {
 .form-lead {
   margin: -0.5rem 0 1rem;
 }
+
+/* Repères rapides sous le prix du kit. */
+.kit-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-block: 1rem 1.25rem;
+}
+
+.kit-facts li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: var(--sand);
+  font-size: var(--step--1);
+  line-height: 1.3;
+}
+
+.kit-facts svg {
+  flex: none;
+  color: var(--brass);
+}
+
+/* Générateur en 5 étapes : carrousel horizontal (glisser ou flèches). */
+.engine-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(80%, 19rem);
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+  padding: 0.25rem 0 1rem;
+  scrollbar-width: none;
+}
+
+.engine-track::-webkit-scrollbar {
+  display: none;
+}
+
+.engine-track:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  outline-offset: 4px;
+}
+
+.engine-card {
+  position: relative;
+  scroll-snap-align: start;
+  text-align: center;
+  padding: 0.5rem 0.5rem 1rem;
+}
+
+.engine-card h3 {
+  font-size: var(--step-1);
+  margin: 1.1rem 0.25rem 0.35rem;
+}
+
+.engine-card p {
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+  margin: 0 0.25rem;
+}
+
+/* Téléphone dessiné en CSS autour de la capture du site. */
+.phone {
+  position: relative;
+  inline-size: min(100%, 13.5rem);
+  margin-inline: auto;
+  aspect-ratio: 390 / 844;
+  border: 0.55rem solid #1d1a18;
+  border-radius: 2.1rem;
+  background: #1d1a18;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.phone::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 0.35rem;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  inline-size: 32%;
+  block-size: 0.85rem;
+  border-radius: var(--radius-pill);
+  background: #1d1a18;
+}
+
+[dir="rtl"] .phone::before {
+  translate: 50% 0;
+}
+
+.phone img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 1.55rem;
+}
+
+.engine-num {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0.75rem;
+  display: grid;
+  place-items: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: 400 1.1rem/1 var(--font-display);
+}
+
+.engine-nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.engine-arrow {
+  border: 1.5px solid var(--ink);
+}
+
+/* Flèches dans le sens de lecture. */
+[dir="rtl"] .engine-arrow svg {
+  transform: scaleX(-1);
+}
+
+/* Options du kit avec interrupteur. */
+.accessories {
+  margin-block: 0.5rem 1.25rem;
+}
+
+.accessories-title {
+  font-weight: 700;
+  font-size: var(--step--1);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 0.6rem;
+}
+
+:lang(ar) .accessories-title {
+  letter-spacing: 0;
+}
+
+.accessories ul {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.accessory {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  background: linear-gradient(90deg, var(--sand), var(--cream));
+  border: 1.5px solid transparent;
+  transition: border-color var(--motion-fast) var(--ease-out);
+}
+
+.accessory[data-on="true"] {
+  border-color: var(--color-success);
+}
+
+.accessory-text {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.accessory-tag {
+  color: var(--color-success);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.accessory-text label {
+  font-weight: 600;
+}
+
+.accessory-price {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: var(--step--1);
+}
+
+/* Interrupteur façon téléphone. */
+.switch {
+  position: relative;
+  inline-size: 3.1rem;
+  block-size: 1.85rem;
+  border-radius: var(--radius-pill);
+  border: 0;
+  background: #d9d3cc;
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-out);
+}
+
+.switch::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 0.2rem;
+  inset-inline-start: 0.2rem;
+  inline-size: 1.45rem;
+  block-size: 1.45rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: inset-inline-start var(--motion-fast) var(--ease-out);
+}
+
+.switch[aria-checked="true"] {
+  background: var(--color-success);
+}
+
+.switch[aria-checked="true"]::after {
+  inset-inline-start: 1.45rem;
+}
+
+.switch:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  outline-offset: 2px;
+}
+
+.switch:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

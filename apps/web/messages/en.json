@@ -220,7 +220,14 @@
     "haveCode": "Already have your kit? Enter your code",
     "abroad": "Living abroad?",
     "abroadGift": "Send a kit to someone in Algeria",
-    "abroadDigital": "the digital offer"
+    "abroadDigital": "the digital offer",
+    "facts": {
+      "label": "The kit at a glance",
+      "board": "50 × 50 cm board, 240 nails already in place",
+      "time": "Making time: about 4 to 6 hours, at your own pace",
+      "app": "Online software in French, English and Arabic",
+      "voice": "Nail-by-nail voice guide"
+    }
   },
   "faq": {
     "eyebrow": "FAQ",
@@ -458,7 +465,37 @@
         }
       }
     },
-    "faqTitle": "Questions about the kit"
+    "faqTitle": "Questions about the kit",
+    "engine": {
+      "eyebrow": "Our generator",
+      "title": "How does our online generator work?",
+      "lead": "It isn't a filter: the software works out the real path of the thread across the 240 nails of your board, the one the voice will guide you through.",
+      "steps": {
+        "site": {
+          "title": "Open the DeeKra website",
+          "text": "On your phone or computer, tap “I have a code”."
+        },
+        "code": {
+          "title": "Enter your code",
+          "text": "The code printed on the kit card unlocks your creation."
+        },
+        "photo": {
+          "title": "Upload your photo",
+          "text": "Pick a look: soft, balanced or bold. The software frames the face and lightens the background."
+        },
+        "preview": {
+          "title": "See your portrait",
+          "text": "The software works out, thread by thread, the path across the 240 nails and shows you the result before you start."
+        },
+        "voice": {
+          "title": "Follow the voice",
+          "text": "The guide calls out every nail, from A1 to D60, at your pace, until the last thread."
+        }
+      },
+      "prev": "Previous step",
+      "next": "Next step",
+      "step": "Step"
+    }
   },
   "carousel": {
     "roledescription": "carousel",
@@ -767,5 +804,13 @@
     "meanwhile": "Meanwhile:",
     "giftLink": "send a kit to someone in Algeria",
     "demoLink": "try the voice guide"
+  },
+  "accessories": {
+    "title": "Complete your gift",
+    "soon": "Price coming soon",
+    "tags": {
+      "stand": "Display it anywhere",
+      "candle": "Set the mood"
+    }
   }
 }

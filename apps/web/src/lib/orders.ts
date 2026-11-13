@@ -1,5 +1,6 @@
 import "server-only";
 import { randomInt } from "node:crypto";
+import { accessories as accessoryCatalog } from "@/config/catalog";
 import { commerce } from "@/config/commerce";
 import { CODE_ALPHABET } from "./codes";
 import { db } from "./db";
@@ -16,6 +17,16 @@ export interface CheckoutOptions {
   payment: string[];
   /** Frais connus : mode de livraison → wilaya → montant (unité mineure). */
   rates: Record<string, Record<string, number>>;
+  /** Options proposables (actives et avec un prix sur ce marché, dans la devise du kit). */
+  accessories: CheckoutAccessory[];
+}
+
+export interface CheckoutAccessory {
+  id: string;
+  slug: string;
+  icon: "stand" | "candle";
+  names: { fr: string; en: string; ar: string };
+  price: Price;
 }
 
 /**
@@ -41,6 +52,16 @@ export async function checkoutOptions(marketCode = commerce.defaultMarket): Prom
     .map((m) => m.paymentMethod.code)
     .sort((a, b) => (a === "cod" ? -1 : b === "cod" ? 1 : a.localeCompare(b)));
   if (payment.length === 0 || market.deliveryMethods.length === 0) return null;
+  const extras = await db().product.findMany({
+    where: { kind: "ACCESSORY", active: true },
+    include: { prices: { where: { marketId: market.id, currency: price.currency } } },
+  });
+  // Ordre et icône du catalogue ; une option sans prix sur ce marché n'est pas proposée.
+  const accessories = accessoryCatalog.flatMap((a): CheckoutAccessory[] => {
+    const p = extras.find((e) => e.slug === a.slug);
+    if (!p?.prices[0]) return [];
+    return [{ id: p.id, slug: a.slug, icon: a.icon, names: p.names as CheckoutAccessory["names"], price: { amountMinor: p.prices[0].amountMinor, currency: p.prices[0].currency } }];
+  });
   return {
     marketId: market.id,
     product: { id: product.id, slug: product.slug, names: product.names as Record<string, string> },
@@ -51,6 +72,7 @@ export async function checkoutOptions(marketCode = commerce.defaultMarket): Prom
     rates: Object.fromEntries(
       market.deliveryMethods.map((d) => [d.code, Object.fromEntries(d.rates.filter((r) => r.currency === price.currency).map((r) => [r.zone, r.amountMinor]))]),
     ),
+    accessories,
   };
 }
 
@@ -60,7 +82,7 @@ function orderNumber(): string {
   return `DK-${s}`;
 }
 
-export type CreateOrderResult = { ok: true; number: string; redirect: string | null } | { ok: false; error: "closed" | "delivery" | "payment" };
+export type CreateOrderResult = { ok: true; number: string; redirect: string | null } | { ok: false; error: "closed" | "delivery" | "payment" | "unavailable" };
 
 /**
  * Enregistre une commande déjà validée par `orderSchema`. Le prix vient
@@ -71,6 +93,10 @@ export async function createOrder(input: ValidOrder, baseUrl: string): Promise<C
   if (!options) return { ok: false, error: "closed" };
   if (!options.delivery.includes(input.delivery)) return { ok: false, error: "delivery" };
   if (!options.payment.includes(input.payment)) return { ok: false, error: "payment" };
+  // Options : uniquement celles proposées avec un prix ; une par commande (pas multipliée par la quantité de kits).
+  const extras = input.options.map((slug) => options.accessories.find((a) => a.slug === slug));
+  if (extras.some((a) => !a)) return { ok: false, error: "unavailable" };
+  const chosen = extras as CheckoutAccessory[];
 
   const [delivery, method] = await Promise.all([
     db().deliveryMethod.findUniqueOrThrow({ where: { marketId_code: { marketId: options.marketId, code: input.delivery } } }),
@@ -81,7 +107,8 @@ export async function createOrder(input: ValidOrder, baseUrl: string): Promise<C
 
   // Frais de livraison lus en base ; inconnus = confirmés par téléphone (null).
   const fee = options.rates[input.delivery]?.[input.wilaya] ?? null;
-  const total = options.price.amountMinor * input.quantity + (fee ?? 0);
+  const extrasTotal = chosen.reduce((sum, a) => sum + a.price.amountMinor, 0);
+  const total = options.price.amountMinor * input.quantity + extrasTotal + (fee ?? 0);
   const order = await db().$transaction(async (tx) => {
     // Le client est la personne qui passe la commande : l'acheteur pour un cadeau, sinon le destinataire.
     const customer = await tx.customer.create({
@@ -108,7 +135,12 @@ export async function createOrder(input: ValidOrder, baseUrl: string): Promise<C
             note: input.note,
             gift: input.buyer ? { buyerEmail: input.buyer.email, message: input.giftMessage } : null,
           },
-          items: { create: { productId: options.product.id, quantity: input.quantity, unitPriceMinor: options.price.amountMinor } },
+          items: {
+            create: [
+              { productId: options.product.id, quantity: input.quantity, unitPriceMinor: options.price.amountMinor },
+              ...chosen.map((a) => ({ productId: a.id, quantity: 1, unitPriceMinor: a.price.amountMinor })),
+            ],
+          },
           payments: { create: { paymentMethodId: method.id, amountMinor: total, currency: options.price.currency } },
         },
         include: { payments: true },
@@ -138,6 +170,7 @@ export async function createOrder(input: ValidOrder, baseUrl: string): Promise<C
       delivery: input.delivery,
       payment: input.payment,
       quantity: input.quantity,
+      options: chosen.map((a) => a.names.fr).join(" ; "),
       deliveryFee: fee === null ? null : fee / 100,
       total: total / 100,
       currency: order.currency,

@@ -29,6 +29,7 @@ enum ProductKind {
   KIT            // kit physique avec code inclus
   EXTRA_CODE     // code supplémentaire
   ARTWORK        // tableau fini
+  ACCESSORY      // option ajoutée au kit (support, bougie…)
 }
 
 model Product {

@@ -2,6 +2,9 @@ import { getTranslations } from "next-intl/server";
 import { Gallery } from "./Gallery";
 import { Link } from "@/i18n/navigation";
 import { PlusIcon } from "./Icons";
+import { KitFacts } from "./KitFacts";
+import { KitBuyBox } from "./KitBuyBox";
+import { accessories } from "@/config/catalog";
 
 const INCLUDES = ["board", "thread", "code", "guide", "card"] as const;
 const ACCORDION = ["box", "photo", "app", "gift"] as const;
@@ -53,6 +56,7 @@ export async function ProductSection({
           <Heading id="shop-title">{t("title")}</Heading>
           <p className="shop-price">{price ?? t("priceSoon")}</p>
           {price && provisional && <p className="shop-price-note">{t("priceProvisional")}</p>}
+          <KitFacts />
           <p className="shop-lead">{t("lead")}</p>
           <p className="shop-desc">{t("description")}</p>
           <h3>{t("includesTitle")}</h3>
@@ -62,9 +66,7 @@ export async function ProductSection({
             ))}
           </ul>
           {price && orderingOpen ? (
-            <Link href="/commander" className="btn btn-primary btn-lg btn-block">
-              {t("cta")}
-            </Link>
+            <KitBuyBox accessories={accessories} />
           ) : (
             <button type="button" className="btn btn-primary btn-lg btn-block" disabled>
               {t("ctaSoon")}

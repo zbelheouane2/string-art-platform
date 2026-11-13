@@ -6,7 +6,7 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient, ProductKind } from "../src/generated/prisma/client";
-import { kitOffer } from "../src/config/catalog";
+import { accessories, kitOffer } from "../src/config/catalog";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 
@@ -73,6 +73,21 @@ async function main() {
       update: data,
       create: { ...data, productId: kit.id, marketId: dz.id },
     });
+  }
+  // Options du kit : produit toujours créé, prix seulement s'il est fixé.
+  for (const acc of accessories) {
+    const product = await db.product.upsert({
+      where: { slug: acc.slug },
+      update: { names: acc.names, kind: ProductKind.ACCESSORY },
+      create: { slug: acc.slug, kind: ProductKind.ACCESSORY, names: acc.names },
+    });
+    const where = { productId_marketId: { productId: product.id, marketId: dz.id } };
+    if (acc.price) {
+      const data = { amountMinor: acc.price.amountMinor, currency: acc.price.currency };
+      await db.price.upsert({ where, update: data, create: { ...data, productId: product.id, marketId: dz.id } });
+    } else {
+      await db.price.deleteMany({ where: { productId: product.id, marketId: dz.id } });
+    }
   }
   console.log("Données de référence en place.");
 }

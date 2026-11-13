@@ -4,6 +4,8 @@ import { useActionState, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { OTHER_COMMUNE, communesOf } from "@/config/communes";
 import { WILAYAS } from "@/config/wilayas";
+import { AccessoryPicker } from "@/components/AccessoryPicker";
+import type { CheckoutAccessory } from "@/lib/orders";
 import { formatPrice, type Price } from "@/lib/price";
 import { orderAction, type OrderState } from "./actions";
 
@@ -17,6 +19,10 @@ interface Props {
   maxQuantity: number;
   /** Ouvre le formulaire en mode « cadeau pour un proche en Algérie ». */
   giftDefault?: boolean;
+  /** Options proposées (prix lus en base). */
+  accessories?: CheckoutAccessory[];
+  /** Options déjà choisies sur la fiche du kit. */
+  optionsDefault?: string[];
 }
 
 function Field({ id, label, error, children }: { id: string; label: string; error?: string; children: React.ReactNode }) {
@@ -35,7 +41,7 @@ function Field({ id, label, error, children }: { id: string; label: string; erro
   );
 }
 
-export function OrderForm({ price, rates, delivery, payment, maxQuantity, giftDefault = false }: Props) {
+export function OrderForm({ price, rates, delivery, payment, maxQuantity, giftDefault = false, accessories = [], optionsDefault = [] }: Props) {
   const t = useTranslations("order");
   const locale = useLocale();
   const [state, action, pending] = useActionState<OrderState, FormData>(orderAction, { fieldErrors: {}, formError: null, values: {} });
@@ -48,7 +54,10 @@ export function OrderForm({ price, rates, delivery, payment, maxQuantity, giftDe
   const communes = communesOf(wilaya);
   const fee = wilaya ? (rates[mode]?.[wilaya] ?? null) : null;
   const money = (amountMinor: number) => formatPrice({ amountMinor, currency: price.currency }, locale);
+  const [options, setOptions] = useState<string[]>(v.options !== undefined ? v.options.split(",").filter(Boolean) : optionsDefault);
+  const chosen = accessories.filter((a) => options.includes(a.slug));
   const items = price.amountMinor * quantity;
+  const extras = chosen.reduce((sum, a) => sum + a.price.amountMinor, 0);
   const err = (k: string) => (state.fieldErrors[k] ? t(`errors.${state.fieldErrors[k]}`) : undefined);
   const aria = (k: string) => (state.fieldErrors[k] ? { "aria-invalid": true, "aria-describedby": `${k}-error` } : {});
 
@@ -176,6 +185,7 @@ export function OrderForm({ price, rates, delivery, payment, maxQuantity, giftDe
             ))}
           </select>
         </Field>
+        <AccessoryPicker accessories={accessories} selected={options} onChange={setOptions} name="options" />
         {gift && (
           <Field id="giftMessage" label={t("fields.giftMessage")} error={err("giftMessage")}>
             <textarea id="giftMessage" name="giftMessage" className="field" rows={3} maxLength={200} defaultValue={v.giftMessage} {...aria("giftMessage")} />
@@ -189,6 +199,12 @@ export function OrderForm({ price, rates, delivery, payment, maxQuantity, giftDe
             <dt>{t("lineItems", { count: quantity })}</dt>
             <dd>{money(items)}</dd>
           </div>
+          {chosen.map((a) => (
+            <div key={a.slug}>
+              <dt>{a.names[locale as "fr" | "en" | "ar"] ?? a.names.fr}</dt>
+              <dd>{money(a.price.amountMinor)}</dd>
+            </div>
+          ))}
           <div>
             <dt>{t("lineDelivery")}</dt>
             <dd>{fee === null ? t("feeLater") : money(fee)}</dd>
@@ -196,7 +212,7 @@ export function OrderForm({ price, rates, delivery, payment, maxQuantity, giftDe
         </dl>
         <p className="order-total">
           <span>{fee === null ? t("total") : t("totalWithDelivery")}</span>
-          <strong>{money(items + (fee ?? 0))}</strong>
+          <strong>{money(items + extras + (fee ?? 0))}</strong>
         </p>
       </fieldset>
 

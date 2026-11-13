@@ -49,6 +49,13 @@ export const orderSchema = z.object({
   delivery: z.string().min(1, "delivery"),
   payment: z.string().min(1, "payment"),
   quantity: z.coerce.number().int().min(1, "quantity").max(commerce.maxQuantity, "quantity"),
+  /** Options ajoutées au kit (support, bougie…) : slugs séparés par des virgules. Prix relus en base. */
+  options: z
+    .string()
+    .optional()
+    .default("")
+    .transform((v) => [...new Set(v.split(",").map((x) => x.trim()).filter(Boolean))])
+    .pipe(z.array(z.string().regex(/^[a-z0-9-]{1,40}$/, "unavailable")).max(10, "unavailable")),
   note: z.string().trim().max(300, "noteLong").optional().default(""),
   locale: z.enum(["fr", "en", "ar"]).default("fr"),
   /**

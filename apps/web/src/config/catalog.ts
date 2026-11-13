@@ -13,3 +13,31 @@ export const kitOffer: { slug: string; price: Price | null; provisional: boolean
   provisional: true,
   orderingOpen: process.env.NEXT_PUBLIC_ORDERING_OPEN !== "false",
 };
+
+/**
+ * Options proposées avec le kit (interrupteur sur la fiche et dans la commande).
+ * `price: null` = prix pas encore fixé par le propriétaire : l'option est
+ * affichée « bientôt » et ne peut pas être choisie. Même règle que le kit : ce
+ * prix remplit la table Price (seed), la commande relit le prix en base.
+ */
+export interface Accessory {
+  slug: string;
+  icon: "stand" | "candle";
+  names: { fr: string; en: string; ar: string };
+  price: Price | null;
+}
+
+export const accessories: readonly Accessory[] = [
+  {
+    slug: "support-chevalet",
+    icon: "stand",
+    names: { fr: "Support chevalet en bois", en: "Wooden display stand", ar: "حامل خشبي للعرض" },
+    price: null,
+  },
+  {
+    slug: "bougie-parfumee",
+    icon: "candle",
+    names: { fr: "Bougie parfumée", en: "Scented candle", ar: "شمعة معطّرة" },
+    price: null,
+  },
+];
