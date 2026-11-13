@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { Metadata } from "next";
-import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BeforeAfter } from "@/components/BeforeAfter";
 import { PlusIcon } from "@/components/Icons";
 import { NailRing } from "@/components/NailRing";
@@ -14,6 +14,7 @@ import { StickyBar } from "@/components/StickyBar";
 import { WeavingBoard } from "@/components/WeavingBoard";
 import { brand } from "@/config/brand";
 import { kitOffer } from "@/config/catalog";
+import { formatPrice } from "@/lib/price";
 import { howSteps } from "@/config/howSteps";
 import { Link } from "@/i18n/navigation";
 import type { DemoPortrait } from "@/lib/board";
@@ -52,11 +53,8 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations();
-  const format = await getFormatter();
   const demo = await loadDemo();
-  const price = kitOffer.price
-    ? format.number(kitOffer.price.amountMinor / 100, { style: "currency", currency: kitOffer.price.currency })
-    : null;
+  const price = kitOffer.price ? formatPrice(kitOffer.price, locale) : null;
 
   return (
     <>
@@ -67,7 +65,7 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
       <SiteHeader />
       <main id="main">
         <div id="hero-actions" />
-        <ProductSection price={price} headingLevel={1} />
+        <ProductSection price={price} provisional={kitOffer.provisional} orderingOpen={kitOffer.orderingOpen} headingLevel={1} />
 
         {/* Qu'est-ce que c'est : la planche animée tient le rôle de la vidéo. */}
         <section className="section bg-sand" aria-labelledby="kit-what-title">
@@ -258,7 +256,7 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
         </section>
       </main>
       <SiteFooter />
-      <StickyBar watchId="hero-actions" price={price} />
+      <StickyBar watchId="hero-actions" price={price} orderingOpen={kitOffer.orderingOpen} />
       <Reveal />
     </>
   );

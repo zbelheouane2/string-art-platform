@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BeforeAfter } from "@/components/BeforeAfter";
 import { GiftIcon, HeartThreadIcon, PlusIcon } from "@/components/Icons";
 import { NailRing } from "@/components/NailRing";
@@ -14,6 +14,7 @@ import { StickyBar } from "@/components/StickyBar";
 import { WeavingBoard } from "@/components/WeavingBoard";
 import { brand } from "@/config/brand";
 import { kitOffer } from "@/config/catalog";
+import { formatPrice } from "@/lib/price";
 import { howSteps } from "@/config/howSteps";
 import { Link } from "@/i18n/navigation";
 import type { DemoPortrait } from "@/lib/board";
@@ -27,6 +28,7 @@ const GIFTS = [
   { key: "pets", name: "chat" },
   { key: "memory", name: "benmhidi" },
   { key: "self", name: "soi" },
+  { key: "occasion", name: "bebe", occasions: ["birth", "birthday", "wedding", "memory", "other"] },
 ] as const;
 const INTRO = ["gift", "hobby"] as const;
 const BOX = [
@@ -54,11 +56,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations();
-  const format = await getFormatter();
   const demo = await loadDemo();
-  const price = kitOffer.price
-    ? format.number(kitOffer.price.amountMinor / 100, { style: "currency", currency: kitOffer.price.currency })
-    : null;
+  const price = kitOffer.price ? formatPrice(kitOffer.price, locale) : null;
 
   return (
     <>
@@ -236,7 +235,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </div>
         </section>
 
-        <ProductSection price={price} />
+        <ProductSection price={price} provisional={kitOffer.provisional} orderingOpen={kitOffer.orderingOpen} />
 
         {/* Idées cadeaux : en-tête scindé, cartes-liens avec petite œuvre superposée. */}
         <section className="section bg-cream" id="cadeaux" aria-labelledby="gifts-title">
@@ -250,7 +249,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             </header>
             <ul className="gift-grid">
               {GIFTS.map((g, i) => (
-                <li key={g.key} data-reveal style={{ ["--i" as string]: i % 3 }}>
+                <li key={g.key} data-reveal style={{ ["--i" as string]: i % 3 }} className={"occasions" in g ? "gift-wide" : undefined}>
                   <a className="gift-card" href="#acheter">
                     <div className="gift-img">
                       {g.name ? <img src={`/visuels/${g.name}-photo.webp`} alt="" width={600} height={600} loading="lazy" /> : <NailRing />}
@@ -264,6 +263,13 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                     {"caption" in g && <p className="gift-caption">{t(`gifts.items.${g.key}.caption`)}</p>}
                     <h3 className={"caption" in g ? "has-caption" : undefined}>{t(`gifts.items.${g.key}.title`)}</h3>
                     <p>{t(`gifts.items.${g.key}.text`)}</p>
+                    {"occasions" in g && (
+                      <ul className="gift-occasions">
+                        {g.occasions.map((o) => (
+                          <li key={o}>{t(`gifts.items.${g.key}.occasions.${o}`)}</li>
+                        ))}
+                      </ul>
+                    )}
                   </a>
                 </li>
               ))}
@@ -314,7 +320,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </section>
       </main>
       <SiteFooter />
-      <StickyBar watchId="hero-actions" price={price} />
+      <StickyBar watchId="hero-actions" price={price} orderingOpen={kitOffer.orderingOpen} />
       <Reveal />
     </>
   );

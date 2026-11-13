@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 
 /** Barre d'achat : apparaît quand le bouton du haut n'est plus visible. */
-export function StickyBar({ watchId, price }: { watchId: string; price: string | null }) {
+export function StickyBar({ watchId, price, orderingOpen = false }: { watchId: string; price: string | null; orderingOpen?: boolean }) {
   const t = useTranslations("sticky");
   const [visible, setVisible] = useState(false);
 
@@ -24,7 +24,7 @@ export function StickyBar({ watchId, price }: { watchId: string; price: string |
         {price && <span>{price}</span>}
       </div>
       <a className="btn btn-primary" href="#acheter">
-        {price ? t("cta") : t("ctaSoon")}
+        {price && orderingOpen ? t("cta") : t("ctaSoon")}
       </a>
     </div>
   );

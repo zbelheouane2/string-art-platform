@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Gallery } from "./Gallery";
 import { PlusIcon } from "./Icons";
 
-const INCLUDES = ["board", "thread", "code", "guide"] as const;
+const INCLUDES = ["board", "thread", "code", "guide", "card"] as const;
 const ACCORDION = ["box", "photo", "app", "gift"] as const;
 
 /** Album : chaque portrait en fil est suivi de sa photo de départ. */
@@ -27,7 +27,17 @@ const GALLERY = [
 ];
 
 /** Bloc d'achat (accueil et page du kit) : galerie qui glisse + colonne d'infos collante. */
-export async function ProductSection({ price, headingLevel = 2 }: { price: string | null; headingLevel?: 1 | 2 }) {
+export async function ProductSection({
+  price,
+  provisional = false,
+  orderingOpen = false,
+  headingLevel = 2,
+}: {
+  price: string | null;
+  provisional?: boolean;
+  orderingOpen?: boolean;
+  headingLevel?: 1 | 2;
+}) {
   const t = await getTranslations("shop");
   const Heading = headingLevel === 1 ? "h1" : "h2";
   return (
@@ -41,6 +51,7 @@ export async function ProductSection({ price, headingLevel = 2 }: { price: strin
         <div className="shop-info" data-reveal style={{ ["--i" as string]: 1 }}>
           <Heading id="shop-title">{t("title")}</Heading>
           <p className="shop-price">{price ?? t("priceSoon")}</p>
+          {price && provisional && <p className="shop-price-note">{t("priceProvisional")}</p>}
           <p className="shop-lead">{t("lead")}</p>
           <p className="shop-desc">{t("description")}</p>
           <h3>{t("includesTitle")}</h3>
@@ -49,8 +60,8 @@ export async function ProductSection({ price, headingLevel = 2 }: { price: strin
               <li key={k}>{t(`includes.${k}`)}</li>
             ))}
           </ul>
-          <button type="button" className="btn btn-primary btn-lg btn-block" disabled={!price}>
-            {price ? t("cta") : t("ctaSoon")}
+          <button type="button" className="btn btn-primary btn-lg btn-block" disabled={!price || !orderingOpen}>
+            {price && orderingOpen ? t("cta") : t("ctaSoon")}
           </button>
           <p className="shop-note">{t("payment")}</p>
           <div className="faq-list shop-accordion">

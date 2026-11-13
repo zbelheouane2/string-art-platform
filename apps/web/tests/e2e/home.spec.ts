@@ -175,3 +175,12 @@ test("le plan de la planche montre 240 clous numérotés de 1 à 60 par secteur"
   expect(nums[60]).toBe("1");
   expect(nums[239]).toBe("60");
 });
+
+test("le prix provisoire s'affiche et la commande reste fermée", async ({ page }) => {
+  await page.goto("/fr");
+  const shop = page.locator("#acheter");
+  await expect(shop.locator(".shop-price")).toHaveText(/4\s900\sDA/);
+  await expect(shop.locator(".shop-price-note")).toHaveText("Prix de lancement provisoire");
+  await expect(shop.getByRole("button", { name: "Bientôt disponible" })).toBeDisabled();
+  await expect(page.locator(".gift-wide .gift-occasions li")).toHaveCount(5);
+});

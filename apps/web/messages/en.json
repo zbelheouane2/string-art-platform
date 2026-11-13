@@ -33,7 +33,7 @@
     "replay": "Replay the weaving",
     "pause": "Pause",
     "play": "Resume",
-    "credit": "Sample portrait",
+    "credit": "Algerian Beauty",
     "medallion": "The original photo",
     "proof": {
       "cod": "Cash on delivery",
@@ -76,6 +76,17 @@
       "self": {
         "title": "For yourself",
         "text": "A creative evening, away from screens"
+      },
+      "occasion": {
+        "title": "For an occasion",
+        "text": "A free message card, tucked into the kit, for the occasion of your choice:",
+        "occasions": {
+          "birth": "Birth",
+          "birthday": "Birthday",
+          "wedding": "Wedding",
+          "memory": "Keepsake",
+          "other": "Other"
+        }
       }
     },
     "placeholder": "Temporary visual"
@@ -144,7 +155,8 @@
       "board": "50 × 50 cm board with 240 nails already set",
       "thread": "Spool of black thread",
       "code": "Personal code to create the pattern",
-      "guide": "Voice guide on your phone"
+      "guide": "Voice guide on your phone",
+      "card": "Free message card for the occasion of your choice (birth, birthday, wedding, keepsake or other)"
     },
     "cta": "Add to cart",
     "ctaSoon": "Coming soon",
@@ -195,7 +207,8 @@
       "grandpa": "String portrait of a grandfather in a chechia",
       "grandpaPhoto": "The source photo of the grandfather in a chechia",
       "board": "Board plan, 50 × 50 cm: 240 nails numbered A1 to D60"
-    }
+    },
+    "priceProvisional": "Provisional launch price"
   },
   "faq": {
     "eyebrow": "FAQ",

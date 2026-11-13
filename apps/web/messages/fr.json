@@ -33,7 +33,7 @@
     "replay": "Revoir le tissage",
     "pause": "Mettre en pause",
     "play": "Reprendre",
-    "credit": "Portrait d'exemple",
+    "credit": "Beauté Algérienne",
     "medallion": "La photo de départ",
     "proof": {
       "cod": "Paiement à la livraison",
@@ -76,6 +76,17 @@
       "self": {
         "title": "Pour soi",
         "text": "Une soirée créative, loin des écrans"
+      },
+      "occasion": {
+        "title": "Pour une occasion",
+        "text": "Une carte-message offerte, glissée dans le kit, pour l'occasion de votre choix :",
+        "occasions": {
+          "birth": "Naissance",
+          "birthday": "Anniversaire",
+          "wedding": "Mariage",
+          "memory": "Souvenir",
+          "other": "Autre"
+        }
       }
     },
     "placeholder": "Visuel provisoire"
@@ -144,7 +155,8 @@
       "board": "Planche 50 × 50 cm, 240 clous déjà posés",
       "thread": "Bobine de fil noir",
       "code": "Code personnel pour créer le modèle",
-      "guide": "Guide vocal sur téléphone"
+      "guide": "Guide vocal sur téléphone",
+      "card": "Carte-message offerte pour l'occasion de votre choix (naissance, anniversaire, mariage, souvenir ou autre)"
     },
     "cta": "Ajouter au panier",
     "ctaSoon": "Bientôt disponible",
@@ -195,7 +207,8 @@
       "grandpa": "Portrait en fil d'un grand-père à la chéchia",
       "grandpaPhoto": "La photo de départ du grand-père à la chéchia",
       "board": "Plan de la planche 50 × 50 cm : 240 clous numérotés de A1 à D60"
-    }
+    },
+    "priceProvisional": "Prix de lancement provisoire"
   },
   "faq": {
     "eyebrow": "FAQ",
