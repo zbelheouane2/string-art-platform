@@ -21,7 +21,7 @@ const TRUST = ["cod", "delivery", "voice", "nails"] as const;
 const PROOF = ["cod", "nails", "voice"] as const;
 const GIFTS = [
   { key: "couples", name: "couple" },
-  { key: "parents", name: "photographe" },
+  { key: "parents", name: "salah" },
   { key: "grandparents", name: "fillette" },
   { key: "pets", name: "chat" },
   { key: "memory", name: null },

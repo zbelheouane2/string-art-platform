@@ -39,3 +39,4 @@ Nouveaux textes sous `home.*` (fr, en, ar).
 - Idées cadeaux, carte « Pour les grands-parents » : photo de fillette fournie par Zaki (`fillette-photo.webp`) et son portrait en fil calculé par le moteur (contraste, 3 065 fils, `fillette-fil.webp`), à la place du visuel provisoire.
 
 - Accueil : carte « De la photo au fil » avec curseur rond (photo couleur ↔ fil, aller-retour d'invitation à la première apparition) sur le visage de la femme du couple ; carte cadeau « Pour un couple » avec la photo du couple.
+- Accueil : carte cadeau « Pour ses parents » illustrée par le portrait de Salah Aougrout et son rendu en fil (moteur, variante standard, 2 400 lignes environ) ; visuel provisoire.
