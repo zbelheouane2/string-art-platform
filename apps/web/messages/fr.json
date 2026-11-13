@@ -189,7 +189,9 @@
       "pet": "Portrait en fil d'un chat",
       "petPhoto": "La photo de départ du chat",
       "baby": "Portrait en fil d'un bébé",
-      "babyPhoto": "La photo de départ du bébé"
+      "babyPhoto": "La photo de départ du bébé",
+      "haik": "Portrait en fil d'une femme en haïk",
+      "haikPhoto": "La photo de départ de la femme en haïk"
     }
   },
   "faq": {

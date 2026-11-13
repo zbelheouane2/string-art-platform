@@ -189,7 +189,9 @@
       "pet": "String portrait of a cat",
       "petPhoto": "The source photo of the cat",
       "baby": "String portrait of a baby",
-      "babyPhoto": "The source photo of the baby"
+      "babyPhoto": "The source photo of the baby",
+      "haik": "String portrait of a woman in a haik",
+      "haikPhoto": "The source photo of the woman in a haik"
     }
   },
   "faq": {
