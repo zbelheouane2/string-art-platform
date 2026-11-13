@@ -11,10 +11,8 @@ const portrait = (name: string, alt: string) => [
   { src: `/visuels/${name}-photo.webp`, alt: `${alt}Photo` },
 ];
 const GALLERY = [
-  { src: "/visuels/martyr-fil.webp", alt: "thread" },
+  ...portrait("monalisa", "monalisa"),
   { src: "/visuels/planche-plan.webp", alt: "board" },
-  { src: "/visuels/devidoir.webp", alt: "spool" },
-  { src: "/visuels/martyr-photo.webp", alt: "photo" },
   ...portrait("salah", "salah"),
   ...portrait("benmhidi", "benmhidi"),
   ...portrait("soi", "self"),
