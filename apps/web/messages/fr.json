@@ -33,7 +33,7 @@
     "replay": "Revoir le tissage",
     "pause": "Mettre en pause",
     "play": "Reprendre",
-    "credit": "Photo d'archive",
+    "credit": "Ali La Pointe",
     "medallion": "La photo de départ",
     "proof": {
       "cod": "Paiement à la livraison",
@@ -58,7 +58,8 @@
       },
       "parents": {
         "title": "Pour ses parents",
-        "text": "Un portrait de famille pour le salon"
+        "text": "Un portrait de famille pour le salon",
+        "caption": "La star algérienne : Salah Aougrout"
       },
       "grandparents": {
         "title": "Pour les grands-parents",

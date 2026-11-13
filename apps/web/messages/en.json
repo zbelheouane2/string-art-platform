@@ -33,7 +33,7 @@
     "replay": "Replay the weaving",
     "pause": "Pause",
     "play": "Resume",
-    "credit": "Archive photo",
+    "credit": "Ali La Pointe",
     "medallion": "The original photo",
     "proof": {
       "cod": "Cash on delivery",
@@ -58,7 +58,8 @@
       },
       "parents": {
         "title": "For your parents",
-        "text": "A family portrait for the living room"
+        "text": "A family portrait for the living room",
+        "caption": "Algerian star: Salah Aougrout"
       },
       "grandparents": {
         "title": "For grandparents",

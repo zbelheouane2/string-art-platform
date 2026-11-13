@@ -2585,3 +2585,15 @@ h1 em {
 .ba-round .ba-tag {
   display: none;
 }
+
+/* Légende sous la vignette d'une carte cadeau (ex. nom de la personne photographiée). */
+.gift-card .gift-caption {
+  margin-block: 0.9rem 0;
+  color: var(--accent);
+  font-size: var(--step--1);
+  font-weight: 600;
+}
+
+.gift-card h3.has-caption {
+  margin-block-start: 0.25rem;
+}

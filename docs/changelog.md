@@ -42,3 +42,5 @@ Nouveaux textes sous `home.*` (fr, en, ar).
 - Accueil : carte cadeau « Pour ses parents » illustrée par le portrait de Salah Aougrout et son rendu en fil (moteur, variante standard, 2 583 lignes) ; visuel provisoire.
 - Accueil : carte cadeau « Pour soi » avec la photo fournie par Zaki et son rendu en fil (variante standard, 1 782 lignes).
 - Accueil : carte cadeau « En mémoire d'un proche » avec la photo d'archive de Larbi Ben M'hidi, recadrée sur le visage, et son rendu en fil (variante contraste, 2 947 lignes).
+- Accueil : sous l'animation, le crédit « Photo d'archive » devient le nom du martyr, Ali La Pointe (fr, en, ar).
+- Accueil : légende « La star algérienne : Salah Aougrout » sur la carte « Pour ses parents » (fr, en, ar).

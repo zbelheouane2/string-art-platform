@@ -21,7 +21,7 @@ const TRUST = ["cod", "delivery", "voice", "nails"] as const;
 const PROOF = ["cod", "nails", "voice"] as const;
 const GIFTS = [
   { key: "couples", name: "couple" },
-  { key: "parents", name: "salah" },
+  { key: "parents", name: "salah", caption: true },
   { key: "grandparents", name: "fillette" },
   { key: "pets", name: "chat" },
   { key: "memory", name: "benmhidi" },
@@ -260,7 +260,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                         </span>
                       )}
                     </div>
-                    <h3>{t(`gifts.items.${g.key}.title`)}</h3>
+                    {"caption" in g && <p className="gift-caption">{t(`gifts.items.${g.key}.caption`)}</p>}
+                    <h3 className={"caption" in g ? "has-caption" : undefined}>{t(`gifts.items.${g.key}.title`)}</h3>
                     <p>{t(`gifts.items.${g.key}.text`)}</p>
                   </a>
                 </li>
