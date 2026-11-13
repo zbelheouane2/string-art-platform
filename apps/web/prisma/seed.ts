@@ -50,12 +50,20 @@ async function main() {
   }
 
   const dz = await db.market.findUniqueOrThrow({ where: { code: "DZ" } });
-  for (const code of ["yalidine_home", "yalidine_desk"]) {
-    await db.deliveryMethod.upsert({
-      where: { marketId_code: { marketId: dz.id, code } },
-      update: {},
-      create: { marketId: dz.id, code, provider: "yalidine" },
-    });
+  // Transporteur retenu au lancement : ZR Express (choix du propriétaire, 2026-11-13).
+  // Les autres restent en base, inactifs, prêts à être rouverts.
+  const carriers = [
+    { codes: ["zrexpress_home", "zrexpress_desk"], provider: "zrexpress", active: true },
+    { codes: ["yalidine_home", "yalidine_desk"], provider: "yalidine", active: false },
+  ];
+  for (const c of carriers) {
+    for (const code of c.codes) {
+      await db.deliveryMethod.upsert({
+        where: { marketId_code: { marketId: dz.id, code } },
+        update: { provider: c.provider, active: c.active },
+        create: { marketId: dz.id, code, provider: c.provider, active: c.active },
+      });
+    }
   }
   if (kitOffer.price) {
     const kit = await db.product.findUniqueOrThrow({ where: { slug: kitOffer.slug } });

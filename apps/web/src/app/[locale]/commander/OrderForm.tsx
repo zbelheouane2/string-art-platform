@@ -2,12 +2,16 @@
 
 import { useActionState, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { OTHER_COMMUNE, communesOf } from "@/config/communes";
 import { WILAYAS } from "@/config/wilayas";
+import { formatPrice, type Price } from "@/lib/price";
 import { orderAction, type OrderState } from "./actions";
 
 interface Props {
-  /** Total affiché pour chaque quantité (index 0 = 1 kit), calculé côté serveur. */
-  prices: string[];
+  /** Prix unitaire du kit (lu en base). Le serveur recalcule tout à la validation. */
+  price: Price;
+  /** Frais connus : mode de livraison → wilaya → montant. */
+  rates: Record<string, Record<string, number>>;
   delivery: string[];
   payment: string[];
   maxQuantity: number;
@@ -29,13 +33,19 @@ function Field({ id, label, error, children }: { id: string; label: string; erro
   );
 }
 
-export function OrderForm({ prices, delivery, payment, maxQuantity }: Props) {
+export function OrderForm({ price, rates, delivery, payment, maxQuantity }: Props) {
   const t = useTranslations("order");
   const locale = useLocale();
   const [state, action, pending] = useActionState<OrderState, FormData>(orderAction, { fieldErrors: {}, formError: null, values: {} });
   const v = state.values;
   const [quantity, setQuantity] = useState(Number(v.quantity ?? 1));
   const [mode, setMode] = useState(v.delivery ?? delivery[0]);
+  const [wilaya, setWilaya] = useState(v.wilaya ?? "");
+  const [commune, setCommune] = useState(v.commune ?? "");
+  const communes = communesOf(wilaya);
+  const fee = wilaya ? (rates[mode]?.[wilaya] ?? null) : null;
+  const money = (amountMinor: number) => formatPrice({ amountMinor, currency: price.currency }, locale);
+  const items = price.amountMinor * quantity;
   const err = (k: string) => (state.fieldErrors[k] ? t(`errors.${state.fieldErrors[k]}`) : undefined);
   const aria = (k: string) => (state.fieldErrors[k] ? { "aria-invalid": true, "aria-describedby": `${k}-error` } : {});
 
@@ -67,7 +77,18 @@ export function OrderForm({ prices, delivery, payment, maxQuantity }: Props) {
           ))}
         </div>
         <Field id="wilaya" label={t("fields.wilaya")} error={err("wilaya")}>
-          <select id="wilaya" name="wilaya" className="field" defaultValue={v.wilaya ?? ""} required {...aria("wilaya")}>
+          <select
+            id="wilaya"
+            name="wilaya"
+            className="field"
+            value={wilaya}
+            onChange={(e) => {
+              setWilaya(e.target.value);
+              setCommune("");
+            }}
+            required
+            {...aria("wilaya")}
+          >
             <option value="" disabled>
               {t("fields.wilayaPick")}
             </option>
@@ -79,14 +100,26 @@ export function OrderForm({ prices, delivery, payment, maxQuantity }: Props) {
           </select>
         </Field>
         <Field id="commune" label={t("fields.commune")} error={err("commune")}>
-          <input id="commune" name="commune" className="field" autoComplete="address-level2" defaultValue={v.commune} required {...aria("commune")} />
+          <select id="commune" name="commune" className="field" value={commune} onChange={(e) => setCommune(e.target.value)} disabled={!wilaya} required {...aria("commune")}>
+            <option value="" disabled>
+              {wilaya ? t("fields.communePick") : t("fields.communeFirst")}
+            </option>
+            {communes.map(([fr, ar]) => (
+              <option key={fr} value={fr}>
+                {locale === "ar" ? ar : fr}
+              </option>
+            ))}
+            {wilaya && <option value={OTHER_COMMUNE}>{t("fields.communeOther")}</option>}
+          </select>
         </Field>
-        {mode.endsWith("_home") && (
-          <Field id="address" label={t("fields.address")} error={err("address")}>
-            <input id="address" name="address" className="field" autoComplete="street-address" defaultValue={v.address} required {...aria("address")} />
+        {commune === OTHER_COMMUNE && (
+          <Field id="communeOther" label={t("fields.communeOtherLabel")}>
+            <input id="communeOther" name="communeOther" className="field" autoComplete="address-level2" defaultValue={v.communeOther} required />
           </Field>
         )}
-        <p className="field-help">{t("deliveryFees")}</p>
+        <p className="field-help" aria-live="polite">
+          {!wilaya ? t("feePickWilaya") : fee === null ? t("deliveryFees") : t("feeKnown", { fee: money(fee) })}
+        </p>
       </fieldset>
 
       <fieldset className="form-section">
@@ -118,9 +151,19 @@ export function OrderForm({ prices, delivery, payment, maxQuantity }: Props) {
         <Field id="note" label={t("fields.note")} error={err("note")}>
           <textarea id="note" name="note" className="field" rows={2} defaultValue={v.note} {...aria("note")} />
         </Field>
+        <dl className="order-lines">
+          <div>
+            <dt>{t("lineItems", { count: quantity })}</dt>
+            <dd>{money(items)}</dd>
+          </div>
+          <div>
+            <dt>{t("lineDelivery")}</dt>
+            <dd>{fee === null ? t("feeLater") : money(fee)}</dd>
+          </div>
+        </dl>
         <p className="order-total">
-          <span>{t("total")}</span>
-          <strong>{prices[quantity - 1]}</strong>
+          <span>{fee === null ? t("total") : t("totalWithDelivery")}</span>
+          <strong>{money(items + (fee ?? 0))}</strong>
         </p>
       </fieldset>
 

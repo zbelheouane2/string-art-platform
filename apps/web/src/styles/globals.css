@@ -3133,3 +3133,20 @@ h1 em {
   gap: 0.5rem;
   margin-block-start: 1rem;
 }
+
+.order-lines {
+  display: grid;
+  gap: 0.35rem;
+  margin: 1rem 0 0;
+}
+
+.order-lines div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--ink-soft);
+}
+
+.order-lines dd {
+  margin: 0;
+}

@@ -14,10 +14,11 @@ export interface OrderRow {
   phone: string;
   wilaya: string;
   commune: string;
-  address: string;
   delivery: string;
   payment: string;
   quantity: number;
+  /** null : frais à confirmer par téléphone. */
+  deliveryFee: number | null;
   total: number;
   currency: string;
   note: string;

@@ -22,7 +22,7 @@ export default async function ConfirmationPage({ params }: { params: Promise<{ l
   if (!/^DK-[0-9A-Z]{6}$/.test(number)) notFound();
   const order = await db().order.findUnique({
     where: { number },
-    select: { number: true, totalMinor: true, currency: true, payments: { select: { paymentMethod: { select: { code: true } } } } },
+    select: { number: true, totalMinor: true, deliveryFeeMinor: true, currency: true, payments: { select: { paymentMethod: { select: { code: true } } } } },
   });
   if (!order) notFound();
   const t = await getTranslations("confirmation");
@@ -39,7 +39,7 @@ export default async function ConfirmationPage({ params }: { params: Promise<{ l
           {t("number")} <strong dir="ltr">{order.number}</strong>
         </p>
         <p className="order-total">
-          <span>{t("total")}</span>
+          <span>{order.deliveryFeeMinor === null ? t("total") : t("totalWithDelivery")}</span>
           <strong>{formatPrice({ amountMinor: order.totalMinor, currency: order.currency }, locale)}</strong>
         </p>
         <ol className="num-list">

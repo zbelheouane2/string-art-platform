@@ -634,9 +634,12 @@
       "wilaya": "Wilaya (province)",
       "wilayaPick": "Choose your wilaya",
       "commune": "Town",
-      "address": "Address (street, number, building)",
       "quantity": "Number of kits",
-      "note": "Note for the courier (optional)"
+      "note": "Note for the courier (optional)",
+      "communePick": "Choose your town",
+      "communeFirst": "Choose the wilaya first",
+      "communeOther": "My town isn't listed",
+      "communeOtherLabel": "Name of your town"
     },
     "delivery": {
       "yalidine_home": {
@@ -646,6 +649,14 @@
       "yalidine_desk": {
         "name": "Courier office",
         "text": "Pick up the parcel near you"
+      },
+      "zrexpress_home": {
+        "name": "Home delivery",
+        "text": "Delivered by ZR Express; the courier calls you for the exact place"
+      },
+      "zrexpress_desk": {
+        "name": "Delivery office",
+        "text": "Pick up the parcel at a ZR Express office"
       }
     },
     "payment": {
@@ -662,19 +673,17 @@
         "text": "Secure online payment"
       }
     },
-    "deliveryFees": "Delivery fees depend on your wilaya: we confirm them by phone before shipping.",
+    "deliveryFees": "The delivery fee for this wilaya is confirmed by phone before shipping.",
     "total": "Total (excluding delivery)",
     "submit": "Place my order",
     "sending": "Sending…",
-    "privacy": "Your details are only used to deliver your order.",
+    "privacy": "Your details are only used to deliver your order. We don't ask for your full address: the courier will call you.",
     "errors": {
       "nameShort": "Enter your full name.",
       "nameLong": "Name too long.",
       "phone": "Algerian mobile number expected (05, 06 or 07, 10 digits).",
       "wilaya": "Choose your wilaya.",
       "commune": "Enter your town.",
-      "address": "Enter your address for home delivery.",
-      "addressLong": "Address too long.",
       "delivery": "Choose a delivery option.",
       "payment": "Choose a payment method.",
       "quantity": "Invalid quantity.",
@@ -682,7 +691,13 @@
       "check": "Please check the highlighted fields.",
       "closed": "Ordering is not open at the moment.",
       "unavailable": "This option is no longer available, please try again."
-    }
+    },
+    "feePickWilaya": "Choose your wilaya to see the delivery fee.",
+    "feeKnown": "Delivery fee: {fee}.",
+    "lineItems": "{count, plural, one {# kit} other {# kits}}",
+    "lineDelivery": "Delivery",
+    "feeLater": "confirmed by phone",
+    "totalWithDelivery": "Total including delivery"
   },
   "confirmation": {
     "eyebrow": "Thank you!",
@@ -696,6 +711,7 @@
       "paid": "Your payment is being verified.",
       "code": "In the box: your personal code to create the portrait and start the voice guide."
     },
-    "tryGuide": "Meanwhile, try the voice guide"
+    "tryGuide": "Meanwhile, try the voice guide",
+    "totalWithDelivery": "Total including delivery"
   }
 }

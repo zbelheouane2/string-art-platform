@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
+import { OTHER_COMMUNE, communeCount, communesOf } from "@/config/communes";
 import { WILAYAS } from "@/config/wilayas";
 import { normalizeDzPhone, orderSchema } from "@/lib/orderSchema";
 
-const base = { fullName: "Client Test", phone: "0555123456", wilaya: "16", commune: "Bab Ezzouar", delivery: "yalidine_desk", payment: "cod", quantity: "1" };
+const base = { fullName: "Client Test", phone: "0555123456", wilaya: "16", commune: "Bab Ezzouar", delivery: "zrexpress_desk", payment: "cod", quantity: "1" };
 
 describe("commande", () => {
   it("normalise les numéros mobiles algériens", () => {
@@ -20,11 +21,11 @@ describe("commande", () => {
     expect(r.data?.locale).toBe("fr");
   });
 
-  it("exige l'adresse pour la livraison à domicile", () => {
-    const r = orderSchema.safeParse({ ...base, delivery: "yalidine_home" });
-    expect(r.success).toBe(false);
-    expect(r.error?.issues[0]).toMatchObject({ path: ["address"], message: "address" });
-    expect(orderSchema.safeParse({ ...base, delivery: "yalidine_home", address: "12 rue des Martyrs" }).success).toBe(true);
+  it("livraison à domicile sans adresse complète", () => {
+    // Aucune adresse demandée, même à domicile ; une adresse envoyée quand même est ignorée.
+    const r = orderSchema.safeParse({ ...base, delivery: "zrexpress_home", address: "12 rue des Martyrs" });
+    expect(r.success).toBe(true);
+    expect(r.data).not.toHaveProperty("address");
   });
 
   it("refuse wilaya inconnue, quantité excessive et téléphone fixe", () => {
@@ -37,5 +38,23 @@ describe("commande", () => {
     expect(WILAYAS).toHaveLength(69);
     expect(WILAYAS.map((w) => Number(w.code))).toEqual(Array.from({ length: 69 }, (_, i) => i + 1));
     expect(WILAYAS.every((w) => w.fr && w.ar)).toBe(true);
+  });
+
+  it("contient les 1 541 communes, réparties dans les 69 wilayas, avec noms français et arabes", () => {
+    expect(communeCount()).toBe(1541);
+    for (const w of WILAYAS) expect(communesOf(w.code).length).toBeGreaterThan(0);
+    // Nouvelles wilayas (loi 26-06) : effectifs annoncés par le texte.
+    const expected: Record<string, number> = { "59": 12, "60": 8, "61": 5, "62": 4, "63": 4, "64": 6, "65": 10, "66": 8, "67": 21, "68": 23, "69": 7 };
+    for (const [code, n] of Object.entries(expected)) expect(communesOf(code)).toHaveLength(n);
+    expect(communesOf("68").map(([fr]) => fr)).toContain("Bou Saada");
+    expect(communesOf("28").map(([fr]) => fr)).not.toContain("Bou Saada");
+    expect(Object.values(WILAYAS).every((w) => communesOf(w.code).every(([fr, ar]) => fr && /[\u0600-\u06ff]/.test(ar)))).toBe(true);
+  });
+
+  it("refuse une commune d'une autre wilaya, accepte la saisie libre", () => {
+    expect(orderSchema.safeParse({ ...base, commune: "Boufarik" }).success).toBe(false);
+    const other = orderSchema.safeParse({ ...base, commune: OTHER_COMMUNE, communeOther: "Hai El Badr" });
+    expect(other.data?.commune).toBe("Hai El Badr");
+    expect(orderSchema.safeParse({ ...base, commune: OTHER_COMMUNE }).success).toBe(false);
   });
 });

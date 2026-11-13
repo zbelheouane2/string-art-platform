@@ -17,10 +17,10 @@ Le mot secret empêche quelqu'un qui connaîtrait l'URL d'ajouter de fausses lig
 
 ```javascript
 const SECRET = "CHANGEZ-MOI";
-const COLUMNS = ["number", "createdAt", "fullName", "phone", "wilaya", "commune", "address",
-  "delivery", "payment", "quantity", "total", "currency", "note", "locale"];
-const HEADERS = ["Commande", "Date", "Nom", "Téléphone", "Wilaya", "Commune", "Adresse",
-  "Livraison", "Paiement", "Quantité", "Total", "Devise", "Remarque", "Langue", "Statut"];
+const COLUMNS = ["number", "createdAt", "fullName", "phone", "wilaya", "commune",
+  "delivery", "payment", "quantity", "deliveryFee", "total", "currency", "note", "locale"];
+const HEADERS = ["Commande", "Date", "Nom", "Téléphone", "Wilaya", "Commune",
+  "Livraison", "Paiement", "Quantité", "Frais de livraison", "Total", "Devise", "Remarque", "Langue", "Statut"];
 
 function doPost(e) {
   const data = JSON.parse(e.postData.contents);
@@ -28,8 +28,8 @@ function doPost(e) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
   if (sheet.getLastRow() === 0) sheet.appendRow(HEADERS);
   const o = data.order;
-  // Téléphone en texte pour garder le 0 initial.
-  sheet.appendRow(COLUMNS.map((k) => (k === "phone" ? "'" + o[k] : o[k])).concat(["À confirmer"]));
+  // Téléphone en texte pour garder le 0 initial ; frais vides = à confirmer par téléphone.
+  sheet.appendRow(COLUMNS.map((k) => (k === "phone" ? "'" + o[k] : o[k] ?? "")).concat(["À confirmer"]));
   return json({ ok: true });
 }
 

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { OTHER_COMMUNE, isCommuneOf } from "@/config/communes";
 import { commerce } from "@/config/commerce";
 import { WILAYAS } from "@/config/wilayas";
 
@@ -12,7 +13,11 @@ export function normalizeDzPhone(input: string): string | null {
   return m ? `0${m[1]}` : null;
 }
 
-/** Validation partagée par le formulaire (navigateur) et le serveur. Messages = clés de traduction. */
+/**
+ * Validation partagée par le formulaire (navigateur) et le serveur. Messages = clés de traduction.
+ * Pas d'adresse complète (choix du propriétaire, protection des données) : wilaya
+ * et commune suffisent, le livreur appelle le client pour le lieu exact.
+ */
 export const orderSchema = z.object({
   fullName: z.string().trim().min(3, "nameShort").max(80, "nameLong"),
   phone: z
@@ -27,16 +32,21 @@ export const orderSchema = z.object({
       return phone;
     }),
   wilaya: z.string().refine((v) => WILAYAS.some((w) => w.code === v), "wilaya"),
-  commune: z.string().trim().min(2, "commune").max(80, "commune"),
-  address: z.string().trim().max(200, "addressLong").optional().default(""),
+  /** Commune choisie dans la liste de la wilaya, ou OTHER_COMMUNE + saisie libre. */
+  commune: z.string().trim().min(1, "commune").max(80, "commune"),
+  communeOther: z.string().trim().max(80, "commune").optional().default(""),
   delivery: z.string().min(1, "delivery"),
   payment: z.string().min(1, "payment"),
   quantity: z.coerce.number().int().min(1, "quantity").max(commerce.maxQuantity, "quantity"),
   note: z.string().trim().max(300, "noteLong").optional().default(""),
   locale: z.enum(["fr", "en", "ar"]).default("fr"),
 })
-  // À domicile, l'adresse est obligatoire ; au bureau du transporteur, la commune suffit.
-  .refine((o) => !o.delivery.endsWith("_home") || o.address.length >= 5, { message: "address", path: ["address"] });
+  // La commune doit appartenir à la wilaya choisie (ou être saisie à la main).
+  .refine((o) => (o.commune === OTHER_COMMUNE ? o.communeOther.length >= 2 : isCommuneOf(o.wilaya, o.commune)), {
+    message: "commune",
+    path: ["commune"],
+  })
+  .transform(({ communeOther, ...o }) => ({ ...o, commune: o.commune === OTHER_COMMUNE ? communeOther : o.commune }));
 
 export type OrderInput = z.input<typeof orderSchema>;
 export type ValidOrder = z.output<typeof orderSchema>;

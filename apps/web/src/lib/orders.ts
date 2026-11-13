@@ -14,6 +14,8 @@ export interface CheckoutOptions {
   price: Price;
   delivery: string[];
   payment: string[];
+  /** Frais connus : mode de livraison → wilaya → montant (unité mineure). */
+  rates: Record<string, Record<string, number>>;
 }
 
 /**
@@ -25,7 +27,7 @@ export async function checkoutOptions(marketCode = commerce.defaultMarket): Prom
   const market = await db().market.findUnique({
     where: { code: marketCode },
     include: {
-      deliveryMethods: { where: { active: true }, orderBy: { code: "asc" } },
+      deliveryMethods: { where: { active: true }, orderBy: { code: "asc" }, include: { rates: true } },
       paymentMethods: { where: { active: true }, include: { paymentMethod: true } },
     },
   });
@@ -43,8 +45,12 @@ export async function checkoutOptions(marketCode = commerce.defaultMarket): Prom
     marketId: market.id,
     product: { id: product.id, slug: product.slug, names: product.names as Record<string, string> },
     price: { amountMinor: price.amountMinor, currency: price.currency },
-    delivery: market.deliveryMethods.map((d) => d.code),
+    // Domicile d'abord, puis bureau.
+    delivery: market.deliveryMethods.map((d) => d.code).sort((a, b) => Number(b.endsWith("_home")) - Number(a.endsWith("_home"))),
     payment,
+    rates: Object.fromEntries(
+      market.deliveryMethods.map((d) => [d.code, Object.fromEntries(d.rates.filter((r) => r.currency === price.currency).map((r) => [r.zone, r.amountMinor]))]),
+    ),
   };
 }
 
@@ -73,7 +79,9 @@ export async function createOrder(input: ValidOrder, baseUrl: string): Promise<C
   const provider = paymentProvider(method.provider);
   if (!provider) return { ok: false, error: "payment" };
 
-  const total = options.price.amountMinor * input.quantity;
+  // Frais de livraison lus en base ; inconnus = confirmés par téléphone (null).
+  const fee = options.rates[input.delivery]?.[input.wilaya] ?? null;
+  const total = options.price.amountMinor * input.quantity + (fee ?? 0);
   const order = await db().$transaction(async (tx) => {
     const customer = await tx.customer.create({ data: { fullName: input.fullName, phone: input.phone, locale: input.locale } });
     for (let attempt = 0; ; attempt++) {
@@ -86,8 +94,9 @@ export async function createOrder(input: ValidOrder, baseUrl: string): Promise<C
           marketId: options.marketId,
           deliveryMethodId: delivery.id,
           currency: options.price.currency,
+          deliveryFeeMinor: fee,
           totalMinor: total,
-          shippingAddress: { wilaya: input.wilaya, commune: input.commune, address: input.address, note: input.note },
+          shippingAddress: { wilaya: input.wilaya, commune: input.commune, note: input.note },
           items: { create: { productId: options.product.id, quantity: input.quantity, unitPriceMinor: options.price.amountMinor } },
           payments: { create: { paymentMethodId: method.id, amountMinor: total, currency: options.price.currency } },
         },
@@ -115,10 +124,10 @@ export async function createOrder(input: ValidOrder, baseUrl: string): Promise<C
       phone: input.phone,
       wilayaCode: input.wilaya,
       commune: input.commune,
-      address: input.address,
       delivery: input.delivery,
       payment: input.payment,
       quantity: input.quantity,
+      deliveryFee: fee === null ? null : fee / 100,
       total: total / 100,
       currency: order.currency,
       note: input.note,

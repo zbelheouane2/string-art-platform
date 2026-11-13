@@ -634,9 +634,12 @@
       "wilaya": "Wilaya",
       "wilayaPick": "Choisissez votre wilaya",
       "commune": "Commune",
-      "address": "Adresse (rue, numéro, bâtiment)",
       "quantity": "Nombre de kits",
-      "note": "Remarque pour le livreur (facultatif)"
+      "note": "Remarque pour le livreur (facultatif)",
+      "communePick": "Choisissez votre commune",
+      "communeFirst": "Choisissez d'abord la wilaya",
+      "communeOther": "Ma commune n'est pas dans la liste",
+      "communeOtherLabel": "Nom de votre commune"
     },
     "delivery": {
       "yalidine_home": {
@@ -646,6 +649,14 @@
       "yalidine_desk": {
         "name": "Au bureau du transporteur",
         "text": "Vous retirez le colis près de chez vous"
+      },
+      "zrexpress_home": {
+        "name": "À domicile",
+        "text": "Livré chez vous par ZR Express ; le livreur vous appelle pour le lieu exact"
+      },
+      "zrexpress_desk": {
+        "name": "Au bureau de livraison",
+        "text": "Vous retirez le colis dans un bureau ZR Express"
       }
     },
     "payment": {
@@ -662,19 +673,17 @@
         "text": "Paiement sécurisé en ligne"
       }
     },
-    "deliveryFees": "Les frais de livraison dépendent de votre wilaya : nous vous les confirmons par téléphone avant l'envoi.",
+    "deliveryFees": "Frais de livraison pour cette wilaya confirmés par téléphone avant l'envoi.",
     "total": "Total (hors livraison)",
     "submit": "Valider ma commande",
     "sending": "Envoi…",
-    "privacy": "Vos coordonnées servent uniquement à livrer votre commande.",
+    "privacy": "Vos coordonnées servent uniquement à livrer votre commande. Nous ne demandons pas votre adresse complète : le livreur vous appelle.",
     "errors": {
       "nameShort": "Indiquez votre nom et prénom.",
       "nameLong": "Nom trop long.",
       "phone": "Numéro mobile algérien attendu (05, 06 ou 07, 10 chiffres).",
       "wilaya": "Choisissez votre wilaya.",
       "commune": "Indiquez votre commune.",
-      "address": "Indiquez votre adresse pour la livraison à domicile.",
-      "addressLong": "Adresse trop longue.",
       "delivery": "Choisissez un mode de livraison.",
       "payment": "Choisissez un moyen de paiement.",
       "quantity": "Quantité invalide.",
@@ -682,7 +691,13 @@
       "check": "Vérifiez les champs signalés.",
       "closed": "La commande n'est pas ouverte pour le moment.",
       "unavailable": "Ce choix n'est plus disponible, merci de réessayer."
-    }
+    },
+    "feePickWilaya": "Choisissez votre wilaya pour voir les frais de livraison.",
+    "feeKnown": "Frais de livraison : {fee}.",
+    "lineItems": "{count, plural, one {# kit} other {# kits}}",
+    "lineDelivery": "Livraison",
+    "feeLater": "confirmée par téléphone",
+    "totalWithDelivery": "Total livraison comprise"
   },
   "confirmation": {
     "eyebrow": "Merci !",
@@ -696,6 +711,7 @@
       "paid": "Votre paiement est en cours de vérification.",
       "code": "Dans la boîte : votre code personnel pour créer le portrait et lancer le guide vocal."
     },
-    "tryGuide": "En attendant, essayez le guide vocal"
+    "tryGuide": "En attendant, essayez le guide vocal",
+    "totalWithDelivery": "Total livraison comprise"
   }
 }

@@ -35,7 +35,8 @@ export default async function OrderPage({ params }: { params: Promise<{ locale: 
       </header>
       {options ? (
         <OrderForm
-          prices={Array.from({ length: commerce.maxQuantity }, (_, i) => formatPrice({ ...options.price, amountMinor: options.price.amountMinor * (i + 1) }, locale))}
+          price={options.price}
+          rates={options.rates}
           delivery={options.delivery}
           payment={options.payment}
           maxQuantity={commerce.maxQuantity}

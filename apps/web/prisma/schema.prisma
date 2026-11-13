@@ -85,8 +85,26 @@ model DeliveryMethod {
   active      Boolean @default(true)
   market      Market  @relation(fields: [marketId], references: [id])
   orders      Order[]
+  rates       DeliveryRate[]
 
   @@unique([marketId, code])
+}
+
+/// Frais de livraison d'un mode de livraison vers une zone (wilaya en Algérie),
+/// importés d'un fichier ou synchronisés avec le transporteur.
+model DeliveryRate {
+  id               String         @id @default(cuid())
+  deliveryMethodId String
+  /// Code de zone : numéro de wilaya « 01 »…« 69 » pour l'Algérie.
+  zone             String
+  amountMinor      Int
+  currency         String         @db.Char(3)
+  /// Origine du tarif : « fichier », « zrexpress »…
+  source           String
+  deliveryMethod   DeliveryMethod @relation(fields: [deliveryMethodId], references: [id])
+  updatedAt        DateTime       @updatedAt
+
+  @@unique([deliveryMethodId, zone])
 }
 
 model Customer {
@@ -117,6 +135,9 @@ model Order {
   marketId         String
   deliveryMethodId String?
   currency         String          @db.Char(3)
+  /// Frais de livraison retenus à la commande (null : à confirmer par téléphone).
+  deliveryFeeMinor Int?
+  /// Total articles + livraison connue.
   totalMinor       Int
   /// Adresse figée au moment de la commande.
   shippingAddress  Json

@@ -4,7 +4,7 @@
  * calcul du portrait, le moteur (ENGINE_URL).
  */
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import AxeBuilder from "@axe-core/playwright";
@@ -149,9 +149,11 @@ test.describe("commande", () => {
     await page.getByLabel("Nom et prénom").fill("Client Test");
     await page.getByLabel("Téléphone mobile").fill("+213 555 12 34 56");
     await page.getByLabel("Wilaya").selectOption("16");
-    await page.getByLabel("Commune").fill("Bab Ezzouar");
-    await page.getByLabel("Au bureau du transporteur").check();
-    await expect(page.getByLabel(/^Adresse/)).toHaveCount(0);
+    await page.getByLabel("Commune", { exact: true }).selectOption("Bab Ezzouar");
+    await page.getByLabel("Au bureau de livraison").check();
+    await page.getByLabel("À domicile").check();
+    await expect(page.locator("#address")).toHaveCount(0);
+    await page.getByLabel("Au bureau de livraison").check();
     await page.getByLabel("Nombre de kits").selectOption("2");
     await expect(page.locator(".order-total strong")).toHaveText("9 800 DA");
     await page.getByRole("button", { name: "Valider ma commande" }).click();
@@ -162,6 +164,43 @@ test.describe("commande", () => {
     await expect(page.getByText("Vous payez en espèces au livreur")).toBeVisible();
     // Aucune donnée personnelle sur la page de confirmation.
     await expect(page.getByText("Client Test")).toHaveCount(0);
+  });
+
+  test("frais de livraison connus : ajoutés au total selon la wilaya et le mode", async ({ page }) => {
+    const dir = mkdtempSync(path.join(tmpdir(), "tarifs-"));
+    const file = path.join(dir, "tarifs.csv");
+    writeFileSync(file, "wilaya;domicile;bureau\n09 - Blida;600;400\n");
+    execFileSync("npx", ["tsx", "scripts/import-rates.ts", "--carrier", "zrexpress", "--file", file], { stdio: "ignore" });
+
+    await page.goto("/fr/commander");
+    await expect(page.getByText("Choisissez votre wilaya pour voir les frais de livraison.")).toBeVisible();
+    await page.getByLabel("Wilaya").selectOption("09");
+    await expect(page.getByText("Frais de livraison : 600 DA.")).toBeVisible();
+    await expect(page.locator(".order-total strong")).toHaveText("5 500 DA");
+    await page.getByLabel("Au bureau de livraison").check();
+    await expect(page.locator(".order-total strong")).toHaveText("5 300 DA");
+
+    await page.getByLabel("Nom et prénom").fill("Client Blida");
+    await page.getByLabel("Téléphone mobile").fill("0661223344");
+    await page.getByLabel("Commune", { exact: true }).selectOption("Boufarik");
+    await page.getByRole("button", { name: "Valider ma commande" }).click();
+    await expect(page).toHaveURL(/\/fr\/commande\/DK-[0-9A-Z]{6}$/);
+    await expect(page.getByText("Total livraison comprise")).toBeVisible();
+    await expect(page.locator(".order-total strong")).toHaveText("5 300 DA");
+  });
+
+  test("communes : la liste suit la wilaya, en arabe aussi, avec saisie libre en dernier recours", async ({ page }) => {
+    await page.goto("/ar/commander");
+    const commune = page.locator("#commune");
+    await expect(commune).toBeDisabled();
+    await page.locator("#wilaya").selectOption("68");
+    await expect(commune.locator("option")).toHaveCount(1 + 23 + 1);
+    await expect(commune.locator('option[value="Bou Saada"]')).toHaveText("بوسعادة");
+    await commune.selectOption("__autre");
+    await expect(page.locator("#communeOther")).toBeVisible();
+    await page.locator("#wilaya").selectOption("16");
+    await expect(commune).toHaveValue("");
+    await expect(page.locator("#communeOther")).toHaveCount(0);
   });
 
   test("le bouton du site mène à la commande", async ({ page }) => {
