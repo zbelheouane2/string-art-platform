@@ -3,7 +3,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createOrder } from "@/lib/orders";
-import { orderSchema } from "@/lib/orderSchema";
+import { giftFieldErrors, orderSchema } from "@/lib/orderSchema";
 
 export type OrderState = {
   /** Champ → clé d'erreur (traduite dans le formulaire). */
@@ -18,6 +18,7 @@ export async function orderAction(_prev: OrderState, form: FormData): Promise<Or
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {};
     for (const issue of parsed.error.issues) fieldErrors[String(issue.path[0])] ??= issue.message;
+    Object.assign(fieldErrors, giftFieldErrors(values), fieldErrors);
     return { fieldErrors, formError: null, values };
   }
   const h = await headers();

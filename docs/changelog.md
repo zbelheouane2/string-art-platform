@@ -1,6 +1,7 @@
 # Historique
 
 ## 2026-11-13
+- **Commande, suite** : ZR Express par défaut, frais par wilaya (import CSV), 1 541 communes par wilaya (loi 26-06), adresse complète retirée, option « cadeau depuis l'étranger », page de l'offre numérique diaspora (paiement à venir). Migration `delivery_rates`.
 - **Site fonctionnel, tranche 1** (`docs/parcours-client.md`) : commande avec paiement à la livraison (69 wilayas, envoi vers Google Sheet), codes d'activation (lots, clé de contrôle, anti force brute), création du portrait par le moteur, guide vocal (FR/EN/AR), architecture de paiement et de transporteurs extensible. Migration `activation_code_batch`.
 
 ## 2026-11-12

@@ -211,7 +211,10 @@
       "board": "Board plan, 50 × 50 cm: 240 nails numbered A1 to D60"
     },
     "priceProvisional": "Provisional launch price",
-    "haveCode": "Already have your kit? Enter your code"
+    "haveCode": "Already have your kit? Enter your code",
+    "abroad": "Living abroad?",
+    "abroadGift": "Send a kit to someone in Algeria",
+    "abroadDigital": "the digital offer"
   },
   "faq": {
     "eyebrow": "FAQ",
@@ -267,7 +270,9 @@
       "gift": "Gift ideas",
       "faq": "FAQ",
       "code": "I have a code",
-      "guideDemo": "Try the voice guide"
+      "guideDemo": "Try the voice guide",
+      "giftAbroad": "Gift from abroad",
+      "digital": "Digital offer (diaspora)"
     },
     "rights": "© {year} {brand}",
     "info": "Information",
@@ -626,7 +631,9 @@
       "contact": "Your details",
       "delivery": "Delivery",
       "payment": "Payment",
-      "summary": "Summary"
+      "summary": "Summary",
+      "buyer": "You, the giver",
+      "recipient": "The recipient in Algeria"
     },
     "fields": {
       "fullName": "Full name",
@@ -639,7 +646,10 @@
       "communePick": "Choose your town",
       "communeFirst": "Choose the wilaya first",
       "communeOther": "My town isn't listed",
-      "communeOtherLabel": "Name of your town"
+      "communeOtherLabel": "Name of your town",
+      "buyerPhone": "Your phone (with country code, e.g. +44)",
+      "buyerEmail": "Your email (optional)",
+      "giftMessage": "Your message for the card (optional)"
     },
     "delivery": {
       "yalidine_home": {
@@ -690,14 +700,24 @@
       "noteLong": "Note too long.",
       "check": "Please check the highlighted fields.",
       "closed": "Ordering is not open at the moment.",
-      "unavailable": "This option is no longer available, please try again."
+      "unavailable": "This option is no longer available, please try again.",
+      "buyerName": "Enter your full name.",
+      "buyerPhone": "Number expected with country code (e.g. +44 7700 900123).",
+      "buyerEmail": "Invalid email address.",
+      "giftMessageLong": "Message too long (200 characters)."
     },
     "feePickWilaya": "Choose your wilaya to see the delivery fee.",
     "feeKnown": "Delivery fee: {fee}.",
     "lineItems": "{count, plural, one {# kit} other {# kits}}",
     "lineDelivery": "Delivery",
     "feeLater": "confirmed by phone",
-    "totalWithDelivery": "Total including delivery"
+    "totalWithDelivery": "Total including delivery",
+    "gift": {
+      "toggle": "It's a gift for someone in Algeria",
+      "toggleText": "Living abroad? The kit is delivered to your loved one, who pays on delivery.",
+      "recipientHelp": "The person receiving the kit: the courier calls them on this number.",
+      "paymentHelp": "The recipient pays in cash on delivery. We let you know when the parcel has arrived."
+    }
   },
   "confirmation": {
     "eyebrow": "Thank you!",
@@ -709,9 +729,37 @@
       "call": "We will call you to confirm the order and the delivery fee.",
       "cod": "You pay the courier in cash on delivery.",
       "paid": "Your payment is being verified.",
-      "code": "In the box: your personal code to create the portrait and start the voice guide."
+      "code": "In the box: your personal code to create the portrait and start the voice guide.",
+      "giftCall": "We will call you, then your loved one, to confirm the order and the delivery fee.",
+      "giftCod": "Your loved one pays the courier in cash on delivery."
     },
     "tryGuide": "Meanwhile, try the voice guide",
     "totalWithDelivery": "Total including delivery"
+  },
+  "digital": {
+    "eyebrow": "Diaspora",
+    "title": "The thread portrait, 100% digital",
+    "lead": "Living outside Algeria? Get your code by email, create your portrait and make it at home with the voice guide, on a board you prepare yourself.",
+    "includesTitle": "What you get",
+    "includes": {
+      "code": "A personal code, sent by email",
+      "software": "The software that turns your photo into a thread portrait",
+      "voice": "The nail-by-nail voice guide, in French, English or Arabic",
+      "template": "The board template to print at full size (50 × 50 cm, 240 nails numbered A1 to D60)",
+      "materials": "The list of materials to buy locally: board, nails, thread"
+    },
+    "stepsTitle": "How it works",
+    "steps": {
+      "buy": "Buy the offer online and receive your code.",
+      "print": "Print the template and fix it on a board.",
+      "build": "Hammer the 240 nails at the template marks.",
+      "thread": "Create your portrait and follow the voice, thread by thread."
+    },
+    "price": "Price announced at launch",
+    "soon": "Coming soon",
+    "soonHelp": "Online payment from abroad will open soon.",
+    "meanwhile": "Meanwhile:",
+    "giftLink": "send a kit to someone in Algeria",
+    "demoLink": "try the voice guide"
   }
 }

@@ -15,6 +15,8 @@ interface Props {
   delivery: string[];
   payment: string[];
   maxQuantity: number;
+  /** Ouvre le formulaire en mode « cadeau pour un proche en Algérie ». */
+  giftDefault?: boolean;
 }
 
 function Field({ id, label, error, children }: { id: string; label: string; error?: string; children: React.ReactNode }) {
@@ -33,12 +35,13 @@ function Field({ id, label, error, children }: { id: string; label: string; erro
   );
 }
 
-export function OrderForm({ price, rates, delivery, payment, maxQuantity }: Props) {
+export function OrderForm({ price, rates, delivery, payment, maxQuantity, giftDefault = false }: Props) {
   const t = useTranslations("order");
   const locale = useLocale();
   const [state, action, pending] = useActionState<OrderState, FormData>(orderAction, { fieldErrors: {}, formError: null, values: {} });
   const v = state.values;
   const [quantity, setQuantity] = useState(Number(v.quantity ?? 1));
+  const [gift, setGift] = useState(v.gift ? v.gift === "on" : giftDefault);
   const [mode, setMode] = useState(v.delivery ?? delivery[0]);
   const [wilaya, setWilaya] = useState(v.wilaya ?? "");
   const [commune, setCommune] = useState(v.commune ?? "");
@@ -53,8 +56,32 @@ export function OrderForm({ price, rates, delivery, payment, maxQuantity }: Prop
     <form action={action} className="order-form" noValidate>
       <input type="hidden" name="locale" value={locale} />
 
+      <label className="choice gift-toggle">
+        <input type="checkbox" name="gift" checked={gift} onChange={(e) => setGift(e.target.checked)} />
+        <span>
+          <strong>{t("gift.toggle")}</strong>
+          <small>{t("gift.toggleText")}</small>
+        </span>
+      </label>
+
+      {gift && (
+        <fieldset className="form-section">
+          <legend>{t("sections.buyer")}</legend>
+          <Field id="buyerName" label={t("fields.fullName")} error={err("buyerName")}>
+            <input id="buyerName" name="buyerName" className="field" autoComplete="name" defaultValue={v.buyerName} required {...aria("buyerName")} />
+          </Field>
+          <Field id="buyerPhone" label={t("fields.buyerPhone")} error={err("buyerPhone")}>
+            <input id="buyerPhone" name="buyerPhone" className="field" type="tel" dir="ltr" inputMode="tel" autoComplete="tel" placeholder="+33 6 12 34 56 78" defaultValue={v.buyerPhone} required {...aria("buyerPhone")} />
+          </Field>
+          <Field id="buyerEmail" label={t("fields.buyerEmail")} error={err("buyerEmail")}>
+            <input id="buyerEmail" name="buyerEmail" className="field" type="email" dir="ltr" autoComplete="email" defaultValue={v.buyerEmail} {...aria("buyerEmail")} />
+          </Field>
+        </fieldset>
+      )}
+
       <fieldset className="form-section">
-        <legend>{t("sections.contact")}</legend>
+        <legend>{gift ? t("sections.recipient") : t("sections.contact")}</legend>
+        {gift && <p className="field-help form-lead">{t("gift.recipientHelp")}</p>}
         <Field id="fullName" label={t("fields.fullName")} error={err("fullName")}>
           <input id="fullName" name="fullName" className="field" autoComplete="name" defaultValue={v.fullName} required {...aria("fullName")} />
         </Field>
@@ -124,6 +151,7 @@ export function OrderForm({ price, rates, delivery, payment, maxQuantity }: Prop
 
       <fieldset className="form-section">
         <legend>{t("sections.payment")}</legend>
+        {gift && <p className="field-help form-lead">{t("gift.paymentHelp")}</p>}
         <div className="choice-row">
           {payment.map((p) => (
             <label key={p} className="choice">
@@ -148,6 +176,11 @@ export function OrderForm({ price, rates, delivery, payment, maxQuantity }: Prop
             ))}
           </select>
         </Field>
+        {gift && (
+          <Field id="giftMessage" label={t("fields.giftMessage")} error={err("giftMessage")}>
+            <textarea id="giftMessage" name="giftMessage" className="field" rows={3} maxLength={200} defaultValue={v.giftMessage} {...aria("giftMessage")} />
+          </Field>
+        )}
         <Field id="note" label={t("fields.note")} error={err("note")}>
           <textarea id="note" name="note" className="field" rows={2} defaultValue={v.note} {...aria("note")} />
         </Field>

@@ -203,6 +203,37 @@ test.describe("commande", () => {
     await expect(page.locator("#communeOther")).toHaveCount(0);
   });
 
+  test("cadeau depuis l'étranger : acheteur + destinataire, envoyé avec la commande", async ({ page }) => {
+    await page.goto("/fr/kit");
+    await page.locator("#acheter").getByRole("link", { name: "Offrir un kit à un proche en Algérie" }).click();
+    await expect(page).toHaveURL(/\/fr\/commander\?cadeau=1$/);
+    await expect(page.getByLabel("C'est un cadeau pour un proche en Algérie")).toBeChecked();
+    await expect(page.getByRole("group", { name: "Le destinataire en Algérie" })).toBeVisible();
+
+    await page.getByRole("button", { name: "Valider ma commande" }).click();
+    await expect(page.getByText("Numéro attendu avec l'indicatif du pays")).toBeVisible();
+
+    await page.locator("#buyerName").fill("Amina Diaspora");
+    await page.locator("#buyerPhone").fill("+33 6 12 34 56 78");
+    await page.locator("#fullName").fill("Fatima Destinataire");
+    await page.locator("#phone").fill("0770 12 34 56");
+    await page.locator("#wilaya").selectOption("25");
+    await page.locator("#commune").selectOption("Constantine");
+    await page.locator("#giftMessage").fill("Joyeux anniversaire maman");
+    await page.getByRole("button", { name: "Valider ma commande" }).click();
+    await expect(page).toHaveURL(/\/fr\/commande\/DK-[0-9A-Z]{6}$/);
+    await expect(page.getByText("Votre proche paie en espèces au livreur")).toBeVisible();
+  });
+
+  test("offre numérique diaspora : présentée, paiement pas encore ouvert", async ({ page }) => {
+    for (const [locale, title] of [["fr", "Le portrait en fil, 100 % numérique"], ["ar", "لوحة الخيط، رقمية بالكامل"]] as const) {
+      await page.goto(`/${locale}/numerique`);
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(title);
+      await expect(page.locator("main .btn-primary")).toBeDisabled();
+      await axe(page);
+    }
+  });
+
   test("le bouton du site mène à la commande", async ({ page }) => {
     await page.goto("/fr/kit");
     await page.locator("#acheter").getByRole("link", { name: "Commander" }).click();

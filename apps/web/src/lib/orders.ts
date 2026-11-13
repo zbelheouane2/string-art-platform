@@ -83,7 +83,12 @@ export async function createOrder(input: ValidOrder, baseUrl: string): Promise<C
   const fee = options.rates[input.delivery]?.[input.wilaya] ?? null;
   const total = options.price.amountMinor * input.quantity + (fee ?? 0);
   const order = await db().$transaction(async (tx) => {
-    const customer = await tx.customer.create({ data: { fullName: input.fullName, phone: input.phone, locale: input.locale } });
+    // Le client est la personne qui passe la commande : l'acheteur pour un cadeau, sinon le destinataire.
+    const customer = await tx.customer.create({
+      data: input.buyer
+        ? { fullName: input.buyer.name, phone: input.buyer.phone, locale: input.locale }
+        : { fullName: input.fullName, phone: input.phone, locale: input.locale },
+    });
     for (let attempt = 0; ; attempt++) {
       const number = orderNumber();
       if (attempt < 5 && (await tx.order.findUnique({ where: { number }, select: { id: true } }))) continue;
@@ -96,7 +101,13 @@ export async function createOrder(input: ValidOrder, baseUrl: string): Promise<C
           currency: options.price.currency,
           deliveryFeeMinor: fee,
           totalMinor: total,
-          shippingAddress: { wilaya: input.wilaya, commune: input.commune, note: input.note },
+          shippingAddress: {
+            recipient: { fullName: input.fullName, phone: input.phone },
+            wilaya: input.wilaya,
+            commune: input.commune,
+            note: input.note,
+            gift: input.buyer ? { buyerEmail: input.buyer.email, message: input.giftMessage } : null,
+          },
           items: { create: { productId: options.product.id, quantity: input.quantity, unitPriceMinor: options.price.amountMinor } },
           payments: { create: { paymentMethodId: method.id, amountMinor: total, currency: options.price.currency } },
         },
@@ -132,6 +143,11 @@ export async function createOrder(input: ValidOrder, baseUrl: string): Promise<C
       currency: order.currency,
       note: input.note,
       locale: input.locale,
+      gift: input.buyer ? "oui" : "non",
+      buyerName: input.buyer?.name ?? "",
+      buyerPhone: input.buyer?.phone ?? "",
+      buyerEmail: input.buyer?.email ?? "",
+      giftMessage: input.giftMessage,
     }),
   );
   // Journal sans données personnelles : numéro, montant et état de l'envoi vers la feuille.

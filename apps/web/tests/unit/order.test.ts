@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { OTHER_COMMUNE, communeCount, communesOf } from "@/config/communes";
 import { WILAYAS } from "@/config/wilayas";
-import { normalizeDzPhone, orderSchema } from "@/lib/orderSchema";
+import { giftFieldErrors, normalizeDzPhone, normalizeIntlPhone, orderSchema } from "@/lib/orderSchema";
 
 const base = { fullName: "Client Test", phone: "0555123456", wilaya: "16", commune: "Bab Ezzouar", delivery: "zrexpress_desk", payment: "cod", quantity: "1" };
 
@@ -56,5 +56,26 @@ describe("commande", () => {
     const other = orderSchema.safeParse({ ...base, commune: OTHER_COMMUNE, communeOther: "Hai El Badr" });
     expect(other.data?.commune).toBe("Hai El Badr");
     expect(orderSchema.safeParse({ ...base, commune: OTHER_COMMUNE }).success).toBe(false);
+  });
+
+  it("cadeau depuis l'étranger : coordonnées de l'acheteur obligatoires, numéro international", () => {
+    expect(normalizeIntlPhone("+33 6 12 34 56 78")).toBe("+33612345678");
+    expect(normalizeIntlPhone("0044 7700 900123")).toBe("+447700900123");
+    expect(normalizeIntlPhone("0612345678")).toBeNull();
+
+    const missing = orderSchema.safeParse({ ...base, gift: "on" });
+    expect(missing.error?.issues.map((i) => i.message).sort()).toEqual(["buyerName", "buyerPhone"]);
+
+    const ok = orderSchema.safeParse({ ...base, gift: "on", buyerName: "Amina Exp", buyerPhone: "+33 6 12 34 56 78", buyerEmail: "amina@example.com", giftMessage: "Joyeux anniversaire" });
+    expect(ok.data?.buyer).toEqual({ name: "Amina Exp", phone: "+33612345678", email: "amina@example.com" });
+    expect(ok.data?.giftMessage).toBe("Joyeux anniversaire");
+    expect(ok.data?.phone).toBe("0555123456");
+
+    expect(orderSchema.safeParse({ ...base, gift: "on", buyerName: "Amina", buyerPhone: "+33612345678", buyerEmail: "pas-un-mail" }).success).toBe(false);
+    // Erreurs « cadeau » visibles même quand le reste du formulaire est vide.
+    expect(giftFieldErrors({ gift: "on", buyerPhone: "123" })).toEqual({ buyerName: "buyerName", buyerPhone: "buyerPhone" });
+    expect(giftFieldErrors({ buyerPhone: "123" })).toEqual({});
+    // Sans la case cadeau, les champs acheteur sont ignorés.
+    expect(orderSchema.safeParse({ ...base, buyerName: "x", giftMessage: "y" }).data).toMatchObject({ buyer: null, giftMessage: "" });
   });
 });

@@ -34,6 +34,12 @@ export async function SiteFooter() {
             <li>
               <Link href="/guide/demo">{t("links.guideDemo")}</Link>
             </li>
+            <li>
+              <Link href={{ pathname: "/commander", query: { cadeau: "1" } }}>{t("links.giftAbroad")}</Link>
+            </li>
+            <li>
+              <Link href="/numerique">{t("links.digital")}</Link>
+            </li>
           </ul>
         </nav>
         <nav aria-labelledby="footer-info">

@@ -23,6 +23,12 @@ export interface OrderRow {
   currency: string;
   note: string;
   locale: string;
+  /** Cadeau offert depuis l'étranger : coordonnées de l'acheteur (vides sinon). */
+  gift: "oui" | "non";
+  buyerName: string;
+  buyerPhone: string;
+  buyerEmail: string;
+  giftMessage: string;
 }
 
 export function orderRow(input: Omit<OrderRow, "wilaya"> & { wilayaCode: string }): OrderRow {

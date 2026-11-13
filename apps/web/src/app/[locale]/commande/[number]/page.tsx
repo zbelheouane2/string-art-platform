@@ -22,11 +22,12 @@ export default async function ConfirmationPage({ params }: { params: Promise<{ l
   if (!/^DK-[0-9A-Z]{6}$/.test(number)) notFound();
   const order = await db().order.findUnique({
     where: { number },
-    select: { number: true, totalMinor: true, deliveryFeeMinor: true, currency: true, payments: { select: { paymentMethod: { select: { code: true } } } } },
+    select: { number: true, totalMinor: true, deliveryFeeMinor: true, currency: true, shippingAddress: true, payments: { select: { paymentMethod: { select: { code: true } } } } },
   });
   if (!order) notFound();
   const t = await getTranslations("confirmation");
   const cod = order.payments[0]?.paymentMethod.code === "cod";
+  const gift = Boolean((order.shippingAddress as { gift?: unknown } | null)?.gift);
   return (
     <PageShell narrow>
       <header className="flow-head">
@@ -43,8 +44,8 @@ export default async function ConfirmationPage({ params }: { params: Promise<{ l
           <strong>{formatPrice({ amountMinor: order.totalMinor, currency: order.currency }, locale)}</strong>
         </p>
         <ol className="num-list">
-          <li>{t("next.call")}</li>
-          <li>{cod ? t("next.cod") : t("next.paid")}</li>
+          <li>{gift ? t("next.giftCall") : t("next.call")}</li>
+          <li>{cod ? (gift ? t("next.giftCod") : t("next.cod")) : t("next.paid")}</li>
           <li>{t("next.code")}</li>
         </ol>
       </div>

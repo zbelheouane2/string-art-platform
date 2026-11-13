@@ -3150,3 +3150,11 @@ h1 em {
 .order-lines dd {
   margin: 0;
 }
+
+.gift-toggle {
+  border-style: dashed;
+}
+
+.form-lead {
+  margin: -0.5rem 0 1rem;
+}

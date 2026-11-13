@@ -18,9 +18,11 @@ Le mot secret empêche quelqu'un qui connaîtrait l'URL d'ajouter de fausses lig
 ```javascript
 const SECRET = "CHANGEZ-MOI";
 const COLUMNS = ["number", "createdAt", "fullName", "phone", "wilaya", "commune",
-  "delivery", "payment", "quantity", "deliveryFee", "total", "currency", "note", "locale"];
+  "delivery", "payment", "quantity", "deliveryFee", "total", "currency", "note", "locale",
+  "gift", "buyerName", "buyerPhone", "buyerEmail", "giftMessage"];
 const HEADERS = ["Commande", "Date", "Nom", "Téléphone", "Wilaya", "Commune",
-  "Livraison", "Paiement", "Quantité", "Frais de livraison", "Total", "Devise", "Remarque", "Langue", "Statut"];
+  "Livraison", "Paiement", "Quantité", "Frais de livraison", "Total", "Devise", "Remarque", "Langue",
+  "Cadeau", "Acheteur", "Tél. acheteur", "E-mail acheteur", "Message cadeau", "Statut"];
 
 function doPost(e) {
   const data = JSON.parse(e.postData.contents);
@@ -29,7 +31,7 @@ function doPost(e) {
   if (sheet.getLastRow() === 0) sheet.appendRow(HEADERS);
   const o = data.order;
   // Téléphone en texte pour garder le 0 initial ; frais vides = à confirmer par téléphone.
-  sheet.appendRow(COLUMNS.map((k) => (k === "phone" ? "'" + o[k] : o[k] ?? "")).concat(["À confirmer"]));
+  sheet.appendRow(COLUMNS.map((k) => (k === "phone" || k === "buyerPhone" ? "'" + o[k] : o[k] ?? "")).concat(["À confirmer"]));
   return json({ ok: true });
 }
 

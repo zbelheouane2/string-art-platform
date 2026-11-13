@@ -16,8 +16,15 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: `${t("title")} — ${brand.name}`, robots: { index: false } };
 }
 
-export default async function OrderPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function OrderPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ cadeau?: string }>;
+}) {
   const { locale } = await params;
+  const gift = (await searchParams).cadeau === "1";
   setRequestLocale(locale);
   const t = await getTranslations("order");
   const options = kitOffer.orderingOpen ? await checkoutOptions() : null;
@@ -40,6 +47,7 @@ export default async function OrderPage({ params }: { params: Promise<{ locale: 
           delivery={options.delivery}
           payment={options.payment}
           maxQuantity={commerce.maxQuantity}
+          giftDefault={gift}
         />
       ) : (
         <p className="form-card">{t("closed")}</p>

@@ -73,6 +73,11 @@ export async function ProductSection({
           <p className="shop-note">
             <Link href="/activer">{t("haveCode")}</Link>
           </p>
+          <p className="shop-note">
+            {t("abroad")} <Link href={{ pathname: "/commander", query: { cadeau: "1" } }}>{t("abroadGift")}</Link>
+            {" · "}
+            <Link href="/numerique">{t("abroadDigital")}</Link>
+          </p>
           <p className="shop-note">{t("payment")}</p>
           <div className="faq-list shop-accordion">
             {ACCORDION.map((k) => (
