@@ -51,3 +51,4 @@ Nouveaux textes sous `home.*` (fr, en, ar).
 - Album : rendus en fil plus nets pour Salah Aougrout (2 768 lignes), le couple (3 179) et la fillette (2 930) : photo contrastée et accentuée, fond gardé, variante contraste, poids de ligne 0,18 ; 4 réglages comparés pour chacun.
 - Album : portrait d'un bébé (rendu en fil : photo contrastée et accentuée, fond gardé, variante contraste, poids de ligne 0,18, 2 356 lignes ; 8 réglages comparés).
 - Album : portrait d'une femme en haïk (rendu en fil : variante contraste, fond gardé, poids de ligne 0,18, 2 942 lignes ; 6 réglages comparés).
+- Album : portrait d'un grand-père à la chéchia (rendu en fil : variante contraste, fond gardé, poids de ligne 0,18 ; 6 réglages comparés).
