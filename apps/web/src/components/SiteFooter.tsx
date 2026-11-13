@@ -17,7 +17,7 @@ export async function SiteFooter() {
     <footer className="site-footer">
       <div className="wrap footer-grid">
         <div className="footer-brand">
-          <Logo />
+          <Logo tone="dark" />
           <p>{t("tagline")}</p>
         </div>
         <nav aria-labelledby="footer-menu">

@@ -10,7 +10,7 @@ const { execFileSync } = require("node:child_process");
 
 const BASE = process.argv[2] || "http://localhost:3000";
 const OUT = path.join(__dirname, "../apps/web/public/visuels/etapes");
-const BRAND = process.env.NEXT_PUBLIC_BRAND_NAME || "Studio Fil";
+const BRAND = process.env.NEXT_PUBLIC_BRAND_NAME || "DeeKra";
 
 const T = {
   fr: {
@@ -52,8 +52,7 @@ const css = `
 .notch{position:absolute;top:12px;left:50%;translate:-50% 0;width:110px;height:30px;border-radius:20px;background:#1d1612}
 .status{display:flex;justify-content:space-between;font:600 15px/1 var(--font-body);padding:6px 8px 0;direction:ltr}
 .bar{display:flex;align-items:center;justify-content:space-between;margin-top:26px}
-.logo{font:400 26px/1 var(--font-display)}
-.logo i{display:block;width:70px;height:9px;margin:0 auto 4px;border-top:2px solid #a8322d;border-radius:50%}
+.logo{height:84px;width:auto;display:block}
 .pill{border:1px solid #d9c7b7;border-radius:999px;padding:5px 12px;font:700 13px/1 var(--font-body)}
 .eb{margin-top:42px;color:#a8322d;font:700 13px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase}
 h1{font:400 34px/1.12 var(--font-display);margin:12px 0 10px}
@@ -96,7 +95,7 @@ p{color:#5a4a40;font-size:16px;line-height:1.5;margin:0}
 `;
 
 const head = (t, dir) => `<div class="notch"></div><div class="status"><span>9:41</span><span>●●● ▮</span></div>
-  <div class="bar" dir="${dir}"><div class="logo"><i></i>${BRAND}</div><span class="pill">${t.lang}</span></div>`;
+  <div class="bar" dir="${dir}"><img class="logo" src="${BASE}/visuels/marque/deekra-entete.webp" alt="${BRAND}"><span class="pill">${t.lang}</span></div>`;
 
 const screens = {
   code: (t, dir) => `${head(t, dir)}
@@ -123,10 +122,10 @@ const screens = {
         <path d="M145 145 L145 17 A128 128 0 0 1 273 145 Z" fill="#a8322d"/>
         <path d="M145 17v256M17 145h256" stroke="#fffaf5" stroke-width="4"/></svg>
       <span class="q" style="left:-6px;top:-4px">A</span><span class="q" style="right:-6px;top:-4px;color:#a8322d">B</span>
-      <span class="q" style="left:-6px;bottom:-4px">C</span><span class="q" style="right:-6px;bottom:-4px">D</span>
+      <span class="q" style="left:-6px;bottom:-4px">D</span><span class="q" style="right:-6px;bottom:-4px">C</span>
       <div class="ctr"><small>${t.nail}</small><b>B27</b></div>
     </div>
-    <p class="next">B27 → D14 → A03</p>
+    <p class="next">B27 → D14 → A3</p>
     <div class="prog"><div><i></i></div><span>642 / 3 600</span></div>
     <div class="ctrl">
       <span>${ICON('<path d="M11 7l-5 5 5 5M18 7l-5 5 5 5"/>', 28)}</span>

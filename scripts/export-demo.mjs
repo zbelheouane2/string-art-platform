@@ -181,7 +181,8 @@ for (const [url, file, locale] of PAGES) {
     .replace(/href="(\/(?:fr|en|ar)(?:\/kit)?)(#[\w-]*)?"/g, (_, p1, h) => `href="${FILE_OF[p1]}${h ?? ""}"`)
     .replace(/href="\/"/g, 'href="index.html"')
     .replace(/(src|href)="\/visuels\//g, '$1="visuels/')
-    .replace(/<link[^>]*>/g, "");
+    .replace(/<link[^>]*>/g, "")
+    .replace("</head>", `<link rel="icon" href="data:image/png;base64,${readFileSync(path.join(web, "public/visuels/marque/icone-32.png")).toString("base64")}"></head>`);
   const style = css.replace(/url\((?:\/_next\/static|\.\.)\/media\//g, "url(assets/media/");
   const banner = `<p style="margin:0;padding:.5rem 1rem;background:#fff3cd;color:#2a1f1a;font:500 13px/1.4 system-ui,sans-serif;text-align:center">${locale === "ar" ? "نسخة تجريبية للعرض فقط — الطلب غير مفعّل" : locale === "en" ? "Demo version for review only — ordering is not active" : "Version de démonstration — la commande n'est pas active"}</p>`;
   page = page

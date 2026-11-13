@@ -26,7 +26,7 @@ services:
       DATABASE_URL: postgresql://stringart:stringart@db:5432/stringart
       ENGINE_URL: http://engine:8000
       ENGINE_TOKEN: ${ENGINE_TOKEN:-dev-token}
-      NEXT_PUBLIC_BRAND_NAME: ${BRAND_NAME:-Studio Fil}
+      NEXT_PUBLIC_BRAND_NAME: ${BRAND_NAME:-DeeKra}
     ports: ["3000:3000"]
     depends_on:
       db: { condition: service_healthy }
