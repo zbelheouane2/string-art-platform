@@ -8,6 +8,7 @@ _Phase « site fonctionnel », tranche 1 (2026-11-13)._
 |---|---|---|
 | Commander | `/[langue]/commander` | Paiement à la livraison. Nom, mobile algérien (05/06/07, +213 accepté), domicile ou bureau ZR Express, 69 wilayas, commune choisie dans la liste de la wilaya (1 541 communes, saisie libre en dernier recours), 1 à 5 kits. **Pas d'adresse complète** (protection des données) : le livreur appelle le client. Frais de livraison par wilaya ajoutés au total quand ils sont connus (`npm run rates:import`). Prix lu en base (table `Price`), jamais envoyé par le navigateur. |
 | Cadeau depuis l'étranger | `/[langue]/commander?cadeau=1` | Case « cadeau pour un proche en Algérie » : coordonnées de l'acheteur (téléphone international, e-mail facultatif), destinataire en Algérie qui reçoit et paie à la livraison, message pour la carte. Tout part dans la Google Sheet. |
+| Options du kit | fiche du kit, puis `/[langue]/commander?options=…` | Support chevalet et bougie parfumée, en cartes avec interrupteur. Une option sans prix s'affiche « Prix bientôt disponible » et ne peut pas être activée. Prix dans `src/config/catalog.ts` (`accessories`), recopiés en base par `npm run db:seed` ; le serveur relit le prix en base. Une option par commande, ajoutée au total, aux lignes de commande et à la colonne « Options » de la Google Sheet. |
 | Offre numérique (diaspora) | `/[langue]/numerique` | Présentation : code, logiciel, guide vocal, gabarit imprimable, liste du matériel. Paiement « bientôt » (encaissement en devises à valider). |
 | Confirmation | `/[langue]/commande/DK-XXXXXX` | Numéro et total, aucune donnée personnelle affichée. |
 | Google Sheet | — | Chaque commande ajoutée à la feuille du propriétaire (`docs/commandes-google-sheet.md`). |
@@ -37,4 +38,5 @@ npm run codes:create -- --count 200 --batch 2026-11-A --out codes-2026-11-A.csv
 
 - Frais de livraison par wilaya (affichés « confirmés par téléphone » en attendant).
 - Premier transporteur à brancher.
+- Prix et photos du support et de la bougie.
 - Durée de conservation des portraits calculés (la photo, elle, n'est pas conservée).

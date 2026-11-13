@@ -21,10 +21,11 @@ export default async function OrderPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ cadeau?: string }>;
+  searchParams: Promise<{ cadeau?: string; options?: string }>;
 }) {
   const { locale } = await params;
-  const gift = (await searchParams).cadeau === "1";
+  const query = await searchParams;
+  const gift = query.cadeau === "1";
   setRequestLocale(locale);
   const t = await getTranslations("order");
   const options = kitOffer.orderingOpen ? await checkoutOptions() : null;
@@ -48,6 +49,8 @@ export default async function OrderPage({
           payment={options.payment}
           maxQuantity={commerce.maxQuantity}
           giftDefault={gift}
+          accessories={options.accessories}
+          optionsDefault={(query.options ?? "").split(",").filter((s) => options.accessories.some((a) => a.slug === s))}
         />
       ) : (
         <p className="form-card">{t("closed")}</p>

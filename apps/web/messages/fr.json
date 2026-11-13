@@ -220,7 +220,14 @@
     "haveCode": "Vous avez déjà votre kit ? Entrez votre code",
     "abroad": "Vous vivez à l'étranger ?",
     "abroadGift": "Offrir un kit à un proche en Algérie",
-    "abroadDigital": "l'offre numérique"
+    "abroadDigital": "l'offre numérique",
+    "facts": {
+      "label": "Le kit en bref",
+      "board": "Planche 50 × 50 cm, 240 clous déjà posés",
+      "time": "Montage : 4 à 6 h environ, à votre rythme",
+      "app": "Logiciel en ligne en français, anglais et arabe",
+      "voice": "Guide vocal clou par clou"
+    }
   },
   "faq": {
     "eyebrow": "FAQ",
@@ -458,7 +465,37 @@
         }
       }
     },
-    "faqTitle": "Questions sur le kit"
+    "faqTitle": "Questions sur le kit",
+    "engine": {
+      "eyebrow": "Notre générateur",
+      "title": "Comment fonctionne notre générateur en ligne ?",
+      "lead": "Ce n'est pas un filtre : le logiciel calcule le vrai chemin du fil sur les 240 clous de votre planche, celui que vous suivrez à la voix.",
+      "steps": {
+        "site": {
+          "title": "Ouvrez le site DeeKra",
+          "text": "Sur votre téléphone ou votre ordinateur, touchez « J'ai un code »."
+        },
+        "code": {
+          "title": "Saisissez votre code",
+          "text": "Le code imprimé sur la carte du kit ouvre votre création."
+        },
+        "photo": {
+          "title": "Importez votre photo",
+          "text": "Choisissez un rendu : doux, équilibré ou contrasté. Le logiciel cadre le visage et éclaircit le fond."
+        },
+        "preview": {
+          "title": "Découvrez votre portrait",
+          "text": "Le logiciel calcule fil après fil le chemin sur les 240 clous et vous montre le résultat avant de commencer."
+        },
+        "voice": {
+          "title": "Suivez la voix",
+          "text": "Le guide annonce chaque clou, de A1 à D60, à votre rythme, jusqu'au dernier fil."
+        }
+      },
+      "prev": "Étape précédente",
+      "next": "Étape suivante",
+      "step": "Étape"
+    }
   },
   "carousel": {
     "roledescription": "carrousel",
@@ -767,5 +804,13 @@
     "meanwhile": "En attendant :",
     "giftLink": "offrir un kit à un proche en Algérie",
     "demoLink": "essayer le guide vocal"
+  },
+  "accessories": {
+    "title": "Complétez votre cadeau",
+    "soon": "Prix bientôt disponible",
+    "tags": {
+      "stand": "Exposez-le partout",
+      "candle": "Créez l'ambiance"
+    }
   }
 }

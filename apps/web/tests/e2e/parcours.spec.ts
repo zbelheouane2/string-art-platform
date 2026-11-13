@@ -3,6 +3,7 @@
  * paiement à la livraison. Nécessite la base (migrée + seed) et, pour le
  * calcul du portrait, le moteur (ENGINE_URL).
  */
+import "dotenv/config";
 import { execFileSync } from "node:child_process";
 import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -234,6 +235,42 @@ test.describe("commande", () => {
     }
   });
 
+  test("options : sans prix elles sont « bientôt » ; avec un prix elles s'ajoutent au total et à la feuille", async ({ page }) => {
+    await page.goto("/fr/kit");
+    const stand = page.locator("#acheter").getByRole("switch", { name: "Support chevalet en bois" });
+    await expect(stand).toBeDisabled();
+    await expect(page.locator("#acheter .accessory")).toHaveCount(2);
+    await expect(page.locator("#acheter").getByText("Prix bientôt disponible").first()).toBeVisible();
+
+    // Prix d'essai posé en base le temps du test (le vrai prix viendra du catalogue).
+    const sql = (q: string) => execFileSync("psql", [process.env.DATABASE_URL!, "-qtAc", q]);
+    const where = `"productId" = (SELECT id FROM "Product" WHERE slug = 'bougie-parfumee') AND "marketId" = (SELECT id FROM "Market" WHERE code = 'DZ')`;
+    sql(`DELETE FROM "Price" WHERE ${where}; INSERT INTO "Price" (id, "productId", "marketId", "amountMinor", currency) SELECT 'e2e-bougie', (SELECT id FROM "Product" WHERE slug = 'bougie-parfumee'), (SELECT id FROM "Market" WHERE code = 'DZ'), 120000, 'DZD'`);
+    try {
+      await page.goto("/fr/commander?options=bougie-parfumee,inconnue");
+      const candle = page.getByRole("switch", { name: "Bougie parfumée" });
+      await expect(candle).toHaveAttribute("aria-checked", "true");
+      await expect(page.getByRole("switch", { name: "Support chevalet en bois" })).toHaveCount(0);
+      await expect(page.locator(".order-total strong")).toHaveText("6 100 DA");
+      await candle.click();
+      await expect(page.locator(".order-total strong")).toHaveText("4 900 DA");
+      await candle.click();
+
+      await page.getByLabel("Nom et prénom").fill("Client Options");
+      await page.getByLabel("Téléphone mobile").fill("0555 66 77 88");
+      await page.getByLabel("Wilaya").selectOption("31");
+      await page.getByLabel("Commune", { exact: true }).selectOption("Oran");
+      await page.getByRole("button", { name: "Valider ma commande" }).click();
+      await expect(page).toHaveURL(/\/fr\/commande\/DK-[0-9A-Z]{6}$/);
+      await expect(page.locator(".order-total strong")).toHaveText("6 100 DA");
+      const number = page.url().split("/").pop();
+      const items = sql(`SELECT p.slug || ':' || i."unitPriceMinor" FROM "OrderItem" i JOIN "Order" o ON o.id = i."orderId" JOIN "Product" p ON p.id = i."productId" WHERE o.number = '${number}' ORDER BY p.slug`).toString().trim();
+      expect(items.split("\n")).toEqual(["bougie-parfumee:120000", "kit-portrait-50:490000"]);
+    } finally {
+      sql(`DELETE FROM "Price" WHERE ${where}`);
+    }
+  });
+
   test("le bouton du site mène à la commande", async ({ page }) => {
     await page.goto("/fr/kit");
     await page.locator("#acheter").getByRole("link", { name: "Commander" }).click();
@@ -243,6 +280,30 @@ test.describe("commande", () => {
   for (const locale of ["fr", "ar"] as const) {
     test(`formulaire ${locale} : accessibilité et largeur`, async ({ page }) => {
       await page.goto(`/${locale}/commander`);
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      expect(overflow).toBeLessThanOrEqual(0);
+      await axe(page);
+    });
+  }
+});
+
+test.describe("fiche du kit", () => {
+  for (const [locale, facts, steps] of [
+    ["fr", "Montage : 4 à 6 h environ, à votre rythme", "Saisissez votre code"],
+    ["ar", "مدة الإنجاز: من 4 إلى 6 ساعات تقريبًا، على راحتك", "أدخل رمزك"],
+  ] as const) {
+    test(`repères sous le prix et générateur en 5 étapes (${locale})`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await page.goto(`/${locale}/kit`);
+      await expect(page.locator("#acheter .kit-facts li")).toHaveCount(4);
+      await expect(page.locator("#acheter .kit-facts")).toContainText(facts);
+      await expect(page.locator("#generateur .engine-card")).toHaveCount(5);
+      // Carrousel : la flèche « suivante » fait glisser vers l'étape 2 (vers la gauche en FR, la droite en AR).
+      const track = page.locator(".engine-track");
+      const before = await track.evaluate((el) => el.scrollLeft);
+      await page.locator(".engine-arrow").nth(1).click();
+      await expect.poll(() => track.evaluate((el) => el.scrollLeft)).not.toBe(before);
+      await expect(page.locator("#generateur")).toContainText(steps);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       expect(overflow).toBeLessThanOrEqual(0);
       await axe(page);

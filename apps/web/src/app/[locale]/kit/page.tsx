@@ -3,6 +3,7 @@ import path from "node:path";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BeforeAfter } from "@/components/BeforeAfter";
+import { EngineCarousel } from "@/components/EngineCarousel";
 import { PlusIcon } from "@/components/Icons";
 import { NailRing } from "@/components/NailRing";
 import { ProductSection } from "@/components/ProductSection";
@@ -20,6 +21,7 @@ import { Link } from "@/i18n/navigation";
 import type { DemoPortrait } from "@/lib/board";
 
 const WHAT = ["kit", "model", "voice"] as const;
+const ENGINE = ["site", "code", "photo", "preview", "voice"] as const;
 const EXAMPLES = [
   { key: "portrait", name: "astronaute" },
   { key: "pet", name: "chat" },
@@ -118,6 +120,26 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
                 ))}
               </ul>
             </div>
+          </div>
+        </section>
+
+        {/* Comment fonctionne le générateur : le vrai calcul du moteur, en 5 étapes. */}
+        <section className="section bg-sand" id="generateur" aria-labelledby="kit-engine-title">
+          <div className="wrap">
+            <header className="section-head center" data-reveal>
+              <p className="eyebrow">{t("kit.engine.eyebrow")}</p>
+              <h2 id="kit-engine-title">{t("kit.engine.title")}</h2>
+              <p>{t("kit.engine.lead")}</p>
+            </header>
+            <EngineCarousel
+              labels={{ prev: t("kit.engine.prev"), next: t("kit.engine.next"), step: t("kit.engine.step") }}
+              steps={ENGINE.map((key) => ({
+                key,
+                img: `/visuels/generateur/${key}-${locale}.webp`,
+                title: t(`kit.engine.steps.${key}.title`),
+                text: t(`kit.engine.steps.${key}.text`),
+              }))}
+            />
           </div>
         </section>
 
