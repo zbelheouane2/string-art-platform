@@ -24,7 +24,7 @@ const GIFTS = [
   { key: "parents", name: "salah" },
   { key: "grandparents", name: "fillette" },
   { key: "pets", name: "chat" },
-  { key: "memory", name: null },
+  { key: "memory", name: "benmhidi" },
   { key: "self", name: "soi" },
 ] as const;
 const INTRO = ["gift", "hobby"] as const;

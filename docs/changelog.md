@@ -41,3 +41,4 @@ Nouveaux textes sous `home.*` (fr, en, ar).
 - Accueil : carte « De la photo au fil » avec curseur rond (photo couleur ↔ fil, aller-retour d'invitation à la première apparition) sur le visage de la femme du couple ; carte cadeau « Pour un couple » avec la photo du couple.
 - Accueil : carte cadeau « Pour ses parents » illustrée par le portrait de Salah Aougrout et son rendu en fil (moteur, variante standard, 2 583 lignes) ; visuel provisoire.
 - Accueil : carte cadeau « Pour soi » avec la photo fournie par Zaki et son rendu en fil (variante standard, 1 782 lignes).
+- Accueil : carte cadeau « En mémoire d'un proche » avec la photo d'archive de Larbi Ben M'hidi, recadrée sur le visage, et son rendu en fil (variante contraste, 2 947 lignes).
