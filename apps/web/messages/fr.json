@@ -210,7 +210,9 @@
       "monalisa": "Portrait en fil de la Joconde",
       "monalisaPhoto": "Le tableau de départ : la Joconde",
       "woman": "Portrait en fil d'une jeune femme",
-      "womanPhoto": "La photo de départ de la jeune femme"
+      "womanPhoto": "La photo de départ de la jeune femme",
+      "tuareg": "Portrait en fil d'un homme touareg au chèche bleu",
+      "tuaregPhoto": "La photo de départ de l'homme touareg"
     },
     "priceProvisional": "Prix de lancement provisoire"
   },

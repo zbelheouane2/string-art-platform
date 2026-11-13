@@ -18,6 +18,7 @@ const GALLERY = [
   ...portrait("soi", "self"),
   ...portrait("femme", "woman"),
   ...portrait("haik", "haik"),
+  ...portrait("touareg", "tuareg"),
   ...portrait("grandpere", "grandpa"),
   ...portrait("fillette", "girl"),
   ...portrait("bebe", "baby"),
