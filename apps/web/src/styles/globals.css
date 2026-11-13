@@ -2597,3 +2597,19 @@ h1 em {
 .gift-card h3.has-caption {
   margin-block-start: 0.25rem;
 }
+
+/* Étapes sur téléphone : deux rangées de trois onglets de même largeur,
+   pour que les libellés (« Choisissez la photo », « Accrochez-le »)
+   ne se chevauchent pas, même avec une grande taille de texte. */
+@media (max-width: 39.99rem) {
+  .steps-tabs {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 1rem;
+  }
+  .steps-label {
+    font-size: 0.8rem;
+    overflow-wrap: break-word;
+    max-inline-size: 100%;
+  }
+}

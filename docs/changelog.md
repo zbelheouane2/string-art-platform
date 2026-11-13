@@ -44,3 +44,5 @@ Nouveaux textes sous `home.*` (fr, en, ar).
 - Accueil : carte cadeau « En mémoire d'un proche » avec la photo d'archive de Larbi Ben M'hidi, recadrée sur le visage, et son rendu en fil (variante contraste, 2 947 lignes).
 - Accueil : sous l'animation, le crédit « Photo d'archive » devient le nom du martyr, Ali La Pointe (fr, en, ar).
 - Accueil : légende « La star algérienne : Salah Aougrout » sur la carte « Pour ses parents » (fr, en, ar).
+- Album produit : 15 visuels (Ali La Pointe, dévidoir, puis chaque portrait en fil suivi de sa photo : Salah Aougrout, Larbi Ben M'hidi, homme en veste bleue, fillette, couple, chat) ; textes alternatifs fr/en/ar.
+- Étapes sur téléphone : onglets sur deux rangées de trois, de même largeur, pour éviter que les libellés se chevauchent (vérifié aussi avec une grande taille de texte).

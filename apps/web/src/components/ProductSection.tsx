@@ -5,6 +5,23 @@ import { PlusIcon } from "./Icons";
 const INCLUDES = ["board", "thread", "code", "guide"] as const;
 const ACCORDION = ["box", "photo", "app", "gift"] as const;
 
+/** Album : chaque portrait en fil est suivi de sa photo de départ. */
+const portrait = (name: string, alt: string) => [
+  { src: `/visuels/${name}-fil.webp`, alt },
+  { src: `/visuels/${name}-photo.webp`, alt: `${alt}Photo` },
+];
+const GALLERY = [
+  { src: "/visuels/martyr-fil.webp", alt: "thread" },
+  { src: "/visuels/devidoir.webp", alt: "spool" },
+  { src: "/visuels/martyr-photo.webp", alt: "photo" },
+  ...portrait("salah", "salah"),
+  ...portrait("benmhidi", "benmhidi"),
+  ...portrait("soi", "self"),
+  ...portrait("fillette", "girl"),
+  ...portrait("couple", "couple"),
+  ...portrait("chat", "pet"),
+];
+
 /** Bloc d'achat (accueil et page du kit) : galerie qui glisse + colonne d'infos collante. */
 export async function ProductSection({ price, headingLevel = 2 }: { price: string | null; headingLevel?: 1 | 2 }) {
   const t = await getTranslations("shop");
@@ -14,15 +31,7 @@ export async function ProductSection({ price, headingLevel = 2 }: { price: strin
       <div className="wrap shop-grid">
         <div data-reveal>
           <Gallery
-            images={[
-              { src: "/visuels/astronaute-fil.webp", alt: t("galleryAlt.thread") },
-              { src: "/visuels/devidoir.webp", alt: t("galleryAlt.spool") },
-              { src: "/visuels/astronaute-photo.webp", alt: t("galleryAlt.photo") },
-              { src: "/visuels/chat-fil.webp", alt: t("galleryAlt.pet") },
-              { src: "/visuels/chat-photo.webp", alt: t("galleryAlt.petPhoto") },
-              { src: "/visuels/photographe-fil.webp", alt: t("galleryAlt.portrait") },
-              { src: "/visuels/photographe-photo.webp", alt: t("galleryAlt.portraitPhoto") },
-            ]}
+            images={GALLERY.map((g) => ({ src: g.src, alt: t(`galleryAlt.${g.alt}`) }))}
           />
         </div>
         <div className="shop-info" data-reveal style={{ ["--i" as string]: 1 }}>

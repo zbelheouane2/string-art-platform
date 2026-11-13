@@ -173,13 +173,21 @@
       }
     },
     "galleryAlt": {
-      "thread": "Thread portrait computed by our software",
+      "thread": "String portrait of Ali La Pointe, computed by our software",
       "spool": "The wooden spool holder to assemble, with its spool of black thread",
-      "photo": "The original photo of the portrait",
-      "pet": "Thread portrait of a cat",
-      "petPhoto": "The original photo of the cat",
-      "portrait": "Thread portrait of a photographer",
-      "portraitPhoto": "The original photo of the photographer"
+      "photo": "The archive photo of Ali La Pointe",
+      "salah": "String portrait of Salah Aougrout",
+      "salahPhoto": "The source photo of Salah Aougrout",
+      "benmhidi": "String portrait of Larbi Ben M'hidi",
+      "benmhidiPhoto": "The archive photo of Larbi Ben M'hidi",
+      "self": "String portrait of a man in a blue jacket",
+      "selfPhoto": "The source photo of the man in a blue jacket",
+      "girl": "String portrait of a little girl",
+      "girlPhoto": "The source photo of the little girl",
+      "couple": "String portrait of a couple",
+      "couplePhoto": "The source photo of the couple",
+      "pet": "String portrait of a cat",
+      "petPhoto": "The source photo of the cat"
     }
   },
   "faq": {

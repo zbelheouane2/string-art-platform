@@ -173,13 +173,21 @@
       }
     },
     "galleryAlt": {
-      "thread": "Portrait en fil calculé par notre logiciel",
+      "thread": "Portrait en fil d'Ali La Pointe, calculé par notre logiciel",
       "spool": "Le dévidoir en bois à monter, avec sa bobine de fil noir",
-      "photo": "La photo de départ du portrait",
+      "photo": "La photo d'archive d'Ali La Pointe",
+      "salah": "Portrait en fil de Salah Aougrout",
+      "salahPhoto": "La photo de départ de Salah Aougrout",
+      "benmhidi": "Portrait en fil de Larbi Ben M'hidi",
+      "benmhidiPhoto": "La photo d'archive de Larbi Ben M'hidi",
+      "self": "Portrait en fil d'un homme en veste bleue",
+      "selfPhoto": "La photo de départ de l'homme en veste bleue",
+      "girl": "Portrait en fil d'une fillette",
+      "girlPhoto": "La photo de départ de la fillette",
+      "couple": "Portrait en fil d'un couple",
+      "couplePhoto": "La photo de départ du couple",
       "pet": "Portrait en fil d'un chat",
-      "petPhoto": "La photo de départ du chat",
-      "portrait": "Portrait en fil d'un photographe",
-      "portraitPhoto": "La photo de départ du photographe"
+      "petPhoto": "La photo de départ du chat"
     }
   },
   "faq": {
