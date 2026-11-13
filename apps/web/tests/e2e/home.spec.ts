@@ -148,13 +148,13 @@ test("le carrousel ne défile pas seul avec « réduire les animations »", asyn
 test("la galerie produit glisse avec les flèches et les vignettes", async ({ page }) => {
   await page.goto("/fr/kit");
   const count = page.locator(".gallery-count");
-  await expect(count).toHaveText("1 / 22");
+  await expect(count).toHaveText("1 / 25");
   await page.getByRole("button", { name: "Visuel suivant" }).click();
-  await expect(count).toHaveText("2 / 22");
+  await expect(count).toHaveText("2 / 25");
   await page.locator(".gallery-thumbs button").nth(4).click();
-  await expect(count).toHaveText("5 / 22");
+  await expect(count).toHaveText("5 / 25");
   await page.getByRole("button", { name: "Visuel précédent" }).click();
-  await expect(count).toHaveText("4 / 22");
+  await expect(count).toHaveText("4 / 25");
 });
 
 test("le bouton « Comment ça marche ? » mène à la page du kit", async ({ page }) => {

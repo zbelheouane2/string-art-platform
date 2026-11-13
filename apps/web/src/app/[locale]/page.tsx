@@ -305,7 +305,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         {/* Appel final : œuvre ronde + titre, prix, bouton. */}
         <section className="section bg-cream final" aria-labelledby="final-title">
           <div className="wrap final-inner" data-reveal>
-            <img src="/visuels/martyr-fil.webp" alt="" width={240} height={240} loading="lazy" className="final-img" />
+            <img src="/visuels/dame-fil.webp" alt="" width={240} height={240} loading="lazy" className="final-img" />
             <div className="final-content">
               <h2 id="final-title">{t("final.title")}</h2>
               <p>

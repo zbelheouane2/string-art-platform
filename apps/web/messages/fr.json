@@ -208,7 +208,13 @@
       "haikPhoto": "La photo de départ de la femme en haïk",
       "grandpa": "Portrait en fil d'un grand-père à la chéchia",
       "grandpaPhoto": "La photo de départ du grand-père à la chéchia",
-      "board": "Plan de la planche 50 × 50 cm : 240 clous numérotés de A1 à D60"
+      "board": "Plan de la planche 50 × 50 cm : 240 clous numérotés de A1 à D60",
+      "monalisa": "Portrait en fil de la Joconde",
+      "monalisaPhoto": "Le tableau de départ : la Joconde",
+      "woman": "Portrait en fil d'une jeune femme",
+      "womanPhoto": "La photo de départ de la jeune femme",
+      "tuareg": "Portrait en fil d'un homme touareg au chèche bleu",
+      "tuaregPhoto": "La photo de départ de l'homme touareg"
     },
     "priceProvisional": "Prix de lancement provisoire",
     "haveCode": "Vous avez déjà votre kit ? Entrez votre code",

@@ -208,7 +208,13 @@
       "haikPhoto": "The source photo of the woman in a haik",
       "grandpa": "String portrait of a grandfather in a chechia",
       "grandpaPhoto": "The source photo of the grandfather in a chechia",
-      "board": "Board plan, 50 × 50 cm: 240 nails numbered A1 to D60"
+      "board": "Board plan, 50 × 50 cm: 240 nails numbered A1 to D60",
+      "monalisa": "String portrait of the Mona Lisa",
+      "monalisaPhoto": "The source painting: the Mona Lisa",
+      "woman": "String portrait of a young woman",
+      "womanPhoto": "The source photo of the young woman",
+      "tuareg": "String portrait of a Tuareg man in a blue veil",
+      "tuaregPhoto": "The source photo of the Tuareg man"
     },
     "priceProvisional": "Provisional launch price",
     "haveCode": "Already have your kit? Enter your code",
