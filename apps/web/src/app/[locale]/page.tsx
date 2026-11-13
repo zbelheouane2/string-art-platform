@@ -80,7 +80,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               </span>
               <WeavingBoard demo={demo} />
               <figure className="medallion">
-                <img src="/visuels/martyr-photo.webp" alt={t("hero.medallion")} width={300} height={300} />
+                <img src="/visuels/caftan-photo.webp" alt={t("hero.medallion")} width={300} height={300} />
               </figure>
             </div>
             <div className="hero-copy" data-reveal style={{ ["--i" as string]: 1 }}>
