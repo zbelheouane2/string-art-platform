@@ -1,10 +1,12 @@
 /**
  * Données de référence : marchés, produits, moyens de paiement et de livraison.
- * Aucun prix n'est créé ici : les tarifs ne sont pas encore validés.
+ * Seul prix créé : le kit en Algérie, prix de lancement provisoire validé par le
+ * propriétaire (src/config/catalog.ts, même source que l'affichage du site).
  */
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient, ProductKind } from "../src/generated/prisma/client";
+import { kitOffer } from "../src/config/catalog";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 
@@ -48,11 +50,28 @@ async function main() {
   }
 
   const dz = await db.market.findUniqueOrThrow({ where: { code: "DZ" } });
-  for (const code of ["yalidine_home", "yalidine_desk"]) {
-    await db.deliveryMethod.upsert({
-      where: { marketId_code: { marketId: dz.id, code } },
-      update: {},
-      create: { marketId: dz.id, code, provider: "yalidine" },
+  // Transporteur retenu au lancement : ZR Express (choix du propriétaire, 2026-11-13).
+  // Les autres restent en base, inactifs, prêts à être rouverts.
+  const carriers = [
+    { codes: ["zrexpress_home", "zrexpress_desk"], provider: "zrexpress", active: true },
+    { codes: ["yalidine_home", "yalidine_desk"], provider: "yalidine", active: false },
+  ];
+  for (const c of carriers) {
+    for (const code of c.codes) {
+      await db.deliveryMethod.upsert({
+        where: { marketId_code: { marketId: dz.id, code } },
+        update: { provider: c.provider, active: c.active },
+        create: { marketId: dz.id, code, provider: c.provider, active: c.active },
+      });
+    }
+  }
+  if (kitOffer.price) {
+    const kit = await db.product.findUniqueOrThrow({ where: { slug: kitOffer.slug } });
+    const data = { amountMinor: kitOffer.price.amountMinor, currency: kitOffer.price.currency };
+    await db.price.upsert({
+      where: { productId_marketId: { productId: kit.id, marketId: dz.id } },
+      update: data,
+      create: { ...data, productId: kit.id, marketId: dz.id },
     });
   }
   console.log("Données de référence en place.");

@@ -2668,3 +2668,493 @@ h1 em {
   color: var(--ink-soft);
   font-size: var(--step--1);
 }
+
+/* ------------------------------------------------------------------ */
+/* Parcours client : code, création, guide vocal, commande.            */
+/* ------------------------------------------------------------------ */
+
+.visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.flow-page {
+  background: var(--cream);
+  padding-block: clamp(2rem, 1rem + 4vw, 4.5rem);
+  min-block-size: 70vh;
+}
+
+.flow-wrap.narrow {
+  max-inline-size: calc(40rem + 2 * var(--gutter));
+}
+
+.flow-head {
+  margin-block-end: 2rem;
+}
+
+.flow-head h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--step-3);
+  line-height: 1.1;
+  margin: 0 0 0.75rem;
+}
+
+.flow-head p:not(.eyebrow) {
+  color: var(--ink-soft);
+  font-size: var(--step-1);
+  max-inline-size: 40rem;
+  margin: 0;
+}
+
+.flow-aside {
+  margin-block-start: 1.5rem;
+  color: var(--ink-soft);
+}
+
+.flow-aside a,
+.shop-note a {
+  color: var(--ink);
+  text-underline-offset: 0.2em;
+}
+
+.form-card,
+.order-form .form-section,
+.studio-step,
+.studio-result,
+.guide-panel {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: clamp(1.25rem, 0.8rem + 2vw, 2rem);
+}
+
+.form-card {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.field-label {
+  display: block;
+  font-weight: 600;
+  margin-block-end: 0.375rem;
+}
+
+.field {
+  display: block;
+  inline-size: 100%;
+  min-block-size: 3rem;
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid var(--color-border-input);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--ink);
+  font: inherit;
+}
+
+.field:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+.field[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+.field-short {
+  max-inline-size: 8rem;
+}
+
+.code-input {
+  font-size: 1.6rem;
+  letter-spacing: 0.15em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
+}
+
+.field-help {
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+  margin: 0.25rem 0 0;
+}
+
+.field-error {
+  color: var(--color-danger);
+  font-size: var(--step--1);
+  font-weight: 600;
+  margin: 0.25rem 0 0;
+}
+
+.field-group + .field-group {
+  margin-block-start: 1rem;
+}
+
+.choice-row {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  border: 0;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+
+.choice {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.9rem 1rem;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  background: var(--white);
+}
+
+.choice:has(input:checked) {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 6%, var(--white));
+}
+
+.choice input {
+  margin-block-start: 0.2rem;
+  accent-color: var(--accent);
+}
+
+.choice span {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.choice small {
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+}
+
+.toggle {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  cursor: pointer;
+  margin-block: 0.75rem;
+}
+
+.toggle input {
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+  accent-color: var(--accent);
+}
+
+/* Studio de création */
+.studio {
+  display: grid;
+  gap: 1.25rem;
+  max-inline-size: 52rem;
+}
+
+.studio-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: var(--step-2);
+  font-family: var(--font-display);
+  font-weight: 400;
+  margin: 0 0 1rem;
+}
+
+.studio-num {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--white);
+  font: 700 0.95rem/1 var(--font-body);
+}
+
+.drop {
+  display: grid;
+  place-items: center;
+  min-block-size: 14rem;
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-card);
+  background: var(--cream);
+  cursor: pointer;
+  overflow: hidden;
+  text-align: center;
+  padding: 1rem;
+}
+
+.drop:focus-within {
+  outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.drop-text {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--ink-soft);
+}
+
+.drop-text strong {
+  color: var(--ink);
+  font-size: var(--step-1);
+}
+
+.drop-img {
+  max-block-size: 22rem;
+  inline-size: auto;
+  border-radius: var(--radius-sm);
+}
+
+.studio-actions {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.compare {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+}
+
+.compare img {
+  inline-size: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  background: var(--sand);
+}
+
+.compare figcaption {
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+  margin-block-start: 0.4rem;
+}
+
+.result-facts {
+  font-weight: 600;
+  margin: 1rem 0 0.5rem;
+}
+
+.result-warnings {
+  list-style: disc;
+  padding-inline-start: 1.25rem;
+  color: var(--ink-soft);
+  margin-block-end: 1rem;
+}
+
+/* Guide vocal */
+.guide {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (min-width: 60rem) {
+  .guide {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  }
+}
+
+.guide-board {
+  background: var(--white);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--line);
+  padding: clamp(0.5rem, 2vw, 1.25rem);
+  box-shadow: var(--shadow-card);
+}
+
+.guide-canvas {
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: 1;
+}
+
+.guide-panel {
+  display: grid;
+  gap: 1rem;
+}
+
+.guide-now {
+  text-align: center;
+}
+
+.guide-count {
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.guide-move {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: 0.25rem 0 0;
+  font: 400 clamp(2.6rem, 1.8rem + 4vw, 4.25rem) / 1.1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+
+.guide-from {
+  color: var(--ink-soft);
+  font-size: 0.6em;
+}
+
+.guide-arrow {
+  color: var(--brass);
+  font-size: 0.6em;
+}
+
+.guide-to {
+  color: var(--accent);
+}
+
+.guide-done {
+  font: 400 var(--step-2) / 1.2 var(--font-display);
+  margin: 0;
+}
+
+.guide-progress {
+  inline-size: 100%;
+  block-size: 0.6rem;
+  appearance: none;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--sand);
+  overflow: hidden;
+}
+
+.guide-progress::-webkit-progress-bar {
+  background: var(--sand);
+}
+
+.guide-progress::-webkit-progress-value {
+  background: var(--accent);
+}
+
+.guide-progress::-moz-progress-bar {
+  background: var(--accent);
+}
+
+.guide-meta {
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+  margin: -0.5rem 0 0;
+}
+
+.guide-controls {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  gap: 0.5rem;
+}
+
+.guide-btn,
+.guide-play {
+  padding-inline: 0.75rem;
+}
+
+.guide-settings {
+  border-block-start: 1px solid var(--line);
+  padding-block-start: 1rem;
+}
+
+.guide-settings input[type="range"] {
+  inline-size: 100%;
+  accent-color: var(--accent);
+}
+
+.guide-jump {
+  margin-block-start: 0.5rem;
+}
+
+.jump-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.jump-row .field {
+  max-inline-size: 9rem;
+}
+
+/* Commande */
+.order-form {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.order-form .form-section {
+  margin: 0;
+}
+
+.order-form legend {
+  float: inline-start;
+  inline-size: 100%;
+  font: 400 var(--step-2) / 1.2 var(--font-display);
+  margin-block-end: 1rem;
+  padding: 0;
+}
+
+.order-form legend + * {
+  clear: both;
+}
+
+.order-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  border-block-start: 1px solid var(--line);
+  padding-block-start: 1rem;
+  margin-block: 1rem 0;
+}
+
+.order-total strong {
+  font-size: var(--step-2);
+}
+
+.order-number strong {
+  font-size: var(--step-2);
+  letter-spacing: 0.05em;
+}
+
+.num-list {
+  list-style: decimal;
+  padding-inline-start: 1.25rem;
+  display: grid;
+  gap: 0.5rem;
+  margin-block-start: 1rem;
+}
+
+.order-lines {
+  display: grid;
+  gap: 0.35rem;
+  margin: 1rem 0 0;
+}
+
+.order-lines div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--ink-soft);
+}
+
+.order-lines dd {
+  margin: 0;
+}
+
+.gift-toggle {
+  border-style: dashed;
+}
+
+.form-lead {
+  margin: -0.5rem 0 1rem;
+}

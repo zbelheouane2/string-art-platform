@@ -14,10 +14,12 @@
     "kit": "The kit",
     "gift": "Gift ideas",
     "faq": "FAQ",
-    "cart": "View cart",
+    "cart": "Order",
     "language": "Language",
     "home": "Home",
-    "kitPage": "The kit in detail"
+    "kitPage": "The kit in detail",
+    "code": "I have a code",
+    "guideDemo": "Try the voice guide"
   },
   "hero": {
     "badge": "Gift idea",
@@ -158,7 +160,7 @@
       "guide": "Voice guide on your phone",
       "card": "Free message card for the occasion of your choice (birth, birthday, wedding, keepsake or other)"
     },
-    "cta": "Add to cart",
+    "cta": "Order now",
     "ctaSoon": "Coming soon",
     "payment": "Cash on delivery in Algeria",
     "gallery": "Kit visuals",
@@ -214,7 +216,11 @@
       "tuareg": "String portrait of a Tuareg man in a blue veil",
       "tuaregPhoto": "The source photo of the Tuareg man"
     },
-    "priceProvisional": "Provisional launch price"
+    "priceProvisional": "Provisional launch price",
+    "haveCode": "Already have your kit? Enter your code",
+    "abroad": "Living abroad?",
+    "abroadGift": "Send a kit to someone in Algeria",
+    "abroadDigital": "the digital offer"
   },
   "faq": {
     "eyebrow": "FAQ",
@@ -256,7 +262,7 @@
   },
   "sticky": {
     "name": "Portrait kit 50 × 50 cm",
-    "cta": "Add to cart",
+    "cta": "Order now",
     "ctaSoon": "Discover"
   },
   "footer": {
@@ -268,7 +274,11 @@
       "kit": "The kit",
       "how": "How it works",
       "gift": "Gift ideas",
-      "faq": "FAQ"
+      "faq": "FAQ",
+      "code": "I have a code",
+      "guideDemo": "Try the voice guide",
+      "giftAbroad": "Gift from abroad",
+      "digital": "Digital offer (diaspora)"
     },
     "rights": "© {year} {brand}",
     "info": "Information",
@@ -512,5 +522,250 @@
       "title": "How does our online generator work?",
       "scroll": "Scroll to see the screens"
     }
+  },
+  "activate": {
+    "eyebrow": "Your kit",
+    "title": "Enter your code",
+    "lead": "The code is printed on the card inside the box. It unlocks your portrait on this device.",
+    "label": "8-character code",
+    "help": "Format XXXX-XXXX. Capitals and the dash are added for you.",
+    "submit": "Validate my code",
+    "checking": "Checking…",
+    "noKit": "No kit yet?",
+    "order": "Order one",
+    "demo": "Try the voice guide",
+    "errors": {
+      "format": "This code doesn't look right. Check each character (codes never contain O, I, 0 or 1).",
+      "unknown": "We can't find this code. Check the card or contact us.",
+      "disabled": "This code has been disabled. Contact us to reactivate it.",
+      "tooMany": "Too many attempts. Please wait fifteen minutes and try again."
+    }
+  },
+  "create": {
+    "eyebrow": "Code accepted",
+    "title": "Your photo becomes a portrait",
+    "lead": "Pick a sharp photo with a well-lit face. The software frames the face, works out the thread order and shows you the result before you start.",
+    "photo": {
+      "title": "Your photo",
+      "choose": "Choose a photo",
+      "hint": "JPG, PNG or WebP, up to 15 MB. From your phone or computer.",
+      "change": "Tap the photo to pick another one.",
+      "alt": "Your photo"
+    },
+    "style": {
+      "title": "The look",
+      "keepBackground": "Keep the photo background (otherwise it is lightened)",
+      "doux": {
+        "name": "Soft",
+        "text": "Fine lines, bright skin"
+      },
+      "standard": {
+        "name": "Balanced",
+        "text": "Recommended for most photos"
+      },
+      "contraste": {
+        "name": "Bold",
+        "text": "Deeper blacks, graphic look"
+      }
+    },
+    "generate": "Create my portrait",
+    "regenerate": "Recalculate with these settings",
+    "generating": "Calculating…",
+    "generatingHint": "The software tries thousands of threads; this takes a few seconds.",
+    "remaining": "{count, plural, =0 {No calculations left with this code.} one {# calculation left with this code.} other {# calculations left with this code.}}",
+    "result": {
+      "title": "Your portrait in thread",
+      "before": "Your photo",
+      "after": "In thread",
+      "alt": "Preview of the thread portrait",
+      "facts": "{lines} threads, about {meters} m of thread.",
+      "noFace": "No face detected: the portrait uses the whole photo.",
+      "choose": "I choose this portrait",
+      "choosing": "Saving…",
+      "chooseHint": "Once chosen, this portrait is tied to your code and the voice guide opens. You can still try another setting first."
+    },
+    "warnings": {
+      "photo_floue": "The photo looks blurry: the portrait will be less sharp.",
+      "photo_trop_sombre": "The photo is dark: try a brighter one.",
+      "photo_trop_claire": "The photo is very bright: details may disappear.",
+      "contraste_faible": "Low contrast: try the “Bold” look."
+    },
+    "errors": {
+      "fileType": "Unsupported format. Choose a JPG, PNG or WebP photo.",
+      "fileSize": "Photo too large (15 MB maximum).",
+      "photo": "This photo can't be used (too small or unreadable). Try another at least 400 pixels wide.",
+      "engine": "The calculation didn't finish. Please try again in a moment.",
+      "network": "Connection lost. Check your network and try again.",
+      "limit": "This code has reached its maximum number of calculations. Contact us.",
+      "used": "A portrait is already chosen for this code.",
+      "disabled": "This code has been disabled.",
+      "noSession": "Enter your code first."
+    }
+  },
+  "guide": {
+    "eyebrow": "Making guide",
+    "demoEyebrow": "Demo",
+    "title": "Follow the voice, nail by nail",
+    "lead": "{lines} threads, about {meters} m. Put your phone next to the board, press play and run the thread to each nail called out.",
+    "boardAlt": "Board plan: threads already placed, current thread and the next nail",
+    "thread": "Thread {n} of {total}",
+    "to": "to",
+    "done": "Well done, your portrait is finished!",
+    "progress": "Progress",
+    "percent": "{p}% done",
+    "remaining": "about {min} min left",
+    "prev": "Previous",
+    "next": "Next",
+    "start": "Start",
+    "resume": "Resume",
+    "pause": "Pause",
+    "repeat": "Repeat the nail",
+    "speed": "Speed: one thread every {s} seconds",
+    "voice": "Call out the nails aloud",
+    "voiceMissing": "Your device has no voice in this language, so the default voice is used. You can also follow on screen.",
+    "lost": "Lost? Resume at thread no.",
+    "jumpPlaceholder": "e.g. 125",
+    "jump": "Go",
+    "keys": "Keyboard: space to pause, arrows to move, R to repeat. Your progress is kept on this device."
+  },
+  "order": {
+    "eyebrow": "Order",
+    "title": "Order your kit",
+    "provisional": "launch price",
+    "closed": "Online ordering isn't open yet. Please come back soon.",
+    "sections": {
+      "contact": "Your details",
+      "delivery": "Delivery",
+      "payment": "Payment",
+      "summary": "Summary",
+      "buyer": "You, the giver",
+      "recipient": "The recipient in Algeria"
+    },
+    "fields": {
+      "fullName": "Full name",
+      "phone": "Mobile phone",
+      "wilaya": "Wilaya (province)",
+      "wilayaPick": "Choose your wilaya",
+      "commune": "Town",
+      "quantity": "Number of kits",
+      "note": "Note for the courier (optional)",
+      "communePick": "Choose your town",
+      "communeFirst": "Choose the wilaya first",
+      "communeOther": "My town isn't listed",
+      "communeOtherLabel": "Name of your town",
+      "buyerPhone": "Your phone (with country code, e.g. +44)",
+      "buyerEmail": "Your email (optional)",
+      "giftMessage": "Your message for the card (optional)"
+    },
+    "delivery": {
+      "yalidine_home": {
+        "name": "Home delivery",
+        "text": "The courier comes to your door"
+      },
+      "yalidine_desk": {
+        "name": "Courier office",
+        "text": "Pick up the parcel near you"
+      },
+      "zrexpress_home": {
+        "name": "Home delivery",
+        "text": "Delivered by ZR Express; the courier calls you for the exact place"
+      },
+      "zrexpress_desk": {
+        "name": "Delivery office",
+        "text": "Pick up the parcel at a ZR Express office"
+      }
+    },
+    "payment": {
+      "cod": {
+        "name": "Cash on delivery",
+        "text": "Pay in cash when the parcel arrives"
+      },
+      "cib_edahabia": {
+        "name": "CIB or EDAHABIA card",
+        "text": "Secure online payment"
+      },
+      "card": {
+        "name": "Bank card",
+        "text": "Secure online payment"
+      }
+    },
+    "deliveryFees": "The delivery fee for this wilaya is confirmed by phone before shipping.",
+    "total": "Total (excluding delivery)",
+    "submit": "Place my order",
+    "sending": "Sending…",
+    "privacy": "Your details are only used to deliver your order. We don't ask for your full address: the courier will call you.",
+    "errors": {
+      "nameShort": "Enter your full name.",
+      "nameLong": "Name too long.",
+      "phone": "Algerian mobile number expected (05, 06 or 07, 10 digits).",
+      "wilaya": "Choose your wilaya.",
+      "commune": "Enter your town.",
+      "delivery": "Choose a delivery option.",
+      "payment": "Choose a payment method.",
+      "quantity": "Invalid quantity.",
+      "noteLong": "Note too long.",
+      "check": "Please check the highlighted fields.",
+      "closed": "Ordering is not open at the moment.",
+      "unavailable": "This option is no longer available, please try again.",
+      "buyerName": "Enter your full name.",
+      "buyerPhone": "Number expected with country code (e.g. +44 7700 900123).",
+      "buyerEmail": "Invalid email address.",
+      "giftMessageLong": "Message too long (200 characters)."
+    },
+    "feePickWilaya": "Choose your wilaya to see the delivery fee.",
+    "feeKnown": "Delivery fee: {fee}.",
+    "lineItems": "{count, plural, one {# kit} other {# kits}}",
+    "lineDelivery": "Delivery",
+    "feeLater": "confirmed by phone",
+    "totalWithDelivery": "Total including delivery",
+    "gift": {
+      "toggle": "It's a gift for someone in Algeria",
+      "toggleText": "Living abroad? The kit is delivered to your loved one, who pays on delivery.",
+      "recipientHelp": "The person receiving the kit: the courier calls them on this number.",
+      "paymentHelp": "The recipient pays in cash on delivery. We let you know when the parcel has arrived."
+    }
+  },
+  "confirmation": {
+    "eyebrow": "Thank you!",
+    "title": "Order received",
+    "lead": "We have received your order.",
+    "number": "Order number:",
+    "total": "Total (excluding delivery)",
+    "next": {
+      "call": "We will call you to confirm the order and the delivery fee.",
+      "cod": "You pay the courier in cash on delivery.",
+      "paid": "Your payment is being verified.",
+      "code": "In the box: your personal code to create the portrait and start the voice guide.",
+      "giftCall": "We will call you, then your loved one, to confirm the order and the delivery fee.",
+      "giftCod": "Your loved one pays the courier in cash on delivery."
+    },
+    "tryGuide": "Meanwhile, try the voice guide",
+    "totalWithDelivery": "Total including delivery"
+  },
+  "digital": {
+    "eyebrow": "Diaspora",
+    "title": "The thread portrait, 100% digital",
+    "lead": "Living outside Algeria? Get your code by email, create your portrait and make it at home with the voice guide, on a board you prepare yourself.",
+    "includesTitle": "What you get",
+    "includes": {
+      "code": "A personal code, sent by email",
+      "software": "The software that turns your photo into a thread portrait",
+      "voice": "The nail-by-nail voice guide, in French, English or Arabic",
+      "template": "The board template to print at full size (50 × 50 cm, 240 nails numbered A1 to D60)",
+      "materials": "The list of materials to buy locally: board, nails, thread"
+    },
+    "stepsTitle": "How it works",
+    "steps": {
+      "buy": "Buy the offer online and receive your code.",
+      "print": "Print the template and fix it on a board.",
+      "build": "Hammer the 240 nails at the template marks.",
+      "thread": "Create your portrait and follow the voice, thread by thread."
+    },
+    "price": "Price announced at launch",
+    "soon": "Coming soon",
+    "soonHelp": "Online payment from abroad will open soon.",
+    "meanwhile": "Meanwhile:",
+    "giftLink": "send a kit to someone in Algeria",
+    "demoLink": "try the voice guide"
   }
 }

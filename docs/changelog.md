@@ -1,5 +1,9 @@
 # Historique
 
+## 2026-11-13
+- **Commande, suite** : ZR Express par défaut, frais par wilaya (import CSV), 1 541 communes par wilaya (loi 26-06), adresse complète retirée, option « cadeau depuis l'étranger », page de l'offre numérique diaspora (paiement à venir). Migration `delivery_rates`.
+- **Site fonctionnel, tranche 1** (`docs/parcours-client.md`) : commande avec paiement à la livraison (69 wilayas, envoi vers Google Sheet), codes d'activation (lots, clé de contrôle, anti force brute), création du portrait par le moteur, guide vocal (FR/EN/AR), architecture de paiement et de transporteurs extensible. Migration `activation_code_batch`.
+
 ## 2026-11-12
 - **Relevé point par point de la référence** (`replica/recon.md`) et rattrapage : ligne de preuves du héros, en-tête de section scindé, cartes cadeaux cliquables avec œuvre superposée, encadré matériaux et puces, bandeau « l'offrir » complet, galerie produit en carrousel (défilement aimanté, flèches, vignettes), colonne d'achat collante avec accordéon, menu de langue déroulant, pied de page foncé à 5 colonnes, appel final en ligne. **Nouvelle page « Le kit »** (`/kit`) : achat, planche animée, avant/après + 3 exemples, « Comment ça marche » en 5 étapes, guide sur téléphone, « pour offrir », « pourquoi nous », FAQ. 50 tests navigateur.
 - **Animations de la page d'accueil** : apparitions au défilement, bandeau qui défile, effets au survol ; désactivées avec « réduire les animations ». 2 tests navigateur ajoutés.
