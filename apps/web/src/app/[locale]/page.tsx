@@ -25,7 +25,7 @@ const GIFTS = [
   { key: "grandparents", name: "fillette" },
   { key: "pets", name: "chat" },
   { key: "memory", name: null },
-  { key: "self", name: "astronaute" },
+  { key: "self", name: "soi" },
 ] as const;
 const INTRO = ["gift", "hobby"] as const;
 const BOX = [
