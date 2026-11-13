@@ -1,0 +1,228 @@
+// Modèle de données de la plateforme. Toute évolution passe par une migration.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Marché commercial : pays ou zone, avec sa devise et sa langue par défaut.
+model Market {
+  id            String          @id @default(cuid())
+  code          String          @unique // "DZ", "FR", "EU"…
+  name          String
+  currency      String          @db.Char(3) // ISO 4217
+  defaultLocale String
+  active        Boolean         @default(true)
+  prices        Price[]
+  paymentMethods MarketPaymentMethod[]
+  deliveryMethods DeliveryMethod[]
+  orders        Order[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+enum ProductKind {
+  KIT            // kit physique avec code inclus
+  EXTRA_CODE     // code supplémentaire
+  ARTWORK        // tableau fini
+}
+
+model Product {
+  id        String      @id @default(cuid())
+  slug      String      @unique
+  kind      ProductKind
+  active    Boolean     @default(true)
+  /// Libellés par langue : { "fr": "...", "en": "...", "ar": "..." }
+  names     Json
+  prices    Price[]
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+/// Prix d'un produit sur un marché, en unité mineure (centimes, ou dinars pour DZD).
+model Price {
+  id          String  @id @default(cuid())
+  productId   String
+  marketId    String
+  amountMinor Int
+  currency    String  @db.Char(3)
+  product     Product @relation(fields: [productId], references: [id])
+  market      Market  @relation(fields: [marketId], references: [id])
+
+  @@unique([productId, marketId])
+}
+
+/// Moyen de paiement générique (le prestataire est branché par un adaptateur).
+model PaymentMethod {
+  id       String                @id @default(cuid())
+  code     String                @unique // "cod", "cib_edahabia", "card"…
+  provider String                // identifiant de l'adaptateur
+  markets  MarketPaymentMethod[]
+  payments Payment[]
+}
+
+model MarketPaymentMethod {
+  marketId        String
+  paymentMethodId String
+  active          Boolean       @default(true)
+  market          Market        @relation(fields: [marketId], references: [id])
+  paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+
+  @@id([marketId, paymentMethodId])
+}
+
+/// Mode de livraison d'un marché (le transporteur est branché par un adaptateur).
+model DeliveryMethod {
+  id          String  @id @default(cuid())
+  marketId    String
+  code        String  // "yalidine_home", "yalidine_desk"…
+  provider    String
+  active      Boolean @default(true)
+  market      Market  @relation(fields: [marketId], references: [id])
+  orders      Order[]
+
+  @@unique([marketId, code])
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  email     String?  @unique
+  phone     String?
+  fullName  String
+  locale    String   @default("fr")
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  RETURNED
+}
+
+model Order {
+  id               String          @id @default(cuid())
+  number           String          @unique
+  status           OrderStatus     @default(PENDING)
+  customerId       String
+  marketId         String
+  deliveryMethodId String?
+  currency         String          @db.Char(3)
+  totalMinor       Int
+  /// Adresse figée au moment de la commande.
+  shippingAddress  Json
+  customer         Customer        @relation(fields: [customerId], references: [id])
+  market           Market          @relation(fields: [marketId], references: [id])
+  deliveryMethod   DeliveryMethod? @relation(fields: [deliveryMethodId], references: [id])
+  items            OrderItem[]
+  payments         Payment[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([status, createdAt])
+}
+
+model OrderItem {
+  id             String           @id @default(cuid())
+  orderId        String
+  productId      String
+  quantity       Int
+  unitPriceMinor Int
+  order          Order            @relation(fields: [orderId], references: [id])
+  product        Product          @relation(fields: [productId], references: [id])
+  codes          ActivationCode[]
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  orderId         String
+  paymentMethodId String
+  status          PaymentStatus @default(PENDING)
+  amountMinor     Int
+  currency        String        @db.Char(3)
+  providerRef     String?
+  order           Order         @relation(fields: [orderId], references: [id])
+  paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+enum ActivationCodeStatus {
+  ACTIVE     // utilisable
+  USED       // portrait validé
+  DISABLED   // désactivé (abus, remboursement, limite d'envois atteinte)
+}
+
+/// Code d'activation au format XXXX-XXXX, imprimé dans le kit.
+model ActivationCode {
+  id           String               @id @default(cuid())
+  code         String               @unique
+  status       ActivationCodeStatus @default(ACTIVE)
+  orderItemId  String?
+  /// Nombre d'envois des instructions par e-mail (limite configurable).
+  emailsSent   Int                  @default(0)
+  redeemedAt   DateTime?
+  orderItem    OrderItem?           @relation(fields: [orderItemId], references: [id])
+  generations  Generation[]
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+}
+
+enum GenerationStatus {
+  QUEUED
+  RUNNING
+  DONE
+  FAILED
+}
+
+/// Calcul d'un portrait par le moteur. La photo est stockée à part (stockage privé)
+/// et supprimée à `photoDeleteAfter` ; seule son empreinte reste.
+model Generation {
+  id               String           @id @default(cuid())
+  activationCodeId String
+  status           GenerationStatus @default(QUEUED)
+  variant          String
+  engineVersion    String?
+  photoSha256      String           @db.Char(64)
+  photoKey         String?          // clé dans le stockage privé, null une fois supprimée
+  photoDeleteAfter DateTime
+  params           Json
+  /// Document d'instructions renvoyé par le moteur (séquence, étapes, métriques).
+  document         Json?
+  chosen           Boolean          @default(false)
+  error            String?
+  activationCode   ActivationCode   @relation(fields: [activationCodeId], references: [id])
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index([activationCodeId])
+  @@index([photoDeleteAfter])
+}
+
+/// Journal des opérations importantes (sans données personnelles en clair).
+model AuditLog {
+  id        String   @id @default(cuid())
+  actor     String   // "system", "customer:<id>", "admin:<id>"
+  action    String
+  target    String?
+  meta      Json?
+  createdAt DateTime @default(now())
+
+  @@index([action, createdAt])
+}

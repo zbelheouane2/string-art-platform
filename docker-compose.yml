@@ -1,0 +1,36 @@
+# Environnement de développement local : base de données, moteur, site.
+# Lancer : docker compose up --build   puis   http://localhost:3000
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: stringart
+      POSTGRES_PASSWORD: stringart
+      POSTGRES_DB: stringart
+    ports: ["5432:5432"]
+    volumes: [db-data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stringart"]
+      interval: 5s
+      retries: 10
+
+  engine:
+    build: ./services/engine
+    environment:
+      ENGINE_TOKEN: ${ENGINE_TOKEN:-dev-token}
+    ports: ["8000:8000"]
+
+  web:
+    build: ./apps/web
+    environment:
+      DATABASE_URL: postgresql://stringart:stringart@db:5432/stringart
+      ENGINE_URL: http://engine:8000
+      ENGINE_TOKEN: ${ENGINE_TOKEN:-dev-token}
+      NEXT_PUBLIC_BRAND_NAME: ${BRAND_NAME:-DeeKra}
+    ports: ["3000:3000"]
+    depends_on:
+      db: { condition: service_healthy }
+      engine: { condition: service_started }
+
+volumes:
+  db-data:

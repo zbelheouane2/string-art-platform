@@ -1,7 +1,7 @@
 # STRING ART PLATFORM
 ## Cahier des charges global — Spécifications fonctionnelles et techniques
 
-**Version : 1.0**  
+**Version : 1.1** (voir l'historique des versions en fin de document)  
 **Type de projet :** Plateforme Web / E-commerce / Génération algorithmique String Art  
 **Développement :** Claude Code  
 **Marché cible :** Algérie + International  
@@ -88,6 +88,14 @@ Le kit doit pouvoir comprendre :
 - Les outils nécessaires, selon la composition commerciale retenue.
 - Un guide de démarrage.
 - Un accès au guide numérique interactif.
+- Une carte comportant un code d'activation unique (voir section 2.3).
+- Un support de téléphone, si retenu dans la composition commerciale, pour suivre l'assistant pendant la réalisation.
+
+**Choix retenu :** le support est livré avec les clous déjà posés aux positions standards du gabarit, identiques pour tous les kits. Le client n'a qu'à tendre le fil selon la séquence générée. Les supports peuvent ainsi être fabriqués en série, indépendamment de la photo du client.
+
+Le support doit comporter un repère d'orientation (par exemple « haut » et clou n° 1 marqués) et un QR code menant à l'assistant de réalisation.
+
+La quantité de fil fournie peut permettre plusieurs réalisations. Le nombre de réalisations permises par un kit doit être administrable.
 
 La composition exacte du kit doit être administrable depuis le back-office.
 
@@ -107,6 +115,33 @@ Le produit numérique comprend :
 Prévoir également une offre regroupant le kit physique et le patron numérique.
 
 Les différentes offres doivent pouvoir être configurées et commercialisées indépendamment.
+
+### D. Accessoires et consommables
+
+Prévoir la vente d'accessoires complémentaires (support d'exposition, cadre, recharge de fil, codes d'activation supplémentaires) depuis le catalogue.
+
+## 2.3. Kit générique et code d'activation
+
+Pour simplifier la fabrication et la logistique, le kit physique peut être vendu **sans personnalisation préalable**. La personnalisation se fait après réception, grâce à un code d'activation.
+
+Principe :
+- Chaque kit contient une carte avec un code d'activation unique, non devinable.
+- Le client saisit le code (ou scanne le QR code) sur la plateforme, importe sa photo et génère son portrait.
+- Le code est lié au format de support du kit, ce qui garantit la compatibilité entre le patron et les clous.
+
+Règles à rendre administrables :
+- Nombre de portraits validés autorisés par code.
+- Nombre de générations d'essai autorisées par code.
+- Durée de validité (illimitée par défaut).
+- Nombre de téléchargements du PDF par portrait.
+
+Le système doit :
+- Générer les codes par lots, avec un statut (créé, imprimé, vendu, activé, épuisé, désactivé).
+- Limiter les tentatives de saisie pour empêcher la recherche de codes par force brute.
+- Permettre la vente de codes seuls (cadeau, réutilisation d'un kit).
+- Tracer chaque utilisation d'un code.
+
+Ce mode cohabite avec le parcours « créer puis acheter » décrit en section 3.1. Il permet aussi d'offrir un kit sans connaître la photo du destinataire, et de vendre des kits en boutique physique ou chez des revendeurs.
 
 ---
 
@@ -142,6 +177,24 @@ Autoriser un client à commencer une création sans créer immédiatement un com
 La création de compte peut être proposée au moment de la sauvegarde ou de la commande.
 
 Les créations temporaires doivent être associées à une session sécurisée et disposer d'une durée de conservation définie.
+
+## 3.3. Parcours kit avec code d'activation
+
+1. Le client reçoit son kit (achat en ligne, cadeau ou revendeur).
+2. Il scanne le QR code ou saisit son code d'activation.
+3. Il importe et ajuste sa photographie.
+4. Le moteur génère le portrait, que le client peut régénérer dans la limite autorisée.
+5. Il valide son portrait, ce qui consomme une utilisation du code.
+6. Il accède à l'assistant de réalisation et au PDF.
+
+La création d'un compte est proposée à la validation, pour permettre la reprise sur un autre appareil.
+
+## 3.4. Le parcours comme cadeau
+
+Le cadeau est un cas d'usage majeur. Prévoir :
+- L'achat d'un kit ou d'un code en tant que cadeau, sans photo.
+- Un message personnalisé et une option d'emballage cadeau, si retenue commercialement.
+- Le masquage des prix sur le bon de livraison.
 
 ---
 
@@ -265,6 +318,13 @@ Le système doit vérifier la qualité et les dimensions de l'image.
 
 Il doit avertir l'utilisateur si la photographie est trop sombre, floue ou si le sujet est difficile à distinguer.
 
+Prévoir une **vérification automatique de la photo avant génération** :
+- Score de qualité (netteté, exposition, contraste, résolution).
+- Détection du visage pour proposer automatiquement un recadrage centré.
+- Conseils clairs et illustrés (gros plan, un ou deux sujets, éclairage contrasté, fond simple).
+
+Cette vérification se fait sans enregistrer de données biométriques. La détection de visage sert uniquement au recadrage et n'est pas conservée.
+
 ## 5.4. Étape 2 : Prétraitement
 
 Le moteur doit :
@@ -293,6 +353,17 @@ Le moteur doit pouvoir générer les coordonnées des clous selon le gabarit sta
 Les positions doivent être reproductibles et identiques entre le rendu, le PDF et le support physique.
 
 Le nombre de clous sera déterminé par les essais de qualité et les contraintes de fabrication.
+
+**Hypothèse de départ (à valider par le prototype) :**
+- Les clous sont disposés en **cercle**, inscrit dans le support carré.
+- **240 clous**, répartis en **4 secteurs de 60 clous**, nommés A, B, C et D.
+- Chaque clou a un repère lisible par l'humain (par exemple **B17**) et un index technique unique (1 à 240) utilisé par l'algorithme. La correspondance entre les deux est fixe.
+- Les instructions, le PDF, l'assistant et le marquage physique du support utilisent les repères de secteur (A1 à D60), plus faciles à retrouver qu'un numéro de 1 à 240.
+- Les 4 secteurs sont **peints en alternance noir / blanc / noir / blanc** pour être repérés d'un coup d'œil, et le support porte des marques visibles au début de chaque secteur.
+- Les instructions sont de la forme « A1 → D56 ».
+- **Convention retenue** : numérotation dans le **sens horaire**, **A1 à 9 h**. Secteurs dans l'ordre horaire : **A** (9 h → 12 h, fond noir), **B** (12 h → 3 h, fond blanc), **C** (3 h → 6 h, fond noir), **D** (6 h → 9 h, fond blanc). Index interne i (0 à 239) → lettre « ABCD »[i div 60], numéro (i mod 60) + 1.
+
+Le moteur doit rester paramétrable (nombre de secteurs, clous par secteur) pour tester d'autres configurations sans refonte.
 
 ## 5.6. Étape 4 : Calcul des connexions
 
@@ -360,6 +431,12 @@ Ne pas utiliser une seule métrique pour juger la qualité artistique.
 
 Le système doit permettre de tester différents paramètres et de conserver le meilleur résultat.
 
+## 5.8 bis. Reproductibilité et versionnement
+
+- Le moteur doit être déterministe : à image, paramètres et version du moteur identiques, le résultat doit être identique.
+- Chaque génération enregistre la version du moteur et la graine aléatoire éventuelle.
+- Une mise à jour du moteur ne doit jamais modifier un portrait déjà validé.
+
 ## 5.9. Paramètres du moteur
 
 Les paramètres suivants doivent être administrables :
@@ -403,6 +480,7 @@ L'utilisateur doit pouvoir :
 - Ajuster la luminosité.
 - Modifier le niveau de détail parmi les options disponibles.
 - Relancer la génération.
+- Choisir entre deux ou trois variantes proposées automatiquement (par exemple : contraste doux, standard, marqué), plutôt que régler des curseurs techniques.
 
 Le format physique carré reste unique.
 
@@ -526,10 +604,26 @@ L'assistant doit être parfaitement utilisable depuis un smartphone posé à cô
 
 Prévoir des boutons suffisamment grands et une interface sans distraction.
 
+Prévoir également :
+- Le maintien de l'écran allumé pendant la réalisation.
+- Une zone de validation très large (toucher n'importe où sur l'écran pour passer à l'étape suivante).
+- Le fonctionnement hors connexion une fois la séquence chargée (application web progressive).
+- La synchronisation de la progression entre appareils pour les clients ayant un compte.
+- Des pauses suggérées et un temps restant estimé.
+
+## Guidage audio (MVP)
+
+La réalisation demande plusieurs heures. Le client a les mains occupées par le fil et ne peut pas regarder l'écran en permanence. Le guidage audio est donc intégré au MVP dans une version simple :
+- Annonce vocale du numéro du clou suivant, dans la langue du client (français, anglais, arabe).
+- Lecture automatique à un rythme réglable, avec pause et reprise.
+- Possibilité de répéter la dernière annonce.
+- Musique d'ambiance optionnelle.
+
+Les annonces peuvent reposer sur des fichiers audio pré-enregistrés par nombre et par langue, plus fiables que la synthèse vocale du navigateur, en particulier pour l'arabe. Le choix technique sera validé en phase 4.
+
 ## Évolutions futures
 
-- Assistant vocal.
-- Instructions audio.
+- Commande vocale (« suivant », « répète », « retour »).
 - Vidéos explicatives.
 - Détection de progression par caméra, si techniquement réalisable.
 
@@ -601,6 +695,12 @@ Prévoir une intégration sécurisée avec vérification serveur des notificatio
 
 Ne jamais stocker directement les données bancaires sensibles.
 
+Exemples de moyens à prévoir selon les marchés, tous configurables :
+- Algérie : paiement à la livraison, cartes CIB et EDAHABIA via un prestataire agréé.
+- International : cartes bancaires et portefeuilles électroniques via un prestataire international.
+
+Le paiement à la livraison implique des statuts spécifiques (encaissé par le transporteur, reversé, refusé à la livraison) et une gestion des retours de colis.
+
 ## 9.6. Livraison
 
 Prévoir :
@@ -611,6 +711,8 @@ Prévoir :
 - Délais estimatifs.
 - Numéro de suivi.
 - Statuts de livraison.
+- Livraison à domicile ou en point relais, selon les transporteurs disponibles.
+- Intégration des transporteurs par connecteurs interchangeables (transporteurs locaux en Algérie, transporteurs internationaux ailleurs).
 
 ---
 
@@ -897,6 +999,9 @@ Prévoir au minimum les entités suivantes :
 28. SupportRequests
 29. Settings
 30. AuditLogs
+31. ActivationCodes
+32. ActivationCodeBatches
+33. ActivationCodeUsages
 
 Les relations, contraintes, index et règles de suppression doivent être documentés avant la mise en production.
 
@@ -1147,6 +1252,9 @@ La première version doit se concentrer sur les fonctionnalités réellement ind
 - Génération du guide.
 - Offre numérique.
 - Offre kit physique.
+- Code d'activation pour les kits génériques.
+- Assistant de réalisation avec guidage audio simple.
+- Vérification automatique de la qualité de la photo.
 - Panier.
 - Commandes.
 - Gestion administrative.
@@ -1162,7 +1270,7 @@ La première version doit se concentrer sur les fonctionnalités réellement ind
 - Programme de fidélité.
 - Application mobile native.
 - Réalité augmentée.
-- Assistant vocal.
+- Commande vocale de l'assistant.
 - Génération de portraits de groupe avancée.
 
 Ne pas développer les évolutions futures avant la validation du MVP.
@@ -1279,3 +1387,22 @@ L'expérience e-commerce doit ensuite être construite autour de ce moteur.
 Le développement doit être progressif, documenté, testé et validé à chaque étape.
 
 **Objectif final : construire une plateforme internationale de personnalisation et de commercialisation de créations String Art, dotée de son propre moteur algorithmique et d'une expérience client premium.**
+
+---
+
+# HISTORIQUE DES VERSIONS
+
+## Version 1.1 — 2026-11-11
+
+Améliorations issues de l'analyse concurrentielle du marché et de l'expertise technique :
+- Ajout du kit générique avec code d'activation (sections 2.3 et 3.3) et des entités associées.
+- Support livré avec clous pré-posés (choix validé), repère d'orientation et QR code (section 2.2).
+- Ajout des accessoires et consommables (section 2.2 D) et du parcours cadeau (section 3.4).
+- Vérification automatique de la photo avant génération (section 5.3).
+- Reproductibilité et versionnement du moteur (section 5.8 bis).
+- Choix entre variantes proposées dans le studio (section 6.2).
+- Guidage audio simple intégré au MVP et améliorations mobiles de l'assistant (section 8).
+- Exemples de moyens de paiement par marché, dont le paiement à la livraison en Algérie (section 9.5).
+- Livraison à domicile ou en point relais et connecteurs transporteurs (section 9.6).
+- Hypothèse de géométrie : cercle de 240 clous en 4 secteurs A à D de 60 clous (section 5.5).
+- Mise à jour du périmètre MVP (section 20).

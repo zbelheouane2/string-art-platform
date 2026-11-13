@@ -1,0 +1,516 @@
+{
+  "meta": {
+    "title": "{brand} — a thread portrait of someone you love",
+    "description": "Give a kit that turns a photo into a stretched-thread portrait. Board, pre-set nails, thread and voice guide included."
+  },
+  "a11y": {
+    "skip": "Skip to content"
+  },
+  "announcement": "Cash on delivery across Algeria",
+  "nav": {
+    "menu": "Open navigation",
+    "close": "Close navigation",
+    "how": "How it works",
+    "kit": "The kit",
+    "gift": "Gift ideas",
+    "faq": "FAQ",
+    "cart": "View cart",
+    "language": "Language",
+    "home": "Home",
+    "kitPage": "The kit in detail"
+  },
+  "hero": {
+    "badge": "Gift idea",
+    "eyebrow": "A portrait made by their own hands",
+    "titleStart": "The gift that",
+    "titleAccent": "never ends up in a drawer",
+    "lead": "Pick a photo that matters, and our software turns it into a path of thread across 240 nails. Then just follow the guide's voice: no artistic talent needed.",
+    "cta": "Give the kit",
+    "secondary": "How does it work?",
+    "boardLabel": "Portrait being woven, computed by our software",
+    "progress": "Thread {current} of {total}",
+    "segment": "from {from} to {to}",
+    "replay": "Replay the weaving",
+    "pause": "Pause",
+    "play": "Resume",
+    "credit": "Algerian Beauty",
+    "medallion": "The original photo",
+    "proof": {
+      "cod": "Cash on delivery",
+      "nails": "240 nails already set",
+      "voice": "Voice guide in 3 languages"
+    }
+  },
+  "trust": {
+    "cod": "Cash on delivery",
+    "delivery": "Delivery across Algeria",
+    "voice": "Voice guide in Arabic, French and English",
+    "nails": "Nails already set in the board"
+  },
+  "gifts": {
+    "eyebrow": "Gift ideas",
+    "title": "Who is this portrait for?",
+    "lead": "One photo is all it takes. You choose the person, they choose the memory.",
+    "items": {
+      "couples": {
+        "title": "For a couple",
+        "text": "Engagement, wedding, the day you met"
+      },
+      "parents": {
+        "title": "For your parents",
+        "text": "A family portrait for the living room",
+        "caption": "Algerian star: Salah Aougrout"
+      },
+      "grandparents": {
+        "title": "For grandparents",
+        "text": "All the grandchildren in one frame"
+      },
+      "pets": {
+        "title": "For animal lovers",
+        "text": "The family cat or dog, line for line"
+      },
+      "memory": {
+        "title": "In memory of a loved one",
+        "text": "A beloved face, kept close"
+      },
+      "self": {
+        "title": "For yourself",
+        "text": "A creative evening, away from screens"
+      },
+      "occasion": {
+        "title": "For an occasion",
+        "text": "A free message card, tucked into the kit, for the occasion of your choice:",
+        "occasions": {
+          "birth": "Birth",
+          "birthday": "Birthday",
+          "wedding": "Wedding",
+          "memory": "Keepsake",
+          "other": "Other"
+        }
+      }
+    },
+    "placeholder": "Temporary visual"
+  },
+  "what": {
+    "eyebrow": "In the box",
+    "title": "A kit to build + software that makes it yours",
+    "slider": {
+      "label": "Compare the photo and the thread portrait",
+      "photo": "Photo",
+      "thread": "In thread",
+      "hint": "Drag to move from photo to thread"
+    },
+    "steps": {
+      "photo": {
+        "title": "One photo",
+        "text": "They enter their code and choose the memory they want to keep."
+      },
+      "model": {
+        "title": "A made-to-measure pattern",
+        "text": "Our software works out the thread's path, nail after nail, for that very photo."
+      },
+      "thread": {
+        "title": "One thread, one voice",
+        "text": "The guide reads out every nail. Pull, listen, keep going."
+      }
+    },
+    "premiumTitle": "A real board, ready to string",
+    "premiumText": "A 50 × 50 cm board with 240 nails already set and numbered A1 to D60, a spool of black thread and your personal code.",
+    "chips": {
+      "box": "Everything in the box",
+      "nails": "No nails to hammer",
+      "voice": "Multilingual voice guide"
+    },
+    "more": "See how it works"
+  },
+  "howGift": {
+    "eyebrow": "Giving it",
+    "title": "You give the box, they choose the memory",
+    "lead": "No need to guess which photo they'll love: the code in the box leaves the choice to them.",
+    "steps": {
+      "box": {
+        "title": "You give the kit",
+        "text": "Board, pre-set nails, thread and a personal code: it's all in the box."
+      },
+      "choose": {
+        "title": "They pick their photo",
+        "text": "With the code, they create their own pattern whenever they like."
+      },
+      "make": {
+        "title": "They make it",
+        "text": "Guided by voice, at their own pace, to the very last thread."
+      }
+    },
+    "togetherTitle": "Alone, or together.",
+    "togetherText": "An activity to share as a couple, with family or friends, with a picture to hang at the end.",
+    "togetherText2": "The code stays valid: they create their portrait whenever they like.",
+    "cta": "Give the kit"
+  },
+  "shop": {
+    "title": "Portrait kit 50 × 50 cm",
+    "lead": "The photo of someone you love, turned into a stretched-thread picture.",
+    "priceSoon": "Price coming soon",
+    "includesTitle": "Included",
+    "includes": {
+      "board": "50 × 50 cm board with 240 nails already set",
+      "thread": "Spool of black thread",
+      "code": "Personal code to create the pattern",
+      "guide": "Voice guide on your phone",
+      "card": "Free message card for the occasion of your choice (birth, birthday, wedding, keepsake or other)"
+    },
+    "cta": "Add to cart",
+    "ctaSoon": "Coming soon",
+    "payment": "Cash on delivery in Algeria",
+    "gallery": "Kit visuals",
+    "galleryPrev": "Previous visual",
+    "galleryNext": "Next visual",
+    "galleryCount": "{current} / {total}",
+    "description": "Everything is set up to get it right the first time: the board is ready, the software works out the thread's path and a voice guides you nail after nail.",
+    "accordion": {
+      "box": {
+        "q": "What's in the box and dimensions",
+        "a": "A 50 × 50 cm board, 240 nails already set in a circle, a spool of black thread and a personal code to create your pattern."
+      },
+      "photo": {
+        "q": "Which photo to choose",
+        "a": "A sharp, front-facing, well-lit portrait. The software frames the face automatically and shows you the result before you start."
+      },
+      "app": {
+        "q": "How the guide works",
+        "a": "Enter your code, choose your photo, approve the preview, then the guide reads out every nail at the speed you choose."
+      },
+      "gift": {
+        "q": "How to give it",
+        "a": "Give the box as it is: the person chooses their own photo with the code, whenever they like."
+      }
+    },
+    "galleryAlt": {
+      "thread": "String portrait of Ali La Pointe, computed by our software",
+      "spool": "The wooden spool holder to assemble, with its spool of black thread",
+      "photo": "The archive photo of Ali La Pointe",
+      "salah": "String portrait of Salah Aougrout",
+      "salahPhoto": "The source photo of Salah Aougrout",
+      "benmhidi": "String portrait of Larbi Ben M'hidi",
+      "benmhidiPhoto": "The archive photo of Larbi Ben M'hidi",
+      "self": "String portrait of a woman in a caftan",
+      "selfPhoto": "The source photo of the woman in a caftan",
+      "girl": "String portrait of a little girl",
+      "girlPhoto": "The source photo of the little girl",
+      "couple": "String portrait of a couple",
+      "couplePhoto": "The source photo of the couple",
+      "pet": "String portrait of a cat",
+      "petPhoto": "The source photo of the cat",
+      "baby": "String portrait of a baby",
+      "babyPhoto": "The source photo of the baby",
+      "haik": "String portrait of a woman in a haik",
+      "haikPhoto": "The source photo of the woman in a haik",
+      "grandpa": "String portrait of a grandfather in a chechia",
+      "grandpaPhoto": "The source photo of the grandfather in a chechia",
+      "board": "Board plan, 50 × 50 cm: 240 nails numbered A1 to D60",
+      "monalisa": "String portrait of the Mona Lisa",
+      "monalisaPhoto": "The source painting: the Mona Lisa",
+      "woman": "String portrait of a young woman",
+      "womanPhoto": "The source photo of the young woman",
+      "tuareg": "String portrait of a Tuareg man in a blue veil",
+      "tuaregPhoto": "The source photo of the Tuareg man"
+    },
+    "priceProvisional": "Provisional launch price"
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Your questions before giving it",
+    "lead": "Still unsure? Write to us, we answer every message.",
+    "items": {
+      "who": {
+        "q": "If it's a gift, who chooses the photo?",
+        "a": "The person who receives the kit. They enter the code printed in the box and choose their own photo."
+      },
+      "skills": {
+        "q": "Do I need to know how to draw?",
+        "a": "No. You pull the thread from one nail to the next in the order the guide reads out. No artistic skill is needed."
+      },
+      "photo": {
+        "q": "Which photo gives the best result?",
+        "a": "A sharp, front-facing, well-lit photo with a single face. The software frames the face and warns you if the photo is blurry or too dark."
+      },
+      "time": {
+        "q": "How long does it take?",
+        "a": "Several hours, at your own pace. The guide saves your progress, so you pick up where you left off."
+      },
+      "privacy": {
+        "q": "What happens to my photo?",
+        "a": "It is only used to compute your portrait. It is never published and it is deleted after a limited time."
+      },
+      "payment": {
+        "q": "How do I pay?",
+        "a": "In Algeria, you pay on delivery. Other payment methods depend on your country."
+      }
+    },
+    "contact": "Write to us"
+  },
+  "final": {
+    "title": "Give a portrait they'll make themselves",
+    "text": "Everything is in the box, cash on delivery.",
+    "cta": "Give the kit",
+    "priceLine": "Portrait kit 50 × 50 cm"
+  },
+  "sticky": {
+    "name": "Portrait kit 50 × 50 cm",
+    "cta": "Add to cart",
+    "ctaSoon": "Discover"
+  },
+  "footer": {
+    "menu": "Menu",
+    "contact": "Contact",
+    "contactText": "A question about an order or a photo? Write to us.",
+    "tagline": "Thread portraits to make at home.",
+    "links": {
+      "kit": "The kit",
+      "how": "How it works",
+      "gift": "Gift ideas",
+      "faq": "FAQ"
+    },
+    "rights": "© {year} {brand}",
+    "info": "Information",
+    "infoLinks": {
+      "kitPage": "The kit in detail",
+      "privacy": "Photo privacy",
+      "payment": "Payment and delivery"
+    }
+  },
+  "notFound": {
+    "title": "This page doesn't exist",
+    "back": "Back to home"
+  },
+  "kit": {
+    "meta": {
+      "title": "The portrait kit — {brand}",
+      "description": "Everything about the kit: the board, the software, the voice guide and the steps, from the box to the portrait on your wall."
+    },
+    "what": {
+      "eyebrow": "What is it?",
+      "title": "A kit to string + software that makes it yours",
+      "lead": "Never done string art? It doesn't matter: everything is worked out for you, just follow the voice.",
+      "steps": {
+        "kit": {
+          "title": "A ready board",
+          "text": "240 nails already set and numbered: nothing to measure, nothing to hammer."
+        },
+        "model": {
+          "title": "Your photo becomes a pattern",
+          "text": "Our software works out, for your photo, the exact order in which to pull the thread."
+        },
+        "voice": {
+          "title": "A voice guides you",
+          "text": "The guide reads out each nail. Pull, listen, go at your own pace."
+        }
+      }
+    },
+    "check": {
+      "eyebrow": "Your photo, in thread",
+      "title": "Will my photo look good?",
+      "lead": "The software frames the face, lightens the background and shows you the final portrait before you pull the first thread. If you don't like it, change the photo.",
+      "examples": {
+        "portrait": "Portrait",
+        "pet": "Pet",
+        "group": "Memory"
+      }
+    },
+    "how": {
+      "eyebrow": "How it works",
+      "title": "From the box to the wall",
+      "lead": "Six steps, no artistic skill. You can pause at any time and pick up later.",
+      "steps": {
+        "open": {
+          "title": "Open the box",
+          "text": "The board, the nails already set, the thread and your personal code."
+        },
+        "prepare": {
+          "title": "Set up the kit",
+          "text": "Fold the box into a stand, assemble the wooden spool holder and put your phone on its stand."
+        },
+        "code": {
+          "title": "Enter your code",
+          "text": "On our website, from your phone: the code activates your portrait."
+        },
+        "photo": {
+          "title": "Choose the photo",
+          "text": "The software frames the face and shows you the thread preview."
+        },
+        "thread": {
+          "title": "Follow the voice",
+          "text": "The guide reads out each nail, from A1 to D60, at the speed you set."
+        },
+        "hang": {
+          "title": "Hang it up",
+          "text": "The finished portrait looks like the preview: all that's left is to hang it."
+        }
+      }
+    },
+    "app": {
+      "eyebrow": "The guide on your phone",
+      "title": "Your personal pattern, in your pocket",
+      "lead": "Every kit comes with a unique code. It opens your space: your photo, your pattern and the voice guide that stays with you to the last thread.",
+      "steps": {
+        "site": {
+          "title": "Open the website",
+          "text": "From your phone, nothing to install."
+        },
+        "code": {
+          "title": "Enter the code",
+          "text": "The code printed in the box."
+        },
+        "photo": {
+          "title": "Add a photo",
+          "text": "A sharp, front-facing, well-lit face."
+        },
+        "preview": {
+          "title": "Approve the preview",
+          "text": "See the thread portrait before you start."
+        },
+        "thread": {
+          "title": "String with the voice",
+          "text": "Nail after nail, at your own pace."
+        }
+      },
+      "chips": {
+        "voice": "Voice guide in Arabic, French and English",
+        "speed": "Adjustable speed",
+        "pause": "Pause and resume anytime",
+        "progress": "Progress saved"
+      },
+      "note": "Already have a kit?",
+      "cta": "Enter my code (soon)"
+    },
+    "gift": {
+      "eyebrow": "Is it a gift?",
+      "title": "The gift where they choose the memory",
+      "lead": "No need to guess which photo they'll love: with the code, they create their own portrait whenever they want.",
+      "chips": {
+        "code": "Personal code in the box",
+        "cod": "Cash on delivery",
+        "langs": "Arabic, French, English"
+      },
+      "cta": "See gift ideas"
+    },
+    "why": {
+      "eyebrow": "Why us",
+      "title": "Designed to get it right the first time",
+      "lead": "What makes the difference between a lovely portrait and a failed board.",
+      "items": {
+        "engine": {
+          "title": "Our own calculation software",
+          "text": "The thread's path is computed for your photo, and the preview shows exactly what you'll get.",
+          "compare": "Often: a generic pattern, the same for everyone."
+        },
+        "face": {
+          "title": "The face framed for you",
+          "text": "The software finds the face, centres it and lightens the background for a readable portrait.",
+          "compare": "Often: cropping the photo is up to you."
+        },
+        "nails": {
+          "title": "Nails set and numbered",
+          "text": "240 nails already in place, marked A1 to D60 so you never get lost.",
+          "compare": "Often: nails to hammer in yourself."
+        },
+        "voice": {
+          "title": "A guide that speaks your language",
+          "text": "Arabic, French or English, with adjustable speed and pauses whenever you like.",
+          "compare": "Often: a long list of numbers to read."
+        },
+        "cod": {
+          "title": "Pay on delivery",
+          "text": "In Algeria, you pay for the kit when it arrives.",
+          "compare": "No online payment required."
+        },
+        "privacy": {
+          "title": "Your photo stays private",
+          "text": "It is only used to compute your portrait, never published and deleted after a limited time.",
+          "compare": "Your memories stay yours."
+        }
+      },
+      "stats": {
+        "nails": {
+          "value": "240",
+          "label": "nails already set"
+        },
+        "size": {
+          "value": "50 × 50",
+          "label": "centimetres"
+        },
+        "langs": {
+          "value": "3",
+          "label": "guide languages"
+        },
+        "labels": {
+          "value": "A1–D60",
+          "label": "numbered nails"
+        }
+      }
+    },
+    "faqTitle": "Questions about the kit"
+  },
+  "carousel": {
+    "roledescription": "carousel",
+    "tablist": "Steps",
+    "stepOf": "Step {n} of {total}",
+    "pause": "Pause the slideshow",
+    "play": "Play the slideshow"
+  },
+  "home": {
+    "intro": {
+      "eyebrow": "The idea",
+      "title": "What is {brand}?",
+      "gift": {
+        "title": "A gift that means something",
+        "text": "Give a thread portrait made from a photo that matters: a loved face, a pet, a memory. You make it yourself, and that's what makes it unique."
+      },
+      "hobby": {
+        "title": "A calming pastime",
+        "text": "A few quiet hours, one thread, a voice that guides you. No drawing skills needed: just follow the nails as they are called out, one by one."
+      },
+      "imgAlt": "A woman sitting next to her finished thread portrait"
+    },
+    "transform": {
+      "eyebrow": "From photo to thread",
+      "title": "Your photo becomes a thread portrait",
+      "text": "Each line is the thread passing from one nail to another. Our software works out the exact order for your photo; you just follow it.",
+      "cta": "Order the kit"
+    },
+    "box": {
+      "eyebrow": "In the box",
+      "title": "What does the kit contain?",
+      "lead": "Everything you need for one portrait, ready to use.",
+      "items": {
+        "box": {
+          "title": "The box stand",
+          "text": "It folds out to hold the board at an angle while you weave."
+        },
+        "board": {
+          "title": "The board and its 240 nails",
+          "text": "50 × 50 cm, nails already in place and numbered A1 to D60."
+        },
+        "spool": {
+          "title": "Thread and spool holder",
+          "text": "A spool of black thread on a wooden holder you assemble, so the thread unwinds without tangling."
+        },
+        "stand": {
+          "title": "The phone stand",
+          "text": "Made of wood, it keeps the screen in view while your hands work."
+        },
+        "code": {
+          "title": "Your personal code",
+          "text": "It unlocks your portrait on our online generator."
+        },
+        "voice": {
+          "title": "The voice guide",
+          "text": "In French, English or Arabic, it calls out each nail at your pace."
+        }
+      }
+    },
+    "app": {
+      "title": "How does our online generator work?",
+      "scroll": "Scroll to see the screens"
+    }
+  }
+}

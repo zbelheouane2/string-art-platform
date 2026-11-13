@@ -1,0 +1,516 @@
+{
+  "meta": {
+    "title": "{brand} — le portrait en fil de quelqu'un que vous aimez",
+    "description": "Offrez un kit pour transformer une photo en tableau en fil tendu. Planche, clous déjà posés, fil et guide vocal inclus."
+  },
+  "a11y": {
+    "skip": "Aller au contenu"
+  },
+  "announcement": "Paiement à la livraison dans toute l'Algérie",
+  "nav": {
+    "menu": "Ouvrir la navigation",
+    "close": "Fermer la navigation",
+    "how": "Comment ça marche",
+    "kit": "Le kit",
+    "gift": "Idées cadeaux",
+    "faq": "FAQ",
+    "cart": "Voir le panier",
+    "language": "Langue",
+    "home": "Accueil",
+    "kitPage": "Le kit en détail"
+  },
+  "hero": {
+    "badge": "Idée cadeau",
+    "eyebrow": "Un portrait fait de leurs mains",
+    "titleStart": "Le cadeau qu'on",
+    "titleAccent": "ne range pas au placard",
+    "lead": "Choisissez une photo qui compte, notre logiciel la traduit en un chemin de fil entre 240 clous. Il ne reste qu'à suivre la voix du guide : aucun talent artistique nécessaire.",
+    "cta": "Offrir le kit",
+    "secondary": "Comment ça marche ?",
+    "boardLabel": "Portrait en cours de tissage, calculé par notre logiciel",
+    "progress": "Fil {current} sur {total}",
+    "segment": "de {from} à {to}",
+    "replay": "Revoir le tissage",
+    "pause": "Mettre en pause",
+    "play": "Reprendre",
+    "credit": "Beauté Algérienne",
+    "medallion": "La photo de départ",
+    "proof": {
+      "cod": "Paiement à la livraison",
+      "nails": "240 clous déjà posés",
+      "voice": "Guide vocal en 3 langues"
+    }
+  },
+  "trust": {
+    "cod": "Paiement à la livraison",
+    "delivery": "Livraison partout en Algérie",
+    "voice": "Guide vocal en arabe, français et anglais",
+    "nails": "Clous déjà posés sur la planche"
+  },
+  "gifts": {
+    "eyebrow": "Idées cadeaux",
+    "title": "Pour qui sera ce portrait ?",
+    "lead": "Une photo suffit pour faire plaisir. Choisissez la personne, elle choisira le souvenir.",
+    "items": {
+      "couples": {
+        "title": "Pour un couple",
+        "text": "Fiançailles, mariage, anniversaire de rencontre"
+      },
+      "parents": {
+        "title": "Pour ses parents",
+        "text": "Un portrait de famille pour le salon",
+        "caption": "La star algérienne : Salah Aougrout"
+      },
+      "grandparents": {
+        "title": "Pour les grands-parents",
+        "text": "Les petits-enfants réunis dans un seul cadre"
+      },
+      "pets": {
+        "title": "Pour les amis des animaux",
+        "text": "Le chat ou le chien de la maison, trait pour trait"
+      },
+      "memory": {
+        "title": "En mémoire d'un proche",
+        "text": "Un visage aimé, gardé près de soi"
+      },
+      "self": {
+        "title": "Pour soi",
+        "text": "Une soirée créative, loin des écrans"
+      },
+      "occasion": {
+        "title": "Pour une occasion",
+        "text": "Une carte-message offerte, glissée dans le kit, pour l'occasion de votre choix :",
+        "occasions": {
+          "birth": "Naissance",
+          "birthday": "Anniversaire",
+          "wedding": "Mariage",
+          "memory": "Souvenir",
+          "other": "Autre"
+        }
+      }
+    },
+    "placeholder": "Visuel provisoire"
+  },
+  "what": {
+    "eyebrow": "Dans la boîte",
+    "title": "Un kit à monter + un logiciel qui le personnalise",
+    "slider": {
+      "label": "Comparer la photo et le portrait en fil",
+      "photo": "Photo",
+      "thread": "En fil",
+      "hint": "Faites glisser pour passer de la photo au fil"
+    },
+    "steps": {
+      "photo": {
+        "title": "Une photo",
+        "text": "La personne entre son code et choisit le souvenir qu'elle veut garder."
+      },
+      "model": {
+        "title": "Un modèle sur mesure",
+        "text": "Notre logiciel calcule le parcours du fil, clou après clou, pour cette photo-là."
+      },
+      "thread": {
+        "title": "Un fil, une voix",
+        "text": "Le guide annonce chaque clou à voix haute. On tend, on écoute, on avance."
+      }
+    },
+    "premiumTitle": "Une vraie planche, prête à tendre",
+    "premiumText": "Planche de 50 × 50 cm avec 240 clous déjà posés et numérotés de A1 à D60, une bobine de fil noir et votre code personnel.",
+    "chips": {
+      "box": "Tout est dans la boîte",
+      "nails": "Aucun clou à planter",
+      "voice": "Guide vocal multilingue"
+    },
+    "more": "Voir comment ça marche"
+  },
+  "howGift": {
+    "eyebrow": "L'offrir",
+    "title": "Vous offrez la boîte, ils choisissent le souvenir",
+    "lead": "Pas besoin de deviner quelle photo leur plaira : le code dans la boîte leur laisse le choix.",
+    "steps": {
+      "box": {
+        "title": "Vous offrez le kit",
+        "text": "Planche, clous posés, fil et code personnel : tout est dans la boîte."
+      },
+      "choose": {
+        "title": "Ils choisissent leur photo",
+        "text": "Avec le code, ils créent leur propre modèle, quand ils le souhaitent."
+      },
+      "make": {
+        "title": "Ils le réalisent",
+        "text": "Guidés par la voix, à leur rythme, jusqu'au dernier fil."
+      }
+    },
+    "togetherTitle": "Seul, ou à deux.",
+    "togetherText": "Une activité à partager en couple, en famille ou entre amis, avec un tableau à accrocher à la fin.",
+    "togetherText2": "Le code reste valable : ils créent leur portrait le jour où ils le souhaitent.",
+    "cta": "Offrir le kit"
+  },
+  "shop": {
+    "title": "Kit portrait 50 × 50 cm",
+    "lead": "La photo de quelqu'un que vous aimez, transformée en tableau en fil tendu.",
+    "priceSoon": "Prix bientôt disponible",
+    "includesTitle": "Inclus",
+    "includes": {
+      "board": "Planche 50 × 50 cm, 240 clous déjà posés",
+      "thread": "Bobine de fil noir",
+      "code": "Code personnel pour créer le modèle",
+      "guide": "Guide vocal sur téléphone",
+      "card": "Carte-message offerte pour l'occasion de votre choix (naissance, anniversaire, mariage, souvenir ou autre)"
+    },
+    "cta": "Ajouter au panier",
+    "ctaSoon": "Bientôt disponible",
+    "payment": "Paiement à la livraison en Algérie",
+    "gallery": "Visuels du kit",
+    "galleryPrev": "Visuel précédent",
+    "galleryNext": "Visuel suivant",
+    "galleryCount": "{current} / {total}",
+    "description": "Tout est prévu pour réussir du premier coup : la planche est prête, le logiciel calcule le parcours du fil et une voix vous guide clou après clou.",
+    "accordion": {
+      "box": {
+        "q": "Contenu de la boîte et dimensions",
+        "a": "Une planche de 50 × 50 cm, 240 clous déjà posés sur un cercle, une bobine de fil noir et un code personnel pour créer votre modèle."
+      },
+      "photo": {
+        "q": "Quelle photo choisir",
+        "a": "Un portrait net, de face et bien éclairé. Le logiciel cadre le visage automatiquement et vous montre le résultat avant de commencer."
+      },
+      "app": {
+        "q": "Comment fonctionne le guide",
+        "a": "Vous entrez votre code, choisissez votre photo, validez l'aperçu, puis le guide annonce chaque clou à voix haute, à la vitesse que vous choisissez."
+      },
+      "gift": {
+        "q": "Comment l'offrir",
+        "a": "Offrez la boîte telle quelle : la personne choisit elle-même sa photo grâce au code, quand elle le souhaite."
+      }
+    },
+    "galleryAlt": {
+      "thread": "Portrait en fil d'Ali La Pointe, calculé par notre logiciel",
+      "spool": "Le dévidoir en bois à monter, avec sa bobine de fil noir",
+      "photo": "La photo d'archive d'Ali La Pointe",
+      "salah": "Portrait en fil de Salah Aougrout",
+      "salahPhoto": "La photo de départ de Salah Aougrout",
+      "benmhidi": "Portrait en fil de Larbi Ben M'hidi",
+      "benmhidiPhoto": "La photo d'archive de Larbi Ben M'hidi",
+      "self": "Portrait en fil d'une femme en caftan",
+      "selfPhoto": "La photo de départ de la femme en caftan",
+      "girl": "Portrait en fil d'une fillette",
+      "girlPhoto": "La photo de départ de la fillette",
+      "couple": "Portrait en fil d'un couple",
+      "couplePhoto": "La photo de départ du couple",
+      "pet": "Portrait en fil d'un chat",
+      "petPhoto": "La photo de départ du chat",
+      "baby": "Portrait en fil d'un bébé",
+      "babyPhoto": "La photo de départ du bébé",
+      "haik": "Portrait en fil d'une femme en haïk",
+      "haikPhoto": "La photo de départ de la femme en haïk",
+      "grandpa": "Portrait en fil d'un grand-père à la chéchia",
+      "grandpaPhoto": "La photo de départ du grand-père à la chéchia",
+      "board": "Plan de la planche 50 × 50 cm : 240 clous numérotés de A1 à D60",
+      "monalisa": "Portrait en fil de la Joconde",
+      "monalisaPhoto": "Le tableau de départ : la Joconde",
+      "woman": "Portrait en fil d'une jeune femme",
+      "womanPhoto": "La photo de départ de la jeune femme",
+      "tuareg": "Portrait en fil d'un homme touareg au chèche bleu",
+      "tuaregPhoto": "La photo de départ de l'homme touareg"
+    },
+    "priceProvisional": "Prix de lancement provisoire"
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Vos questions avant d'offrir",
+    "lead": "Une hésitation ? Écrivez-nous, nous répondons à chaque message.",
+    "items": {
+      "who": {
+        "q": "Si c'est un cadeau, qui choisit la photo ?",
+        "a": "La personne qui reçoit le kit. Elle entre le code imprimé dans la boîte et choisit elle-même sa photo."
+      },
+      "skills": {
+        "q": "Faut-il savoir dessiner ?",
+        "a": "Non. Vous tendez le fil d'un clou à l'autre dans l'ordre annoncé par le guide. Aucun geste artistique n'est nécessaire."
+      },
+      "photo": {
+        "q": "Quelle photo donne le meilleur résultat ?",
+        "a": "Une photo nette, de face, bien éclairée, avec un seul visage. Le logiciel cadre le visage et vous prévient si la photo est floue ou trop sombre."
+      },
+      "time": {
+        "q": "Combien de temps faut-il ?",
+        "a": "Plusieurs heures, à votre rythme. Le guide garde votre progression : vous reprenez là où vous vous êtes arrêté."
+      },
+      "privacy": {
+        "q": "Que devient ma photo ?",
+        "a": "Elle sert uniquement à calculer votre portrait. Elle n'est jamais publiée et elle est supprimée après un délai limité."
+      },
+      "payment": {
+        "q": "Comment payer ?",
+        "a": "En Algérie, vous payez à la livraison. Les autres moyens de paiement dépendent de votre pays."
+      }
+    },
+    "contact": "Nous écrire"
+  },
+  "final": {
+    "title": "Offrez un portrait qu'ils feront eux-mêmes",
+    "text": "Tout est dans la boîte, paiement à la livraison.",
+    "cta": "Offrir le kit",
+    "priceLine": "Kit portrait 50 × 50 cm"
+  },
+  "sticky": {
+    "name": "Kit portrait 50 × 50 cm",
+    "cta": "Ajouter au panier",
+    "ctaSoon": "Découvrir"
+  },
+  "footer": {
+    "menu": "Menu",
+    "contact": "Contact",
+    "contactText": "Une question sur une commande ou une photo ? Écrivez-nous.",
+    "tagline": "Des portraits en fil à réaliser chez soi.",
+    "links": {
+      "kit": "Le kit",
+      "how": "Comment ça marche",
+      "gift": "Idées cadeaux",
+      "faq": "FAQ"
+    },
+    "rights": "© {year} {brand}",
+    "info": "Informations",
+    "infoLinks": {
+      "kitPage": "Le kit en détail",
+      "privacy": "Confidentialité des photos",
+      "payment": "Paiement et livraison"
+    }
+  },
+  "notFound": {
+    "title": "Cette page n'existe pas",
+    "back": "Retour à l'accueil"
+  },
+  "kit": {
+    "meta": {
+      "title": "Le kit portrait — {brand}",
+      "description": "Tout sur le kit : la planche, le logiciel, le guide vocal et les étapes, de la boîte au portrait accroché."
+    },
+    "what": {
+      "eyebrow": "Qu'est-ce que c'est ?",
+      "title": "Un kit à tendre + un logiciel qui le personnalise",
+      "lead": "Vous n'avez jamais fait de fil tendu ? Aucune importance : tout est calculé pour vous, il suffit de suivre la voix.",
+      "steps": {
+        "kit": {
+          "title": "Une planche prête",
+          "text": "240 clous déjà posés et numérotés : rien à mesurer, rien à planter."
+        },
+        "model": {
+          "title": "Votre photo devient un modèle",
+          "text": "Notre logiciel calcule, pour votre photo, l'ordre exact dans lequel tendre le fil."
+        },
+        "voice": {
+          "title": "Une voix vous guide",
+          "text": "Le guide annonce chaque clou. Vous tendez, vous écoutez, vous avancez à votre rythme."
+        }
+      }
+    },
+    "check": {
+      "eyebrow": "Votre photo, en fil",
+      "title": "Ma photo va-t-elle rendre bien ?",
+      "lead": "Le logiciel cadre le visage, éclaircit le fond et vous montre le portrait final avant que vous ne tendiez le premier fil. Si le rendu ne vous plaît pas, changez de photo.",
+      "examples": {
+        "portrait": "Portrait",
+        "pet": "Animal",
+        "group": "Souvenir"
+      }
+    },
+    "how": {
+      "eyebrow": "Comment ça marche",
+      "title": "De la boîte au portrait accroché",
+      "lead": "Six étapes, aucune compétence artistique. Vous pouvez faire une pause à tout moment et reprendre plus tard.",
+      "steps": {
+        "open": {
+          "title": "Ouvrez la boîte",
+          "text": "La planche, les clous déjà posés, le fil et votre code personnel."
+        },
+        "prepare": {
+          "title": "Préparez le kit",
+          "text": "Dépliez la boîte en support, montez le dévidoir en bois et posez votre téléphone sur son socle."
+        },
+        "code": {
+          "title": "Entrez votre code",
+          "text": "Sur notre site, depuis votre téléphone : le code active votre portrait."
+        },
+        "photo": {
+          "title": "Choisissez la photo",
+          "text": "Le logiciel cadre le visage et vous montre l'aperçu en fil."
+        },
+        "thread": {
+          "title": "Suivez la voix",
+          "text": "Le guide annonce chaque clou, de A1 à D60, à la vitesse que vous réglez."
+        },
+        "hang": {
+          "title": "Accrochez-le",
+          "text": "Le portrait terminé ressemble à l'aperçu : il ne reste qu'à l'accrocher."
+        }
+      }
+    },
+    "app": {
+      "eyebrow": "Le guide sur téléphone",
+      "title": "Votre modèle personnel, dans votre poche",
+      "lead": "Chaque kit contient un code unique. Il ouvre votre espace : votre photo, votre modèle et le guide vocal qui vous accompagne jusqu'au dernier fil.",
+      "steps": {
+        "site": {
+          "title": "Ouvrez le site",
+          "text": "Depuis votre téléphone, sans rien installer."
+        },
+        "code": {
+          "title": "Saisissez le code",
+          "text": "Le code imprimé dans la boîte."
+        },
+        "photo": {
+          "title": "Ajoutez une photo",
+          "text": "Un visage net, de face, bien éclairé."
+        },
+        "preview": {
+          "title": "Validez l'aperçu",
+          "text": "Voyez le portrait en fil avant de commencer."
+        },
+        "thread": {
+          "title": "Tendez avec la voix",
+          "text": "Clou après clou, à votre rythme."
+        }
+      },
+      "chips": {
+        "voice": "Guide vocal en arabe, français et anglais",
+        "speed": "Vitesse réglable",
+        "pause": "Pause et reprise à tout moment",
+        "progress": "Progression sauvegardée"
+      },
+      "note": "Vous avez déjà un kit ?",
+      "cta": "Saisir mon code (bientôt)"
+    },
+    "gift": {
+      "eyebrow": "C'est pour offrir ?",
+      "title": "Le cadeau dont ils choisissent le souvenir",
+      "lead": "Inutile de deviner quelle photo leur plaira : avec le code, ils créent eux-mêmes leur portrait, quand ils le veulent.",
+      "chips": {
+        "code": "Code personnel dans la boîte",
+        "cod": "Paiement à la livraison",
+        "langs": "Arabe, français, anglais"
+      },
+      "cta": "Voir les idées cadeaux"
+    },
+    "why": {
+      "eyebrow": "Pourquoi nous",
+      "title": "Pensé pour réussir du premier coup",
+      "lead": "Ce qui fait la différence entre un joli portrait et une planche ratée.",
+      "items": {
+        "engine": {
+          "title": "Notre propre logiciel de calcul",
+          "text": "Le parcours du fil est calculé pour votre photo, et l'aperçu montre exactement ce que vous obtiendrez.",
+          "compare": "Souvent : un modèle générique, le même pour tous."
+        },
+        "face": {
+          "title": "Le visage cadré pour vous",
+          "text": "Le logiciel repère le visage, le centre et éclaircit le fond pour un portrait lisible.",
+          "compare": "Souvent : à vous de recadrer la photo."
+        },
+        "nails": {
+          "title": "Clous posés et numérotés",
+          "text": "240 clous déjà en place, repérés de A1 à D60 pour ne jamais se tromper.",
+          "compare": "Souvent : des clous à planter soi-même."
+        },
+        "voice": {
+          "title": "Un guide qui parle votre langue",
+          "text": "Arabe, français ou anglais, avec une vitesse réglable et des pauses quand vous voulez.",
+          "compare": "Souvent : une longue liste de numéros à lire."
+        },
+        "cod": {
+          "title": "Payez à la livraison",
+          "text": "En Algérie, vous réglez le kit à sa réception.",
+          "compare": "Aucun paiement en ligne obligatoire."
+        },
+        "privacy": {
+          "title": "Votre photo reste privée",
+          "text": "Elle sert uniquement à calculer votre portrait, n'est jamais publiée et est supprimée après un délai limité.",
+          "compare": "Vos souvenirs restent les vôtres."
+        }
+      },
+      "stats": {
+        "nails": {
+          "value": "240",
+          "label": "clous déjà posés"
+        },
+        "size": {
+          "value": "50 × 50",
+          "label": "centimètres"
+        },
+        "langs": {
+          "value": "3",
+          "label": "langues pour le guide"
+        },
+        "labels": {
+          "value": "A1–D60",
+          "label": "clous numérotés"
+        }
+      }
+    },
+    "faqTitle": "Questions sur le kit"
+  },
+  "carousel": {
+    "roledescription": "carrousel",
+    "tablist": "Étapes",
+    "stepOf": "Étape {n} sur {total}",
+    "pause": "Mettre le défilement en pause",
+    "play": "Relancer le défilement"
+  },
+  "home": {
+    "intro": {
+      "eyebrow": "Le concept",
+      "title": "Qu'est-ce que {brand} ?",
+      "gift": {
+        "title": "Un cadeau qui a du sens",
+        "text": "Offrez un portrait en fil tiré d'une photo qui compte : un visage aimé, un animal, un souvenir. On le fabrique soi-même, et c'est ce qui le rend unique."
+      },
+      "hobby": {
+        "title": "Un loisir apaisant",
+        "text": "Quelques heures de calme, un fil, une voix qui guide. Pas besoin de savoir dessiner : il suffit de suivre les clous annoncés, un par un."
+      },
+      "imgAlt": "Une femme assise à côté de son portrait en fil terminé"
+    },
+    "transform": {
+      "eyebrow": "De la photo au fil",
+      "title": "Votre photo devient un portrait en fil",
+      "text": "Chaque trait est un passage du fil d'un clou à l'autre. Notre logiciel calcule l'ordre exact pour votre photo ; vous n'avez qu'à le suivre.",
+      "cta": "Commander le kit"
+    },
+    "box": {
+      "eyebrow": "Dans la boîte",
+      "title": "Que contient le kit ?",
+      "lead": "Tout le nécessaire pour un portrait, prêt à l'emploi.",
+      "items": {
+        "box": {
+          "title": "La boîte-support",
+          "text": "Elle se déplie pour tenir la planche inclinée pendant le tissage."
+        },
+        "board": {
+          "title": "La planche et ses 240 clous",
+          "text": "50 × 50 cm, clous déjà posés et numérotés de A1 à D60."
+        },
+        "spool": {
+          "title": "Le fil et son dévidoir",
+          "text": "Une bobine de fil noir sur un dévidoir en bois à monter : le fil se déroule sans s'emmêler."
+        },
+        "stand": {
+          "title": "Le support de téléphone",
+          "text": "En bois, il garde l'écran sous vos yeux pendant que vos mains travaillent."
+        },
+        "code": {
+          "title": "Votre code personnel",
+          "text": "Il active votre portrait sur notre générateur en ligne."
+        },
+        "voice": {
+          "title": "Le guide vocal",
+          "text": "En français, en anglais ou en arabe, il annonce chaque clou à votre rythme."
+        }
+      }
+    },
+    "app": {
+      "title": "Comment fonctionne notre générateur en ligne ?",
+      "scroll": "Faites défiler pour voir les écrans"
+    }
+  }
+}
