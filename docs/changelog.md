@@ -36,3 +36,4 @@ Nouveaux textes sous `home.*` (fr, en, ar).
 - Portrait de démonstration régénéré par le moteur (variante standard, recadrage 55,170,850, 3 158 fils, 240 clous) à partir de la photo d'archive fournie ; médaillon, comparaison photo / fil, appel final et barre collante de l'accueil passent sur ce portrait (`martyr-photo.webp`, `martyr-fil.webp`). Crédit : « Photo d'archive ».
 - Rendu plus net : un tracé par fil (les croisements s'assombrissent enfin comme sur la planche ; avant, un tracé groupé ne cumulait pas l'opacité), largeur d'un pixel physique, opacité calculée comme la simulation du moteur (+30 % pour compenser l'anticrénelage), rendu au moins en 2×.
 - Test e2e : le nombre de fils est lu dans le JSON du portrait.
+- Idées cadeaux, carte « Pour les grands-parents » : photo de fillette fournie par Zaki (`fillette-photo.webp`) et son portrait en fil calculé par le moteur (contraste, 3 065 fils, `fillette-fil.webp`), à la place du visuel provisoire.

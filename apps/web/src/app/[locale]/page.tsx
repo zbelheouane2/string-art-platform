@@ -22,7 +22,7 @@ const PROOF = ["cod", "nails", "voice"] as const;
 const GIFTS = [
   { key: "couples", name: null },
   { key: "parents", name: "photographe" },
-  { key: "grandparents", name: null },
+  { key: "grandparents", name: "fillette" },
   { key: "pets", name: "chat" },
   { key: "memory", name: null },
   { key: "self", name: "astronaute" },
