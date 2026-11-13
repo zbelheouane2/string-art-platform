@@ -46,3 +46,4 @@ Nouveaux textes sous `home.*` (fr, en, ar).
 - Accueil : légende « La star algérienne : Salah Aougrout » sur la carte « Pour ses parents » (fr, en, ar).
 - Album produit : 15 visuels (Ali La Pointe, dévidoir, puis chaque portrait en fil suivi de sa photo : Salah Aougrout, Larbi Ben M'hidi, homme en veste bleue, fillette, couple, chat) ; textes alternatifs fr/en/ar.
 - Étapes sur téléphone : onglets sur deux rangées de trois, de même largeur, pour éviter que les libellés se chevauchent (vérifié aussi avec une grande taille de texte).
+- Accueil et album : la carte « Pour soi » prend la photo de la femme en caftan ; rendu en fil net (photo légèrement contrastée et accentuée avant calcul, variante contraste, poids de ligne 0,18, 3 158 lignes).
