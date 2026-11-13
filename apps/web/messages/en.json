@@ -208,7 +208,9 @@
       "grandpaPhoto": "The source photo of the grandfather in a chechia",
       "board": "Board plan, 50 × 50 cm: 240 nails numbered A1 to D60",
       "monalisa": "String portrait of the Mona Lisa",
-      "monalisaPhoto": "The source painting: the Mona Lisa"
+      "monalisaPhoto": "The source painting: the Mona Lisa",
+      "woman": "String portrait of a young woman",
+      "womanPhoto": "The source photo of the young woman"
     },
     "priceProvisional": "Provisional launch price"
   },
