@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
@@ -52,7 +53,10 @@ test("le sélecteur de langue garde la page", async ({ page }) => {
 test("le portrait se tisse jusqu'au bout", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/fr");
-  await expect(page.locator(".plaque-status strong")).toHaveText(/1\s?913 sur 1\s?913/);
+  // Nombre de fils lu dans le portrait de démonstration (change si on régénère le portrait).
+  const { lines } = JSON.parse(readFileSync("public/demo/portrait-demo.json", "utf-8")) as { lines: number };
+  const n = String(lines).replace(/\B(?=(\d{3})+$)/g, "\\s?");
+  await expect(page.locator(".plaque-status strong")).toHaveText(new RegExp(`${n} sur ${n}`));
   await expect(page.getByRole("button", { name: "Revoir le tissage" })).toBeVisible();
 });
 

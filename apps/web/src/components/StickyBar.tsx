@@ -18,7 +18,7 @@ export function StickyBar({ watchId, price }: { watchId: string; price: string |
 
   return (
     <div className="sticky-bar" data-visible={visible} aria-hidden={!visible} inert={!visible}>
-      <img src="/visuels/astronaute-fil.webp" alt="" width={48} height={48} className="sticky-thumb" />
+      <img src="/visuels/martyr-fil.webp" alt="" width={48} height={48} className="sticky-thumb" />
       <div className="sticky-text">
         <strong>{t("name")}</strong>
         {price && <span>{price}</span>}

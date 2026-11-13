@@ -80,7 +80,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               </span>
               <WeavingBoard demo={demo} />
               <figure className="medallion">
-                <img src="/visuels/astronaute-photo.webp" alt={t("hero.medallion")} width={300} height={300} />
+                <img src="/visuels/martyr-photo.webp" alt={t("hero.medallion")} width={300} height={300} />
               </figure>
             </div>
             <div className="hero-copy" data-reveal style={{ ["--i" as string]: 1 }}>
@@ -165,7 +165,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <section className="section bg-sand transform" aria-labelledby="transform-title">
           <div className="wrap split">
             <div data-reveal>
-              <BeforeAfter photo="/visuels/astronaute-photo.webp" thread="/visuels/astronaute-fil.webp" />
+              <BeforeAfter photo="/visuels/martyr-photo.webp" thread="/visuels/martyr-fil.webp" />
               <p className="ba-hint-below">{t("what.slider.hint")}</p>
             </div>
             <div data-reveal style={{ ["--i" as string]: 1 }}>
@@ -295,7 +295,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         {/* Appel final : œuvre ronde + titre, prix, bouton. */}
         <section className="section bg-cream final" aria-labelledby="final-title">
           <div className="wrap final-inner" data-reveal>
-            <img src="/visuels/astronaute-fil.webp" alt="" width={240} height={240} loading="lazy" className="final-img" />
+            <img src="/visuels/martyr-fil.webp" alt="" width={240} height={240} loading="lazy" className="final-img" />
             <div className="final-content">
               <h2 id="final-title">{t("final.title")}</h2>
               <p>

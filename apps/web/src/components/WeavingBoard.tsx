@@ -6,7 +6,15 @@ import { NAILS_PER_SECTOR, SECTORS, nailLabel, type DemoPortrait } from "@/lib/b
 import { PauseIcon, PlayIcon, ReplayIcon } from "./Icons";
 
 const DURATION_MS = 16000;
-const THREAD = "rgba(26, 25, 22, 0.2)";
+/** Fil réel : 0,12 mm, opacité 0,95, cercle de clous de 470 mm (comme le moteur). */
+const THREAD_MM = 0.12;
+const THREAD_OPACITY = 0.95;
+/** Le rendu écran (anticrénelage) éclaircit les fils fins : on compense pour retrouver le contraste de la simulation. */
+const SCREEN_BOOST = 1.3;
+const CIRCLE_MM = 470;
+const RADIUS = 0.455;
+/** Rendu au moins en 2× : le navigateur réduit ensuite l'image, d'où un tracé plus net. */
+const pixelRatio = () => Math.min(Math.max(window.devicePixelRatio || 1, 2), 3);
 const NAIL = "#a9803f";
 
 /**
@@ -27,7 +35,7 @@ export function WeavingBoard({ demo }: { demo: DemoPortrait }) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return null;
     const size = canvas.getBoundingClientRect().width;
-    const radius = size * 0.455;
+    const radius = size * RADIUS;
     return { canvas, ctx, size, radius, c: size / 2 };
   }, []);
 
@@ -36,16 +44,22 @@ export function WeavingBoard({ demo }: { demo: DemoPortrait }) {
       const g = geometry();
       if (!g) return;
       const { ctx, radius, c } = g;
-      ctx.strokeStyle = THREAD;
-      ctx.lineWidth = Math.max(0.45, g.size / 1100);
-      ctx.beginPath();
+      // Un pixel physique par fil, opacité calculée comme dans la simulation du moteur.
+      const dpr = pixelRatio();
+      const pxMm = CIRCLE_MM / (2 * radius * dpr);
+      const alpha = Math.min(1, (SCREEN_BOOST * THREAD_OPACITY * THREAD_MM) / pxMm);
+      ctx.strokeStyle = `rgba(20, 18, 16, ${alpha.toFixed(3)})`;
+      ctx.lineWidth = 1 / dpr;
+      // Un tracé par fil : les passages qui se croisent s'assombrissent comme sur la planche
+      // (un seul tracé groupé ne cumulerait pas l'opacité et donnerait un portrait délavé).
       for (let k = from; k < to; k++) {
         const [ax, ay] = demo.nails[demo.sequence[k]];
         const [bx, by] = demo.nails[demo.sequence[k + 1]];
+        ctx.beginPath();
         ctx.moveTo(c + ax * radius, c + ay * radius);
         ctx.lineTo(c + bx * radius, c + by * radius);
+        ctx.stroke();
       }
-      ctx.stroke();
     },
     [demo, geometry],
   );
@@ -54,7 +68,7 @@ export function WeavingBoard({ demo }: { demo: DemoPortrait }) {
     const g = geometry();
     if (!g) return;
     const { canvas, ctx, size, radius, c } = g;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    const dpr = pixelRatio();
     canvas.width = Math.round(size * dpr);
     canvas.height = Math.round(size * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
