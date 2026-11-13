@@ -2547,3 +2547,41 @@ h1 em {
 .app-scroller .num-badge {
   background: var(--color-surface);
 }
+
+/* ---------- Accueil : carte « de la photo au fil » avec curseur rond ---------- */
+.transform-card {
+  display: grid;
+  gap: 2rem;
+  padding: 1.75rem;
+  border-radius: var(--radius-2xl);
+  background: var(--color-surface-beige);
+}
+
+@media (min-width: 60rem) {
+  .transform-card {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: 3.5rem;
+    padding: 3rem 3.5rem;
+  }
+}
+
+.transform-media {
+  min-inline-size: 0;
+}
+
+.ba-round {
+  border-radius: 50%;
+  box-shadow: 0 18px 40px rgb(42 31 26 / 0.18);
+  background: var(--color-bg);
+}
+
+.ba-round .ba-handle::after {
+  inline-size: 2.4rem;
+  block-size: 2.4rem;
+}
+
+/* Le cadre rond coupe les étiquettes : la consigne sous l'image suffit. */
+.ba-round .ba-tag {
+  display: none;
+}

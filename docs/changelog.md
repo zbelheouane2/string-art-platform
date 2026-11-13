@@ -37,3 +37,5 @@ Nouveaux textes sous `home.*` (fr, en, ar).
 - Rendu plus net : un tracé par fil (les croisements s'assombrissent enfin comme sur la planche ; avant, un tracé groupé ne cumulait pas l'opacité), largeur d'un pixel physique, opacité calculée comme la simulation du moteur (+30 % pour compenser l'anticrénelage), rendu au moins en 2×.
 - Test e2e : le nombre de fils est lu dans le JSON du portrait.
 - Idées cadeaux, carte « Pour les grands-parents » : photo de fillette fournie par Zaki (`fillette-photo.webp`) et son portrait en fil calculé par le moteur (contraste, 3 065 fils, `fillette-fil.webp`), à la place du visuel provisoire.
+
+- Accueil : carte « De la photo au fil » avec curseur rond (photo couleur ↔ fil, aller-retour d'invitation à la première apparition) sur le visage de la femme du couple ; carte cadeau « Pour un couple » avec la photo du couple.

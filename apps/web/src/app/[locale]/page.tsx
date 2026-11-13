@@ -20,7 +20,7 @@ import type { DemoPortrait } from "@/lib/board";
 const TRUST = ["cod", "delivery", "voice", "nails"] as const;
 const PROOF = ["cod", "nails", "voice"] as const;
 const GIFTS = [
-  { key: "couples", name: null },
+  { key: "couples", name: "couple" },
   { key: "parents", name: "photographe" },
   { key: "grandparents", name: "fillette" },
   { key: "pets", name: "chat" },
@@ -161,20 +161,22 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </div>
         </section>
 
-        {/* De la photo au fil : grand avant/après. */}
-        <section className="section bg-sand transform" aria-labelledby="transform-title">
-          <div className="wrap split">
-            <div data-reveal>
-              <BeforeAfter photo="/visuels/martyr-photo.webp" thread="/visuels/martyr-fil.webp" />
-              <p className="ba-hint-below">{t("what.slider.hint")}</p>
-            </div>
-            <div data-reveal style={{ ["--i" as string]: 1 }}>
-              <p className="eyebrow">{t("home.transform.eyebrow")}</p>
-              <h2 id="transform-title">{t("home.transform.title")}</h2>
-              <p className="transform-text">{t("home.transform.text")}</p>
-              <a className="btn btn-primary btn-lg" href="#acheter">
-                {t("home.transform.cta")}
-              </a>
+        {/* De la photo au fil : carte avec texte et grand curseur rond photo ↔ fil. */}
+        <section className="section bg-cream transform" aria-labelledby="transform-title">
+          <div className="wrap">
+            <div className="transform-card" data-reveal>
+              <div className="transform-copy">
+                <p className="eyebrow">{t("home.transform.eyebrow")}</p>
+                <h2 id="transform-title">{t("home.transform.title")}</h2>
+                <p className="transform-text">{t("home.transform.text")}</p>
+                <a className="btn btn-primary btn-lg" href="#acheter">
+                  {t("home.transform.cta")}
+                </a>
+              </div>
+              <div className="transform-media">
+                <BeforeAfter photo="/visuels/couple-femme-photo.webp" thread="/visuels/couple-femme-fil.webp" round hint />
+                <p className="ba-hint-below">{t("what.slider.hint")}</p>
+              </div>
             </div>
           </div>
         </section>

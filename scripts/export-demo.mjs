@@ -55,7 +55,18 @@ const runtime = (locale) => `
   D.querySelectorAll("figure.ba").forEach((fig) => {
     const r = fig.querySelector(".ba-range");
     const upd = () => fig.style.setProperty("--pos", r.value + "%");
-    r.value = 50; upd(); r.addEventListener("input", upd);
+    r.value = 50; upd();
+    let touched = false;
+    r.addEventListener("input", () => { touched = true; upd(); });
+    if (fig.hasAttribute("data-ba-hint") && !reduce) {
+      const io2 = new IntersectionObserver(([e]) => {
+        if (!e.isIntersecting) return; io2.disconnect();
+        const t0 = performance.now();
+        const step = (now) => { if (touched) return; const k = Math.min(1, (now - t0) / 2400); r.value = 50 - 28 * Math.sin(k * Math.PI * 2); upd(); if (k < 1) requestAnimationFrame(step); else { r.value = 50; upd(); } };
+        requestAnimationFrame(step);
+      }, { threshold: 0.6 });
+      io2.observe(fig);
+    }
   });
 
   // Carrousel « Comment ça marche »
