@@ -14,10 +14,12 @@
     "kit": "Le kit",
     "gift": "Idées cadeaux",
     "faq": "FAQ",
-    "cart": "Voir le panier",
+    "cart": "Commander",
     "language": "Langue",
     "home": "Accueil",
-    "kitPage": "Le kit en détail"
+    "kitPage": "Le kit en détail",
+    "code": "J'ai un code",
+    "guideDemo": "Essayer le guide vocal"
   },
   "hero": {
     "badge": "Idée cadeau",
@@ -158,7 +160,7 @@
       "guide": "Guide vocal sur téléphone",
       "card": "Carte-message offerte pour l'occasion de votre choix (naissance, anniversaire, mariage, souvenir ou autre)"
     },
-    "cta": "Ajouter au panier",
+    "cta": "Commander",
     "ctaSoon": "Bientôt disponible",
     "payment": "Paiement à la livraison en Algérie",
     "gallery": "Visuels du kit",
@@ -208,7 +210,8 @@
       "grandpaPhoto": "La photo de départ du grand-père à la chéchia",
       "board": "Plan de la planche 50 × 50 cm : 240 clous numérotés de A1 à D60"
     },
-    "priceProvisional": "Prix de lancement provisoire"
+    "priceProvisional": "Prix de lancement provisoire",
+    "haveCode": "Vous avez déjà votre kit ? Entrez votre code"
   },
   "faq": {
     "eyebrow": "FAQ",
@@ -250,7 +253,7 @@
   },
   "sticky": {
     "name": "Kit portrait 50 × 50 cm",
-    "cta": "Ajouter au panier",
+    "cta": "Commander",
     "ctaSoon": "Découvrir"
   },
   "footer": {
@@ -262,7 +265,9 @@
       "kit": "Le kit",
       "how": "Comment ça marche",
       "gift": "Idées cadeaux",
-      "faq": "FAQ"
+      "faq": "FAQ",
+      "code": "J'ai un code",
+      "guideDemo": "Essayer le guide vocal"
     },
     "rights": "© {year} {brand}",
     "info": "Informations",
@@ -506,5 +511,191 @@
       "title": "Comment fonctionne notre générateur en ligne ?",
       "scroll": "Faites défiler pour voir les écrans"
     }
+  },
+  "activate": {
+    "eyebrow": "Votre kit",
+    "title": "Entrez votre code",
+    "lead": "Le code est imprimé sur la carte glissée dans la boîte. Il ouvre la création de votre portrait sur cet appareil.",
+    "label": "Code à 8 caractères",
+    "help": "Format XXXX-XXXX. Majuscules et tirets sont ajoutés automatiquement.",
+    "submit": "Valider mon code",
+    "checking": "Vérification…",
+    "noKit": "Pas encore de kit ?",
+    "order": "Commander",
+    "demo": "Essayer le guide vocal",
+    "errors": {
+      "format": "Ce code ne semble pas correct. Vérifiez chaque caractère : les codes ne contiennent jamais O, I, 0 ni 1.",
+      "unknown": "Nous ne trouvons pas ce code. Vérifiez la carte ou contactez-nous.",
+      "disabled": "Ce code a été désactivé. Contactez-nous pour le réactiver.",
+      "tooMany": "Trop d'essais. Patientez un quart d'heure avant de réessayer."
+    }
+  },
+  "create": {
+    "eyebrow": "Code validé",
+    "title": "Votre photo devient un portrait",
+    "lead": "Choisissez une photo nette, visage bien éclairé. Le logiciel cadre le visage, calcule l'ordre des fils et vous montre le résultat avant de commencer.",
+    "photo": {
+      "title": "Votre photo",
+      "choose": "Choisir une photo",
+      "hint": "JPG, PNG ou WebP, 15 Mo maximum. Depuis votre téléphone ou votre ordinateur.",
+      "change": "Touchez la photo pour en choisir une autre.",
+      "alt": "Votre photo"
+    },
+    "style": {
+      "title": "Le rendu",
+      "keepBackground": "Garder le fond de la photo (sinon il est éclairci)",
+      "doux": {
+        "name": "Doux",
+        "text": "Traits fins, peau lumineuse"
+      },
+      "standard": {
+        "name": "Équilibré",
+        "text": "Recommandé pour la plupart des photos"
+      },
+      "contraste": {
+        "name": "Contrasté",
+        "text": "Plus de noirs, effet graphique"
+      }
+    },
+    "generate": "Calculer mon portrait",
+    "regenerate": "Recalculer avec ces réglages",
+    "generating": "Calcul en cours…",
+    "generatingHint": "Le logiciel teste des milliers de fils, cela prend quelques secondes.",
+    "remaining": "{count, plural, =0 {Plus aucun calcul possible avec ce code.} one {Encore # calcul possible avec ce code.} other {Encore # calculs possibles avec ce code.}}",
+    "result": {
+      "title": "Votre portrait en fil",
+      "before": "Votre photo",
+      "after": "En fil",
+      "alt": "Aperçu du portrait en fil",
+      "facts": "{lines} fils, environ {meters} m de fil.",
+      "noFace": "Aucun visage détecté : le portrait est centré sur la photo entière.",
+      "choose": "Je valide ce portrait",
+      "choosing": "Validation…",
+      "chooseHint": "Une fois validé, ce portrait est lié à votre code et le guide vocal s'ouvre. Vous pouvez encore essayer un autre réglage avant."
+    },
+    "warnings": {
+      "photo_floue": "La photo semble floue : le portrait sera moins net.",
+      "photo_trop_sombre": "La photo est sombre : essayez-en une plus lumineuse.",
+      "photo_trop_claire": "La photo est très claire : les détails risquent de disparaître.",
+      "contraste_faible": "Peu de contraste : essayez le rendu « Contrasté »."
+    },
+    "errors": {
+      "fileType": "Format non accepté. Choisissez une photo JPG, PNG ou WebP.",
+      "fileSize": "Photo trop lourde (15 Mo maximum).",
+      "photo": "Cette photo ne peut pas être utilisée (trop petite ou illisible). Essayez-en une autre d'au moins 400 pixels de côté.",
+      "engine": "Le calcul n'a pas pu aboutir. Réessayez dans un instant.",
+      "network": "Connexion interrompue. Vérifiez votre réseau et réessayez.",
+      "limit": "Ce code a atteint le nombre maximal de calculs. Contactez-nous.",
+      "used": "Un portrait est déjà validé pour ce code.",
+      "disabled": "Ce code a été désactivé.",
+      "noSession": "Entrez d'abord votre code."
+    }
+  },
+  "guide": {
+    "eyebrow": "Guide de réalisation",
+    "demoEyebrow": "Démonstration",
+    "title": "Suivez la voix, clou après clou",
+    "lead": "{lines} fils, environ {meters} m. Posez le téléphone près de la planche, lancez la lecture et tendez le fil vers chaque clou annoncé.",
+    "boardAlt": "Plan de la planche : fils déjà tendus, fil en cours et clou à atteindre",
+    "thread": "Fil {n} sur {total}",
+    "to": "vers",
+    "done": "Bravo, votre portrait est terminé !",
+    "progress": "Avancement",
+    "percent": "{p} % réalisé",
+    "remaining": "environ {min} min restantes",
+    "prev": "Précédent",
+    "next": "Suivant",
+    "start": "Commencer",
+    "resume": "Reprendre",
+    "pause": "Pause",
+    "repeat": "Répéter le clou",
+    "speed": "Vitesse : un fil toutes les {s} secondes",
+    "voice": "Annoncer les clous à voix haute",
+    "voiceMissing": "Votre appareil n'a pas de voix dans cette langue : les clous sont annoncés avec la voix par défaut. Vous pouvez aussi suivre à l'écran.",
+    "lost": "Perdu ? Reprenez au fil n°",
+    "jumpPlaceholder": "ex. 125",
+    "jump": "Aller",
+    "keys": "Au clavier : espace pour pause, flèches pour avancer ou reculer, R pour répéter. Votre avancement est gardé sur cet appareil."
+  },
+  "order": {
+    "eyebrow": "Commande",
+    "title": "Commander votre kit",
+    "provisional": "prix de lancement",
+    "closed": "La commande en ligne n'est pas encore ouverte. Revenez bientôt.",
+    "sections": {
+      "contact": "Vos coordonnées",
+      "delivery": "Livraison",
+      "payment": "Paiement",
+      "summary": "Récapitulatif"
+    },
+    "fields": {
+      "fullName": "Nom et prénom",
+      "phone": "Téléphone mobile",
+      "wilaya": "Wilaya",
+      "wilayaPick": "Choisissez votre wilaya",
+      "commune": "Commune",
+      "address": "Adresse (rue, numéro, bâtiment)",
+      "quantity": "Nombre de kits",
+      "note": "Remarque pour le livreur (facultatif)"
+    },
+    "delivery": {
+      "yalidine_home": {
+        "name": "À domicile",
+        "text": "Le livreur vient chez vous"
+      },
+      "yalidine_desk": {
+        "name": "Au bureau du transporteur",
+        "text": "Vous retirez le colis près de chez vous"
+      }
+    },
+    "payment": {
+      "cod": {
+        "name": "Paiement à la livraison",
+        "text": "Vous payez en espèces à la réception du colis"
+      },
+      "cib_edahabia": {
+        "name": "Carte CIB ou EDAHABIA",
+        "text": "Paiement sécurisé en ligne"
+      },
+      "card": {
+        "name": "Carte bancaire",
+        "text": "Paiement sécurisé en ligne"
+      }
+    },
+    "deliveryFees": "Les frais de livraison dépendent de votre wilaya : nous vous les confirmons par téléphone avant l'envoi.",
+    "total": "Total (hors livraison)",
+    "submit": "Valider ma commande",
+    "sending": "Envoi…",
+    "privacy": "Vos coordonnées servent uniquement à livrer votre commande.",
+    "errors": {
+      "nameShort": "Indiquez votre nom et prénom.",
+      "nameLong": "Nom trop long.",
+      "phone": "Numéro mobile algérien attendu (05, 06 ou 07, 10 chiffres).",
+      "wilaya": "Choisissez votre wilaya.",
+      "commune": "Indiquez votre commune.",
+      "address": "Indiquez votre adresse pour la livraison à domicile.",
+      "addressLong": "Adresse trop longue.",
+      "delivery": "Choisissez un mode de livraison.",
+      "payment": "Choisissez un moyen de paiement.",
+      "quantity": "Quantité invalide.",
+      "noteLong": "Remarque trop longue.",
+      "check": "Vérifiez les champs signalés.",
+      "closed": "La commande n'est pas ouverte pour le moment.",
+      "unavailable": "Ce choix n'est plus disponible, merci de réessayer."
+    }
+  },
+  "confirmation": {
+    "eyebrow": "Merci !",
+    "title": "Commande enregistrée",
+    "lead": "Nous avons bien reçu votre commande.",
+    "number": "Numéro de commande :",
+    "total": "Total (hors livraison)",
+    "next": {
+      "call": "Nous vous appelons pour confirmer la commande et les frais de livraison.",
+      "cod": "Vous payez en espèces au livreur, à la réception.",
+      "paid": "Votre paiement est en cours de vérification.",
+      "code": "Dans la boîte : votre code personnel pour créer le portrait et lancer le guide vocal."
+    },
+    "tryGuide": "En attendant, essayez le guide vocal"
   }
 }

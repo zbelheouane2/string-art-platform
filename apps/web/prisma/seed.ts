@@ -1,10 +1,12 @@
 /**
  * Données de référence : marchés, produits, moyens de paiement et de livraison.
- * Aucun prix n'est créé ici : les tarifs ne sont pas encore validés.
+ * Seul prix créé : le kit en Algérie, prix de lancement provisoire validé par le
+ * propriétaire (src/config/catalog.ts, même source que l'affichage du site).
  */
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient, ProductKind } from "../src/generated/prisma/client";
+import { kitOffer } from "../src/config/catalog";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 
@@ -53,6 +55,15 @@ async function main() {
       where: { marketId_code: { marketId: dz.id, code } },
       update: {},
       create: { marketId: dz.id, code, provider: "yalidine" },
+    });
+  }
+  if (kitOffer.price) {
+    const kit = await db.product.findUniqueOrThrow({ where: { slug: kitOffer.slug } });
+    const data = { amountMinor: kitOffer.price.amountMinor, currency: kitOffer.price.currency };
+    await db.price.upsert({
+      where: { productId_marketId: { productId: kit.id, marketId: dz.id } },
+      update: data,
+      create: { ...data, productId: kit.id, marketId: dz.id },
     });
   }
   console.log("Données de référence en place.");

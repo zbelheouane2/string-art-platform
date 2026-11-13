@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Gallery } from "./Gallery";
+import { Link } from "@/i18n/navigation";
 import { PlusIcon } from "./Icons";
 
 const INCLUDES = ["board", "thread", "code", "guide", "card"] as const;
@@ -60,9 +61,18 @@ export async function ProductSection({
               <li key={k}>{t(`includes.${k}`)}</li>
             ))}
           </ul>
-          <button type="button" className="btn btn-primary btn-lg btn-block" disabled={!price || !orderingOpen}>
-            {price && orderingOpen ? t("cta") : t("ctaSoon")}
-          </button>
+          {price && orderingOpen ? (
+            <Link href="/commander" className="btn btn-primary btn-lg btn-block">
+              {t("cta")}
+            </Link>
+          ) : (
+            <button type="button" className="btn btn-primary btn-lg btn-block" disabled>
+              {t("ctaSoon")}
+            </button>
+          )}
+          <p className="shop-note">
+            <Link href="/activer">{t("haveCode")}</Link>
+          </p>
           <p className="shop-note">{t("payment")}</p>
           <div className="faq-list shop-accordion">
             {ACCORDION.map((k) => (

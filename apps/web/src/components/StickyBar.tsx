@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 /** Barre d'achat : apparaît quand le bouton du haut n'est plus visible. */
 export function StickyBar({ watchId, price, orderingOpen = false }: { watchId: string; price: string | null; orderingOpen?: boolean }) {
@@ -23,9 +24,15 @@ export function StickyBar({ watchId, price, orderingOpen = false }: { watchId: s
         <strong>{t("name")}</strong>
         {price && <span>{price}</span>}
       </div>
-      <a className="btn btn-primary" href="#acheter">
-        {price && orderingOpen ? t("cta") : t("ctaSoon")}
-      </a>
+      {price && orderingOpen ? (
+        <Link className="btn btn-primary" href="/commander">
+          {t("cta")}
+        </Link>
+      ) : (
+        <a className="btn btn-primary" href="#acheter">
+          {t("ctaSoon")}
+        </a>
+      )}
     </div>
   );
 }

@@ -26,3 +26,16 @@ export interface DemoPortrait {
   nails: [number, number][];
   sequence: number[];
 }
+
+/**
+ * Positions normalisées des clous dans [-1, 1] (y vers le bas), calculées comme
+ * le moteur (`geometry.py`) : A1 à 9 h, sens horaire, décalage d'un demi-pas.
+ */
+export function nailPositions(count = NAIL_COUNT, startAngleDeg = 180): [number, number][] {
+  const step = (2 * Math.PI) / count;
+  const start = (startAngleDeg * Math.PI) / 180;
+  return Array.from({ length: count }, (_, i) => {
+    const a = start - (i + 0.5) * step;
+    return [Math.cos(a), -Math.sin(a)];
+  });
+}
