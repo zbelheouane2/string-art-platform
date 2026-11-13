@@ -61,3 +61,4 @@ Nouveaux textes sous `home.*` (fr, en, ar).
 - Album : la Joconde ajoutée en tête (rendu en fil : image agrandie x4 et contrastée, variante contraste, fond gardé, poids de ligne 0,18, 2 803 lignes ; 6 réglages comparés). Ali La Pointe (fil et photo) et le dévidoir retirés de l'album : 21 visuels.
 - Album : portrait d'une jeune femme (image agrandie x3, contrastée et assombrie (gamma 1,35), variante contraste, fond gardé, poids de ligne 0,18 ; 9 réglages comparés). Album : 23 visuels.
 - Album : portrait d'un homme touareg au chèche bleu (cadrage sur les yeux, pleine hauteur ; variante contraste, fond gardé, poids de ligne 0,18 ; 9 réglages comparés, dont une conversion par le canal rouge). Album : 25 visuels.
+- Accueil : en bas de page (« Offrez un portrait… ») et dans la barre d'achat collante, le portrait en fil d'Ali La Pointe est remplacé par celui de la dame fourni par Zaki (dame-fil.webp). Le portrait du Touareg reste dans l'album.
