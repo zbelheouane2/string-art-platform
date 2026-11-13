@@ -148,17 +148,30 @@ test("le carrousel ne défile pas seul avec « réduire les animations »", asyn
 test("la galerie produit glisse avec les flèches et les vignettes", async ({ page }) => {
   await page.goto("/fr/kit");
   const count = page.locator(".gallery-count");
-  await expect(count).toHaveText("1 / 21");
+  await expect(count).toHaveText("1 / 22");
   await page.getByRole("button", { name: "Visuel suivant" }).click();
-  await expect(count).toHaveText("2 / 21");
+  await expect(count).toHaveText("2 / 22");
   await page.locator(".gallery-thumbs button").nth(4).click();
-  await expect(count).toHaveText("5 / 21");
+  await expect(count).toHaveText("5 / 22");
   await page.getByRole("button", { name: "Visuel précédent" }).click();
-  await expect(count).toHaveText("4 / 21");
+  await expect(count).toHaveText("4 / 22");
 });
 
 test("le bouton « Comment ça marche ? » mène à la page du kit", async ({ page }) => {
   await page.goto("/fr");
   await page.locator("#hero-actions").getByRole("link", { name: "Comment ça marche ?" }).click();
   await expect(page).toHaveURL(/\/fr\/kit$/);
+});
+
+test("le plan de la planche montre 240 clous numérotés de 1 à 60 par secteur", async ({ page }) => {
+  await page.goto("/fr");
+  const plan = page.locator("svg.box-plan");
+  // 240 clous + le disque central et son contour.
+  await expect(plan.locator("circle")).toHaveCount(242);
+  const nums = await plan.locator("g > text").allTextContents();
+  expect(nums).toHaveLength(240);
+  expect(nums.slice(0, 3)).toEqual(["1", "2", "3"]);
+  expect(nums[59]).toBe("60");
+  expect(nums[60]).toBe("1");
+  expect(nums[239]).toBe("60");
 });

@@ -4,6 +4,7 @@ import { getFormatter, getTranslations, setRequestLocale } from "next-intl/serve
 import { BeforeAfter } from "@/components/BeforeAfter";
 import { GiftIcon, HeartThreadIcon, PlusIcon } from "@/components/Icons";
 import { NailRing } from "@/components/NailRing";
+import { BoardPlan } from "@/components/BoardPlan";
 import { ProductSection } from "@/components/ProductSection";
 import { Reveal } from "@/components/Reveal";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -193,7 +194,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               {BOX.map((b, i) => (
                 <li key={b.key} data-reveal style={{ ["--i" as string]: i % 3 }}>
                   <div className="box-media">
-                    {b.img ? <img src={b.key === "code" && locale === "fr" ? "/visuels/etapes/code-photo-fr.webp" : b.img.replace("{locale}", locale)} alt="" width={1000} height={1000} loading="lazy" /> : <NailRing className="box-ring" />}
+                    {b.img ? <img src={b.key === "code" && locale === "fr" ? "/visuels/etapes/code-photo-fr.webp" : b.img.replace("{locale}", locale)} alt="" width={1000} height={1000} loading="lazy" /> : <BoardPlan className="box-plan" />}
                   </div>
                   <h3>{t(`home.box.items.${b.key}.title`)}</h3>
                   <p>{t(`home.box.items.${b.key}.text`)}</p>

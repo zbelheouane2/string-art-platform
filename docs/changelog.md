@@ -52,3 +52,4 @@ Nouveaux textes sous `home.*` (fr, en, ar).
 - Album : portrait d'un bébé (rendu en fil : photo contrastée et accentuée, fond gardé, variante contraste, poids de ligne 0,18, 2 356 lignes ; 8 réglages comparés).
 - Album : portrait d'une femme en haïk (rendu en fil : variante contraste, fond gardé, poids de ligne 0,18, 2 942 lignes ; 6 réglages comparés).
 - Album : portrait d'un grand-père à la chéchia (rendu en fil : variante contraste, fond gardé, poids de ligne 0,18 ; 6 réglages comparés).
+- Planche : nouveau composant BoardPlan (plan SVG 50 × 50 cm dessiné depuis la géométrie du moteur : 240 clous, secteurs A-D de 60, A1 à 9 h, sens horaire, A et C sur fond noir). Utilisé dans la carte « La planche et ses 240 clous » de l'accueil et en 2e image de l'album (planche-plan.webp). Test e2e : 240 clous, numérotation 1-60 par secteur. Le visuel Gemini envoyé n'est pas utilisé tel quel (numéros incohérents, C et D inversés par rapport à notre planche).

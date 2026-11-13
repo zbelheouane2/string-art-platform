@@ -12,6 +12,7 @@ const portrait = (name: string, alt: string) => [
 ];
 const GALLERY = [
   { src: "/visuels/martyr-fil.webp", alt: "thread" },
+  { src: "/visuels/planche-plan.webp", alt: "board" },
   { src: "/visuels/devidoir.webp", alt: "spool" },
   { src: "/visuels/martyr-photo.webp", alt: "photo" },
   ...portrait("salah", "salah"),
