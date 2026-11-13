@@ -187,7 +187,9 @@
       "couple": "Portrait en fil d'un couple",
       "couplePhoto": "La photo de départ du couple",
       "pet": "Portrait en fil d'un chat",
-      "petPhoto": "La photo de départ du chat"
+      "petPhoto": "La photo de départ du chat",
+      "baby": "Portrait en fil d'un bébé",
+      "babyPhoto": "La photo de départ du bébé"
     }
   },
   "faq": {

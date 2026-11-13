@@ -187,7 +187,9 @@
       "couple": "String portrait of a couple",
       "couplePhoto": "The source photo of the couple",
       "pet": "String portrait of a cat",
-      "petPhoto": "The source photo of the cat"
+      "petPhoto": "The source photo of the cat",
+      "baby": "String portrait of a baby",
+      "babyPhoto": "The source photo of the baby"
     }
   },
   "faq": {

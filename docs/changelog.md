@@ -49,3 +49,4 @@ Nouveaux textes sous `home.*` (fr, en, ar).
 - Accueil et album : la carte « Pour soi » prend la photo de la femme en caftan ; rendu en fil net (photo légèrement contrastée et accentuée avant calcul, variante contraste, poids de ligne 0,18, 3 158 lignes).
 - Accueil : l'animation de tissage montre désormais la femme en caftan (séquence du moteur, 3 158 lignes ; médaillon caftan-photo ; légende « Portrait d'exemple » fr/en/ar). Ali La Pointe reste en tête de l'album, en bas de page et dans la barre collante.
 - Album : rendus en fil plus nets pour Salah Aougrout (2 768 lignes), le couple (3 179) et la fillette (2 930) : photo contrastée et accentuée, fond gardé, variante contraste, poids de ligne 0,18 ; 4 réglages comparés pour chacun.
+- Album : portrait d'un bébé (rendu en fil : photo contrastée et accentuée, fond gardé, variante contraste, poids de ligne 0,18, 2 356 lignes ; 8 réglages comparés).
