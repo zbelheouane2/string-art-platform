@@ -2317,7 +2317,7 @@ h1 em {
 
 .steps[data-paused] .steps-fill,
 .steps:hover .steps-fill,
-.steps:focus-within .steps-fill {
+.steps:has(:focus-visible) .steps-fill {
   animation-play-state: paused;
 }
 
@@ -2388,13 +2388,7 @@ h1 em {
   .steps-panel p:not(.steps-num) {
     animation: none;
   }
-  .steps-fill {
-    animation: none;
-    transform: none;
-  }
-  .steps-toggle {
-    display: none;
-  }
+  /* Le carrousel continue d'avancer (souhait du propriétaire), sans glissement : bouton pause visible. */
 }
 
 /* ---------- Accueil : « Qu'est-ce que c'est ? » ---------- */

@@ -134,14 +134,16 @@ test("le carrousel « Comment ça marche » : onglets, clavier, avance seul, pau
   await expect(how.getByRole("button", { name: "Relancer le défilement" })).toHaveAttribute("aria-pressed", "true");
 });
 
-test("le carrousel ne défile pas seul avec « réduire les animations »", async ({ browser }) => {
+test("avec « réduire les animations », le carrousel avance quand même et reprend après un clic", async ({ browser }) => {
   const context = await browser.newContext({ reducedMotion: "reduce" });
   const page = await context.newPage();
   await page.goto("/fr");
   const how = page.locator("#comment");
   await how.scrollIntoViewIfNeeded();
-  await page.waitForTimeout(7000);
-  await expect(how.getByRole("tab").nth(0)).toHaveAttribute("aria-selected", "true");
+  await how.getByRole("tab").nth(2).click();
+  await page.mouse.move(0, 0);
+  await expect(how.getByRole("tab").nth(3)).toHaveAttribute("aria-selected", "true", { timeout: 8000 });
+  await expect(how.getByRole("button", { name: "Mettre le défilement en pause" })).toBeVisible();
   await context.close();
 });
 

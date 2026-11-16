@@ -8,9 +8,10 @@ import { PauseIcon, PlayIcon } from "./Icons";
 export const AUTO_DELAY_MS = 5000;
 
 /**
- * Rangée de cartes qui défile seule : glisser au doigt (défilement aimanté),
- * flèches, points et bouton pause. Avance toutes les 5 s, s'arrête au survol,
- * au focus, hors écran, sur demande ou si l'utilisateur préfère moins de mouvement.
+ * Rangée de cartes qui défile seule, en boucle : glisser au doigt (défilement aimanté),
+ * flèches, points et bouton pause. Avance toutes les 5 s, s'arrête au survol de la
+ * souris, au clavier, hors écran ou sur demande, et reprend ensuite. Avec « réduire
+ * les animations », elle avance quand même mais sans glissement.
  * Quand toutes les cartes tiennent à l'écran (ordinateur), les commandes disparaissent.
  * Le sens suit celui de la page (arabe : de droite à gauche).
  */
@@ -88,7 +89,7 @@ export function AutoCarousel({
   );
 
   // Minuterie : la jauge du point actif se remplit en 5 s, puis on avance (en pause, la jauge s'arrête).
-  const playing = pages > 1 && !hover && !offscreen && !userPaused && !reduced;
+  const playing = pages > 1 && !hover && !offscreen && !userPaused;
 
   return (
     <div
@@ -103,7 +104,8 @@ export function AutoCarousel({
       aria-label={label}
       onPointerEnter={(e) => e.pointerType === "mouse" && setHover(true)}
       onPointerLeave={() => setHover(false)}
-      onFocus={() => setHover(true)}
+      // Pause au clavier seulement : après un clic, le défilement reprend tout seul.
+      onFocus={(e) => e.target.matches(":focus-visible") && setHover(true)}
       onBlur={(e) => !e.currentTarget.contains(e.relatedTarget as Node | null) && setHover(false)}
     >
       <ol ref={track} className="auto-track" tabIndex={0} aria-label={label}>
@@ -130,7 +132,7 @@ export function AutoCarousel({
               aria-current={k === index ? "true" : undefined}
               onClick={() => go(k)}
             >
-              {k === index && !reduced && <span key={index} className="auto-fill" onAnimationEnd={() => go(index + 1)} />}
+              {k === index && <span key={index} className="auto-fill" onAnimationEnd={() => go(index + 1)} />}
             </button>
           ))}
         </div>

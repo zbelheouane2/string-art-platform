@@ -19,8 +19,8 @@ export interface Step {
  * Carrousel « Comment ça marche » : une grande image qui change avec l'étape,
  * une rangée d'onglets à icônes et la légende de l'étape active.
  * Avance seul (la barre de progression de l'onglet actif sert de minuterie),
- * se met en pause au survol, au focus, hors écran ou sur demande ; glisse au doigt.
- * Sans animation si l'utilisateur a demandé moins de mouvement.
+ * se met en pause au survol, au clavier, hors écran ou sur demande, puis reprend ;
+ * glisse au doigt. Avec « réduire les animations », il avance sans glissement.
  */
 export function StepsCarousel({ id, title, steps }: { id: string; title: string; steps: Step[] }) {
   const t = useTranslations("carousel");
