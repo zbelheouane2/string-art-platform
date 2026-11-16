@@ -4,6 +4,8 @@ import { Alexandria, DM_Sans, DM_Serif_Display, Noto_Naskh_Arabic } from "next/f
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { brand } from "@/config/brand";
+import { CartProvider } from "@/components/Cart";
+import { shopCatalog } from "@/lib/shop";
 import { direction, routing } from "@/i18n/routing";
 import "@/styles/globals.css";
 import "@/styles/info.css";
@@ -45,13 +47,16 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
+  const catalog = await shopCatalog();
   const fonts = [dmSerif, dmSans, naskh, alexandria].map((f) => f.variable).join(" ");
   return (
     <html lang={locale} dir={direction(locale)} className={fonts} suppressHydrationWarning>
       <body>
         {/* Active les animations d'apparition seulement si JavaScript tourne (évite le contenu invisible). */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <CartProvider catalog={catalog}>{children}</CartProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

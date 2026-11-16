@@ -946,7 +946,8 @@
       "payment": "Paiement",
       "summary": "Récapitulatif",
       "buyer": "Vous, qui offrez",
-      "recipient": "Le destinataire en Algérie"
+      "recipient": "Le destinataire en Algérie",
+      "more": "Précisions"
     },
     "fields": {
       "fullName": "Nom et prénom",
@@ -1017,7 +1018,10 @@
       "buyerName": "Indiquez votre nom et prénom.",
       "buyerPhone": "Numéro attendu avec l'indicatif du pays (ex. +33 6 12 34 56 78).",
       "buyerEmail": "Adresse e-mail invalide.",
-      "giftMessageLong": "Message trop long (200 caractères)."
+      "giftMessageLong": "Message trop long (200 caractères).",
+      "promoInvalid": "Ce code promo n'existe pas.",
+      "promoExpired": "Ce code promo n'est plus valable.",
+      "promoUnavailable": "Vérification impossible pour le moment, réessayez."
     },
     "feePickWilaya": "Choisissez votre wilaya pour voir les frais de livraison.",
     "feeKnown": "Frais de livraison : {fee}.",
@@ -1031,7 +1035,16 @@
       "recipientHelp": "La personne qui reçoit le kit : le livreur l'appelle à ce numéro.",
       "paymentHelp": "Le destinataire paie en espèces à la réception. Nous vous prévenons quand le colis est livré."
     },
-    "totalCod": "À payer en espèces au livreur, à la réception."
+    "totalCod": "À payer en espèces au livreur, à la réception.",
+    "summaryShow": "Afficher le récapitulatif",
+    "summaryHide": "Masquer le récapitulatif",
+    "removeItem": "Supprimer",
+    "promoApplied": "Code {code} appliqué",
+    "promoLabel": "Code promo",
+    "promoApply": "Valider",
+    "subtotal": "Sous-total",
+    "lineDiscount": "Remise ({code})",
+    "feeAfterWilaya": "selon votre wilaya"
   },
   "confirmation": {
     "eyebrow": "Merci !",
@@ -1143,5 +1156,21 @@
     "title": "Ils ont tendu leur portrait",
     "rating": "Note : {n} sur 5",
     "photoAlt": "Portrait réalisé par {name}"
+  },
+  "cart": {
+    "title": "Panier",
+    "open": "Ouvrir le panier ({count, plural, =0 {vide} one {# article} other {# articles}})",
+    "close": "Fermer le panier",
+    "empty": "Votre panier est vide.",
+    "addKit": "Ajouter le kit",
+    "remove": "Supprimer",
+    "quantityOf": "Quantité : {name}",
+    "decrease": "Diminuer la quantité : {name}",
+    "increase": "Augmenter la quantité : {name}",
+    "suggest": "Complétez votre cadeau",
+    "total": "Total",
+    "deliveryNote": "Livraison en {min} à {max} jours ouvrables. Frais de livraison calculés à l'étape suivante.",
+    "checkout": "Passer la commande",
+    "addToCart": "Ajouter au panier"
   }
 }

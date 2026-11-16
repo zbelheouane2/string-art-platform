@@ -946,7 +946,8 @@
       "payment": "Payment",
       "summary": "Summary",
       "buyer": "You, the giver",
-      "recipient": "The recipient in Algeria"
+      "recipient": "The recipient in Algeria",
+      "more": "Details"
     },
     "fields": {
       "fullName": "Full name",
@@ -1017,7 +1018,10 @@
       "buyerName": "Enter your full name.",
       "buyerPhone": "Number expected with country code (e.g. +44 7700 900123).",
       "buyerEmail": "Invalid email address.",
-      "giftMessageLong": "Message too long (200 characters)."
+      "giftMessageLong": "Message too long (200 characters).",
+      "promoInvalid": "This promo code doesn't exist.",
+      "promoExpired": "This promo code is no longer valid.",
+      "promoUnavailable": "We can't check the code right now, please try again."
     },
     "feePickWilaya": "Choose your wilaya to see the delivery fee.",
     "feeKnown": "Delivery fee: {fee}.",
@@ -1031,7 +1035,16 @@
       "recipientHelp": "The person receiving the kit: the courier calls them on this number.",
       "paymentHelp": "The recipient pays in cash on delivery. We let you know when the parcel has arrived."
     },
-    "totalCod": "Paid in cash to the courier on delivery."
+    "totalCod": "Paid in cash to the courier on delivery.",
+    "summaryShow": "Show order summary",
+    "summaryHide": "Hide order summary",
+    "removeItem": "Remove",
+    "promoApplied": "Code {code} applied",
+    "promoLabel": "Promo code",
+    "promoApply": "Apply",
+    "subtotal": "Subtotal",
+    "lineDiscount": "Discount ({code})",
+    "feeAfterWilaya": "depends on your wilaya"
   },
   "confirmation": {
     "eyebrow": "Thank you!",
@@ -1143,5 +1156,21 @@
     "title": "They made their portrait",
     "rating": "Rating: {n} out of 5",
     "photoAlt": "Portrait made by {name}"
+  },
+  "cart": {
+    "title": "Cart",
+    "open": "Open cart ({count, plural, =0 {empty} one {# item} other {# items}})",
+    "close": "Close cart",
+    "empty": "Your cart is empty.",
+    "addKit": "Add the kit",
+    "remove": "Remove",
+    "quantityOf": "Quantity: {name}",
+    "decrease": "Decrease quantity: {name}",
+    "increase": "Increase quantity: {name}",
+    "suggest": "Complete your gift",
+    "total": "Total",
+    "deliveryNote": "Delivered in {min} to {max} working days. Delivery fees are calculated at the next step.",
+    "checkout": "Checkout",
+    "addToCart": "Add to cart"
   }
 }

@@ -6,7 +6,6 @@ import { brand } from "@/config/brand";
 import { commerce } from "@/config/commerce";
 import { kitOffer } from "@/config/catalog";
 import { checkoutOptions } from "@/lib/orders";
-import { formatPrice } from "@/lib/price";
 import { OrderForm } from "./OrderForm";
 
 export const dynamic = "force-dynamic";
@@ -31,20 +30,9 @@ export default async function OrderPage({
   const t = await getTranslations("order");
   const options = kitOffer.orderingOpen ? await checkoutOptions() : null;
   return (
-    <PageShell narrow>
+    <PageShell>
       <header className="flow-head">
         <h1>{t("title")}</h1>
-        {options && (
-          <p className="order-product">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/visuels/femme-fil.webp" alt="" width={72} height={72} />
-            <span>
-              <strong>{options.product.names[locale] ?? options.product.names.fr}</strong>
-              {formatPrice(options.price, locale)}
-              {kitOffer.provisional && ` (${t("provisional")})`}
-            </span>
-          </p>
-        )}
       </header>
       {options ? (
         <OrderForm

@@ -155,7 +155,10 @@ test.describe("commande", () => {
     await page.getByLabel("À domicile").check();
     await expect(page.locator("#address")).toHaveCount(0);
     await page.getByLabel("Au bureau de livraison").check();
-    await page.getByLabel("Nombre de kits").selectOption("2");
+    // Téléphone : le récapitulatif est replié au-dessus du formulaire.
+    const toggle = page.locator(".summary-toggle");
+    if (await toggle.isVisible()) await toggle.click();
+    await page.getByRole("button", { name: "Augmenter la quantité : Kit portrait 50 × 50 cm" }).click();
     await expect(page.locator(".order-total strong")).toHaveText("9 800 DA");
     await page.getByRole("button", { name: "Valider ma commande" }).click();
 
@@ -244,13 +247,19 @@ test.describe("commande", () => {
     const stand = box.getByRole("switch", { name: "Support chevalet en bois" });
     await stand.click();
     await expect(stand).toHaveAttribute("aria-checked", "true");
-    await box.getByRole("link", { name: "Commander" }).click();
-    await expect(page).toHaveURL(/\/fr\/commander\?options=support-chevalet$/);
+    // Le kit et l'option vont au panier, qui s'ouvre sur le côté.
+    await box.getByRole("button", { name: "Ajouter au panier" }).click();
+    const drawer = page.getByRole("dialog", { name: /Panier/ });
+    await expect(drawer.locator(".cart-line")).toHaveCount(2);
+    await expect(drawer.locator(".cart-total strong")).toHaveText("5 300 DA");
+    await drawer.getByRole("link", { name: "Passer la commande" }).click();
+    await expect(page).toHaveURL(/\/fr\/commander$/);
 
-    await expect(page.getByRole("switch", { name: "Support chevalet en bois" })).toHaveAttribute("aria-checked", "true");
+    const summary = page.locator(".checkout-summary");
+    await expect(summary.locator(".summary-item")).toHaveCount(2);
     await expect(page.locator(".order-total strong")).toHaveText("5 300 DA");
-    const candle = page.getByRole("switch", { name: "Bougie parfumée" });
-    await candle.click();
+    if (await summary.locator(".summary-toggle").isVisible()) await summary.locator(".summary-toggle").click();
+    await summary.getByRole("button", { name: /Bougie parfumée/ }).click();
     await expect(page.locator(".order-total strong")).toHaveText("6 100 DA");
 
     await page.getByLabel("Nom et prénom").fill("Client Options");
@@ -296,14 +305,60 @@ test.describe("commande", () => {
 
   test("une option inconnue dans l'adresse est ignorée", async ({ page }) => {
     await page.goto("/fr/commander?options=inconnue");
-    await expect(page.getByRole("switch", { checked: true })).toHaveCount(0);
+    await expect(page.locator(".summary-item")).toHaveCount(1);
     await expect(page.locator(".order-total strong")).toHaveText("4 900 DA");
   });
 
-  test("le bouton du site mène à la commande", async ({ page }) => {
+  test("le bouton du site mène à la commande en passant par le panier", async ({ page }) => {
     await page.goto("/fr/kit");
-    await page.locator("#acheter").getByRole("link", { name: "Commander" }).click();
+    await page.locator("#acheter").getByRole("button", { name: "Ajouter au panier" }).click();
+    await page.getByRole("dialog").getByRole("link", { name: "Passer la commande" }).click();
     await expect(page).toHaveURL(/\/fr\/commander$/);
+  });
+
+  test("panier : quantités, suppression, total, nombre d'articles sur l'icône, gardé d'une page à l'autre", async ({ page }) => {
+    await page.goto("/fr/kit");
+    await page.locator("#acheter").getByRole("button", { name: "Ajouter au panier" }).click();
+    const drawer = page.getByRole("dialog", { name: /Panier/ });
+    await drawer.getByRole("button", { name: "Augmenter la quantité : Kit portrait 50 × 50 cm" }).click();
+    await expect(drawer.locator(".cart-total strong")).toHaveText("9 800 DA");
+    await drawer.getByRole("button", { name: /Bougie parfumée/ }).click();
+    await expect(drawer.locator(".cart-total strong")).toHaveText("10 600 DA");
+    await expect(drawer.getByText("Frais de livraison calculés à l'étape suivante.", { exact: false })).toBeVisible();
+    await axe(page);
+    await drawer.locator(".cart-line").filter({ hasText: "Bougie parfumée" }).getByRole("button", { name: "Supprimer" }).click();
+    await expect(drawer.locator(".cart-line")).toHaveCount(1);
+    await drawer.getByRole("button", { name: "Fermer le panier" }).click();
+    await page.goto("/fr");
+    await expect(page.getByRole("button", { name: "Ouvrir le panier (2 articles)" })).toBeVisible();
+    await page.goto("/fr/commander");
+    await expect(page.locator(".order-total strong")).toHaveText("9 800 DA");
+  });
+
+  test("code promo : inconnu refusé, valide appliqué au total et enregistré avec la commande", async ({ page }) => {
+    const code = `TEST${Date.now().toString(36).toUpperCase()}`;
+    execFileSync("psql", [process.env.DATABASE_URL!, "-qtAc", `INSERT INTO "PromoCode" (id, code, kind, value, "updatedAt") VALUES ('${code.toLowerCase()}', '${code}', 'PERCENT', 10, now())`]);
+    await page.goto("/fr/commander");
+    const summary = page.locator(".checkout-summary");
+    if (await summary.locator(".summary-toggle").isVisible()) await summary.locator(".summary-toggle").click();
+    await summary.getByPlaceholder("Code promo").fill("NEXISTEPAS");
+    await summary.getByRole("button", { name: "Valider" }).click();
+    await expect(summary.getByText("Ce code promo n'existe pas.")).toBeVisible();
+    await summary.getByPlaceholder("Code promo").fill(code.toLowerCase());
+    await summary.getByRole("button", { name: "Valider" }).click();
+    await expect(summary.getByText(`Code ${code} appliqué`)).toBeVisible();
+    await expect(summary.locator(".line-discount dd")).toHaveText("− 490 DA");
+    await expect(page.locator(".order-total strong")).toHaveText("4 410 DA");
+
+    await page.getByLabel("Nom et prénom").fill("Client Promo");
+    await page.getByLabel("Téléphone mobile").fill("0555 11 22 33");
+    await page.getByLabel("Wilaya").selectOption("16");
+    await page.getByLabel("Commune", { exact: true }).selectOption("Bab Ezzouar");
+    await page.getByRole("button", { name: "Valider ma commande" }).click();
+    await expect(page).toHaveURL(/\/fr\/commande\/DK-[0-9A-Z]{6}$/);
+    const number = page.url().split("/").pop();
+    const row = execFileSync("psql", [process.env.DATABASE_URL!, "-qtAc", `SELECT "promoCode" || ':' || "discountMinor" || ':' || "totalMinor" FROM "Order" WHERE number = '${number}'`]).toString().trim();
+    expect(row).toBe(`${code}:49000:441000`);
   });
 
   for (const locale of ["fr", "ar"] as const) {
@@ -319,7 +374,12 @@ test.describe("commande", () => {
 test.describe("commande : confiance et erreurs", () => {
   test("engagements et vignette du kit sur la page de commande ; le premier champ en erreur reçoit le curseur", async ({ page }) => {
     await page.goto("/fr/commander");
-    await expect(page.locator(".order-product img")).toBeVisible();
+    const toggle = page.locator(".summary-toggle");
+    if (await toggle.isVisible()) {
+      await expect(toggle).toHaveAttribute("aria-expanded", "false");
+      await toggle.click();
+    }
+    await expect(page.locator(".summary-thumb img").first()).toBeVisible();
     const trust = page.locator(".order-form .reassure");
     await expect(trust).toContainText("Vous payez à la réception");
     await expect(page.locator(".order-total small")).toHaveText("À payer en espèces au livreur, à la réception.");

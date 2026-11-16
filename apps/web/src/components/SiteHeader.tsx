@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { CartButton } from "./Cart";
 import { CloseIcon, MenuIcon } from "./Icons";
 import { LanguageMenu } from "./LanguageMenu";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -64,12 +65,7 @@ export function SiteHeader() {
         </Link>
         <div className="header-end">
           <LanguageMenu />
-          <Link className="icon-btn" href="/commander" aria-label={t("cart")}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M6 8h12l-1 12H7L6 8z" />
-              <path d="M9 8V6a3 3 0 0 1 6 0v2" />
-            </svg>
-          </Link>
+          <CartButton />
         </div>
       </div>
       <nav className="header-nav" aria-label={t("main")}>

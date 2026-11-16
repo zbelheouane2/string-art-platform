@@ -138,8 +138,11 @@ model Order {
   currency         String          @db.Char(3)
   /// Frais de livraison retenus à la commande (null : à confirmer par téléphone).
   deliveryFeeMinor Int?
-  /// Total articles + livraison connue.
+  /// Total articles − remise + livraison connue.
   totalMinor       Int
+  /// Code promo appliqué (en majuscules) et remise accordée sur les articles.
+  promoCode        String?
+  discountMinor    Int             @default(0)
   /// Adresse figée au moment de la commande.
   shippingAddress  Json
   customer         Customer        @relation(fields: [customerId], references: [id])
@@ -251,4 +254,28 @@ model AuditLog {
   createdAt DateTime @default(now())
 
   @@index([action, createdAt])
+}
+
+enum PromoKind {
+  PERCENT
+  FIXED
+}
+
+/// Code promo saisi à la commande. La remise porte sur les articles (pas sur la livraison).
+model PromoCode {
+  id          String    @id @default(cuid())
+  /// En majuscules, sans espaces (« BIENVENUE10 »).
+  code        String    @unique
+  kind        PromoKind
+  /// Pourcentage (1 à 90) ou montant en unité mineure.
+  value       Int
+  currency    String?   @db.Char(3)
+  active      Boolean   @default(true)
+  startsAt    DateTime?
+  endsAt      DateTime?
+  /// Nombre maximal d'utilisations (null : illimité).
+  maxUses     Int?
+  uses        Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }

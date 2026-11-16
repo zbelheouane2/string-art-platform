@@ -219,12 +219,15 @@ test("le plan de la planche montre 240 clous numérotés de 1 à 60 par secteur"
   expect(nums[239]).toBe("60");
 });
 
-test("le prix provisoire s'affiche et le bouton mène à la commande", async ({ page }) => {
+test("le prix provisoire s'affiche et le bouton ajoute au panier", async ({ page }) => {
   await page.goto("/fr");
   const shop = page.locator("#acheter");
   await expect(shop.locator(".shop-price")).toHaveText(/4\s900\s?DA/);
   await expect(shop.locator(".shop-price-note")).toHaveText("Prix de lancement provisoire");
-  await expect(shop.getByRole("link", { name: "Commander" })).toHaveAttribute("href", "/fr/commander");
+  await shop.getByRole("button", { name: "Ajouter au panier" }).click();
+  await expect(page.getByRole("dialog", { name: /Panier/ })).toBeVisible();
+  await expect(page.getByRole("dialog").getByRole("link", { name: "Passer la commande" })).toHaveAttribute("href", "/fr/commander");
+  await page.keyboard.press("Escape");
   await expect(page.locator(".gift-wide .gift-occasions li")).toHaveCount(5);
 });
 

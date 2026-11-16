@@ -44,18 +44,35 @@ export const orderSchema = z.object({
     }),
   wilaya: z.string().refine((v) => WILAYAS.some((w) => w.code === v), "wilaya"),
   /** Commune choisie dans la liste de la wilaya, ou OTHER_COMMUNE + saisie libre. */
-  commune: z.string().trim().min(1, "commune").max(80, "commune"),
+  commune: z.string({ message: "commune" }).trim().min(1, "commune").max(80, "commune"),
   communeOther: z.string().trim().max(80, "commune").optional().default(""),
   delivery: z.string().min(1, "delivery"),
   payment: z.string().min(1, "payment"),
   quantity: z.coerce.number().int().min(1, "quantity").max(commerce.maxQuantity, "quantity"),
-  /** Options ajoutées au kit (support, bougie…) : slugs séparés par des virgules. Prix relus en base. */
+  /**
+   * Options ajoutées au kit (support, bougie…) : « slug » ou « slug:quantité »
+   * séparés par des virgules (le panier envoie les quantités). Prix relus en base.
+   */
   options: z
     .string()
     .optional()
     .default("")
-    .transform((v) => [...new Set(v.split(",").map((x) => x.trim()).filter(Boolean))])
-    .pipe(z.array(z.string().regex(/^[a-z0-9-]{1,40}$/, "unavailable")).max(10, "unavailable")),
+    .transform((v, ctx) => {
+      const out = new Map<string, number>();
+      for (const part of v.split(",").map((x) => x.trim()).filter(Boolean)) {
+        const m = /^([a-z0-9-]{1,40})(?::(\d{1,2}))?$/.exec(part);
+        const q = m ? Number(m[2] ?? 1) : 0;
+        if (!m || q < 1 || q > commerce.maxQuantity) {
+          ctx.addIssue({ code: "custom", message: "unavailable" });
+          return z.NEVER;
+        }
+        out.set(m[1], Math.min(commerce.maxQuantity, (out.get(m[1]) ?? 0) + q));
+      }
+      return [...out].map(([slug, quantity]) => ({ slug, quantity }));
+    })
+    .pipe(z.array(z.object({ slug: z.string(), quantity: z.number() })).max(10, "unavailable")),
+  /** Code promo saisi (facultatif) : vérifié en base à la validation. */
+  promo: z.string().trim().max(40, "promoInvalid").optional().default(""),
   note: z.string().trim().max(300, "noteLong").optional().default(""),
   locale: z.enum(["fr", "en", "ar"]).default("fr"),
   /**

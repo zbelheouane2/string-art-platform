@@ -19,6 +19,9 @@ export interface OrderRow {
   quantity: number;
   /** Options ajoutées (ex. « Support chevalet en bois ; Bougie parfumée »), vide sinon. */
   options: string;
+  /** Code promo appliqué (vide sinon) et remise accordée (unité principale). */
+  promo: string;
+  discount: number;
   /** null : frais à confirmer par téléphone. */
   deliveryFee: number | null;
   total: number;
