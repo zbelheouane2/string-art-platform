@@ -18,6 +18,15 @@ const LINKS = [
   { href: { pathname: "/guide/demo" }, key: "guideDemo" },
 ] as const;
 
+/** Menu horizontal (ordinateur) : les entrées principales, comme une boutique classique. */
+const BAR = [
+  { href: { pathname: "/kit" }, key: "kit" },
+  { href: { pathname: "/", hash: "comment" }, key: "how" },
+  { href: { pathname: "/", hash: "cadeaux" }, key: "gift" },
+  { href: { pathname: "/", hash: "faq" }, key: "faq" },
+  { href: { pathname: "/activer" }, key: "code" },
+] as const;
+
 export function SiteHeader() {
   const t = useTranslations("nav");
   const [open, setOpen] = useState(false);
@@ -47,6 +56,15 @@ export function SiteHeader() {
         <Link href="/" className="header-logo">
           <Logo />
         </Link>
+        <nav className="header-nav" aria-label={t("main")}>
+          <ul>
+            {BAR.map((l) => (
+              <li key={l.key}>
+                <Link href={l.href}>{t(l.key)}</Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
         <div className="header-end">
           <LanguageMenu />
           <Link className="icon-btn" href="/commander" aria-label={t("cart")}>

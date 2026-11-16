@@ -119,7 +119,7 @@ test("le carrousel « Comment ça marche » : onglets, clavier, avance seul, pau
   await how.scrollIntoViewIfNeeded();
   await page.mouse.move(0, 0);
   await expect(tabs.nth(0)).toHaveAttribute("aria-selected", "true");
-  // Avance seul après environ 5,5 s.
+  // Avance seul après environ 5 s.
   await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true", { timeout: 9000 });
   await tabs.nth(4).click();
   await expect(how.getByRole("tabpanel")).toContainText("Suivez la voix");
@@ -183,4 +183,17 @@ test("le prix provisoire s'affiche et le bouton mène à la commande", async ({ 
   await expect(shop.locator(".shop-price-note")).toHaveText("Prix de lancement provisoire");
   await expect(shop.getByRole("link", { name: "Commander" })).toHaveAttribute("href", "/fr/commander");
   await expect(page.locator(".gift-wide .gift-occasions li")).toHaveCount(5);
+});
+
+test("menu horizontal sur ordinateur, menu repliable sur téléphone", async ({ page, isMobile }) => {
+  await page.goto("/fr");
+  const bar = page.getByRole("navigation", { name: "Navigation principale" });
+  if (isMobile) {
+    await expect(bar).toBeHidden();
+    await expect(page.getByRole("button", { name: "Ouvrir la navigation" })).toBeVisible();
+  } else {
+    await expect(bar.getByRole("link")).toHaveCount(5);
+    await bar.getByRole("link", { name: "Le kit" }).click();
+    await expect(page).toHaveURL(/\/fr\/kit$/);
+  }
 });

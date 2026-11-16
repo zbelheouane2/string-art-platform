@@ -1,5 +1,9 @@
 # Historique
 
+## 2026-11-16
+- **Site plus compact** (retour du propriétaire) : titres et textes environ 20 % plus petits, marges de sections réduites, idées cadeaux sur 4 colonnes, images « Dans la boîte » moins hautes. Menu horizontal sur ordinateur (le menu repliable reste sur téléphone). Carrousel « Comment ça marche » : 5 s par photo.
+- **Formulaire de commande plus court** : nom et téléphone côte à côte, wilaya et commune côte à côte, modes de livraison en deux boutons, paiement à la livraison affiché dans le récapitulatif (plus de section dédiée quand il n'y a qu'un moyen), remarque repliée, options compactes.
+
 ## 2026-11-13
 - **Fiche du kit** : repères sous le prix (planche, montage 4 à 6 h, logiciel FR/EN/AR, guide vocal) ; « Comment fonctionne notre générateur en ligne ? » en 5 étapes, carrousel de téléphones avec de vraies captures du site (`scripts/make-generator-shots.cjs`, une série par langue) ; options support et bougie avec interrupteur, reliées à la commande, au total et à la Google Sheet. Prix provisoires : support 400 DA, bougie 800 DA. Migration `product_accessory`.
 - **Commande, suite** : ZR Express par défaut, frais par wilaya (import CSV), 1 541 communes par wilaya (loi 26-06), adresse complète retirée, option « cadeau depuis l'étranger », page de l'offre numérique diaspora (paiement à venir). Migration `delivery_rates`.

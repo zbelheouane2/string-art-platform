@@ -19,7 +19,8 @@
     "home": "Home",
     "kitPage": "The kit in detail",
     "code": "I have a code",
-    "guideDemo": "Try the voice guide"
+    "guideDemo": "Try the voice guide",
+    "main": "Main navigation"
   },
   "hero": {
     "badge": "Gift idea",
