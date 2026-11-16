@@ -265,6 +265,30 @@ test.describe("commande", () => {
     expect(items.split("\n")).toEqual(["bougie-parfumee:80000", "kit-portrait-50:490000", "support-chevalet:40000"]);
   });
 
+  for (const [locale, more, title, add] of [
+    ["fr", "En savoir plus", "Posé, pas accroché", "Ajouter à ma commande"],
+    ["ar", "اعرف المزيد", "ضعها حيث تشاء", "أضِف إلى طلبي"],
+  ] as const) {
+    test(`option : fenêtre de détail avec photo, texte et ajout (${locale})`, async ({ page }) => {
+      await page.goto(`/${locale}/kit`);
+      const box = page.locator("#acheter");
+      await expect(box.locator(".accessory-thumb img")).toHaveCount(2);
+      await box.getByRole("button", { name: more, exact: true }).first().click();
+      const dialog = page.getByRole("dialog", { name: title });
+      await expect(dialog).toBeVisible();
+      await expect(dialog.locator("img")).toHaveJSProperty("complete", true);
+      await axe(page);
+      await dialog.getByRole("button", { name: add }).click();
+      await expect(dialog).toBeHidden();
+      await expect(box.getByRole("switch").first()).toHaveAttribute("aria-checked", "true");
+      // Échap ferme la fenêtre.
+      await box.locator(".accessory-thumb").nth(1).click();
+      await expect(page.getByRole("dialog")).toBeVisible();
+      await page.keyboard.press("Escape");
+      await expect(page.getByRole("dialog")).toBeHidden();
+    });
+  }
+
   test("une option inconnue dans l'adresse est ignorée", async ({ page }) => {
     await page.goto("/fr/commander?options=inconnue");
     await expect(page.getByRole("switch", { checked: true })).toHaveCount(0);

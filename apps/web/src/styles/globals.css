@@ -3395,3 +3395,126 @@ h1 em {
   opacity: 0.45;
   cursor: not-allowed;
 }
+
+/* Options : vignette photo, lien « En savoir plus », fenêtre de détail. */
+.accessory-thumb {
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm, 8px);
+  overflow: hidden;
+  background: #fff;
+  cursor: zoom-in;
+  inline-size: 4rem;
+  block-size: 4rem;
+}
+
+.accessory-thumb img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.accessory-thumb:focus-visible,
+.accessory-more:focus-visible,
+.accessory-dialog-close:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  outline-offset: 2px;
+}
+
+.accessory-more {
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.accessory-dialog {
+  inline-size: min(56rem, calc(100vw - 2rem));
+  max-block-size: calc(100dvh - 2rem);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-lg, 16px);
+  background: var(--color-bg, #fff);
+  color: var(--ink);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+}
+
+.accessory-dialog::backdrop {
+  background: rgba(20, 14, 10, 0.55);
+}
+
+.accessory-dialog-body {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.accessory-dialog-body > img {
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+
+.accessory-dialog-text {
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  padding-inline-end: 2rem;
+}
+
+.accessory-dialog-text h2 {
+  font-size: var(--step-2);
+  margin: 0;
+}
+
+.accessory-dialog-text p {
+  margin: 0;
+}
+
+.accessory-dialog-name {
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.accessory-dialog-name strong {
+  color: var(--accent);
+}
+
+.accessory-dialog-close {
+  position: absolute;
+  inset-block-start: 0.75rem;
+  inset-inline-end: 0.75rem;
+  display: grid;
+  place-items: center;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border: 0;
+  border-radius: 50%;
+  background: var(--sand);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+@media (max-width: 40rem) {
+  .accessory-dialog-body {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .accessory-dialog-text {
+    padding-inline-end: 0;
+  }
+}

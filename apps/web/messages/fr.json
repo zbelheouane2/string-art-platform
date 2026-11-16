@@ -809,8 +809,24 @@
     "title": "Complétez votre cadeau",
     "soon": "Prix bientôt disponible",
     "tags": {
-      "stand": "Exposez-le partout",
-      "candle": "Créez l'ambiance"
+      "stand": "Sans percer le mur",
+      "candle": "Lumière douce"
+    },
+    "more": "En savoir plus",
+    "close": "Fermer",
+    "add": "Ajouter à ma commande",
+    "remove": "Retirer de ma commande",
+    "details": {
+      "stand": {
+        "title": "Posé, pas accroché",
+        "alt": "Support chevalet en bois, seul, en cours de montage et portant un portrait en fil",
+        "text": "Ce chevalet en bois se monte en quelques secondes : deux pièces qui s'emboîtent, sans vis ni outil. Votre portrait tient droit sur une commode, une étagère ou un bureau, et change de place quand vous voulez. Aucun trou dans le mur."
+      },
+      "candle": {
+        "title": "Une soirée fil et lumière",
+        "alt": "Bougie DeeKra dans un pot noir, allumée près d'une planche à clous et d'un portrait en fil",
+        "text": "Le montage prend quelques heures : faites-en un moment à vous. Allumez la bougie, lancez le guide vocal et avancez clou après clou, dans une lumière douce. Une jolie attention aussi dans un cadeau."
+      }
     }
   }
 }

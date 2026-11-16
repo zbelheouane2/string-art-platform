@@ -809,8 +809,24 @@
     "title": "Complete your gift",
     "soon": "Price coming soon",
     "tags": {
-      "stand": "Display it anywhere",
-      "candle": "Set the mood"
+      "stand": "No holes in the wall",
+      "candle": "Soft light"
+    },
+    "more": "Learn more",
+    "close": "Close",
+    "add": "Add to my order",
+    "remove": "Remove from my order",
+    "details": {
+      "stand": {
+        "title": "Stand it, don't hang it",
+        "alt": "Wooden display stand on its own, being assembled and holding a string portrait",
+        "text": "This wooden easel goes together in seconds: two pieces that slot into each other, no screws or tools. Your portrait stands upright on a dresser, a shelf or a desk, and moves whenever you like. No holes in the wall."
+      },
+      "candle": {
+        "title": "An evening of thread and candlelight",
+        "alt": "DeeKra candle in a black jar, lit next to a nail board and a string portrait",
+        "text": "Assembly takes a few hours, so make it your own moment. Light the candle, start the voice guide and work nail by nail in soft light. A thoughtful touch in a gift, too."
+      }
     }
   }
 }
