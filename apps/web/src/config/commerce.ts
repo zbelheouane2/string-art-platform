@@ -9,6 +9,11 @@ export const commerce = {
   /** Produit vendu par le bouton « Commander ». */
   kitSlug: "kit-portrait-50",
   maxQuantity: 5,
+  /**
+   * Frais comptés quand aucun tarif n'est saisi dans l'admin pour la wilaya
+   * et le mode choisis (choix du propriétaire : 0 en attendant les vrais tarifs).
+   */
+  missingRateFeeMinor: 0,
   /** Durée pendant laquelle un appareil garde le code ouvert. */
   codeSessionDays: 30,
   /** Anti force brute : essais de codes inconnus autorisés par appareil et par fenêtre. */

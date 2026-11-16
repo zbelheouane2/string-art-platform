@@ -95,7 +95,7 @@ p{color:#5a4a40;font-size:16px;line-height:1.5;margin:0}
 `;
 
 const head = (t, dir) => `<div class="notch"></div><div class="status"><span>9:41</span><span>●●● ▮</span></div>
-  <div class="bar" dir="${dir}"><img class="logo" src="${BASE}/visuels/marque/deekra-entete.webp" alt="${BRAND}"><span class="pill">${t.lang}</span></div>`;
+  <div class="bar" dir="${dir}"><img class="logo" src="${BASE}/visuels/marque/deekra-logo.webp" alt="${BRAND}"><span class="pill">${t.lang}</span></div>`;
 
 const screens = {
   code: (t, dir) => `${head(t, dir)}

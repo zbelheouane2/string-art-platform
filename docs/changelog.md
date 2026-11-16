@@ -1,6 +1,9 @@
 # Historique
 
 ## 2026-11-16
+- **Frais de livraison toujours calculés** (retour du propriétaire) : dès que le client choisit sa wilaya et le mode (domicile ou bureau), les frais viennent des tarifs saisis dans l'admin ; sans tarif saisi, ils comptent 0 DA (`commerce.missingRateFeeMinor`) au lieu de « à confirmer par téléphone ».
+- **Écrans des téléphones** (« Comment fonctionne notre générateur ») refaits avec le nouveau logo ; cadre ajusté pour montrer l'écran entier (plus de texte rogné à gauche, barre d'état sous l'encoche). Maquettes des étapes régénérées avec le nouveau logo.
+- **Portrait du jeune homme** refait : fond retiré, contraste du visage renforcé, tee-shirt estompé, cadrage centré sur la tête entière, fils plus fins.
 - **Espace admin** (`/admin`, choix du propriétaire « espace admin simple ») : connexion par mot de passe (`ADMIN_PASSWORD`, 10 caractères minimum, à définir sur le serveur), cookie signé 12 h, 5 essais ratés par quart d'heure, page hors index. Prix du kit et des options, codes promo, commandes (changement de statut), sociétés de livraison. Chaque modification est tracée dans le journal d'audit.
 - **Frais de livraison par société** : tableau wilaya × domicile/bureau modifiable, import Excel (.xlsx) ou CSV avec aperçu des changements avant validation, export CSV, date de mise à jour. Ajout de sociétés (nom, logo, active ou non) ; avec plusieurs sociétés actives, le client choisit la sienne et voit son prix pour sa wilaya. Migration `admin_carriers_promo_rules`.
 - **Codes promo** : % ou montant fixe ; sur le kit, la commande ou la livraison ; dates de début et de fin ; nombre d'utilisations total et par client (téléphone) ; commande minimum ; activation/désactivation ; compteur. 6 tests unitaires et 4 tests navigateur ajoutés.

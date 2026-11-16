@@ -3326,14 +3326,16 @@ h1 em {
 }
 
 /* Téléphone dessiné en CSS autour de la capture du site. */
+/* Cadre de téléphone : une barre d'état laisse la place à l'encoche, puis
+   l'écran entier (capture 390 × 844), sans rognage sur les côtés. */
 .phone {
   position: relative;
   inline-size: min(100%, 13.5rem);
   margin-inline: auto;
-  aspect-ratio: 390 / 844;
+  padding-block-start: 1.35rem;
   border: 0.55rem solid #1d1a18;
   border-radius: 2.1rem;
-  background: #1d1a18;
+  background: var(--color-surface);
   overflow: hidden;
   box-shadow: var(--shadow-card);
 }
@@ -3358,10 +3360,11 @@ h1 em {
 .phone img {
   display: block;
   inline-size: 100%;
-  block-size: 100%;
+  block-size: auto;
+  aspect-ratio: 390 / 844;
   object-fit: cover;
   object-position: top;
-  border-radius: 1.55rem;
+  border-radius: 0 0 1.55rem 1.55rem;
 }
 
 .engine-num {

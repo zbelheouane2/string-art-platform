@@ -214,7 +214,7 @@ export async function createOrder(
   if (!provider) return { ok: false, error: "payment" };
 
   // Frais de livraison lus en base ; inconnus = confirmés par téléphone (null).
-  const fee = options.rates[input.delivery]?.[input.wilaya] ?? null;
+  const fee: number | null = options.rates[input.delivery]?.[input.wilaya] ?? commerce.missingRateFeeMinor;
   const extrasTotal = chosen.reduce(
     (sum, e) => sum + e.a.price.amountMinor * e.quantity,
     0,

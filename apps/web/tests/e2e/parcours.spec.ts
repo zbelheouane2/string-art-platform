@@ -160,6 +160,8 @@ test.describe("commande", () => {
     if (await toggle.isVisible()) await toggle.click();
     await page.getByRole("button", { name: "Augmenter la quantité : Kit portrait 50 × 50 cm" }).click();
     await expect(page.locator(".order-total strong")).toHaveText("9 800 DA");
+    // Aucun tarif saisi pour Alger : les frais comptent 0 DA (pas de « à confirmer »).
+    await expect(page.locator(".order-lines > div").last().locator("dd")).toHaveText("0 DA");
     await page.getByRole("button", { name: "Valider ma commande" }).click();
 
     await expect(page).toHaveURL(/\/fr\/commande\/DK-[0-9A-Z]{6}$/);

@@ -1,5 +1,6 @@
 "use client";
 
+import { commerce } from "@/config/commerce";
 import {
   useActionState,
   useEffect,
@@ -123,7 +124,7 @@ export function OrderForm({
   const [wilaya, setWilaya] = useState(v.wilaya ?? "");
   const [commune, setCommune] = useState(v.commune ?? "");
   const communes = communesOf(wilaya);
-  const fee = wilaya ? (rates[mode]?.[wilaya] ?? null) : null;
+  const fee = wilaya ? (rates[mode]?.[wilaya] ?? commerce.missingRateFeeMinor) : null;
   const money = (amountMinor: number) =>
     formatPrice({ amountMinor, currency: price.currency }, locale);
   // Articles : ceux du panier (partagé avec le tiroir). Panier vide = 1 kit.
@@ -328,7 +329,7 @@ export function OrderForm({
               <div className="choice-row choice-compact">
                 {carriers.map((c) => {
                   const m = c[kind] ?? c.home ?? c.desk;
-                  const f = wilaya && m ? (rates[m]?.[wilaya] ?? null) : null;
+                  const f = wilaya && m ? (rates[m]?.[wilaya] ?? commerce.missingRateFeeMinor) : null;
                   return (
                     <label key={c.code} className="choice carrier-choice">
                       <input
@@ -370,7 +371,7 @@ export function OrderForm({
               .filter((k) => carrier?.[k])
               .map((k) => {
                 const m = carrier![k]!;
-                const f = wilaya ? (rates[m]?.[wilaya] ?? null) : null;
+                const f = wilaya ? (rates[m]?.[wilaya] ?? commerce.missingRateFeeMinor) : null;
                 return (
                   <label key={k} className="choice">
                     <input
