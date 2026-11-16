@@ -141,10 +141,10 @@ export default async function DesignPage({ params }: { params: Promise<{ locale:
       <section aria-labelledby="ds-media" className="ds-media">
         <h2 id="ds-media">Médias</h2>
         <div className="split">
-          <BeforeAfter photo="/visuels/astronaute-photo.webp" thread="/visuels/astronaute-fil.webp" />
+          <BeforeAfter photo="/visuels/boucles-photo.webp" thread="/visuels/boucles-fil.webp" />
           <Gallery
             images={[
-              { src: "/visuels/astronaute-fil.webp", alt: "Rendu 1" },
+              { src: "/visuels/boucles-fil.webp", alt: "Rendu 1" },
               { src: "/visuels/chat-fil.webp", alt: "Rendu 2" },
             ]}
           />

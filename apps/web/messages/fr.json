@@ -164,6 +164,13 @@
       "guide": "Guide vocal sur téléphone",
       "card": "Carte-message offerte pour l'occasion de votre choix (naissance, anniversaire, mariage, souvenir ou autre)"
     },
+    "includesShort": {
+      "board": "Planche 50 × 50 cm, 240 clous posés",
+      "thread": "Bobine de fil noir",
+      "code": "Code pour créer votre modèle",
+      "guide": "Guide vocal sur téléphone",
+      "card": "Carte-message offerte"
+    },
     "cta": "Commander",
     "ctaSoon": "Bientôt disponible",
     "payment": "Paiement à la livraison en Algérie",

@@ -977,6 +977,42 @@ h1 em {
   margin-block-end: 0.75rem;
 }
 
+/* « Inclus » : icônes en ligne, libellé court dessous. Glisse sur téléphone. */
+.kit-includes {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.35rem;
+  margin-block: 0 1.75rem;
+}
+
+.kit-includes li {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0.55rem;
+  text-align: center;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.kit-includes-icon {
+  display: grid;
+  place-items: center;
+  inline-size: clamp(3rem, 2.4rem + 2vw, 3.75rem);
+  block-size: clamp(3rem, 2.4rem + 2vw, 3.75rem);
+  border-radius: 50%;
+  background: var(--sand);
+  color: var(--accent);
+}
+
+@media (max-width: 30rem) {
+  .kit-includes li {
+    font-size: 0.7rem;
+  }
+}
+
 .check-list {
   display: grid;
   gap: 0.6rem;
@@ -1761,11 +1797,47 @@ h1 em {
   font-size: clamp(2rem, 1.5rem + 1.8vw, 2.875rem);
 }
 
+/* Prix : montant en serif de la marque, couleur accent, devise plus petite. */
+.shop-price-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.9rem;
+  margin-block: 0.6rem 0.25rem;
+}
+
 .shop-price {
+  margin: 0;
   font-family: var(--font-body);
   font-size: clamp(1.6rem, 1.3rem + 1vw, 2.125rem);
   font-weight: 700;
-  margin-block: 0.75rem 0;
+}
+
+.price-tag {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3em;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.price-tag-amount {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 2rem + 1.8vw, 3.4rem);
+  letter-spacing: -0.01em;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.price-tag-cur {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+:lang(ar) .price-tag-cur {
+  letter-spacing: 0;
 }
 
 .shop-desc {
@@ -2701,9 +2773,13 @@ h1 em {
 }
 
 .shop-price-note {
-  margin-block-start: -0.25rem;
-  color: var(--ink-soft);
-  font-size: var(--step--1);
+  margin: 0;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+  color: var(--accent-deep);
+  font-size: var(--text-xs);
+  font-weight: 600;
 }
 
 /* ------------------------------------------------------------------ */
@@ -3326,11 +3402,10 @@ h1 em {
 
 .accessory {
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 0.9rem;
-  padding: 0.75rem 1rem;
+  grid-template-columns: 1fr auto;
+  align-items: stretch;
   border-radius: var(--radius-md);
+  overflow: hidden;
   background: linear-gradient(90deg, var(--sand), var(--cream));
   border: 1.5px solid transparent;
   transition: border-color var(--motion-fast) var(--ease-out);
@@ -3338,6 +3413,59 @@ h1 em {
 
 .accessory[data-on="true"] {
   border-color: var(--color-success);
+}
+
+/* Zone gauche : photo + texte, ouvre la fenêtre de détail. */
+.accessory-main {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-inline-size: 0;
+  padding: 0.75rem 1rem;
+  padding-inline-end: 0.5rem;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.accessory-main:hover .accessory-more {
+  color: var(--accent);
+}
+
+/* Zone droite : prix + interrupteur, toute la hauteur de la carte est cliquable. */
+.accessory-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-inline-size: 6.5rem;
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-inline-start: 1px dashed color-mix(in srgb, var(--ink) 18%, transparent);
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-out);
+}
+
+.accessory-toggle:hover:not(:disabled) {
+  background: rgb(255 255 255 / 0.55);
+}
+
+.accessory-toggle:disabled {
+  cursor: not-allowed;
+}
+
+.accessory-main:focus-visible,
+.accessory-toggle:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  outline-offset: -3px;
+  border-radius: var(--radius-md);
 }
 
 .accessory-text {
@@ -3353,7 +3481,7 @@ h1 em {
   letter-spacing: 0.06em;
 }
 
-.accessory-text label {
+.accessory-name {
   font-weight: 600;
 }
 
@@ -3366,12 +3494,13 @@ h1 em {
 /* Interrupteur façon téléphone. */
 .switch {
   position: relative;
+  display: block;
+  flex: none;
   inline-size: 3.1rem;
   block-size: 1.85rem;
   border-radius: var(--radius-pill);
   border: 0;
   background: #d9d3cc;
-  cursor: pointer;
   transition: background-color var(--motion-fast) var(--ease-out);
 }
 
@@ -3388,32 +3517,24 @@ h1 em {
   transition: inset-inline-start var(--motion-fast) var(--ease-out);
 }
 
-.switch[aria-checked="true"] {
+.accessory-toggle[aria-checked="true"] .switch {
   background: var(--color-success);
 }
 
-.switch[aria-checked="true"]::after {
+.accessory-toggle[aria-checked="true"] .switch::after {
   inset-inline-start: 1.45rem;
 }
 
-.switch:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
-  outline-offset: 2px;
-}
-
-.switch:disabled {
+.accessory-toggle:disabled .switch {
   opacity: 0.45;
-  cursor: not-allowed;
 }
 
 /* Options : vignette photo, lien « En savoir plus », fenêtre de détail. */
 .accessory-thumb {
-  padding: 0;
-  border: 0;
+  flex: none;
   border-radius: var(--radius-sm, 8px);
   overflow: hidden;
   background: #fff;
-  cursor: zoom-in;
   inline-size: 4rem;
   block-size: 4rem;
 }
@@ -3425,8 +3546,6 @@ h1 em {
   object-fit: cover;
 }
 
-.accessory-thumb:focus-visible,
-.accessory-more:focus-visible,
 .accessory-dialog-close:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
   outline-offset: 2px;
@@ -3434,16 +3553,11 @@ h1 em {
 
 .accessory-more {
   justify-self: start;
-  padding: 0;
-  border: 0;
-  background: none;
   color: var(--ink);
-  font: inherit;
   font-size: var(--text-xs);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;
-  cursor: pointer;
 }
 
 .accessory-dialog {
@@ -3690,9 +3804,14 @@ h1 em {
   margin-block: 0.25rem 0.75rem;
 }
 
-.order-form .accessory {
+.order-form .accessory-main {
   padding: 0.5rem 0.75rem;
   gap: 0.75rem;
+}
+
+.order-form .accessory-toggle {
+  min-inline-size: 5.5rem;
+  padding: 0.5rem 0.75rem;
 }
 
 .order-form .accessory-thumb {
@@ -4100,25 +4219,13 @@ h1 em {
 
 /* Cibles tactiles d'au moins 24 px partout, 44 px pour les commandes principales sur téléphone. */
 .reassure a,
-.accessory-more,
 .site-footer nav a,
 .form-more summary {
   display: inline-block;
   padding-block: 0.3rem;
 }
 
-.accessory-more {
-  min-block-size: 1.75rem;
-}
-
 @media (pointer: coarse) {
-  /* Zone de toucher élargie autour de l'interrupteur sans changer son dessin. */
-  .switch::before {
-    content: "";
-    position: absolute;
-    inset: -0.45rem -0.25rem;
-  }
-
   .auto-dot {
     inline-size: 2.25rem;
     block-size: 2.75rem;

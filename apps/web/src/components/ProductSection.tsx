@@ -1,13 +1,20 @@
 import { getTranslations } from "next-intl/server";
 import { Gallery } from "./Gallery";
 import { Link } from "@/i18n/navigation";
-import { PlusIcon } from "./Icons";
+import { BoardIcon, CardIcon, PhoneCodeIcon, PlusIcon, SpoolIcon, VoiceIcon } from "./Icons";
+import { PriceTag } from "./PriceTag";
 import { KitFacts } from "./KitFacts";
 import { KitBuyBox } from "./KitBuyBox";
 import { accessories } from "@/config/catalog";
 import { Reassurance } from "./Reassurance";
 
-const INCLUDES = ["board", "thread", "code", "guide", "card"] as const;
+const INCLUDES = [
+  { key: "board", Icon: BoardIcon },
+  { key: "thread", Icon: SpoolIcon },
+  { key: "code", Icon: PhoneCodeIcon },
+  { key: "guide", Icon: VoiceIcon },
+  { key: "card", Icon: CardIcon },
+] as const;
 const ACCORDION = ["box", "photo", "app", "gift"] as const;
 
 /** Album : chaque portrait en fil est suivi de sa photo de départ. */
@@ -59,15 +66,24 @@ export async function ProductSection({
         </div>
         <div className="shop-info" data-reveal style={{ ["--i" as string]: 1 }}>
           <Heading id="shop-title">{t("title")}</Heading>
-          <p className="shop-price">{price ?? t("priceSoon")}</p>
-          {price && provisional && <p className="shop-price-note">{t("priceProvisional")}</p>}
+          <div className="shop-price-row">
+            {price ? <PriceTag className="shop-price" value={price} /> : <p className="shop-price">{t("priceSoon")}</p>}
+            {price && provisional && <p className="shop-price-note">{t("priceProvisional")}</p>}
+          </div>
           <KitFacts />
           <p className="shop-lead">{t("lead")}</p>
           <p className="shop-desc">{t("description")}</p>
           <h3>{t("includesTitle")}</h3>
-          <ul className="check-list">
-            {INCLUDES.map((k) => (
-              <li key={k}>{t(`includes.${k}`)}</li>
+          {/* Contenu du kit : icônes en ligne, libellé court dessous (texte complet pour les lecteurs d'écran). */}
+          <ul className="kit-includes">
+            {INCLUDES.map(({ key, Icon }) => (
+              <li key={key} title={t(`includes.${key}`)}>
+                <span className="kit-includes-icon">
+                  <Icon />
+                </span>
+                <span aria-hidden="true">{t(`includesShort.${key}`)}</span>
+                <span className="visually-hidden">{t(`includes.${key}`)}</span>
+              </li>
             ))}
           </ul>
           {price && orderingOpen ? (

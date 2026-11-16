@@ -23,9 +23,9 @@ import type { DemoPortrait } from "@/lib/board";
 const WHAT = ["kit", "model", "voice"] as const;
 const ENGINE = ["site", "code", "photo", "preview", "voice"] as const;
 const EXAMPLES = [
-  { key: "portrait", name: "astronaute" },
+  { key: "portrait", name: "boucles" },
   { key: "pet", name: "chat" },
-  { key: "group", name: "photographe" },
+  { key: "group", name: "jeune" },
 ] as const;
 const APP_CHIPS = ["voice", "speed", "pause", "progress"] as const;
 const GIFT_CHIPS = ["code", "cod", "langs"] as const;
@@ -89,7 +89,7 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
         <section className="section bg-cream" aria-labelledby="kit-check-title">
           <div className="wrap split">
             <div data-reveal>
-              <BeforeAfter photo="/visuels/astronaute-photo.webp" thread="/visuels/astronaute-fil.webp" />
+              <BeforeAfter photo="/visuels/boucles-photo.webp" thread="/visuels/boucles-fil.webp" />
               <p className="ba-hint-below">{t("what.slider.hint")}</p>
             </div>
             <div>
@@ -172,7 +172,7 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
         {/* Pour offrir : image + texte, puces, bouton. */}
         <section className="section bg-blush" aria-labelledby="kit-gift-title">
           <div className="wrap feature" data-reveal>
-            <img src="/visuels/photographe-fil.webp" alt="" width={600} height={600} loading="lazy" />
+            <img src="/visuels/jeune-fil.webp" alt="" width={600} height={600} loading="lazy" />
             <div>
               <h2 id="kit-gift-title">{t("kit.gift.title")}</h2>
               <p className="feature-lead">{t("kit.gift.lead")}</p>

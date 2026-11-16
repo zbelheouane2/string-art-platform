@@ -15,8 +15,9 @@ const photo = (icon: Accessory["icon"], kind: "vignette" | "detail") =>
   `/visuels/options/${PHOTO[icon]}-${kind}.webp`;
 
 /**
- * Options du kit (support, bougie…) avec un interrupteur à droite. Un clic sur
- * la photo ou sur « En savoir plus » ouvre une fenêtre de détail.
+ * Options du kit (support, bougie…). Deux grandes zones par carte : à gauche
+ * (photo, nom, « En savoir plus ») un clic ouvre la fenêtre de détail ; à droite
+ * (prix + interrupteur) un clic ajoute ou retire l'option.
  * Une option sans prix est affichée « bientôt » et ne peut pas être cochée.
  * `name` permet d'envoyer la sélection avec un formulaire.
  */
@@ -61,46 +62,33 @@ export function AccessoryPicker({
           const id = `acc-${a.slug}`;
           return (
             <li key={a.slug} className="accessory" data-on={on}>
-              <button
-                type="button"
-                className="accessory-thumb"
-                onClick={() => show(a)}
-                aria-label={`${t("more")} : ${label(a)}`}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={photo(a.icon, "vignette")}
-                  alt=""
-                  width={64}
-                  height={64}
-                  loading="lazy"
-                />
-              </button>
-              <div className="accessory-text">
-                <span className="accessory-tag">{t(`tags.${a.icon}`)}</span>
-                <label htmlFor={id}>{label(a)}</label>
-                <span className="accessory-price">
-                  {a.price ? `+ ${formatPrice(a.price, locale)}` : t("soon")}
+              {/* Toute la partie gauche (photo + texte) ouvre la fenêtre « En savoir plus ». */}
+              <button type="button" className="accessory-main" onClick={() => show(a)} aria-haspopup="dialog">
+                <span className="accessory-thumb">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={photo(a.icon, "vignette")} alt="" width={64} height={64} loading="lazy" />
                 </span>
-                <button
-                  type="button"
-                  className="accessory-more"
-                  onClick={() => show(a)}
-                  aria-haspopup="dialog"
-                >
-                  {t("more")}
-                </button>
-              </div>
+                <span className="accessory-text">
+                  <span className="accessory-tag">{t(`tags.${a.icon}`)}</span>
+                  <span className="accessory-name">{label(a)}</span>
+                  <span className="accessory-more">{t("more")}</span>
+                </span>
+              </button>
+              {/* Toute la partie droite (prix + interrupteur) ajoute ou retire l'option. */}
               <button
                 id={id}
                 type="button"
                 role="switch"
-                className="switch"
+                className="accessory-toggle"
                 aria-checked={on}
+                aria-label={label(a)}
                 disabled={!a.price}
                 onClick={() => toggle(a)}
               >
-                <span className="visually-hidden">{label(a)}</span>
+                <span className="accessory-price" aria-hidden="true">
+                  {a.price ? `+ ${formatPrice(a.price, locale)}` : t("soon")}
+                </span>
+                <span className="switch" aria-hidden="true" />
               </button>
               {on && name && <input type="hidden" name={name} value={a.slug} />}
             </li>

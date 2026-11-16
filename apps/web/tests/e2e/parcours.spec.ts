@@ -273,7 +273,9 @@ test.describe("commande", () => {
       await page.goto(`/${locale}/kit`);
       const box = page.locator("#acheter");
       await expect(box.locator(".accessory-thumb img")).toHaveCount(2);
-      await box.getByRole("button", { name: more, exact: true }).first().click();
+      // Toute la zone texte (photo, nom, « En savoir plus ») ouvre la fenêtre.
+      await expect(box.locator(".accessory-main").first()).toContainText(more);
+      await box.locator(".accessory-name").first().click();
       const dialog = page.getByRole("dialog", { name: title });
       await expect(dialog).toBeVisible();
       await expect(dialog.locator("img")).toHaveJSProperty("complete", true);
@@ -281,6 +283,9 @@ test.describe("commande", () => {
       await dialog.getByRole("button", { name: add }).click();
       await expect(dialog).toBeHidden();
       await expect(box.getByRole("switch").first()).toHaveAttribute("aria-checked", "true");
+      // Toute la zone de droite (prix compris) ajoute ou retire l'option.
+      await box.locator(".accessory-price").first().click();
+      await expect(box.getByRole("switch").first()).toHaveAttribute("aria-checked", "false");
       // Échap ferme la fenêtre.
       await box.locator(".accessory-thumb").nth(1).click();
       await expect(page.getByRole("dialog")).toBeVisible();
