@@ -4,14 +4,14 @@ import { Children, useCallback, useEffect, useRef, useState, type ReactNode } fr
 import { useTranslations } from "next-intl";
 import { PauseIcon, PlayIcon } from "./Icons";
 
-/** Délai entre deux diapositives (retour du propriétaire : 5 s maximum). */
-export const AUTO_DELAY_MS = 5000;
+/** Délai entre deux diapositives (souhait du propriétaire : 4 s, en boucle). */
+export const AUTO_DELAY_MS = 4000;
 
 /**
  * Rangée de cartes qui défile seule, en boucle : glisser au doigt (défilement aimanté),
- * flèches, points et bouton pause. Avance toutes les 5 s, s'arrête au survol de la
- * souris, au clavier, hors écran ou sur demande, et reprend ensuite. Avec « réduire
- * les animations », elle avance quand même mais sans glissement.
+ * flèches, points et bouton pause. Avance toutes les 4 s sans jamais s'arrêter seule
+ * (souhait du propriétaire) : après un clic ou un glissement, le compte repart de 4 s.
+ * Seul le bouton pause l'arrête. Avec « réduire les animations », elle avance sans glissement.
  * Quand toutes les cartes tiennent à l'écran (ordinateur), les commandes disparaissent.
  * Le sens suit celui de la page (arabe : de droite à gauche).
  */
@@ -33,8 +33,6 @@ export function AutoCarousel({
   const track = useRef<HTMLOListElement>(null);
   const [index, setIndex] = useState(0);
   const [pages, setPages] = useState(1);
-  const [hover, setHover] = useState(false);
-  const [offscreen, setOffscreen] = useState(true);
   const [userPaused, setUserPaused] = useState(false);
   const [reduced, setReduced] = useState(false);
 
@@ -61,15 +59,12 @@ export function AutoCarousel({
       setIndex(Math.min(p - 1, Math.round(Math.abs(el.scrollLeft) / step)));
     };
     el.addEventListener("scroll", onScroll, { passive: true });
-    const io = new IntersectionObserver(([e]) => setOffscreen(!e.isIntersecting), { threshold: 0.4 });
-    if (root.current) io.observe(root.current);
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReduced(mq.matches);
     const onMq = () => setReduced(mq.matches);
     mq.addEventListener("change", onMq);
     return () => {
       ro.disconnect();
-      io.disconnect();
       el.removeEventListener("scroll", onScroll);
       mq.removeEventListener("change", onMq);
     };
@@ -88,8 +83,8 @@ export function AutoCarousel({
     [measure, reduced],
   );
 
-  // Minuterie : la jauge du point actif se remplit en 5 s, puis on avance (en pause, la jauge s'arrête).
-  const playing = pages > 1 && !hover && !offscreen && !userPaused;
+  // Minuterie : la jauge du point actif se remplit en 4 s, puis on avance (en pause, la jauge s'arrête).
+  const playing = pages > 1 && !userPaused;
 
   return (
     <div
@@ -102,11 +97,6 @@ export function AutoCarousel({
       role="region"
       aria-roledescription={t("roledescription")}
       aria-label={label}
-      onPointerEnter={(e) => e.pointerType === "mouse" && setHover(true)}
-      onPointerLeave={() => setHover(false)}
-      // Pause au clavier seulement : après un clic, le défilement reprend tout seul.
-      onFocus={(e) => e.target.matches(":focus-visible") && setHover(true)}
-      onBlur={(e) => !e.currentTarget.contains(e.relatedTarget as Node | null) && setHover(false)}
     >
       <ol ref={track} className="auto-track" tabIndex={0} aria-label={label}>
         {items.map((child, k) => (

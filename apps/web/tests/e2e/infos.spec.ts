@@ -45,12 +45,12 @@ test("le pied de page mène aux quatre pages d'information", async ({ page }) =>
   }
 });
 
-test("pied de page : WhatsApp affiché, réseaux et e-mail masqués tant qu'ils sont vides", async ({ page }) => {
+test("pied de page : WhatsApp et e-mail affichés, réseaux masqués tant qu'ils sont vides", async ({ page }) => {
   await page.goto("/fr");
   const footer = page.locator(".site-footer");
   await expect(footer.getByRole("link", { name: /WhatsApp/ })).toHaveAttribute("href", "https://wa.me/213771704033");
   await expect(footer.locator(".footer-social")).toHaveCount(0);
-  await expect(footer.locator('a[href^="mailto:"]')).toHaveCount(0);
+  await expect(footer.locator('a[href^="mailto:"]')).toHaveAttribute("href", "mailto:deekraart@gmail.com");
 });
 
 test("fiche du kit : engagements sous le bouton Commander", async ({ page }) => {

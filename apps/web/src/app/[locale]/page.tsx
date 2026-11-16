@@ -284,9 +284,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             <header className="section-head" data-reveal>
               <h2 id="faq-title">{t("faq.title")}</h2>
               <p>{t("faq.lead")}</p>
-              <a className="btn btn-outline btn-lg faq-contact" href={brand.supportEmail ? `mailto:${brand.supportEmail}` : "#contact"}>
+              <Link className="btn btn-outline btn-lg faq-contact" href="/contact">
                 {t("faq.contact")}
-              </a>
+              </Link>
             </header>
             <div className="faq-list" data-reveal style={{ ["--i" as string]: 1 }}>
               {FAQ.map((q) => (

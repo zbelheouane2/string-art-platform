@@ -119,7 +119,7 @@ test("le carrousel « Comment ça marche » : onglets, clavier, avance seul, pau
   await how.scrollIntoViewIfNeeded();
   await page.mouse.move(0, 0);
   await expect(tabs.nth(0)).toHaveAttribute("aria-selected", "true");
-  // Avance seul après environ 5 s.
+  // Avance seul après 4 s.
   await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true", { timeout: 9000 });
   await tabs.nth(4).click();
   await expect(how.getByRole("tabpanel")).toContainText("Suivez la voix");
@@ -169,6 +169,35 @@ test("la galerie produit : flèches, vignettes en colonne (ordinateur), points (
   await expect(count).toHaveText(isMobile ? "1 / 18" : "4 / 18");
   // Les photos du kit sont légères : vignettes à part.
   await expect(page.locator(".gallery-track img").first()).toHaveAttribute("src", "/visuels/kit/bureau.webp");
+});
+
+test("souris posée dessus et « réduire les animations » : les carrousels avancent toutes les 4 s", async ({ browser }) => {
+  const context = await browser.newContext({ reducedMotion: "reduce" });
+  const page = await context.newPage();
+  // Étapes : la souris reste sur la grande image, l'étape suivante arrive quand même.
+  await page.goto("/fr");
+  const how = page.locator("#comment");
+  await how.scrollIntoViewIfNeeded();
+  await how.locator(".steps-stage").hover();
+  const tabs = how.getByRole("tab");
+  await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true", { timeout: 6000 });
+  await expect(tabs.nth(2)).toHaveAttribute("aria-selected", "true", { timeout: 6000 });
+  // Galerie : avance seule, un clic sur une vignette l'affiche puis elle repart 4 s après.
+  await page.goto("/fr/kit");
+  const count = page.locator(".gallery-count");
+  await page.locator(".gallery-main").hover();
+  await expect(count).toHaveText("2 / 18", { timeout: 6000 });
+  await page.getByRole("button", { name: "Visuel suivant" }).click();
+  await expect(count).toHaveText("3 / 18");
+  await page.waitForTimeout(2500);
+  await expect(count).toHaveText("3 / 18");
+  await expect(count).toHaveText("4 / 18", { timeout: 4000 });
+  // Seul le bouton pause l'arrête.
+  await page.locator(".gallery-toggle").click();
+  await expect(page.locator(".gallery-toggle")).toHaveAttribute("aria-pressed", "true");
+  await page.waitForTimeout(5000);
+  await expect(count).toHaveText("4 / 18");
+  await context.close();
 });
 
 test("le bouton « Comment ça marche ? » mène à la page du kit", async ({ page }) => {
@@ -223,7 +252,7 @@ test("les écrans du générateur défilent seuls sur téléphone, avec points e
   const dots = carousel.locator(".auto-dot");
   await expect(dots).toHaveCount(3);
   await expect(dots.nth(0)).toHaveAttribute("aria-current", "true");
-  // Avance seul en 5 s environ.
+  // Avance seul en 4 s.
   await expect(dots.nth(1)).toHaveAttribute("aria-current", "true", { timeout: 8000 });
   await expect.poll(() => track.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
   // Un point mène à sa diapositive ; le bouton pause arrête le défilement.

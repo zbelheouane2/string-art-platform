@@ -872,6 +872,27 @@ h1 em {
   font-variant-numeric: tabular-nums;
 }
 
+.gallery-toggle {
+  position: absolute;
+  inset-block-end: 1rem;
+  inset-inline-start: 1rem;
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.92);
+  color: var(--color-text);
+  cursor: pointer;
+  box-shadow: var(--shadow-pop);
+}
+
+.gallery-toggle svg {
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+}
+
 .gallery-nav {
   position: absolute;
   inset-block-start: 50%;
@@ -2121,7 +2142,7 @@ h1 em {
 
 /* ---------- Carrousel « Comment ça marche » ---------- */
 .steps {
-  --steps-delay: 5s;
+  --steps-delay: 4s;
   display: grid;
   gap: 1.5rem;
 }
@@ -2315,9 +2336,7 @@ h1 em {
   }
 }
 
-.steps[data-paused] .steps-fill,
-.steps:hover .steps-fill,
-.steps:has(:focus-visible) .steps-fill {
+.steps[data-paused] .steps-fill {
   animation-play-state: paused;
 }
 
