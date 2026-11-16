@@ -5,8 +5,12 @@ import { useLocale, useTranslations } from "next-intl";
 import { NAILS_PER_SECTOR, SECTORS, nailLabel, nailPositions } from "@/lib/board";
 import { SPEED, clampStep, parseProgress, progressKey, remainingMinutes, stepCount } from "@/lib/guide";
 import { SPEECH_LANG, stepPhrase } from "@/lib/voice";
+import { GuideMusic } from "@/components/GuideMusic";
 
 const POSITIONS = nailPositions();
+/** Niveaux de zoom de la planche ; au-delà de 1, la vue suit le clou à atteindre. */
+const ZOOMS = [1, 1.5, 2, 3] as const;
+const ZOOM_KEY = "dk-guide-zoom";
 
 /** Choisit une voix de synthèse dans la langue demandée, si l'appareil en a une. */
 function pickVoice(lang: string): SpeechSynthesisVoice | null {
@@ -32,8 +36,13 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
   const [restored, setRestored] = useState(false);
   const [voiceMissing, setVoiceMissing] = useState(false);
   const [jump, setJump] = useState("");
+  const [zoom, setZoom] = useState<number>(1);
+  const [boxSize, setBoxSize] = useState(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const wakeLock = useRef<WakeLockSentinel | null>(null);
+  const [speaking, setSpeaking] = useState(false);
+  const speakingTimer = useRef<number | undefined>(undefined);
 
   // Reprise : avancement sauvegardé sur cet appareil.
   useEffect(() => {
@@ -59,6 +68,33 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
     }
   }, [restored, portraitId, step, secondsPerStep, voiceOn]);
 
+  // Zoom gardé sur l'appareil, comme l'avancement.
+  useEffect(() => {
+    try {
+      const z = Number(localStorage.getItem(ZOOM_KEY));
+      if ((ZOOMS as readonly number[]).includes(z)) setZoom(z);
+    } catch {
+      /* ignoré */
+    }
+  }, []);
+  const chooseZoom = (z: number) => {
+    setZoom(z);
+    try {
+      localStorage.setItem(ZOOM_KEY, String(z));
+    } catch {
+      /* ignoré */
+    }
+  };
+
+  // La planche suit la taille de l'écran (téléphone, tablette, ordinateur, rotation).
+  useEffect(() => {
+    const vp = viewportRef.current;
+    if (!vp || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => setBoxSize(Math.round(vp.clientWidth)));
+    ro.observe(vp);
+    return () => ro.disconnect();
+  }, []);
+
   // Voix disponible dans la langue de la page ?
   useEffect(() => {
     if (typeof speechSynthesis === "undefined") return setVoiceMissing(true);
@@ -73,6 +109,16 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
       if (!voiceOn || typeof speechSynthesis === "undefined") return;
       speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(stepPhrase(sequence, s, locale));
+      // La musique baisse pendant l'annonce ; filet de sécurité si la fin n'est jamais signalée.
+      const release = () => {
+        window.clearTimeout(speakingTimer.current);
+        setSpeaking(false);
+      };
+      setSpeaking(true);
+      window.clearTimeout(speakingTimer.current);
+      speakingTimer.current = window.setTimeout(release, 8000);
+      u.onend = release;
+      u.onerror = release;
       u.lang = SPEECH_LANG[locale] ?? "fr-FR";
       const voice = pickVoice(u.lang);
       if (voice) u.voice = voice;
@@ -143,10 +189,14 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
   // Dessin de la planche : fils déjà tendus, fil en cours, clou à atteindre.
   useEffect(() => {
     const canvas = canvasRef.current;
+    const vp = viewportRef.current;
     const ctx = canvas?.getContext("2d");
-    if (!canvas || !ctx) return;
-    const size = canvas.clientWidth || 360;
-    const dpr = window.devicePixelRatio || 1;
+    if (!canvas || !ctx || !vp) return;
+    const view = boxSize || vp.clientWidth || 360;
+    const size = Math.round(view * zoom);
+    canvas.style.inlineSize = `${size}px`;
+    canvas.style.blockSize = `${size}px`;
+    const dpr = Math.min(window.devicePixelRatio || 1, zoom > 1 ? 2 : 3);
     canvas.width = size * dpr;
     canvas.height = size * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -188,6 +238,16 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
     });
 
     if (step < total) {
+      // Zoom : la vue se place sur le fil en cours (milieu entre départ et arrivée, arrivée visible).
+      if (zoom > 1) {
+        const [ax, ay] = at(sequence[step + 1]);
+        const [bx, by] = at(sequence[step]);
+        const cx = Math.abs(ax - bx) < view * 0.8 ? (ax + bx) / 2 : ax;
+        const cy = Math.abs(ay - by) < view * 0.8 ? (ay + by) / 2 : ay;
+        const rtl = getComputedStyle(vp).direction === "rtl";
+        const left = cx - view / 2;
+        vp.scrollTo({ left: rtl ? -(size - view - left) : left, top: cy - view / 2 });
+      }
       const [x1, y1] = at(sequence[step]);
       const [x2, y2] = at(sequence[step + 1]);
       ctx.strokeStyle = accent;
@@ -206,7 +266,7 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
       ctx.arc(x1, y1, 5, 0, Math.PI * 2);
       ctx.stroke();
     }
-  }, [sequence, step, total]);
+  }, [sequence, step, total, zoom, boxSize]);
 
   const done = step >= total;
   const from = done ? null : nailLabel(sequence[step]);
@@ -215,7 +275,16 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
   return (
     <div className="guide">
       <div className="guide-board">
-        <canvas ref={canvasRef} className="guide-canvas" role="img" aria-label={t("boardAlt")} />
+        <div ref={viewportRef} className="guide-viewport" data-zoomed={zoom > 1 ? "true" : undefined}>
+          <canvas ref={canvasRef} className="guide-canvas" role="img" aria-label={t("boardAlt")} />
+        </div>
+        <div className="guide-zoom" role="group" aria-label={t("zoom")}>
+          {ZOOMS.map((z) => (
+            <button key={z} type="button" aria-pressed={zoom === z} onClick={() => chooseZoom(z)} aria-label={t("zoomTo", { z: String(z).replace(".", locale === "en" ? "." : ",") })}>
+              {String(z).replace(".", locale === "en" ? "." : ",")}×
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="guide-panel">
@@ -306,6 +375,8 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
           </form>
           <p className="field-help">{t("keys")}</p>
         </div>
+
+        <GuideMusic ducked={speaking} />
       </div>
     </div>
   );

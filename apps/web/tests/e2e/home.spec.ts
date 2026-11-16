@@ -282,3 +282,25 @@ test("premier écran : titre, prix et bouton visibles sans défiler", async ({ p
   await expect(page.locator(".hero-price")).toBeInViewport();
   await expect(page.getByRole("link", { name: "Offrir le kit" }).first()).toBeInViewport();
 });
+
+for (const locale of ["fr", "ar"] as const) {
+  test(`taille du texte ${locale} : le site grossit, reste sans défilement horizontal, et le choix est gardé`, async ({ page }) => {
+    await page.goto(`/${locale}`);
+    const desktopMenu = page.locator(".header-end .text-menu");
+    if (await desktopMenu.isVisible()) {
+      await desktopMenu.locator("summary").click();
+      await desktopMenu.locator('[data-text-size="150"]').click();
+    } else {
+      await page.locator('[aria-controls="nav-drawer"]').click();
+      await page.locator('.text-size-row [data-text-size="150"]').click();
+    }
+    await expect.poll(() => page.evaluate(() => document.documentElement.style.fontSize)).toBe("150%");
+    await page.reload();
+    expect(await page.evaluate(() => document.documentElement.style.fontSize)).toBe("150%");
+    for (const path of ["", "/kit", "/commander", "/guide/demo"]) {
+      await page.goto(`/${locale}${path}`);
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      expect(overflow, path || "/").toBeLessThanOrEqual(0);
+    }
+  });
+}

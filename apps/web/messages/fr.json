@@ -23,7 +23,14 @@
     "main": "Navigation principale",
     "delivery": "Livraison",
     "contact": "Contact",
-    "track": "Suivre ma commande"
+    "track": "Suivre ma commande",
+    "textSize": "Taille du texte",
+    "textSizes": {
+      "normal": "Normale",
+      "large": "Grande",
+      "xlarge": "Très grande",
+      "xxlarge": "Maximale"
+    }
   },
   "hero": {
     "badge": "Idée cadeau",
@@ -933,7 +940,19 @@
     "lost": "Perdu ? Reprenez au fil n°",
     "jumpPlaceholder": "ex. 125",
     "jump": "Aller",
-    "keys": "Au clavier : espace pour pause, flèches pour avancer ou reculer, R pour répéter. Votre avancement est gardé sur cet appareil."
+    "keys": "Au clavier : espace pour pause, flèches pour avancer ou reculer, R pour répéter. Votre avancement est gardé sur cet appareil.",
+    "zoom": "Zoom sur la planche",
+    "zoomTo": "Zoom × {z}",
+    "musicTitle": "Musique pendant le montage",
+    "musicPick": "Choisir des morceaux sur mon téléphone",
+    "musicAdd": "Ajouter des morceaux",
+    "musicClear": "Retirer la musique",
+    "musicPlay": "Lecture",
+    "musicPause": "Pause",
+    "musicNext": "Morceau suivant",
+    "musicVolume": "Volume de la musique : {v} %",
+    "musicCount": "Morceau {n} sur {total}",
+    "musicNote": "Vos morceaux restent sur votre téléphone, rien n'est envoyé. La musique baisse à chaque annonce de clou, puis remonte."
   },
   "order": {
     "eyebrow": "Commande",

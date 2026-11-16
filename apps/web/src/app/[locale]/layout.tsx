@@ -1,3 +1,4 @@
+import { TEXT_SIZE_BOOT } from "@/lib/textSize";
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { Alexandria, DM_Sans, DM_Serif_Display, Noto_Naskh_Arabic } from "next/font/google";
@@ -53,7 +54,7 @@ export default async function LocaleLayout({
     <html lang={locale} dir={direction(locale)} className={fonts} suppressHydrationWarning>
       <body>
         {/* Active les animations d'apparition seulement si JavaScript tourne (évite le contenu invisible). */}
-        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js');" + TEXT_SIZE_BOOT }} />
         <NextIntlClientProvider>
           <CartProvider catalog={catalog}>{children}</CartProvider>
         </NextIntlClientProvider>

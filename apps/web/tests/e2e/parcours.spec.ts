@@ -20,6 +20,27 @@ function freshCodes(count: number): string[] {
   return readFileSync(out, "utf-8").trim().split("\n").slice(1);
 }
 
+/** Fichier WAV silencieux (mono, 8 kHz) pour tester le lecteur de musique. */
+function silentWav(seconds: number): Buffer {
+  const rate = 8000;
+  const data = rate * seconds;
+  const b = Buffer.alloc(44 + data);
+  b.write("RIFF", 0);
+  b.writeUInt32LE(36 + data, 4);
+  b.write("WAVEfmt ", 8);
+  b.writeUInt32LE(16, 16);
+  b.writeUInt16LE(1, 20);
+  b.writeUInt16LE(1, 22);
+  b.writeUInt32LE(rate, 24);
+  b.writeUInt32LE(rate, 28);
+  b.writeUInt16LE(1, 32);
+  b.writeUInt16LE(8, 34);
+  b.write("data", 36);
+  b.writeUInt32LE(data, 40);
+  b.fill(128, 44);
+  return b;
+}
+
 async function axe(page: Page) {
   const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
   expect(results.violations.map((v) => `${v.id}: ${v.nodes.length}`)).toEqual([]);
@@ -93,12 +114,22 @@ test.describe("portrait et guide", () => {
   });
 });
 
+/** Le guide est interactif une fois la planche dessinée (évite de cliquer avant l'hydratation). */
+async function hydrated(page: Page) {
+  await expect(page.locator(".guide-canvas")).toHaveAttribute("width", /^[1-9]\d*$/);
+}
+
+async function openGuide(page: Page, url: string) {
+  await page.goto(url);
+  await hydrated(page);
+}
+
 test.describe("guide vocal (démonstration)", () => {
   test("avance, recule, saute à un fil et reprend où on s'était arrêté", async ({ page }) => {
-    await page.goto("/fr/guide/demo");
+    await openGuide(page, "/fr/guide/demo");
     await expect(page.getByText(/^Fil 1 sur 3158$/)).toBeVisible();
-    await page.getByRole("button", { name: "Suivant" }).click();
-    await page.getByRole("button", { name: "Suivant" }).click();
+    await page.getByRole("button", { name: "Suivant", exact: true }).click();
+    await page.getByRole("button", { name: "Suivant", exact: true }).click();
     await expect(page.getByText(/^Fil 3 sur 3158$/)).toBeVisible();
     await page.getByRole("button", { name: "Précédent" }).click();
     await expect(page.getByText(/^Fil 2 sur 3158$/)).toBeVisible();
@@ -109,17 +140,79 @@ test.describe("guide vocal (démonstration)", () => {
     await expect(page.locator(".guide-to")).toHaveText(/^[A-D]([1-9]|[1-5]\d|60)$/);
 
     await page.reload();
+    await hydrated(page);
     await expect(page.getByText(/^Fil 125 sur 3158$/)).toBeVisible();
     await expect(page.getByRole("button", { name: "Reprendre" })).toBeVisible();
   });
 
   test("lecture automatique : le fil suivant arrive tout seul", async ({ page }) => {
-    await page.goto("/fr/guide/demo");
+    await openGuide(page, "/fr/guide/demo");
     await page.evaluate(() => localStorage.setItem("dk-guide:demo", JSON.stringify({ step: 0, secondsPerStep: 3, voice: false })));
     await page.reload();
+    await hydrated(page);
     await page.getByRole("button", { name: "Commencer" }).click();
     await expect(page.getByText(/^Fil 2 sur 3158$/)).toBeVisible({ timeout: 5_000 });
     await page.getByRole("button", { name: "Pause" }).click();
+  });
+
+  test("zoom sur la planche : la vue grossit, défile et le choix est gardé", async ({ page }) => {
+    await openGuide(page, "/fr/guide/demo");
+    const viewport = page.locator(".guide-viewport");
+    const width = await viewport.evaluate((v) => v.clientWidth);
+    await page.getByRole("button", { name: "Zoom × 2" }).click();
+    await expect(page.getByRole("button", { name: "Zoom × 2" })).toHaveAttribute("aria-pressed", "true");
+    await expect.poll(() => viewport.evaluate((v) => v.scrollWidth)).toBeGreaterThan(width * 1.8);
+    // La page elle-même ne déborde pas.
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
+    await page.reload();
+    await hydrated(page);
+    await expect(page.getByRole("button", { name: "Zoom × 2" })).toHaveAttribute("aria-pressed", "true");
+    await page.getByRole("button", { name: "Zoom × 1", exact: true }).click();
+    await expect.poll(() => viewport.evaluate((v) => v.scrollWidth - v.clientWidth)).toBeLessThanOrEqual(1);
+  });
+
+  test("musique du téléphone : lecture, morceau suivant, volume, baisse pendant l'annonce", async ({ page }) => {
+    // Voix simulée : chaque annonce dure 1,5 s.
+    await page.addInitScript(() => {
+      const synth = {
+        speak(u: SpeechSynthesisUtterance) {
+          setTimeout(() => u.onend?.(new Event("end") as SpeechSynthesisEvent), 1500);
+        },
+        cancel() {},
+        getVoices: () => [],
+        addEventListener() {},
+        removeEventListener() {},
+      };
+      Object.defineProperty(window, "speechSynthesis", { value: synth });
+    });
+    await openGuide(page, "/fr/guide/demo");
+    await page.evaluate(() => localStorage.setItem("dk-guide:demo", JSON.stringify({ step: 0, secondsPerStep: 7, voice: true })));
+    await page.reload();
+    await hydrated(page);
+
+    const files = ["Premier morceau.wav", "Deuxieme_morceau.wav"].map((name) => ({ name, mimeType: "audio/wav", buffer: silentWav(20) }));
+    await page.locator("#guide-music-files").setInputFiles(files);
+    await expect(page.getByText("Morceau 1 sur 2")).toBeVisible();
+    await expect(page.getByText("Premier morceau", { exact: true })).toBeVisible();
+
+    await page.getByRole("button", { name: "Lecture" }).click();
+    const audio = page.locator(".guide-music audio");
+    await expect.poll(() => audio.evaluate((a: HTMLAudioElement) => !a.paused)).toBe(true);
+    await page.getByRole("button", { name: "Morceau suivant" }).click();
+    await expect(page.getByText("Deuxieme morceau", { exact: true })).toBeVisible();
+
+    await page.getByLabel(/Volume de la musique/).fill("0.8");
+    await expect.poll(() => audio.evaluate((a: HTMLAudioElement) => a.volume)).toBeCloseTo(0.8, 1);
+
+    // Annonce d'un clou : la musique baisse, puis remonte.
+    await page.getByRole("button", { name: "Suivant", exact: true }).click();
+    await expect.poll(() => audio.evaluate((a: HTMLAudioElement) => a.volume)).toBeLessThan(0.3);
+    await expect.poll(() => audio.evaluate((a: HTMLAudioElement) => a.volume), { timeout: 5_000 }).toBeCloseTo(0.8, 1);
+
+    await page.getByRole("button", { name: "Pause", exact: true }).last().click();
+    await expect.poll(() => audio.evaluate((a: HTMLAudioElement) => a.paused)).toBe(true);
+    await page.getByRole("button", { name: "Retirer la musique" }).click();
+    await expect(page.locator(".guide-music button", { hasText: "Choisir des morceaux sur mon téléphone" })).toBeVisible();
   });
 
   for (const [locale, dir, label] of [
@@ -129,7 +222,7 @@ test.describe("guide vocal (démonstration)", () => {
   ] as const) {
     test(`guide ${locale} : sens d'écriture, repères de gauche à droite, accessibilité, pas de défilement horizontal`, async ({ page }) => {
       await page.emulateMedia({ reducedMotion: "reduce" });
-      await page.goto(`/${locale}/guide/demo`);
+      await openGuide(page, `/${locale}/guide/demo`);
       await expect(page.locator("html")).toHaveAttribute("dir", dir);
       await expect(page.getByText(label, { exact: true })).toBeVisible();
       await expect(page.locator(".guide-move")).toHaveAttribute("dir", "ltr");

@@ -23,7 +23,14 @@
     "main": "Main navigation",
     "delivery": "Delivery",
     "contact": "Contact",
-    "track": "Track my order"
+    "track": "Track my order",
+    "textSize": "Text size",
+    "textSizes": {
+      "normal": "Normal",
+      "large": "Large",
+      "xlarge": "Extra large",
+      "xxlarge": "Largest"
+    }
   },
   "hero": {
     "badge": "Gift idea",
@@ -933,7 +940,19 @@
     "lost": "Lost? Resume at thread no.",
     "jumpPlaceholder": "e.g. 125",
     "jump": "Go",
-    "keys": "Keyboard: space to pause, arrows to move, R to repeat. Your progress is kept on this device."
+    "keys": "Keyboard: space to pause, arrows to move, R to repeat. Your progress is kept on this device.",
+    "zoom": "Board zoom",
+    "zoomTo": "Zoom × {z}",
+    "musicTitle": "Music while you work",
+    "musicPick": "Choose songs from my phone",
+    "musicAdd": "Add songs",
+    "musicClear": "Remove the music",
+    "musicPlay": "Play",
+    "musicPause": "Pause",
+    "musicNext": "Next song",
+    "musicVolume": "Music volume: {v}%",
+    "musicCount": "Song {n} of {total}",
+    "musicNote": "Your songs stay on your phone, nothing is uploaded. The music lowers each time a nail is announced, then comes back up."
   },
   "order": {
     "eyebrow": "Order",

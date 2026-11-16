@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { CartButton } from "./Cart";
@@ -8,6 +8,7 @@ import { CloseIcon, MenuIcon } from "./Icons";
 import { LanguageMenu } from "./LanguageMenu";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Logo } from "./Logo";
+import { TextSizeMenu } from "./TextSizeMenu";
 
 const LINKS = [
   { href: { pathname: "/", hash: "acheter" }, key: "kit" },
@@ -38,6 +39,19 @@ export function SiteHeader() {
   const t = useTranslations("nav");
   const [open, setOpen] = useState(false);
 
+  // Le menu tient dans l'écran (même texte agrandi) et défile à l'intérieur.
+  const drawerRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = drawerRef.current;
+    if (!open || !el) return;
+    const fit = () => {
+      el.style.maxBlockSize = `${Math.max(160, window.innerHeight - el.getBoundingClientRect().top)}px`;
+    };
+    fit();
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, [open]);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
@@ -64,6 +78,7 @@ export function SiteHeader() {
           <Logo />
         </Link>
         <div className="header-end">
+          <TextSizeMenu />
           <LanguageMenu />
           <CartButton />
         </div>
@@ -78,7 +93,7 @@ export function SiteHeader() {
         </ul>
       </nav>
       {open && (
-        <nav id="nav-drawer" className="nav-drawer" aria-label={t("menu")}>
+        <nav ref={drawerRef} id="nav-drawer" className="nav-drawer" aria-label={t("menu")}>
           <ul className="wrap">
             {LINKS.map((l) => (
               <li key={l.key}>
@@ -90,6 +105,7 @@ export function SiteHeader() {
           </ul>
           <div className="wrap drawer-lang">
             <LanguageSwitcher />
+            <TextSizeMenu inline />
           </div>
         </nav>
       )}
