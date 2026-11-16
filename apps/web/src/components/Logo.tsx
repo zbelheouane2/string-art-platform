@@ -1,9 +1,9 @@
 import { brand } from "@/config/brand";
 
 /**
- * Logo calligraphié DeeKra (version d'en-tête, sans « STRING ART »).
- * `tone="dark"` : version claire pour les fonds sombres (pied de page), chargée en différé.
- * Fichiers à 160 px de haut (2,5 × l'affichage) ; les originaux restent à côté.
+ * Logo « Deekra — L'art du fil » (tête en fils et nom calligraphié, fond transparent).
+ * `tone="dark"` : version éclaircie pour les fonds sombres (pied de page), chargée en différé.
+ * Fichiers à 220 px de haut (2 × l'affichage).
  */
 export function Logo({ tone = "light" }: { tone?: "light" | "dark" }) {
   return (

@@ -297,15 +297,16 @@ figure {
 }
 
 /* Logo image (2,1:1) : 56 px de haut sur téléphone, 76 px sur ordinateur. */
+/* Logo « Deekra — L'art du fil » (tête en fils + nom), empilé : un peu plus haut que l'ancien. */
 .logo {
   display: block;
-  block-size: 3.5rem;
+  block-size: 4rem;
   inline-size: auto;
 }
 
 @media (min-width: 48rem) {
   .logo {
-    block-size: 4rem;
+    block-size: 5.5rem;
   }
 }
 
@@ -1141,7 +1142,7 @@ h1 em {
 }
 
 .site-footer .logo {
-  block-size: 4.5rem;
+  block-size: 7rem;
 }
 
 .site-footer p {
@@ -4147,8 +4148,12 @@ h1 em {
 }
 
 .hero-price strong {
-  font-size: var(--step-2);
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.6rem + 1.2vw, 2.6rem);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--accent);
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
 .hero-price span {

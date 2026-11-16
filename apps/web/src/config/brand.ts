@@ -11,7 +11,7 @@ const env = (value: string | undefined, fallback = "") => (value ?? fallback).tr
 
 export const brand = {
   name: process.env.NEXT_PUBLIC_BRAND_NAME ?? "DeeKra",
-  logo: { light: "/visuels/marque/deekra-entete-160.webp", dark: "/visuels/marque/deekra-entete-sombre-160.webp", width: 312, height: 160 },
+  logo: { light: "/visuels/marque/deekra-logo.webp", dark: "/visuels/marque/deekra-logo-sombre.webp", width: 202, height: 220 },
   /** Adresse de contact créée par le propriétaire (16/11/2026). */
   supportEmail: env(process.env.NEXT_PUBLIC_SUPPORT_EMAIL, "deekraart@gmail.com"),
   /** Numéro WhatsApp du service client, format international sans « + » (ex. 213771704033). */
