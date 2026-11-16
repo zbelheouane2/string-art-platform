@@ -4832,3 +4832,26 @@ h1 em {
   color: var(--accent);
   white-space: nowrap;
 }
+
+.carrier-pick {
+  margin-block-end: 0.75rem;
+}
+
+.carrier-choice strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.carrier-choice img {
+  border-radius: 6px;
+  object-fit: contain;
+  background: #fff;
+}
+
+.promo-min {
+  display: block;
+  color: var(--ink-soft);
+  font-weight: 400;
+  font-size: var(--text-xs);
+}

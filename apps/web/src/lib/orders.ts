@@ -7,8 +7,8 @@ import { db } from "./db";
 import type { ValidOrder } from "./orderSchema";
 import { orderRow, sendOrderToSheet } from "./notify/orderSheet";
 import { paymentProvider } from "./payments";
-import { findPromo } from "./promo";
-import { promoDiscount } from "./promoRules";
+import { findPromo, promoUsesByPhone } from "./promo";
+import { promoDiscount, promoMinimumMet } from "./promoRules";
 import type { Price } from "./price";
 
 export interface CheckoutOptions {
@@ -21,6 +21,16 @@ export interface CheckoutOptions {
   rates: Record<string, Record<string, number>>;
   /** Options proposables (actives et avec un prix sur ce marché, dans la devise du kit). */
   accessories: CheckoutAccessory[];
+  /** Sociétés de livraison actives et leurs modes (code du mode à domicile / au bureau). */
+  carriers: CheckoutCarrier[];
+}
+
+export interface CheckoutCarrier {
+  code: string;
+  name: string;
+  logoUrl: string | null;
+  home: string | null;
+  desk: string | null;
 }
 
 export interface CheckoutAccessory {
@@ -68,7 +78,28 @@ export async function checkoutOptions(
     .filter((m) => paymentProvider(m.paymentMethod.provider))
     .map((m) => m.paymentMethod.code)
     .sort((a, b) => (a === "cod" ? -1 : b === "cod" ? 1 : a.localeCompare(b)));
-  if (payment.length === 0 || market.deliveryMethods.length === 0) return null;
+  // Seules les sociétés actives (espace admin) proposent leurs modes de livraison.
+  const activeCarriers = await db().carrier.findMany({
+    where: { active: true },
+    orderBy: { createdAt: "asc" },
+  });
+  const methods = market.deliveryMethods.filter((d) =>
+    activeCarriers.some((c) => c.code === d.provider),
+  );
+  const carriers: CheckoutCarrier[] = activeCarriers
+    .map((c) => ({
+      code: c.code,
+      name: c.name,
+      logoUrl: c.logoUrl,
+      home:
+        methods.find((d) => d.provider === c.code && d.code.endsWith("_home"))
+          ?.code ?? null,
+      desk:
+        methods.find((d) => d.provider === c.code && d.code.endsWith("_desk"))
+          ?.code ?? null,
+    }))
+    .filter((c) => c.home || c.desk);
+  if (payment.length === 0 || methods.length === 0) return null;
   const extras = await db().product.findMany({
     where: { kind: "ACCESSORY", active: true },
     include: {
@@ -101,14 +132,14 @@ export async function checkoutOptions(
     },
     price: { amountMinor: price.amountMinor, currency: price.currency },
     // Domicile d'abord, puis bureau.
-    delivery: market.deliveryMethods
+    delivery: methods
       .map((d) => d.code)
       .sort(
         (a, b) => Number(b.endsWith("_home")) - Number(a.endsWith("_home")),
       ),
     payment,
     rates: Object.fromEntries(
-      market.deliveryMethods.map((d) => [
+      methods.map((d) => [
         d.code,
         Object.fromEntries(
           d.rates
@@ -118,6 +149,7 @@ export async function checkoutOptions(
       ]),
     ),
     accessories,
+    carriers,
   };
 }
 
@@ -140,7 +172,9 @@ export type CreateOrderResult =
         | "payment"
         | "unavailable"
         | "promoInvalid"
-        | "promoExpired";
+        | "promoExpired"
+        | "promoMinimum"
+        | "promoPerPhone";
     };
 
 /**
@@ -186,8 +220,24 @@ export async function createOrder(
     0,
   );
   const subtotal = options.price.amountMinor * input.quantity + extrasTotal;
+  const basket = {
+    kitMinor: options.price.amountMinor * input.quantity,
+    itemsMinor: subtotal,
+    feeMinor: fee,
+  };
+  if (promo?.ok && !promoMinimumMet(promo.rule, basket))
+    return { ok: false, error: "promoMinimum" };
+  // Plafond par client : même numéro de téléphone (celui de l'acheteur pour un cadeau).
+  const customerPhone = input.buyer ? input.buyer.phone : input.phone;
+  if (
+    promo?.ok &&
+    promo.maxUsesPerPhone !== null &&
+    (await promoUsesByPhone(promo.rule.code, customerPhone)) >=
+      promo.maxUsesPerPhone
+  )
+    return { ok: false, error: "promoPerPhone" };
   const discount = promo?.ok
-    ? promoDiscount(promo.rule, subtotal, options.price.currency)
+    ? promoDiscount(promo.rule, basket, options.price.currency)
     : 0;
   const total = subtotal - discount + (fee ?? 0);
   const order = await db()

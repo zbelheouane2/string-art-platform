@@ -261,14 +261,28 @@ enum PromoKind {
   FIXED
 }
 
+/// Sur quoi porte la remise : le kit seul, tous les articles, ou la livraison.
+enum PromoScope {
+  KIT
+  ORDER
+  SHIPPING
+}
+
 /// Code promo saisi à la commande. La remise porte sur les articles (pas sur la livraison).
 model PromoCode {
   id          String    @id @default(cuid())
   /// En majuscules, sans espaces (« BIENVENUE10 »).
   code        String    @unique
   kind        PromoKind
-  /// Pourcentage (1 à 90) ou montant en unité mineure.
+  scope       PromoScope @default(ORDER)
+  /// Pourcentage (1 à 100) ou montant en unité mineure.
   value       Int
+  /// Montant minimal des articles pour utiliser le code (unité mineure).
+  minOrderMinor   Int?
+  /// Utilisations maximales par client (même numéro de téléphone).
+  maxUsesPerPhone Int?
+  /// Note interne (campagne, partenaire…), jamais affichée au client.
+  note        String?
   currency    String?   @db.Char(3)
   active      Boolean   @default(true)
   startsAt    DateTime?
@@ -278,4 +292,20 @@ model PromoCode {
   uses        Int       @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+}
+
+/// Société de livraison (ZR Express, Yalidine…). Ses modes de livraison
+/// (DeliveryMethod.provider = code) portent les tarifs par wilaya.
+model Carrier {
+  id             String    @id @default(cuid())
+  /// Identifiant technique (« zrexpress ») : préfixe des modes « zrexpress_home » / « zrexpress_desk ».
+  code           String    @unique
+  name           String
+  /// Logo (chemin public ou URL https), facultatif.
+  logoUrl        String?
+  active         Boolean   @default(true)
+  /// Dernière mise à jour des tarifs (import ou modification).
+  ratesUpdatedAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 }

@@ -5,7 +5,7 @@ import { BoardIcon, CardIcon, PhoneCodeIcon, PlusIcon, SpoolIcon, VoiceIcon } fr
 import { PriceTag } from "./PriceTag";
 import { KitFacts } from "./KitFacts";
 import { KitBuyBox } from "./KitBuyBox";
-import { accessories } from "@/config/catalog";
+import { accessories as configAccessories, type Accessory } from "@/config/catalog";
 import { Reassurance } from "./Reassurance";
 
 const INCLUDES = [
@@ -44,11 +44,14 @@ const GALLERY = [
 
 /** Bloc d'achat (accueil et page du kit) : galerie qui glisse + colonne d'infos collante. */
 export async function ProductSection({
+  accessories = configAccessories,
   price,
   provisional = false,
   orderingOpen = false,
   headingLevel = 2,
 }: {
+  /** Options proposées (prix lus en base par la page). */
+  accessories?: readonly Accessory[];
   price: string | null;
   provisional?: boolean;
   orderingOpen?: boolean;

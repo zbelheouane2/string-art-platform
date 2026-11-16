@@ -963,7 +963,8 @@
       "communeOtherLabel": "Name of your town",
       "buyerPhone": "Your phone (with country code, e.g. +44)",
       "buyerEmail": "Your email (optional)",
-      "giftMessage": "Your message for the card (optional)"
+      "giftMessage": "Your message for the card (optional)",
+      "carrier": "Delivery company"
     },
     "delivery": {
       "yalidine_home": {
@@ -981,6 +982,14 @@
       "zrexpress_desk": {
         "name": "Delivery office",
         "text": "Pick up the parcel at a ZR Express office"
+      },
+      "home": {
+        "name": "Home delivery",
+        "text": "Delivered to your door by {carrier}; the courier calls you for the exact place"
+      },
+      "desk": {
+        "name": "Pick-up point",
+        "text": "Collect your parcel at a {carrier} office"
       }
     },
     "payment": {
@@ -1021,7 +1030,9 @@
       "giftMessageLong": "Message too long (200 characters).",
       "promoInvalid": "This promo code doesn't exist.",
       "promoExpired": "This promo code is no longer valid.",
-      "promoUnavailable": "We can't check the code right now, please try again."
+      "promoUnavailable": "We can't check the code right now, please try again.",
+      "promoMinimum": "The minimum amount for this promo code isn't reached.",
+      "promoPerPhone": "This promo code has already been used with this number."
     },
     "feePickWilaya": "Choose your wilaya to see the delivery fee.",
     "feeKnown": "Delivery fee: {fee}.",
@@ -1044,7 +1055,10 @@
     "promoApply": "Apply",
     "subtotal": "Subtotal",
     "lineDiscount": "Discount ({code})",
-    "feeAfterWilaya": "depends on your wilaya"
+    "feeAfterWilaya": "depends on your wilaya",
+    "promoMinimumHint": "Valid from {min} of items.",
+    "promoShippingLater": "Free delivery: the discount shows once the fee is known.",
+    "lineShippingDiscount": "Free delivery"
   },
   "confirmation": {
     "eyebrow": "Thank you!",

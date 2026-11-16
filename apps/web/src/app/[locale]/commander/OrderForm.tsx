@@ -12,9 +12,13 @@ import { useLocale, useTranslations } from "next-intl";
 import { OTHER_COMMUNE, communesOf } from "@/config/communes";
 import { WILAYAS } from "@/config/wilayas";
 import { QuantityStepper, useCart } from "@/components/Cart";
-import type { CheckoutAccessory } from "@/lib/orders";
+import type { CheckoutAccessory, CheckoutCarrier } from "@/lib/orders";
 import { formatPrice, type Price } from "@/lib/price";
-import { promoDiscount, type PromoRule } from "@/lib/promoRules";
+import {
+  promoDiscount,
+  promoMinimumMet,
+  type PromoRule,
+} from "@/lib/promoRules";
 import { encodeLines } from "@/lib/shopTypes";
 import { orderAction, type OrderState } from "./actions";
 import { checkPromoAction } from "./promoAction";
@@ -25,6 +29,8 @@ interface Props {
   /** Frais connus : mode de livraison → wilaya → montant. */
   rates: Record<string, Record<string, number>>;
   delivery: string[];
+  /** Sociétés de livraison actives (le client choisit la sienne s'il y en a plusieurs). */
+  carriers: CheckoutCarrier[];
   payment: string[];
   maxQuantity: number;
   /** Ouvre le formulaire en mode « cadeau pour un proche en Algérie ». */
@@ -67,6 +73,7 @@ export function OrderForm({
   price,
   rates,
   delivery,
+  carriers,
   payment,
   maxQuantity,
   giftDefault = false,
@@ -97,7 +104,22 @@ export function OrderForm({
     first.focus({ preventScroll: true });
   }, [state]);
   const [gift, setGift] = useState(v.gift ? v.gift === "on" : giftDefault);
-  const [mode, setMode] = useState(v.delivery ?? delivery[0]);
+  // Livraison : société (si plusieurs) puis domicile ou bureau. Le mode envoyé est « société_home|desk ».
+  const initial = v.delivery ?? delivery[0];
+  const [carrierCode, setCarrierCode] = useState(
+    carriers.find((c) => c.home === initial || c.desk === initial)?.code ??
+      carriers[0]?.code ??
+      "",
+  );
+  const carrier = carriers.find((c) => c.code === carrierCode) ?? carriers[0];
+  const [kind, setKind] = useState<"home" | "desk">(
+    initial.endsWith("_desk") ? "desk" : "home",
+  );
+  const mode = (carrier?.[kind] ??
+    carrier?.home ??
+    carrier?.desk ??
+    delivery[0]) as string;
+  const modeKind: "home" | "desk" = mode.endsWith("_desk") ? "desk" : "home";
   const [wilaya, setWilaya] = useState(v.wilaya ?? "");
   const [commune, setCommune] = useState(v.commune ?? "");
   const communes = communesOf(wilaya);
@@ -158,7 +180,9 @@ export function OrderForm({
         setPromoError(r.error);
       }
     });
-  const discount = promo ? promoDiscount(promo, subtotal, price.currency) : 0;
+  const basket = { kitMinor: items, itemsMinor: subtotal, feeMinor: fee };
+  const discount = promo ? promoDiscount(promo, basket, price.currency) : 0;
+  const minimumMissing = promo !== null && !promoMinimumMet(promo, basket);
   const [summaryOpen, setSummaryOpen] = useState(false);
   const err = (k: string) =>
     state.fieldErrors[k] ? t(`errors.${state.fieldErrors[k]}`) : undefined;
@@ -293,22 +317,79 @@ export function OrderForm({
 
         <fieldset className="form-section">
           <legend>{t("sections.delivery")}</legend>
+          <input type="hidden" name="delivery" value={mode} />
+          {carriers.length > 1 && (
+            <div
+              className="carrier-pick"
+              role="radiogroup"
+              aria-label={t("fields.carrier")}
+            >
+              <p className="field-label">{t("fields.carrier")}</p>
+              <div className="choice-row choice-compact">
+                {carriers.map((c) => {
+                  const m = c[kind] ?? c.home ?? c.desk;
+                  const f = wilaya && m ? (rates[m]?.[wilaya] ?? null) : null;
+                  return (
+                    <label key={c.code} className="choice carrier-choice">
+                      <input
+                        type="radio"
+                        name="carrier"
+                        value={c.code}
+                        checked={carrierCode === c.code}
+                        onChange={() => setCarrierCode(c.code)}
+                      />
+                      <span>
+                        <strong>
+                          {c.logoUrl && (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={c.logoUrl}
+                              alt=""
+                              width={28}
+                              height={28}
+                            />
+                          )}
+                          {c.name}
+                        </strong>
+                        <small>
+                          {!wilaya
+                            ? t("feeAfterWilaya")
+                            : f === null
+                              ? t("feeLater")
+                              : money(f)}
+                        </small>
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          )}
           <div className="choice-row choice-compact">
-            {delivery.map((d) => (
-              <label key={d} className="choice">
-                <input
-                  type="radio"
-                  name="delivery"
-                  value={d}
-                  checked={mode === d}
-                  onChange={() => setMode(d)}
-                />
-                <span>
-                  <strong>{t(`delivery.${d}.name`)}</strong>
-                  <small>{t(`delivery.${d}.text`)}</small>
-                </span>
-              </label>
-            ))}
+            {(["home", "desk"] as const)
+              .filter((k) => carrier?.[k])
+              .map((k) => {
+                const m = carrier![k]!;
+                const f = wilaya ? (rates[m]?.[wilaya] ?? null) : null;
+                return (
+                  <label key={k} className="choice">
+                    <input
+                      type="radio"
+                      name="deliveryKind"
+                      value={k}
+                      checked={modeKind === k}
+                      onChange={() => setKind(k)}
+                    />
+                    <span>
+                      <strong>{t(`delivery.${k}.name`)}</strong>
+                      <small>
+                        {t(`delivery.${k}.text`, { carrier: carrier!.name })}
+                        {f !== null && ` · ${money(f)}`}
+                      </small>
+                    </span>
+                  </label>
+                );
+              })}
           </div>
           <div className="field-pair">
             <Field id="wilaya" label={t("fields.wilaya")} error={err("wilaya")}>
@@ -567,7 +648,21 @@ export function OrderForm({
           <div className="promo">
             {promo ? (
               <p className="promo-applied" role="status">
-                <span>{t("promoApplied", { code: promo.code })}</span>
+                <span>
+                  {t("promoApplied", { code: promo.code })}
+                  {minimumMissing && promo.minOrderMinor !== null && (
+                    <small className="promo-min">
+                      {t("promoMinimumHint", {
+                        min: money(promo.minOrderMinor),
+                      })}
+                    </small>
+                  )}
+                  {promo.scope === "SHIPPING" && fee === null && (
+                    <small className="promo-min">
+                      {t("promoShippingLater")}
+                    </small>
+                  )}
+                </span>
                 <button
                   type="button"
                   className="link-btn"
@@ -627,14 +722,17 @@ export function OrderForm({
             </div>
             {discount > 0 && promo && (
               <div className="line-discount">
-                <dt>{t("lineDiscount", { code: promo.code })}</dt>
+                <dt>{promo.scope === "SHIPPING" ? `${t("lineShippingDiscount")} (${promo.code})` : t("lineDiscount", { code: promo.code })}</dt>
                 <dd>− {money(discount)}</dd>
               </div>
             )}
             <div>
               <dt>
                 {t("lineDelivery")}
-                <small>{t(`delivery.${mode}.name`)}</small>
+                <small>
+                  {carrier ? `${carrier.name} · ` : ""}
+                  {t(`delivery.${modeKind}.name`)}
+                </small>
               </dt>
               <dd aria-live="polite">
                 {!wilaya

@@ -52,15 +52,17 @@ async function main() {
   const dz = await db.market.findUniqueOrThrow({ where: { code: "DZ" } });
   // Transporteur retenu au lancement : ZR Express (choix du propriétaire, 2026-11-13).
   // Les autres restent en base, inactifs, prêts à être rouverts.
+  // Création seulement : ensuite, l'espace admin décide (société active ou non, tarifs, prix).
   const carriers = [
-    { codes: ["zrexpress_home", "zrexpress_desk"], provider: "zrexpress", active: true },
-    { codes: ["yalidine_home", "yalidine_desk"], provider: "yalidine", active: false },
+    { codes: ["zrexpress_home", "zrexpress_desk"], provider: "zrexpress", name: "ZR Express", active: true },
+    { codes: ["yalidine_home", "yalidine_desk"], provider: "yalidine", name: "Yalidine", active: false },
   ];
   for (const c of carriers) {
+    await db.carrier.upsert({ where: { code: c.provider }, update: {}, create: { code: c.provider, name: c.name, active: c.active } });
     for (const code of c.codes) {
       await db.deliveryMethod.upsert({
         where: { marketId_code: { marketId: dz.id, code } },
-        update: { provider: c.provider, active: c.active },
+        update: { provider: c.provider },
         create: { marketId: dz.id, code, provider: c.provider, active: c.active },
       });
     }
@@ -68,9 +70,10 @@ async function main() {
   if (kitOffer.price) {
     const kit = await db.product.findUniqueOrThrow({ where: { slug: kitOffer.slug } });
     const data = { amountMinor: kitOffer.price.amountMinor, currency: kitOffer.price.currency };
+    // Prix initial seulement : une fois en ligne, il se change dans l'espace admin.
     await db.price.upsert({
       where: { productId_marketId: { productId: kit.id, marketId: dz.id } },
-      update: data,
+      update: {},
       create: { ...data, productId: kit.id, marketId: dz.id },
     });
   }
@@ -84,9 +87,7 @@ async function main() {
     const where = { productId_marketId: { productId: product.id, marketId: dz.id } };
     if (acc.price) {
       const data = { amountMinor: acc.price.amountMinor, currency: acc.price.currency };
-      await db.price.upsert({ where, update: data, create: { ...data, productId: product.id, marketId: dz.id } });
-    } else {
-      await db.price.deleteMany({ where: { productId: product.id, marketId: dz.id } });
+      await db.price.upsert({ where, update: {}, create: { ...data, productId: product.id, marketId: dz.id } });
     }
   }
   console.log("Données de référence en place.");

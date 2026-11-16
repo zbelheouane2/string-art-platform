@@ -963,7 +963,8 @@
       "communeOtherLabel": "اسم بلديتك",
       "buyerPhone": "رقم هاتفك (مع رمز الدولة، مثلًا +33)",
       "buyerEmail": "بريدك الإلكتروني (اختياري)",
-      "giftMessage": "رسالتك على البطاقة (اختياري)"
+      "giftMessage": "رسالتك على البطاقة (اختياري)",
+      "carrier": "شركة التوصيل"
     },
     "delivery": {
       "yalidine_home": {
@@ -981,6 +982,14 @@
       "zrexpress_desk": {
         "name": "مكتب التوصيل",
         "text": "تستلم الطرد من مكتب ZR Express"
+      },
+      "home": {
+        "name": "إلى المنزل",
+        "text": "يوصله {carrier} إلى بيتك؛ يتصل بك المندوب لتحديد المكان"
+      },
+      "desk": {
+        "name": "في مكتب التوصيل",
+        "text": "تستلم الطرد من مكتب {carrier}"
       }
     },
     "payment": {
@@ -1021,7 +1030,9 @@
       "giftMessageLong": "الرسالة طويلة جدًا (200 حرف).",
       "promoInvalid": "رمز التخفيض هذا غير موجود.",
       "promoExpired": "رمز التخفيض هذا لم يعد صالحًا.",
-      "promoUnavailable": "تعذّر التحقق الآن، حاول مرة أخرى."
+      "promoUnavailable": "تعذّر التحقق الآن، حاول مرة أخرى.",
+      "promoMinimum": "لم يتم بلوغ الحد الأدنى لاستعمال رمز التخفيض هذا.",
+      "promoPerPhone": "سبق استعمال رمز التخفيض هذا بهذا الرقم."
     },
     "feePickWilaya": "اختر ولايتك لمعرفة تكلفة التوصيل.",
     "feeKnown": "تكلفة التوصيل: {fee}.",
@@ -1044,7 +1055,10 @@
     "promoApply": "تطبيق",
     "subtotal": "المجموع الفرعي",
     "lineDiscount": "تخفيض ({code})",
-    "feeAfterWilaya": "حسب ولايتك"
+    "feeAfterWilaya": "حسب ولايتك",
+    "promoMinimumHint": "صالح ابتداءً من {min} من المشتريات.",
+    "promoShippingLater": "توصيل مجاني: يظهر التخفيض عند معرفة الرسوم.",
+    "lineShippingDiscount": "توصيل مجاني"
   },
   "confirmation": {
     "eyebrow": "شكرًا!",

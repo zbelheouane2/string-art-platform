@@ -16,6 +16,7 @@ import { WeavingBoard } from "@/components/WeavingBoard";
 import { brand } from "@/config/brand";
 import { kitOffer } from "@/config/catalog";
 import { formatPrice } from "@/lib/price";
+import { shopCatalog } from "@/lib/shop";
 import { howSteps } from "@/config/howSteps";
 import { Link } from "@/i18n/navigation";
 import type { DemoPortrait } from "@/lib/board";
@@ -44,12 +45,18 @@ async function loadDemo(): Promise<DemoPortrait> {
   return JSON.parse(await readFile(file, "utf-8"));
 }
 
+/** Les prix viennent de la base : la page est régénérée après une modification dans l'admin (et au plus tard toutes les 5 minutes). */
+export const revalidate = 300;
+
 export default async function KitPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations();
   const demo = await loadDemo();
-  const price = kitOffer.price ? formatPrice(kitOffer.price, locale) : null;
+  // Prix lus en base (modifiables dans l'admin), repli sur la configuration.
+  const catalog = await shopCatalog();
+  const price = catalog ? formatPrice(catalog.kit.price, locale) : null;
+  const extras = catalog?.accessories.map((a) => ({ slug: a.slug, icon: a.icon!, names: a.names, price: a.price })) ?? [];
 
   return (
     <>
@@ -60,7 +67,7 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
       <SiteHeader />
       <main id="main">
         <div id="hero-actions" />
-        <ProductSection price={price} provisional={kitOffer.provisional} orderingOpen={kitOffer.orderingOpen} headingLevel={1} />
+        <ProductSection accessories={extras} price={price} provisional={kitOffer.provisional} orderingOpen={kitOffer.orderingOpen} headingLevel={1} />
 
         {/* Qu'est-ce que c'est : la planche animée tient le rôle de la vidéo. */}
         <section className="section bg-sand" aria-labelledby="kit-what-title">

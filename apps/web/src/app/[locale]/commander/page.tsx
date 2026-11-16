@@ -39,6 +39,7 @@ export default async function OrderPage({
           price={options.price}
           rates={options.rates}
           delivery={options.delivery}
+          carriers={options.carriers}
           payment={options.payment}
           maxQuantity={commerce.maxQuantity}
           giftDefault={gift}
