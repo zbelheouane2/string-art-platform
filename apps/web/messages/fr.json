@@ -276,7 +276,7 @@
   "footer": {
     "menu": "Menu",
     "contact": "Contact",
-    "contactText": "Une question sur une commande ou une photo ? Écrivez-nous.",
+    "contactText": "Une question sur une commande, une photo ou un code ? Écrivez-nous sur WhatsApp.",
     "tagline": "Des portraits en fil à réaliser chez soi.",
     "links": {
       "kit": "Le kit",
@@ -292,13 +292,260 @@
     "info": "Informations",
     "infoLinks": {
       "kitPage": "Le kit en détail",
-      "privacy": "Confidentialité des photos",
-      "payment": "Paiement et livraison"
+      "delivery": "Livraison",
+      "returns": "Retours et échanges",
+      "privacy": "Données personnelles",
+      "terms": "Conditions de vente"
+    },
+    "whatsapp": "WhatsApp : {phone}",
+    "social": "Suivez-nous",
+    "socialNames": {
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "tiktok": "TikTok"
     }
   },
   "notFound": {
     "title": "Cette page n'existe pas",
     "back": "Retour à l'accueil"
+  },
+  "reassure": {
+    "label": "Nos engagements",
+    "delivery": "Livré en {min} à {max} jours ouvrables",
+    "cod": "Vous payez à la réception, rien avant",
+    "guarantee": "Kit abîmé ou incomplet : échangé sans frais",
+    "help": "Une question ? WhatsApp {phone}",
+    "more": "En savoir plus"
+  },
+  "legal": {
+    "updated": "Mise à jour : {date}",
+    "related": "À lire aussi",
+    "contactTitle": "Nous contacter",
+    "contactText": "Pour toute question ou demande, écrivez-nous sur WhatsApp en indiquant votre numéro de commande (DK-…).",
+    "contactCta": "Écrire sur WhatsApp",
+    "seller": {
+      "title": "Le vendeur",
+      "brand": "Marque",
+      "status": "Statut",
+      "statusValue": "Auto-entrepreneur",
+      "anpdp": "Déclaration ANPDP",
+      "email": "E-mail",
+      "sales": "Service commercial (téléphone et WhatsApp)"
+    },
+    "delivery": {
+      "title": "Livraison",
+      "lead": "Où, comment et en combien de temps nous livrons votre kit.",
+      "sections": [
+        {
+          "h": "Où livrons-nous ?",
+          "p": [
+            "Partout en Algérie, dans toutes les wilayas.",
+            "Vous habitez à l'étranger ? Vous pouvez offrir un kit à un proche en Algérie : il le reçoit et le paie à la livraison."
+          ]
+        },
+        {
+          "h": "À domicile ou au bureau",
+          "p": [
+            "Au moment de commander, vous choisissez la livraison à domicile ou le retrait au bureau du transporteur le plus proche.",
+            "Nous ne demandons pas d'adresse complète : le livreur vous appelle pour convenir du lieu."
+          ]
+        },
+        {
+          "h": "Délais",
+          "p": [
+            "Comptez {min} à {max} jours ouvrables après notre appel de confirmation. Ce délai est indicatif : il peut être un peu plus long dans les wilayas du Sud et pendant les fêtes.",
+            "Pour un cadeau à date fixe (Aïd, anniversaire, Fête des mères), commandez quelques jours en avance."
+          ]
+        },
+        {
+          "h": "Frais de livraison",
+          "p": [
+            "Ils dépendent de la wilaya et du mode choisi. Ils s'affichent dans le formulaire de commande quand ils sont connus ; sinon, nous vous les confirmons au téléphone avant l'envoi."
+          ]
+        },
+        {
+          "h": "Confirmation et paiement",
+          "p": [
+            "Après votre commande, nous vous appelons pour la confirmer. Rien n'est envoyé sans votre accord.",
+            "Vous payez en espèces au livreur, à la réception du colis. Vérifiez l'état du colis en sa présence."
+          ]
+        }
+      ]
+    },
+    "returns": {
+      "title": "Retours et échanges",
+      "lead": "Un problème avec votre kit ? Nous le réglons rapidement.",
+      "sections": [
+        {
+          "h": "Kit abîmé, incomplet ou non conforme",
+          "p": [
+            "Signalez-le-nous dans les {report} jours ouvrables qui suivent la réception, sur WhatsApp, avec votre numéro de commande et quelques photos.",
+            "Nous vous envoyons un kit ou la pièce manquante sans frais. Si l'échange est impossible, nous vous remboursons dans un délai de {refund} jours."
+          ]
+        },
+        {
+          "h": "Code qui ne fonctionne pas",
+          "p": [
+            "Écrivez-nous avec une photo du code imprimé dans la boîte. Nous le vérifions et, si besoin, nous vous en donnons un nouveau."
+          ]
+        },
+        {
+          "h": "Refus du colis",
+          "p": [
+            "Le paiement se fait à la réception : si vous refusez le colis à la livraison, vous ne payez pas le kit."
+          ]
+        },
+        {
+          "h": "Portrait déjà validé",
+          "p": [
+            "Le modèle calculé à partir de votre photo est personnel. Une fois le portrait validé avec votre code, il ne peut pas être échangé contre un autre. Avant de valider, vous pouvez essayer plusieurs photos et plusieurs rendus."
+          ]
+        },
+        {
+          "h": "Comment faire ?",
+          "p": [
+            "Envoyez-nous sur WhatsApp votre numéro de commande, une description du problème et des photos. Nous vous répondons avec la solution et, si un retour est nécessaire, la marche à suivre."
+          ]
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Protection des données personnelles",
+      "lead": "Comment nous traitons vos données, conformément à la loi n° 18-07 du 10 juin 2018 relative à la protection des personnes physiques dans le traitement des données à caractère personnel.",
+      "sections": [
+        {
+          "h": "Responsable du traitement",
+          "p": [
+            "Le responsable du traitement est le vendeur indiqué en bas de cette page. Pour toute question sur vos données, contactez-nous sur WhatsApp ou par e-mail."
+          ]
+        },
+        {
+          "h": "Données que nous collectons",
+          "p": [
+            "Pour une commande : nom et prénom, numéro de téléphone, wilaya, commune, mode de livraison et nombre de kits. Pour un cadeau envoyé depuis l'étranger : aussi les coordonnées de l'acheteur, une adresse e-mail facultative et le message de la carte.",
+            "Pour créer votre portrait : la photo que vous choisissez. Elle sert uniquement au calcul et n'est pas conservée ; nous ne gardons qu'une empreinte numérique qui ne permet pas de la reconstituer.",
+            "Pour le guide vocal : votre code et votre progression, gardés sur votre appareil.",
+            "Pour la sécurité : une empreinte de votre adresse IP, utilisée pour limiter les essais de codes. L'adresse elle-même n'est pas enregistrée."
+          ]
+        },
+        {
+          "h": "Pourquoi nous les utilisons",
+          "p": [
+            "Pour confirmer, préparer et livrer votre commande, calculer votre portrait, vous guider pendant la réalisation et protéger le site contre les abus.",
+            "Nous ne vendons pas vos données, nous ne les utilisons pas pour de la publicité et nous ne publions jamais vos photos."
+          ]
+        },
+        {
+          "h": "Votre consentement",
+          "p": [
+            "En envoyant le formulaire de commande ou une photo, vous acceptez que ces données soient traitées pour les finalités ci-dessus. Vous pouvez retirer votre consentement à tout moment, sauf pour les données nécessaires à une commande en cours."
+          ]
+        },
+        {
+          "h": "Qui y a accès ?",
+          "p": [
+            "Notre équipe, pour traiter votre commande.",
+            "La société de livraison, qui reçoit uniquement ce qui est nécessaire à la livraison : nom, téléphone, wilaya, commune et montant à encaisser.",
+            "Nos prestataires techniques (hébergement, suivi des commandes), tenus à la confidentialité. Si des données devaient être hébergées hors d'Algérie, ce transfert ne se ferait que dans les conditions prévues par la loi n° 18-07."
+          ]
+        },
+        {
+          "h": "Combien de temps ?",
+          "p": [
+            "La photo : pas conservée.",
+            "Les données de commande : le temps de traiter la commande, la livraison et un éventuel échange, puis la durée imposée par nos obligations comptables et fiscales.",
+            "Le code sur votre appareil : 30 jours, renouvelés à chaque utilisation."
+          ]
+        },
+        {
+          "h": "Vos droits",
+          "p": [
+            "La loi n° 18-07 vous donne un droit d'information, un droit d'accès à vos données, un droit de rectification et un droit d'opposition.",
+            "Pour les exercer, écrivez-nous sur WhatsApp ou par e-mail. Nous vous répondons dans les délais prévus par la loi.",
+            "Vous pouvez aussi saisir l'Autorité nationale de protection des données à caractère personnel (ANPDP)."
+          ]
+        },
+        {
+          "h": "Cookies",
+          "p": [
+            "Le site utilise seulement les cookies nécessaires à son fonctionnement : la langue choisie et l'accès à votre code. Aucun cookie publicitaire ni traceur de mesure d'audience."
+          ]
+        },
+        {
+          "h": "Sécurité",
+          "p": [
+            "Les échanges avec le site sont chiffrés. L'accès aux données de commande est limité aux personnes qui en ont besoin."
+          ]
+        }
+      ]
+    },
+    "terms": {
+      "title": "Conditions générales de vente",
+      "lead": "Les règles qui s'appliquent quand vous commandez un kit sur ce site.",
+      "sections": [
+        {
+          "h": "Objet",
+          "p": [
+            "Ces conditions s'appliquent aux ventes conclues sur ce site entre le vendeur indiqué en bas de page et le client, conformément à la loi n° 18-05 du 10 mai 2018 relative au commerce électronique."
+          ]
+        },
+        {
+          "h": "Le produit",
+          "p": [
+            "Le kit comprend une planche de 50 × 50 cm avec 240 clous déjà posés, une bobine de fil et un code personnel. Le code donne accès au logiciel qui calcule votre portrait et au guide vocal.",
+            "Un code permet de calculer jusqu'à 10 aperçus, puis de valider un portrait. Le rendu dépend de la photo choisie : l'aperçu vous est montré avant toute validation."
+          ]
+        },
+        {
+          "h": "Prix",
+          "p": [
+            "Les prix sont indiqués en dinars algériens. Les frais de livraison s'ajoutent au prix du kit ; ils sont affichés lors de la commande ou confirmés par téléphone avant l'envoi."
+          ]
+        },
+        {
+          "h": "Commande",
+          "p": [
+            "Vous remplissez le formulaire de commande, puis nous vous appelons pour la confirmer. La commande est ferme après cette confirmation."
+          ]
+        },
+        {
+          "h": "Paiement",
+          "p": [
+            "En Algérie, le paiement se fait en espèces au livreur, à la réception du colis."
+          ]
+        },
+        {
+          "h": "Livraison",
+          "p": [
+            "Les modes, délais et frais sont décrits sur la page Livraison."
+          ]
+        },
+        {
+          "h": "Garantie, retours et échanges",
+          "p": [
+            "Un kit abîmé, incomplet ou non conforme est échangé sans frais, ou remboursé si l'échange est impossible. Les conditions sont décrites sur la page Retours et échanges."
+          ]
+        },
+        {
+          "h": "Votre photo",
+          "p": [
+            "Vous vous engagez à n'utiliser que des photos que vous avez le droit d'utiliser. La photo sert uniquement au calcul de votre portrait ; elle n'est ni conservée ni publiée."
+          ]
+        },
+        {
+          "h": "Données personnelles",
+          "p": [
+            "Le traitement de vos données est décrit sur la page Protection des données personnelles."
+          ]
+        },
+        {
+          "h": "Droit applicable et litiges",
+          "p": [
+            "Ces conditions sont soumises au droit algérien. En cas de difficulté, contactez-nous d'abord : nous cherchons toujours une solution à l'amiable. À défaut, le litige relève des juridictions algériennes compétentes."
+          ]
+        }
+      ]
+    }
   },
   "kit": {
     "meta": {

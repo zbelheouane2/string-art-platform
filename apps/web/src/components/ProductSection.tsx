@@ -5,6 +5,7 @@ import { PlusIcon } from "./Icons";
 import { KitFacts } from "./KitFacts";
 import { KitBuyBox } from "./KitBuyBox";
 import { accessories } from "@/config/catalog";
+import { Reassurance } from "./Reassurance";
 
 const INCLUDES = ["board", "thread", "code", "guide", "card"] as const;
 const ACCORDION = ["box", "photo", "app", "gift"] as const;
@@ -72,6 +73,7 @@ export async function ProductSection({
               {t("ctaSoon")}
             </button>
           )}
+          <Reassurance />
           <p className="shop-note">
             <Link href="/activer">{t("haveCode")}</Link>
           </p>
