@@ -318,13 +318,11 @@
     "seller": {
       "title": "The seller",
       "brand": "Brand",
-      "company": "Company name",
-      "address": "Address",
-      "rc": "Trade register",
-      "nif": "Tax ID (NIF)",
+      "status": "Status",
+      "statusValue": "Self-employed (auto-entrepreneur)",
       "anpdp": "ANPDP declaration",
       "email": "Email",
-      "whatsapp": "WhatsApp"
+      "sales": "Sales department (phone and WhatsApp)"
     },
     "delivery": {
       "title": "Delivery",

@@ -318,13 +318,11 @@
     "seller": {
       "title": "Le vendeur",
       "brand": "Marque",
-      "company": "Raison sociale",
-      "address": "Adresse",
-      "rc": "Registre du commerce",
-      "nif": "NIF",
+      "status": "Statut",
+      "statusValue": "Auto-entrepreneur",
       "anpdp": "Déclaration ANPDP",
       "email": "E-mail",
-      "whatsapp": "WhatsApp"
+      "sales": "Service commercial (téléphone et WhatsApp)"
     },
     "delivery": {
       "title": "Livraison",

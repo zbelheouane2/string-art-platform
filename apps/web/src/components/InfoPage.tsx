@@ -40,13 +40,10 @@ export async function InfoPage({ page, locale }: { page: InfoPageKey; locale: st
   const wa = whatsappUrl();
   const seller = [
     ["brand", brand.name],
-    ["company", brand.legal.company],
-    ["address", brand.legal.address],
-    ["rc", brand.legal.rc],
-    ["nif", brand.legal.nif],
+    ["status", t("seller.statusValue")],
     ["anpdp", brand.legal.anpdp],
     ["email", brand.supportEmail],
-    ["whatsapp", wa ? ltr(displayPhone()) : ""],
+    ["sales", wa ? ltr(displayPhone()) : ""],
   ].filter(([, v]) => v);
 
   return (

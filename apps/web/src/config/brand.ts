@@ -22,15 +22,12 @@ export const brand = {
     tiktok: env(process.env.NEXT_PUBLIC_TIKTOK_URL),
   },
   /**
-   * Identité du vendeur, exigée par la loi n° 18-05 (commerce électronique) et
-   * la loi n° 18-07 (données personnelles). À remplir avant l'ouverture.
+   * Mentions légales. Le vendeur est auto-entrepreneur : seuls la marque, le
+   * statut et le service commercial sont publiés (choix du propriétaire, pour
+   * ne pas exposer ses données personnelles).
    */
   legal: {
-    company: env(process.env.NEXT_PUBLIC_LEGAL_COMPANY),
-    address: env(process.env.NEXT_PUBLIC_LEGAL_ADDRESS),
-    rc: env(process.env.NEXT_PUBLIC_LEGAL_RC),
-    nif: env(process.env.NEXT_PUBLIC_LEGAL_NIF),
-    /** Numéro de récépissé de déclaration auprès de l'ANPDP. */
+    /** Numéro de récépissé de déclaration auprès de l'ANPDP (loi 18-07), masqué tant qu'il est vide. */
     anpdp: env(process.env.NEXT_PUBLIC_LEGAL_ANPDP),
   },
 } as const;
