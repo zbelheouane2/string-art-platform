@@ -147,16 +147,28 @@ test("avec « réduire les animations », le carrousel avance quand même et rep
   await context.close();
 });
 
-test("la galerie produit glisse avec les flèches et les vignettes", async ({ page }) => {
+test("la galerie produit : flèches, vignettes en colonne (ordinateur), points (téléphone)", async ({ page, isMobile }) => {
   await page.goto("/fr/kit");
   const count = page.locator(".gallery-count");
-  await expect(count).toHaveText("1 / 23");
+  await expect(count).toHaveText("1 / 18");
   await page.getByRole("button", { name: "Visuel suivant" }).click();
-  await expect(count).toHaveText("2 / 23");
-  await page.locator(".gallery-thumbs button").nth(4).click();
-  await expect(count).toHaveText("5 / 23");
+  await expect(count).toHaveText("2 / 18");
+  if (isMobile) {
+    await expect(page.locator(".gallery-thumbs")).toBeHidden();
+    await expect(page.locator(".gallery-dots span[data-on]")).toHaveCount(1);
+  } else {
+    const thumbs = page.locator(".gallery-thumbs button");
+    // Colonne verticale à gauche de la grande image.
+    const [a, b] = [await thumbs.nth(0).boundingBox(), await thumbs.nth(1).boundingBox()];
+    expect(Math.round(a!.x)).toBe(Math.round(b!.x));
+    expect(b!.y).toBeGreaterThan(a!.y);
+    await thumbs.nth(4).click();
+    await expect(count).toHaveText("5 / 18");
+  }
   await page.getByRole("button", { name: "Visuel précédent" }).click();
-  await expect(count).toHaveText("4 / 23");
+  await expect(count).toHaveText(isMobile ? "1 / 18" : "4 / 18");
+  // Les photos du kit sont légères : vignettes à part.
+  await expect(page.locator(".gallery-track img").first()).toHaveAttribute("src", "/visuels/kit/bureau.webp");
 });
 
 test("le bouton « Comment ça marche ? » mène à la page du kit", async ({ page }) => {

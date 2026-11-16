@@ -11,24 +11,28 @@ const INCLUDES = ["board", "thread", "code", "guide", "card"] as const;
 const ACCORDION = ["box", "photo", "app", "gift"] as const;
 
 /** Album : chaque portrait en fil est suivi de sa photo de départ. */
-const portrait = (name: string, alt: string) => [
-  { src: `/visuels/${name}-fil.webp`, alt },
-  { src: `/visuels/${name}-photo.webp`, alt: `${alt}Photo` },
-];
+/** Photos du kit (fournies par le propriétaire) puis rendus réels du logiciel. */
+const kit = (name: string, alt: string) => ({ src: `/visuels/kit/${name}.webp`, thumb: `/visuels/kit/${name}-vignette.webp`, alt });
+const render = (name: string, alt: string) => ({ src: `/visuels/${name}-fil.webp`, alt });
 const GALLERY = [
-  // On ouvre sur un portrait proche des clientes ; la Joconde vient plus loin.
-  ...portrait("femme", "woman"),
+  kit("bureau", "kitDesk"),
+  kit("boite-support", "kitBox"),
+  kit("assemblage", "kitAssembly"),
+  kit("generateur", "kitGenerator"),
+  kit("bobine", "kitSpool"),
+  kit("accrocher", "kitHang"),
+  kit("fierte", "kitProud"),
+  kit("salon", "kitLiving"),
+  kit("entree", "kitEntrance"),
+  kit("langues", "kitLanguages"),
+  kit("notice", "kitNotice"),
   { src: "/visuels/planche-plan.webp", alt: "board" },
-  ...portrait("benmhidi", "benmhidi"),
-  ...portrait("soi", "self"),
-  ...portrait("monalisa", "monalisa"),
-  ...portrait("haik", "haik"),
-  ...portrait("touareg", "tuareg"),
-  ...portrait("grandpere", "grandpa"),
-  ...portrait("fillette", "girl"),
-  ...portrait("bebe", "baby"),
-  ...portrait("couple", "couple"),
-  ...portrait("chat", "pet"),
+  render("femme", "woman"),
+  render("haik", "haik"),
+  render("grandpere", "grandpa"),
+  render("touareg", "tuareg"),
+  render("couple", "couple"),
+  render("chat", "pet"),
 ];
 
 /** Bloc d'achat (accueil et page du kit) : galerie qui glisse + colonne d'infos collante. */
@@ -50,7 +54,7 @@ export async function ProductSection({
       <div className="wrap shop-grid">
         <div data-reveal>
           <Gallery
-            images={GALLERY.map((g) => ({ src: g.src, alt: t(`galleryAlt.${g.alt}`) }))}
+            images={GALLERY.map((g) => ({ src: g.src, thumb: "thumb" in g ? g.thumb : undefined, alt: t(`galleryAlt.${g.alt}`) }))}
           />
         </div>
         <div className="shop-info" data-reveal style={{ ["--i" as string]: 1 }}>

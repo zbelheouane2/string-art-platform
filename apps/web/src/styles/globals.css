@@ -4141,3 +4141,68 @@ h1 em {
     max-inline-size: none;
   }
 }
+
+/* Galerie produit comme la référence : vignettes en colonne à gauche (ordinateur), points sur téléphone. */
+.gallery-dots {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-block-start: 0.75rem;
+}
+
+.gallery-dots span {
+  inline-size: 0.45rem;
+  block-size: 0.45rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ink) 22%, transparent);
+  transition: inline-size var(--motion-fast) var(--ease-out);
+}
+
+.gallery-dots span[data-on] {
+  inline-size: 1.25rem;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+}
+
+@media (max-width: 47.99rem) {
+  .gallery-thumbs {
+    display: none;
+  }
+}
+
+@media (min-width: 48rem) {
+  .gallery-dots {
+    display: none;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: 5.25rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .gallery-main {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  /* La colonne prend la hauteur de la grande image et défile si besoin. */
+  .gallery-thumbs {
+    grid-column: 1;
+    grid-row: 1;
+    flex-direction: column;
+    block-size: 0;
+    min-block-size: 100%;
+    margin: 0;
+    padding: 0.15rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+
+  .gallery-thumbs button {
+    inline-size: 100%;
+  }
+}

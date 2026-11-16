@@ -6,15 +6,19 @@ import { useTranslations } from "next-intl";
 export interface GalleryImage {
   src: string;
   alt: string;
+  /** Petite version pour la colonne de vignettes (sinon l'image elle-même). */
+  thumb?: string;
 }
 
 /**
- * Galerie produit qui glisse : défilement aimanté (doigt, molette, clavier),
- * flèches rondes, compteur et vignettes cliquables.
+ * Galerie produit : grande image qui glisse (doigt, molette, clavier), flèches,
+ * compteur. Ordinateur : colonne de vignettes verticale à gauche qui suit l'image
+ * affichée. Téléphone : points sous l'image.
  */
 export function Gallery({ images }: { images: GalleryImage[] }) {
   const t = useTranslations("shop");
   const listRef = useRef<HTMLUListElement>(null);
+  const thumbsRef = useRef<HTMLDivElement>(null);
   const [i, setI] = useState(0);
 
   // Suit la diapositive visible pendant le défilement.
@@ -32,6 +36,17 @@ export function Gallery({ images }: { images: GalleryImage[] }) {
     list.querySelectorAll("li").forEach((li) => io.observe(li));
     return () => io.disconnect();
   }, []);
+
+  // La vignette active reste visible dans sa colonne (sans faire défiler la page).
+  useEffect(() => {
+    const box = thumbsRef.current;
+    const btn = box?.children[i] as HTMLElement | undefined;
+    if (!box || !btn || box.scrollHeight <= box.clientHeight + 1) return;
+    const top = btn.offsetTop - box.offsetTop;
+    if (top < box.scrollTop || top + btn.offsetHeight > box.scrollTop + box.clientHeight) {
+      box.scrollTo({ top: top - box.clientHeight / 2 + btn.offsetHeight / 2, behavior: "smooth" });
+    }
+  }, [i]);
 
   const go = useCallback(
     (k: number) => {
@@ -66,11 +81,16 @@ export function Gallery({ images }: { images: GalleryImage[] }) {
           <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </button>
       </div>
-      <div className="gallery-thumbs">
+      <div ref={thumbsRef} className="gallery-thumbs">
         {images.map((img, k) => (
           <button key={img.src} type="button" onClick={() => go(k)} aria-current={k === i} aria-label={`${t("gallery")} ${k + 1}`}>
-            <img src={img.src} alt="" width={120} height={120} loading="lazy" />
+            <img src={img.thumb ?? img.src} alt="" width={120} height={120} loading="lazy" />
           </button>
+        ))}
+      </div>
+      <div className="gallery-dots" aria-hidden="true">
+        {images.map((img, k) => (
+          <span key={img.src} data-on={k === i ? "true" : undefined} />
         ))}
       </div>
     </section>
