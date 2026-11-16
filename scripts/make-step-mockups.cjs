@@ -52,7 +52,10 @@ const css = `
 .notch{position:absolute;top:12px;left:50%;translate:-50% 0;width:110px;height:30px;border-radius:20px;background:#1d1612}
 .status{display:flex;justify-content:space-between;font:600 15px/1 var(--font-body);padding:6px 8px 0;direction:ltr}
 .bar{display:flex;align-items:center;justify-content:space-between;margin-top:26px}
-.logo{height:84px;width:auto;display:block}
+nextjs-portal{display:none!important}
+/* Même emplacement et même taille que l'ancien logo horizontal (164 × 84 px) ; le logo s'y loge sans déborder. */
+.mk-logo{height:84px;width:164px;max-width:none;object-fit:contain;object-position:left center;display:block}
+[dir=rtl] .mk-logo{object-position:right center}
 .pill{border:1px solid #d9c7b7;border-radius:999px;padding:5px 12px;font:700 13px/1 var(--font-body)}
 .eb{margin-top:42px;color:#a8322d;font:700 13px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase}
 h1{font:400 34px/1.12 var(--font-display);margin:12px 0 10px}
@@ -95,7 +98,7 @@ p{color:#5a4a40;font-size:16px;line-height:1.5;margin:0}
 `;
 
 const head = (t, dir) => `<div class="notch"></div><div class="status"><span>9:41</span><span>●●● ▮</span></div>
-  <div class="bar" dir="${dir}"><img class="logo" src="${BASE}/visuels/marque/deekra-logo.webp" alt="${BRAND}"><span class="pill">${t.lang}</span></div>`;
+  <div class="bar" dir="${dir}"><img class="mk-logo" style="height:84px!important;width:164px!important;max-width:none!important;object-fit:contain!important;object-position:${dir === "rtl" ? "right" : "left"} center!important" src="${BASE}/visuels/marque/deekra-logo.webp" alt="${BRAND}"><span class="pill">${t.lang}</span></div>`;
 
 const screens = {
   code: (t, dir) => `${head(t, dir)}
