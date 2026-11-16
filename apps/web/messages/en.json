@@ -268,7 +268,7 @@
   "footer": {
     "menu": "Menu",
     "contact": "Contact",
-    "contactText": "A question about an order or a photo? Write to us.",
+    "contactText": "A question about an order, a photo or a code? Message us on WhatsApp.",
     "tagline": "Thread portraits to make at home.",
     "links": {
       "kit": "The kit",
@@ -284,13 +284,262 @@
     "info": "Information",
     "infoLinks": {
       "kitPage": "The kit in detail",
-      "privacy": "Photo privacy",
-      "payment": "Payment and delivery"
+      "delivery": "Delivery",
+      "returns": "Returns and exchanges",
+      "privacy": "Personal data",
+      "terms": "Terms of sale"
+    },
+    "whatsapp": "WhatsApp: {phone}",
+    "social": "Follow us",
+    "socialNames": {
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "tiktok": "TikTok"
     }
   },
   "notFound": {
     "title": "This page doesn't exist",
     "back": "Back to home"
+  },
+  "reassure": {
+    "label": "Our commitments",
+    "delivery": "Delivered in {min} to {max} working days",
+    "cod": "You pay on delivery, nothing upfront",
+    "guarantee": "Damaged or incomplete kit: replaced free of charge",
+    "help": "A question? WhatsApp {phone}",
+    "more": "Learn more"
+  },
+  "legal": {
+    "updated": "Last updated: {date}",
+    "related": "See also",
+    "contactTitle": "Contact us",
+    "contactText": "For any question or request, message us on WhatsApp with your order number (DK-…).",
+    "contactCta": "Message us on WhatsApp",
+    "seller": {
+      "title": "The seller",
+      "brand": "Brand",
+      "company": "Company name",
+      "address": "Address",
+      "rc": "Trade register",
+      "nif": "Tax ID (NIF)",
+      "anpdp": "ANPDP declaration",
+      "email": "Email",
+      "whatsapp": "WhatsApp"
+    },
+    "delivery": {
+      "title": "Delivery",
+      "lead": "Where, how and how fast we deliver your kit.",
+      "sections": [
+        {
+          "h": "Where do we deliver?",
+          "p": [
+            "Anywhere in Algeria, in every wilaya.",
+            "Living abroad? You can give a kit to someone in Algeria: they receive it and pay on delivery."
+          ]
+        },
+        {
+          "h": "Home or pick-up office",
+          "p": [
+            "When ordering, you choose home delivery or collection at the carrier's nearest office.",
+            "We do not ask for a full address: the courier calls you to agree on the place."
+          ]
+        },
+        {
+          "h": "Delivery times",
+          "p": [
+            "Allow {min} to {max} working days after our confirmation call. This is an estimate: it can take a little longer in the southern wilayas and during holidays.",
+            "For a gift with a fixed date (Eid, a birthday, Mother's Day), order a few days ahead."
+          ]
+        },
+        {
+          "h": "Delivery fees",
+          "p": [
+            "They depend on the wilaya and the delivery mode. They appear in the order form when known; otherwise we confirm them by phone before shipping."
+          ]
+        },
+        {
+          "h": "Confirmation and payment",
+          "p": [
+            "After you order, we call you to confirm it. Nothing ships without your agreement.",
+            "You pay the courier in cash when the parcel arrives. Check the parcel in their presence."
+          ]
+        }
+      ]
+    },
+    "returns": {
+      "title": "Returns and exchanges",
+      "lead": "A problem with your kit? We sort it out quickly.",
+      "sections": [
+        {
+          "h": "Damaged, incomplete or wrong kit",
+          "p": [
+            "Let us know within {report} working days of receiving it, on WhatsApp, with your order number and a few photos.",
+            "We send you a new kit or the missing part free of charge. If an exchange is not possible, we refund you within {refund} days."
+          ]
+        },
+        {
+          "h": "Code not working",
+          "p": [
+            "Message us with a photo of the code printed in the box. We check it and, if needed, give you a new one."
+          ]
+        },
+        {
+          "h": "Refusing the parcel",
+          "p": [
+            "You pay on delivery: if you refuse the parcel, you do not pay for the kit."
+          ]
+        },
+        {
+          "h": "Portrait already confirmed",
+          "p": [
+            "The pattern calculated from your photo is personal. Once you confirm the portrait with your code, it cannot be swapped for another one. Before confirming, you can try several photos and several styles."
+          ]
+        },
+        {
+          "h": "How to proceed",
+          "p": [
+            "Send us your order number, a description of the problem and photos on WhatsApp. We reply with the solution and, if a return is needed, the steps to follow."
+          ]
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Personal data protection",
+      "lead": "How we handle your data, in accordance with Algerian Law No. 18-07 of 10 June 2018 on the protection of individuals in the processing of personal data.",
+      "sections": [
+        {
+          "h": "Data controller",
+          "p": [
+            "The data controller is the seller named at the bottom of this page. For any question about your data, contact us on WhatsApp or by email."
+          ]
+        },
+        {
+          "h": "Data we collect",
+          "p": [
+            "For an order: first and last name, phone number, wilaya, commune, delivery mode and number of kits. For a gift sent from abroad: also the buyer's contact details, an optional email address and the card message.",
+            "To create your portrait: the photo you choose. It is used only for the calculation and is not kept; we keep only a digital fingerprint that cannot be used to rebuild it.",
+            "For the voice guide: your code and your progress, kept on your device.",
+            "For security: a fingerprint of your IP address, used to limit code attempts. The address itself is not stored."
+          ]
+        },
+        {
+          "h": "Why we use it",
+          "p": [
+            "To confirm, prepare and deliver your order, calculate your portrait, guide you while you make it and protect the site against abuse.",
+            "We do not sell your data, we do not use it for advertising and we never publish your photos."
+          ]
+        },
+        {
+          "h": "Your consent",
+          "p": [
+            "By sending the order form or a photo, you agree to this data being processed for the purposes above. You can withdraw your consent at any time, except for data needed for an order in progress."
+          ]
+        },
+        {
+          "h": "Who has access?",
+          "p": [
+            "Our team, to process your order.",
+            "The delivery company, which receives only what delivery requires: name, phone, wilaya, commune and amount to collect.",
+            "Our technical providers (hosting, order tracking), bound by confidentiality. If any data were hosted outside Algeria, that transfer would only take place under the conditions set by Law No. 18-07."
+          ]
+        },
+        {
+          "h": "How long?",
+          "p": [
+            "Your photo: not kept.",
+            "Order data: for as long as it takes to process the order, the delivery and any exchange, then for the period required by our accounting and tax obligations.",
+            "The code on your device: 30 days, renewed each time you use it."
+          ]
+        },
+        {
+          "h": "Your rights",
+          "p": [
+            "Law No. 18-07 gives you the right to information, the right to access your data, the right to rectification and the right to object.",
+            "To exercise them, message us on WhatsApp or by email. We reply within the time limits set by law.",
+            "You can also contact the National Authority for the Protection of Personal Data (ANPDP)."
+          ]
+        },
+        {
+          "h": "Cookies",
+          "p": [
+            "The site only uses cookies it needs to work: your chosen language and access to your code. No advertising cookies and no audience tracking."
+          ]
+        },
+        {
+          "h": "Security",
+          "p": [
+            "Exchanges with the site are encrypted. Access to order data is limited to the people who need it."
+          ]
+        }
+      ]
+    },
+    "terms": {
+      "title": "Terms of sale",
+      "lead": "The rules that apply when you order a kit on this site.",
+      "sections": [
+        {
+          "h": "Purpose",
+          "p": [
+            "These terms apply to sales made on this site between the seller named at the bottom of the page and the customer, in accordance with Algerian Law No. 18-05 of 10 May 2018 on electronic commerce."
+          ]
+        },
+        {
+          "h": "The product",
+          "p": [
+            "The kit includes a 50 × 50 cm board with 240 nails already in place, a spool of thread and a personal code. The code gives access to the software that calculates your portrait and to the voice guide.",
+            "One code lets you calculate up to 10 previews, then confirm one portrait. The result depends on the photo chosen: you see the preview before confirming anything."
+          ]
+        },
+        {
+          "h": "Prices",
+          "p": [
+            "Prices are shown in Algerian dinars. Delivery fees are added to the kit price; they are shown when ordering or confirmed by phone before shipping."
+          ]
+        },
+        {
+          "h": "Ordering",
+          "p": [
+            "You fill in the order form, then we call you to confirm it. The order is final after that confirmation."
+          ]
+        },
+        {
+          "h": "Payment",
+          "p": [
+            "In Algeria, you pay the courier in cash when the parcel arrives."
+          ]
+        },
+        {
+          "h": "Delivery",
+          "p": [
+            "Delivery modes, times and fees are described on the Delivery page."
+          ]
+        },
+        {
+          "h": "Guarantee, returns and exchanges",
+          "p": [
+            "A damaged, incomplete or wrong kit is replaced free of charge, or refunded if an exchange is not possible. The conditions are described on the Returns and exchanges page."
+          ]
+        },
+        {
+          "h": "Your photo",
+          "p": [
+            "You agree to use only photos you have the right to use. The photo is used only to calculate your portrait; it is neither kept nor published."
+          ]
+        },
+        {
+          "h": "Personal data",
+          "p": [
+            "How we process your data is described on the Personal data protection page."
+          ]
+        },
+        {
+          "h": "Governing law and disputes",
+          "p": [
+            "These terms are governed by Algerian law. If there is a problem, contact us first: we always look for an amicable solution. Failing that, the dispute falls under the competent Algerian courts."
+          ]
+        }
+      ]
+    }
   },
   "kit": {
     "meta": {

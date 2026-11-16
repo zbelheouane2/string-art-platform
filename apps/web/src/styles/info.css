@@ -1,0 +1,151 @@
+/* Engagements sous le bouton d'achat, contacts du pied de page, pages d'information. */
+
+/* Engagements (fiche du kit) */
+.reassure {
+  display: grid;
+  gap: 0.6rem;
+  margin-block: 1.25rem 0.5rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--color-surface-sand);
+  font-size: var(--step--1);
+}
+
+.reassure li {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.reassure svg {
+  flex: none;
+  color: var(--accent);
+}
+
+.reassure a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 0.2em;
+}
+
+.reassure a:hover {
+  text-decoration-color: currentColor;
+}
+
+/* Pied de page : WhatsApp, e-mail, réseaux */
+.footer-contact {
+  margin-block-start: 0.9rem;
+}
+
+.site-footer .footer-contact a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 2.75rem;
+}
+
+.site-footer .footer-social-title {
+  margin-block-start: 1.25rem;
+}
+
+.site-footer .footer-social {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.site-footer .footer-social a {
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border: 1px solid rgb(255 250 245 / 0.25);
+  border-radius: 50%;
+}
+
+/* Pages d'information */
+.info-page .flow-head {
+  margin-block-end: 2.5rem;
+}
+
+.info-page .info-updated {
+  margin-block-start: 0.75rem;
+  font-size: var(--step--1);
+}
+
+.info-section {
+  padding-block: 1.5rem;
+  border-block-start: 1px solid var(--line);
+}
+
+.info-section h2,
+.info-contact h2,
+.info-related h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.4rem;
+  line-height: 1.25;
+  margin: 0 0 0.6rem;
+}
+
+.info-section p {
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.info-section p + p {
+  margin-block-start: 0.6rem;
+}
+
+.info-seller dl {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+}
+
+.info-seller dl div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+}
+
+.info-seller dt {
+  font-weight: 700;
+  min-inline-size: 11rem;
+}
+
+.info-seller dd {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.info-contact {
+  margin-block-start: 1.5rem;
+}
+
+.info-contact p {
+  color: var(--ink-soft);
+  margin: 0 0 1rem;
+}
+
+.info-contact .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.info-related {
+  margin-block-start: 2rem;
+}
+
+.info-related ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+.info-related a {
+  color: var(--ink);
+  text-underline-offset: 0.2em;
+}

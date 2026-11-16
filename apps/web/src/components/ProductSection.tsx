@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Gallery } from "./Gallery";
 import { Link } from "@/i18n/navigation";
 import { PlusIcon } from "./Icons";
+import { Reassurance } from "./Reassurance";
 
 const INCLUDES = ["board", "thread", "code", "guide", "card"] as const;
 const ACCORDION = ["box", "photo", "app", "gift"] as const;
@@ -70,6 +71,7 @@ export async function ProductSection({
               {t("ctaSoon")}
             </button>
           )}
+          <Reassurance />
           <p className="shop-note">
             <Link href="/activer">{t("haveCode")}</Link>
           </p>

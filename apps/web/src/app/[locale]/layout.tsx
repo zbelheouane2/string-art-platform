@@ -6,6 +6,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { brand } from "@/config/brand";
 import { direction, routing } from "@/i18n/routing";
 import "@/styles/globals.css";
+import "@/styles/info.css";
 
 const dmSerif = DM_Serif_Display({
   weight: "400",

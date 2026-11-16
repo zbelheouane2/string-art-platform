@@ -13,8 +13,8 @@
 `tests/test_api.py` : santé, génération (document + aperçu PNG), refus image trop petite, fichier non image, recadrage invalide, jeton obligatoire si configuré.
 
 ## Site (`apps/web`)
-- `npm test` — 13 tests unitaires : repères de clous identiques au moteur, cohérence du portrait de démonstration, mêmes clés de traduction dans les trois langues.
-- `npm run test:e2e` — 34 tests navigateur (bureau 1440 px et mobile 390 px) : choix de langue selon le navigateur, `lang` et `dir` (RTL en arabe), pas de défilement horizontal, accessibilité WCAG 2.1 A/AA (axe) en FR/EN/AR, sélecteur de langue, tissage complet, FAQ au clavier, santé base + moteur.
+- `npm test` — tests unitaires : repères de clous identiques au moteur, cohérence du portrait de démonstration, mêmes clés de traduction dans les trois langues, liens WhatsApp et réseaux (`contact.test.ts`).
+- `npm run test:e2e` — 34 tests navigateur (bureau 1440 px et mobile 390 px) : choix de langue selon le navigateur, `lang` et `dir` (RTL en arabe), pas de défilement horizontal, accessibilité WCAG 2.1 A/AA (axe) en FR/EN/AR, sélecteur de langue, tissage complet, FAQ au clavier, santé base + moteur. `infos.spec.ts` : les 4 pages d'information en FR/EN/AR (titre, largeur, accessibilité), liens du pied de page, WhatsApp affiché et réseaux masqués, engagements sous le bouton Commander.
 
 ## Essais visuels
 Photo libre de droits (scikit-image « astronaut », recadrée sur le visage) : portrait reconnaissable, 1 800–2 300 fils, ~0,7–0,9 km de fil, ~1 s de calcul + ~2 s de rendu.
