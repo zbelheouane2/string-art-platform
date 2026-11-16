@@ -6,6 +6,8 @@ import { NAILS_PER_SECTOR, SECTORS, nailLabel, type DemoPortrait } from "@/lib/b
 import { PauseIcon, PlayIcon, ReplayIcon } from "./Icons";
 
 const DURATION_MS = 16000;
+/** Part du portrait déjà tissée à l'arrivée : le visage se reconnaît dès le premier écran. */
+const START_SHARE = 0.6;
 /** Fil réel : 0,12 mm, opacité 0,95, cercle de clous de 470 mm (comme le moteur). */
 const THREAD_MM = 0.12;
 const THREAD_OPACITY = 0.95;
@@ -24,10 +26,11 @@ const NAIL = "#a9803f";
 export function WeavingBoard({ demo }: { demo: DemoPortrait }) {
   const t = useTranslations("hero");
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const drawnRef = useRef(0);
-  const [count, setCount] = useState(0);
-  const [playing, setPlaying] = useState(true);
   const total = demo.sequence.length - 1;
+  const start = Math.floor(total * START_SHARE);
+  const drawnRef = useRef(start);
+  const [count, setCount] = useState(start);
+  const [playing, setPlaying] = useState(true);
 
   const geometry = useCallback(() => {
     const canvas = canvasRef.current;
@@ -110,6 +113,7 @@ export function WeavingBoard({ demo }: { demo: DemoPortrait }) {
     let raf = 0;
     let last = performance.now();
     let frame = 0;
+    // La reprise après l'ouverture garde la même vitesse de fil que le tissage complet.
     const perMs = total / DURATION_MS;
     let budget = 0;
     const tick = (now: number) => {

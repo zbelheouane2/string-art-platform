@@ -148,13 +148,13 @@ test("le carrousel ne défile pas seul avec « réduire les animations »", asyn
 test("la galerie produit glisse avec les flèches et les vignettes", async ({ page }) => {
   await page.goto("/fr/kit");
   const count = page.locator(".gallery-count");
-  await expect(count).toHaveText("1 / 25");
+  await expect(count).toHaveText("1 / 23");
   await page.getByRole("button", { name: "Visuel suivant" }).click();
-  await expect(count).toHaveText("2 / 25");
+  await expect(count).toHaveText("2 / 23");
   await page.locator(".gallery-thumbs button").nth(4).click();
-  await expect(count).toHaveText("5 / 25");
+  await expect(count).toHaveText("5 / 23");
   await page.getByRole("button", { name: "Visuel précédent" }).click();
-  await expect(count).toHaveText("4 / 25");
+  await expect(count).toHaveText("4 / 23");
 });
 
 test("le bouton « Comment ça marche ? » mène à la page du kit", async ({ page }) => {
@@ -227,4 +227,12 @@ test("sur ordinateur, les 5 écrans du générateur tiennent sur une ligne, sans
   await expect(carousel.locator(".auto-controls")).toBeHidden();
   const tops = await carousel.locator(".auto-item").evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top)));
   expect(new Set(tops).size).toBe(1);
+});
+
+test("premier écran : titre, prix et bouton visibles sans défiler", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/fr");
+  await expect(page.locator(".hero-price strong")).toHaveText("4 900 DA");
+  await expect(page.locator(".hero-price")).toBeInViewport();
+  await expect(page.getByRole("link", { name: "Offrir le kit" }).first()).toBeInViewport();
 });

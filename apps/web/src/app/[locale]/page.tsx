@@ -25,7 +25,7 @@ const TRUST = ["cod", "delivery", "voice", "nails"] as const;
 const PROOF = ["cod", "nails", "voice"] as const;
 const GIFTS = [
   { key: "couples", name: "couple" },
-  { key: "parents", name: "salah", caption: true },
+  { key: "parents", name: "haik" },
   { key: "grandparents", name: "fillette" },
   { key: "pets", name: "chat" },
   { key: "memory", name: "benmhidi" },
@@ -90,6 +90,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 {t("hero.titleStart")} <em>{t("hero.titleAccent")}</em>
               </h1>
               <p className="hero-lead">{t("hero.lead")}</p>
+              <p className="hero-price">
+                <strong>{price ?? t("shop.priceSoon")}</strong>
+                <span>{t("hero.priceNote")}</span>
+              </p>
               <div className="hero-actions" id="hero-actions">
                 <a className="btn btn-primary btn-lg" href="#acheter">
                   {t("hero.cta")}
@@ -255,8 +259,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                         </span>
                       )}
                     </div>
-                    {"caption" in g && <p className="gift-caption">{t(`gifts.items.${g.key}.caption`)}</p>}
-                    <h3 className={"caption" in g ? "has-caption" : undefined}>{t(`gifts.items.${g.key}.title`)}</h3>
+                    <h3>{t(`gifts.items.${g.key}.title`)}</h3>
                     <p>{t(`gifts.items.${g.key}.text`)}</p>
                     {"occasions" in g && (
                       <ul className="gift-occasions">

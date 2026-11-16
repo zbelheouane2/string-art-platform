@@ -311,6 +311,19 @@ test.describe("commande", () => {
   }
 });
 
+test.describe("commande : confiance et erreurs", () => {
+  test("engagements et vignette du kit sur la page de commande ; le premier champ en erreur reçoit le curseur", async ({ page }) => {
+    await page.goto("/fr/commander");
+    await expect(page.locator(".order-product img")).toBeVisible();
+    const trust = page.locator(".order-form .reassure");
+    await expect(trust).toContainText("Vous payez à la réception");
+    await expect(page.locator(".order-total small")).toHaveText("À payer en espèces au livreur, à la réception.");
+    await page.getByRole("button", { name: "Valider ma commande" }).click();
+    await expect(page.getByLabel("Nom et prénom")).toBeFocused();
+    await expect(page.getByLabel("Nom et prénom")).toBeInViewport();
+  });
+});
+
 test.describe("suivi et contact", () => {
   test("suivre ma commande : numéro + téléphone donnent l'état, sans donnée personnelle", async ({ page }) => {
     await page.goto("/fr/commander");

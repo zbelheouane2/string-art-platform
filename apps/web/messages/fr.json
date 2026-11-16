@@ -45,7 +45,8 @@
       "cod": "Paiement à la livraison",
       "nails": "240 clous déjà posés",
       "voice": "Guide vocal en 3 langues"
-    }
+    },
+    "priceNote": "le kit complet, payé à la livraison"
   },
   "trust": {
     "cod": "Paiement à la livraison",
@@ -64,8 +65,7 @@
       },
       "parents": {
         "title": "Pour ses parents",
-        "text": "Un portrait de famille pour le salon",
-        "caption": "La star algérienne : Salah Aougrout"
+        "text": "Un portrait de famille pour le salon"
       },
       "grandparents": {
         "title": "Pour les grands-parents",
@@ -194,8 +194,6 @@
       "thread": "Portrait en fil d'Ali La Pointe, calculé par notre logiciel",
       "spool": "Le dévidoir en bois à monter, avec sa bobine de fil noir",
       "photo": "La photo d'archive d'Ali La Pointe",
-      "salah": "Portrait en fil de Salah Aougrout",
-      "salahPhoto": "La photo de départ de Salah Aougrout",
       "benmhidi": "Portrait en fil de Larbi Ben M'hidi",
       "benmhidiPhoto": "La photo d'archive de Larbi Ben M'hidi",
       "self": "Portrait en fil d'une femme en caftan",
@@ -648,7 +646,7 @@
         "progress": "Progression sauvegardée"
       },
       "note": "Vous avez déjà un kit ?",
-      "cta": "Saisir mon code (bientôt)"
+      "cta": "Saisir mon code"
     },
     "gift": {
       "eyebrow": "C'est pour offrir ?",
@@ -981,7 +979,7 @@
       }
     },
     "deliveryFees": "Frais de livraison pour cette wilaya confirmés par téléphone avant l'envoi.",
-    "total": "Total (hors livraison)",
+    "total": "Total des articles",
     "submit": "Valider ma commande",
     "sending": "Envoi…",
     "privacy": "Vos coordonnées servent uniquement à livrer votre commande. Nous ne demandons pas votre adresse complète : le livreur vous appelle.",
@@ -1014,7 +1012,8 @@
       "toggleText": "Vous êtes à l'étranger ? Le kit est livré à votre proche, qui règle à la livraison.",
       "recipientHelp": "La personne qui reçoit le kit : le livreur l'appelle à ce numéro.",
       "paymentHelp": "Le destinataire paie en espèces à la réception. Nous vous prévenons quand le colis est livré."
-    }
+    },
+    "totalCod": "À payer en espèces au livreur, à la réception."
   },
   "confirmation": {
     "eyebrow": "Merci !",

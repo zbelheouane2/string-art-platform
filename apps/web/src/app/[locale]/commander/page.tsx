@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageShell } from "@/components/PageShell";
+import { Reassurance } from "@/components/Reassurance";
 import { brand } from "@/config/brand";
 import { commerce } from "@/config/commerce";
 import { kitOffer } from "@/config/catalog";
@@ -34,9 +35,14 @@ export default async function OrderPage({
       <header className="flow-head">
         <h1>{t("title")}</h1>
         {options && (
-          <p>
-            {options.product.names[locale] ?? options.product.names.fr} · {formatPrice(options.price, locale)}
-            {kitOffer.provisional && ` (${t("provisional")})`}
+          <p className="order-product">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/visuels/femme-fil.webp" alt="" width={72} height={72} />
+            <span>
+              <strong>{options.product.names[locale] ?? options.product.names.fr}</strong>
+              {formatPrice(options.price, locale)}
+              {kitOffer.provisional && ` (${t("provisional")})`}
+            </span>
           </p>
         )}
       </header>
@@ -49,6 +55,7 @@ export default async function OrderPage({
           maxQuantity={commerce.maxQuantity}
           giftDefault={gift}
           accessories={options.accessories}
+          trust={<Reassurance />}
           optionsDefault={(query.options ?? "").split(",").filter((s) => options.accessories.some((a) => a.slug === s))}
         />
       ) : (

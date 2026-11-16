@@ -17,6 +17,8 @@
   --brass: var(--color-brass);
   --font-body: var(--font-sans);
 
+  /* Échelle de texte unique (audit) : 12, 14, 15, 17 px puis titres fluides. */
+  --text-xs: 0.75rem;
   --step--1: var(--text-sm);
   /* Échelle resserrée (retour du propriétaire : site trop « zoomé ») : environ 20 % plus petit que les relevés. */
   --step-0: var(--text-body);
@@ -175,7 +177,7 @@ figure {
 .btn-lg {
   min-block-size: var(--control-height);
   padding-inline: var(--control-pad-x);
-  font-size: 1.0625rem;
+  font-size: var(--step-1);
 }
 
 .btn-block {
@@ -460,9 +462,10 @@ h1 em {
 
 .sector-label {
   position: absolute;
-  font-size: 0.7rem;
+  font-size: var(--text-xs);
   font-weight: 700;
-  color: var(--brass);
+  /* Laiton assombri : contraste 4,5:1 sur le blanc de la planche. */
+  color: color-mix(in srgb, var(--brass) 72%, var(--ink));
 }
 
 .plaque-bar {
@@ -488,7 +491,7 @@ h1 em {
 }
 
 .plaque-credit {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   color: var(--ink-soft);
   margin-block-start: 0.25rem;
 }
@@ -608,7 +611,7 @@ h1 em {
   background: rgb(255 255 255 / 0.85);
   border-radius: var(--radius-pill);
   padding: 0.15rem 0.6rem;
-  font-size: 0.7rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   color: var(--ink-soft);
 }
@@ -746,7 +749,7 @@ h1 em {
   background: var(--accent);
   color: var(--on-accent);
   font-family: var(--font-display);
-  font-size: 1.35rem;
+  font-size: var(--step-2);
 }
 
 .num-steps h3 {
@@ -1440,12 +1443,20 @@ h1 em {
 /* En-tête : menu de langue déroulant */
 .lang-menu {
   position: relative;
+}
+
+/* Téléphone : la langue reste dans l'en-tête, sous forme courte (FR, EN, ع). */
+.lang-long {
   display: none;
 }
 
 @media (min-width: 48rem) {
-  .lang-menu {
-    display: block;
+  .lang-long {
+    display: inline;
+  }
+
+  .lang-short {
+    display: none;
   }
 }
 
@@ -1601,7 +1612,7 @@ h1 em {
   background: var(--color-surface-blush);
   color: var(--color-accent);
   font-family: var(--font-body);
-  font-size: 0.97rem;
+  font-size: var(--text-body);
   font-weight: 700;
 }
 
@@ -1631,7 +1642,7 @@ h1 em {
   border-radius: 50%;
   background: var(--color-surface-blush);
   color: var(--color-accent);
-  font-size: 0.97rem;
+  font-size: var(--text-body);
   font-weight: 700;
 }
 
@@ -1915,7 +1926,7 @@ h1 em {
 
 .phone-code {
   font-family: var(--font-body);
-  font-size: 1.2rem;
+  font-size: var(--step-2);
   font-weight: 700;
   letter-spacing: 0.1em;
   padding: 0.6rem 0.8rem;
@@ -1950,7 +1961,7 @@ h1 em {
 .app-footer {
   display: grid;
   gap: 1.5rem;
-  margin-block-start: 3rem;
+  margin-block-start: 1.5rem;
   align-items: center;
 }
 
@@ -2040,7 +2051,7 @@ h1 em {
   margin-block-start: auto;
   padding-block-start: 0.75rem;
   border-block-start: 1px solid var(--color-border);
-  font-size: 0.84rem;
+  font-size: var(--text-sm);
 }
 
 .stats {
@@ -2193,7 +2204,7 @@ h1 em {
   background: rgb(255 255 255 / 0.9);
   border-radius: var(--radius-pill);
   padding: 0.25rem 0.75rem;
-  font-size: 0.85rem;
+  font-size: var(--text-sm);
   font-weight: 700;
   color: var(--color-text);
 }
@@ -2268,7 +2279,7 @@ h1 em {
 }
 
 .steps-label {
-  font-size: 0.78rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   line-height: 1.25;
 }
@@ -2317,7 +2328,7 @@ h1 em {
 
 .steps-num {
   color: var(--color-accent);
-  font-size: 0.85rem;
+  font-size: var(--text-sm);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -2351,7 +2362,7 @@ h1 em {
 }
 
 .steps-label {
-  font-size: 0.72rem;
+  font-size: var(--text-xs);
 }
 
 @media (min-width: 30rem) {
@@ -2364,7 +2375,7 @@ h1 em {
     block-size: 30px;
   }
   .steps-label {
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
   }
 }
 
@@ -2513,7 +2524,7 @@ h1 em {
 }
 
 .box-grid p {
-  font-size: 0.95rem;
+  font-size: var(--text-body);
 }
 
 /* ---------- Accueil : générateur en ligne (défilement horizontal) ---------- */
@@ -2609,7 +2620,7 @@ h1 em {
     row-gap: 1rem;
   }
   .steps-label {
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
     overflow-wrap: break-word;
     max-inline-size: 100%;
   }
@@ -3323,7 +3334,7 @@ h1 em {
 
 .accessory-tag {
   color: var(--color-success);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -3415,7 +3426,7 @@ h1 em {
   background: none;
   color: var(--ink);
   font: inherit;
-  font-size: 0.78rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -3549,7 +3560,7 @@ h1 em {
 
   :lang(ar) .header-nav a {
     letter-spacing: 0;
-    font-size: 0.9375rem;
+    font-size: var(--text-body);
   }
 
   .header-nav a:hover,
@@ -3992,4 +4003,147 @@ h1 em {
   color: var(--ink-soft);
   font-size: var(--step--1);
   font-weight: 600;
+}
+
+/* Héros (audit) : sur téléphone, titre, prix et bouton dans le premier écran, la planche ensuite. */
+.hero-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.6rem;
+  margin: 0 0 1.25rem;
+}
+
+.hero-price strong {
+  font-size: var(--step-2);
+  font-weight: 700;
+}
+
+.hero-price span {
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+}
+
+@media (max-width: 59.99rem) {
+  .hero-copy {
+    order: -1;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(1.75rem, 1.2rem + 2.6vw, 2.4rem);
+  }
+
+  .hero-lead {
+    margin-block: 0.75rem 1rem;
+  }
+
+  .hero-media {
+    inline-size: min(100%, 24rem);
+    justify-self: center;
+  }
+
+  .hero .proof {
+    margin-block-start: 1rem;
+  }
+}
+
+/* Commande (audit) : rappel du produit, engagements avant le bouton, total à payer au livreur. */
+.order-product {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.order-product img {
+  flex: none;
+  inline-size: 4.5rem;
+  block-size: 4.5rem;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  border: 1px solid var(--line);
+}
+
+.order-product span {
+  display: grid;
+}
+
+.order-product strong {
+  color: var(--ink);
+}
+
+.order-total > span {
+  display: grid;
+}
+
+.order-total small {
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+}
+
+.order-form > .reassure {
+  margin-block: 0 1rem;
+}
+
+/* Cibles tactiles d'au moins 24 px partout, 44 px pour les commandes principales sur téléphone. */
+.reassure a,
+.accessory-more,
+.site-footer nav a,
+.form-more summary {
+  display: inline-block;
+  padding-block: 0.3rem;
+}
+
+.accessory-more {
+  min-block-size: 1.75rem;
+}
+
+@media (pointer: coarse) {
+  /* Zone de toucher élargie autour de l'interrupteur sans changer son dessin. */
+  .switch::before {
+    content: "";
+    position: absolute;
+    inset: -0.45rem -0.25rem;
+  }
+
+  .auto-dot {
+    inline-size: 2.25rem;
+    block-size: 2.75rem;
+  }
+
+  .auto-dot[aria-current] {
+    inline-size: 2.75rem;
+  }
+
+  .lang-switch a {
+    min-inline-size: 2.75rem;
+    min-block-size: 2.75rem;
+  }
+}
+
+/* Idées cadeaux sur téléphone : une rangée qu'on fait glisser au lieu d'une longue pile. */
+@media (max-width: 39.99rem) {
+  .gift-grid {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 68%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    margin-inline: calc(-1 * var(--gutter));
+    padding-inline: var(--gutter);
+    padding-block-end: 0.75rem;
+    scrollbar-width: thin;
+  }
+
+  .gift-grid > li,
+  .gift-grid > li.gift-wide {
+    grid-column: auto;
+    scroll-snap-align: start;
+  }
+
+  .gift-wide .gift-img {
+    max-inline-size: none;
+  }
 }

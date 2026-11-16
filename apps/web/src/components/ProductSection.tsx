@@ -16,12 +16,12 @@ const portrait = (name: string, alt: string) => [
   { src: `/visuels/${name}-photo.webp`, alt: `${alt}Photo` },
 ];
 const GALLERY = [
-  ...portrait("monalisa", "monalisa"),
+  // On ouvre sur un portrait proche des clientes ; la Joconde vient plus loin.
+  ...portrait("femme", "woman"),
   { src: "/visuels/planche-plan.webp", alt: "board" },
-  ...portrait("salah", "salah"),
   ...portrait("benmhidi", "benmhidi"),
   ...portrait("soi", "self"),
-  ...portrait("femme", "woman"),
+  ...portrait("monalisa", "monalisa"),
   ...portrait("haik", "haik"),
   ...portrait("touareg", "tuareg"),
   ...portrait("grandpere", "grandpa"),

@@ -27,13 +27,6 @@ const EXAMPLES = [
   { key: "pet", name: "chat" },
   { key: "group", name: "photographe" },
 ] as const;
-const APP = [
-  { key: "site", img: null },
-  { key: "code", img: null },
-  { key: "photo", img: "/visuels/astronaute-photo.webp" },
-  { key: "preview", img: "/visuels/astronaute-fil.webp" },
-  { key: "thread", img: "/visuels/chat-fil.webp" },
-] as const;
 const APP_CHIPS = ["voice", "speed", "pause", "progress"] as const;
 const GIFT_CHIPS = ["code", "cod", "langs"] as const;
 const WHY = ["engine", "face", "nails", "voice", "cod", "privacy"] as const;
@@ -160,30 +153,6 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
               <h2 id="kit-app-title">{t("kit.app.title")}</h2>
               <p>{t("kit.app.lead")}</p>
             </header>
-            <ol className="app-grid">
-              {APP.map((s, i) => (
-                <li key={s.key} data-reveal style={{ ["--i" as string]: i }}>
-                  <div className="phone">
-                    <div className="phone-screen">
-                      {s.img ? (
-                        <img src={s.img} alt="" width={300} height={300} loading="lazy" />
-                      ) : s.key === "code" ? (
-                        <span className="phone-code" dir="ltr">
-                          ••••-••••
-                        </span>
-                      ) : (
-                        <NailRing />
-                      )}
-                    </div>
-                  </div>
-                  <div className="app-title">
-                    <span aria-hidden="true">{i + 1}</span>
-                    <h3>{t(`kit.app.steps.${s.key}.title`)}</h3>
-                  </div>
-                  <p>{t(`kit.app.steps.${s.key}.text`)}</p>
-                </li>
-              ))}
-            </ol>
             <div className="app-footer" data-reveal>
               <ul className="chips chips-dark">
                 {APP_CHIPS.map((c) => (
@@ -192,9 +161,9 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
               </ul>
               <div className="app-cta">
                 <span>{t("kit.app.note")}</span>
-                <button type="button" className="btn btn-primary btn-lg" disabled>
+                <Link className="btn btn-primary btn-lg" href="/activer">
                   {t("kit.app.cta")}
-                </button>
+                </Link>
               </div>
             </div>
           </div>

@@ -45,7 +45,8 @@
       "cod": "Cash on delivery",
       "nails": "240 nails already set",
       "voice": "Voice guide in 3 languages"
-    }
+    },
+    "priceNote": "the complete kit, paid on delivery"
   },
   "trust": {
     "cod": "Cash on delivery",
@@ -64,8 +65,7 @@
       },
       "parents": {
         "title": "For your parents",
-        "text": "A family portrait for the living room",
-        "caption": "Algerian star: Salah Aougrout"
+        "text": "A family portrait for the living room"
       },
       "grandparents": {
         "title": "For grandparents",
@@ -194,8 +194,6 @@
       "thread": "String portrait of Ali La Pointe, computed by our software",
       "spool": "The wooden spool holder to assemble, with its spool of black thread",
       "photo": "The archive photo of Ali La Pointe",
-      "salah": "String portrait of Salah Aougrout",
-      "salahPhoto": "The source photo of Salah Aougrout",
       "benmhidi": "String portrait of Larbi Ben M'hidi",
       "benmhidiPhoto": "The archive photo of Larbi Ben M'hidi",
       "self": "String portrait of a woman in a caftan",
@@ -648,7 +646,7 @@
         "progress": "Progress saved"
       },
       "note": "Already have a kit?",
-      "cta": "Enter my code (soon)"
+      "cta": "Enter my code"
     },
     "gift": {
       "eyebrow": "Is it a gift?",
@@ -981,7 +979,7 @@
       }
     },
     "deliveryFees": "The delivery fee for this wilaya is confirmed by phone before shipping.",
-    "total": "Total (excluding delivery)",
+    "total": "Items total",
     "submit": "Place my order",
     "sending": "Sending…",
     "privacy": "Your details are only used to deliver your order. We don't ask for your full address: the courier will call you.",
@@ -1014,7 +1012,8 @@
       "toggleText": "Living abroad? The kit is delivered to your loved one, who pays on delivery.",
       "recipientHelp": "The person receiving the kit: the courier calls them on this number.",
       "paymentHelp": "The recipient pays in cash on delivery. We let you know when the parcel has arrived."
-    }
+    },
+    "totalCod": "Paid in cash to the courier on delivery."
   },
   "confirmation": {
     "eyebrow": "Thank you!",

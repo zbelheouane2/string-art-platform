@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useRef, useState, type ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { OTHER_COMMUNE, communesOf } from "@/config/communes";
 import { WILAYAS } from "@/config/wilayas";
@@ -23,6 +23,8 @@ interface Props {
   accessories?: CheckoutAccessory[];
   /** Options déjà choisies sur la fiche du kit. */
   optionsDefault?: string[];
+  /** Engagements (délai, paiement, échange, WhatsApp) rappelés juste avant le bouton. */
+  trust?: ReactNode;
 }
 
 function Field({
@@ -60,6 +62,7 @@ export function OrderForm({
   giftDefault = false,
   accessories = [],
   optionsDefault = [],
+  trust,
 }: Props) {
   const t = useTranslations("order");
   const locale = useLocale();
@@ -68,6 +71,15 @@ export function OrderForm({
     { fieldErrors: {}, formError: null, values: {} },
   );
   const v = state.values;
+  const formRef = useRef<HTMLFormElement>(null);
+  // Après un envoi refusé : on amène le premier champ en erreur à l'écran et on y place le curseur.
+  useEffect(() => {
+    const first = formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]');
+    if (!first) return;
+    const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    first.scrollIntoView({ block: "center", behavior: smooth ? "smooth" : "auto" });
+    first.focus({ preventScroll: true });
+  }, [state]);
   const [quantity, setQuantity] = useState(Number(v.quantity ?? 1));
   const [gift, setGift] = useState(v.gift ? v.gift === "on" : giftDefault);
   const [mode, setMode] = useState(v.delivery ?? delivery[0]);
@@ -93,7 +105,7 @@ export function OrderForm({
       : {};
 
   return (
-    <form action={action} className="order-form" noValidate>
+    <form ref={formRef} action={action} className="order-form" noValidate>
       <input type="hidden" name="locale" value={locale} />
 
       <label className="choice gift-toggle">
@@ -413,7 +425,10 @@ export function OrderForm({
           )}
         </dl>
         <p className="order-total">
-          <span>{fee === null ? t("total") : t("totalWithDelivery")}</span>
+          <span>
+            {fee === null ? t("total") : t("totalWithDelivery")}
+            {payment.length === 1 && payment[0] === "cod" && <small>{t("totalCod")}</small>}
+          </span>
           <strong>{money(items + extras + (fee ?? 0))}</strong>
         </p>
       </fieldset>
@@ -428,6 +443,7 @@ export function OrderForm({
           {t("errors.check")}
         </p>
       )}
+      {trust}
       <button
         type="submit"
         className="btn btn-primary btn-lg btn-block"

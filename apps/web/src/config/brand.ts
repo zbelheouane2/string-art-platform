@@ -11,7 +11,7 @@ const env = (value: string | undefined, fallback = "") => (value ?? fallback).tr
 
 export const brand = {
   name: process.env.NEXT_PUBLIC_BRAND_NAME ?? "DeeKra",
-  logo: { light: "/visuels/marque/deekra-entete.webp", dark: "/visuels/marque/deekra-entete-sombre.webp", width: 623, height: 320 },
+  logo: { light: "/visuels/marque/deekra-entete-160.webp", dark: "/visuels/marque/deekra-entete-sombre-160.webp", width: 312, height: 160 },
   supportEmail: env(process.env.NEXT_PUBLIC_SUPPORT_EMAIL),
   /** Numéro WhatsApp du service client, format international sans « + » (ex. 213771704033). */
   whatsapp: env(process.env.NEXT_PUBLIC_WHATSAPP, "213771704033"),
