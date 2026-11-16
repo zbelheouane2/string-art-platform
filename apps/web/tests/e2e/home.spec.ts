@@ -192,8 +192,39 @@ test("menu horizontal sur ordinateur, menu repliable sur téléphone", async ({ 
     await expect(bar).toBeHidden();
     await expect(page.getByRole("button", { name: "Ouvrir la navigation" })).toBeVisible();
   } else {
-    await expect(bar.getByRole("link")).toHaveCount(5);
+    await expect(bar.getByRole("link")).toHaveCount(8);
+    for (const name of ["Livraison", "Contact", "Suivre ma commande"]) await expect(bar.getByRole("link", { name })).toBeVisible();
     await bar.getByRole("link", { name: "Le kit" }).click();
     await expect(page).toHaveURL(/\/fr\/kit$/);
   }
+});
+
+test("les écrans du générateur défilent seuls sur téléphone, avec points et pause", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "sur ordinateur les trois écrans tiennent sur une ligne");
+  await page.goto("/fr");
+  const carousel = page.locator(".app-scroller");
+  await carousel.scrollIntoViewIfNeeded();
+  await page.mouse.move(0, 0);
+  const track = carousel.locator(".auto-track");
+  const dots = carousel.locator(".auto-dot");
+  await expect(dots).toHaveCount(3);
+  await expect(dots.nth(0)).toHaveAttribute("aria-current", "true");
+  // Avance seul en 5 s environ.
+  await expect(dots.nth(1)).toHaveAttribute("aria-current", "true", { timeout: 8000 });
+  await expect.poll(() => track.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
+  // Un point mène à sa diapositive ; le bouton pause arrête le défilement.
+  await dots.nth(2).click();
+  await expect(dots.nth(2)).toHaveAttribute("aria-current", "true");
+  await carousel.getByRole("button", { name: "Mettre le défilement en pause" }).click();
+  await expect(carousel.getByRole("button", { name: "Relancer le défilement" })).toHaveAttribute("aria-pressed", "true");
+});
+
+test("sur ordinateur, les 5 écrans du générateur tiennent sur une ligne, sans commandes", async ({ page, isMobile }) => {
+  test.skip(isMobile, "ordinateur seulement");
+  await page.goto("/fr/kit");
+  const carousel = page.locator("#generateur .auto-carousel");
+  await expect(carousel.locator(".engine-card")).toHaveCount(5);
+  await expect(carousel.locator(".auto-controls")).toBeHidden();
+  const tops = await carousel.locator(".auto-item").evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top)));
+  expect(new Set(tops).size).toBe(1);
 });

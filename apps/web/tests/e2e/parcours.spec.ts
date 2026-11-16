@@ -311,6 +311,68 @@ test.describe("commande", () => {
   }
 });
 
+test.describe("suivi et contact", () => {
+  test("suivre ma commande : numéro + téléphone donnent l'état, sans donnée personnelle", async ({ page }) => {
+    await page.goto("/fr/commander");
+    await page.getByLabel("Nom et prénom").fill("Client Suivi");
+    await page.getByLabel("Téléphone mobile").fill("0555 98 76 54");
+    await page.getByLabel("Wilaya").selectOption("16");
+    await page.getByLabel("Commune", { exact: true }).selectOption("Bab Ezzouar");
+    await page.getByLabel("Au bureau de livraison").check();
+    await page.getByRole("button", { name: "Valider ma commande" }).click();
+    await expect(page).toHaveURL(/\/fr\/commande\/DK-[0-9A-Z]{6}$/);
+    const number = page.url().split("/").pop()!;
+
+    await page.goto("/fr/suivi");
+    // Mauvais téléphone : rien n'est révélé.
+    await page.getByLabel("Numéro de commande").fill(number.toLowerCase());
+    await page.getByLabel("Téléphone utilisé pour la commande").fill("0555 00 00 00");
+    await page.getByRole("button", { name: "Voir où en est ma commande" }).click();
+    await expect(page.locator(".track-form .field-error")).toHaveText("Aucune commande ne correspond à ce numéro et ce téléphone.");
+
+    await page.getByLabel("Téléphone utilisé pour la commande").fill("+213555987654");
+    await page.getByRole("button", { name: "Voir où en est ma commande" }).click();
+    await expect(page.locator(".track-result")).toContainText(number);
+    await expect(page.locator('.track-steps li[aria-current="step"]')).toHaveText("Reçue");
+    await expect(page.getByText("Client Suivi")).toHaveCount(0);
+    await axe(page);
+  });
+
+  test("contact : le message est préparé pour WhatsApp, rien n'est envoyé au site", async ({ page }) => {
+    await page.addInitScript(() => {
+      (window as unknown as { __opened: string[] }).__opened = [];
+      window.open = (url?: string | URL) => {
+        (window as unknown as { __opened: string[] }).__opened.push(String(url));
+        return null;
+      };
+    });
+    await page.goto("/fr/contact");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Une question ?");
+    await page.getByRole("button", { name: "Envoyer sur WhatsApp" }).click();
+    await expect(page.getByText("Écrivez votre message")).toBeVisible();
+    await page.getByLabel("Votre nom").fill("Amina");
+    await page.getByLabel("Votre message").fill("Le kit arrive quand ?");
+    await page.getByRole("button", { name: "Envoyer sur WhatsApp" }).click();
+    const opened = await page.evaluate(() => (window as unknown as { __opened: string[] }).__opened);
+    expect(opened).toHaveLength(1);
+    const url = new URL(opened[0]);
+    expect(url.host).toBe("wa.me");
+    expect(url.searchParams.get("text")).toBe("Votre nom : Amina\nLe kit arrive quand ?");
+    await axe(page);
+  });
+
+  for (const locale of ["en", "ar"] as const) {
+    test(`pages contact et suivi (${locale}) : accessibilité et largeur`, async ({ page }) => {
+      for (const slug of ["contact", "suivi"]) {
+        await page.goto(`/${locale}/${slug}`);
+        const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+        expect(overflow).toBeLessThanOrEqual(0);
+        await axe(page);
+      }
+    });
+  }
+});
+
 test.describe("fiche du kit", () => {
   for (const [locale, facts, steps] of [
     ["fr", "Montage : 4 à 6 h environ, à votre rythme", "Saisissez votre code"],
@@ -322,11 +384,14 @@ test.describe("fiche du kit", () => {
       await expect(page.locator("#acheter .kit-facts li")).toHaveCount(4);
       await expect(page.locator("#acheter .kit-facts")).toContainText(facts);
       await expect(page.locator("#generateur .engine-card")).toHaveCount(5);
-      // Carrousel : la flèche « suivante » fait glisser vers l'étape 2 (vers la gauche en FR, la droite en AR).
-      const track = page.locator(".engine-track");
-      const before = await track.evaluate((el) => el.scrollLeft);
-      await page.locator(".engine-arrow").nth(1).click();
-      await expect.poll(() => track.evaluate((el) => el.scrollLeft)).not.toBe(before);
+      // Téléphone : la flèche « suivante » fait glisser vers l'étape 2 (vers la gauche en FR, la droite en AR).
+      const next = page.locator("#generateur [data-auto-next]");
+      if (await next.isVisible()) {
+        const track = page.locator("#generateur .auto-track");
+        const before = await track.evaluate((el) => el.scrollLeft);
+        await next.click();
+        await expect.poll(() => track.evaluate((el) => el.scrollLeft)).not.toBe(before);
+      }
       await expect(page.locator("#generateur")).toContainText(steps);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       expect(overflow).toBeLessThanOrEqual(0);

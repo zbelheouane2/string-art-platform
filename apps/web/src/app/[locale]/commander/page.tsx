@@ -32,7 +32,6 @@ export default async function OrderPage({
   return (
     <PageShell narrow>
       <header className="flow-head">
-        <p className="eyebrow">{t("eyebrow")}</p>
         <h1>{t("title")}</h1>
         {options && (
           <p>

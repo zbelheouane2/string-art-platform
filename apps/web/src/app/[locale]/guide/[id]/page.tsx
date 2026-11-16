@@ -43,7 +43,6 @@ export default async function GuidePage({ params }: { params: Promise<{ locale: 
   return (
     <PageShell>
       <header className="flow-head guide-head">
-        <p className="eyebrow">{id === "demo" ? t("demoEyebrow") : t("eyebrow")}</p>
         <h1>{t("title")}</h1>
         <p>{t("lead", { lines: portrait!.lines, meters: Math.round(portrait!.threadLengthM) })}</p>
       </header>

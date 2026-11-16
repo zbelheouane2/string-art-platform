@@ -77,7 +77,6 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
             </div>
             <div>
               <header className="section-head" data-reveal>
-                <p className="eyebrow">{t("kit.what.eyebrow")}</p>
                 <h2 id="kit-what-title">{t("kit.what.title")}</h2>
                 <p>{t("kit.what.lead")}</p>
               </header>
@@ -102,7 +101,6 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
             </div>
             <div>
               <header className="section-head" data-reveal>
-                <p className="eyebrow">{t("kit.check.eyebrow")}</p>
                 <h2 id="kit-check-title">{t("kit.check.title")}</h2>
                 <p>{t("kit.check.lead")}</p>
               </header>
@@ -127,12 +125,11 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
         <section className="section bg-sand" id="generateur" aria-labelledby="kit-engine-title">
           <div className="wrap">
             <header className="section-head center" data-reveal>
-              <p className="eyebrow">{t("kit.engine.eyebrow")}</p>
               <h2 id="kit-engine-title">{t("kit.engine.title")}</h2>
               <p>{t("kit.engine.lead")}</p>
             </header>
             <EngineCarousel
-              labels={{ prev: t("kit.engine.prev"), next: t("kit.engine.next"), step: t("kit.engine.step") }}
+              labels={{ title: t("kit.engine.title"), step: t("kit.engine.step") }}
               steps={ENGINE.map((key) => ({
                 key,
                 img: `/visuels/generateur/${key}-${locale}.webp`,
@@ -147,7 +144,6 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
         <section className="section bg-sand" id="comment" aria-labelledby="kit-how-title">
           <div className="wrap">
             <header className="section-head center" data-reveal>
-              <p className="eyebrow">{t("kit.how.eyebrow")}</p>
               <h2 id="kit-how-title">{t("kit.how.title")}</h2>
               <p>{t("kit.how.lead")}</p>
             </header>
@@ -161,7 +157,6 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
         <section className="section bg-inverse" aria-labelledby="kit-app-title">
           <div className="wrap">
             <header className="section-head app-head" data-reveal>
-              <p className="eyebrow">{t("kit.app.eyebrow")}</p>
               <h2 id="kit-app-title">{t("kit.app.title")}</h2>
               <p>{t("kit.app.lead")}</p>
             </header>
@@ -210,7 +205,6 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
           <div className="wrap feature" data-reveal>
             <img src="/visuels/photographe-fil.webp" alt="" width={600} height={600} loading="lazy" />
             <div>
-              <p className="eyebrow">{t("kit.gift.eyebrow")}</p>
               <h2 id="kit-gift-title">{t("kit.gift.title")}</h2>
               <p className="feature-lead">{t("kit.gift.lead")}</p>
               <ul className="chips">
@@ -229,7 +223,6 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
         <section className="section bg-sand" aria-labelledby="kit-why-title">
           <div className="wrap">
             <header className="section-head center" data-reveal>
-              <p className="eyebrow">{t("kit.why.eyebrow")}</p>
               <h2 id="kit-why-title">{t("kit.why.title")}</h2>
               <p>{t("kit.why.lead")}</p>
             </header>
@@ -259,7 +252,6 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
         <section className="section bg-sand faq-band" id="faq" aria-labelledby="faq-title">
           <div className="wrap faq-grid">
             <header className="section-head" data-reveal>
-              <p className="eyebrow">{t("faq.eyebrow")}</p>
               <h2 id="faq-title">{t("kit.faqTitle")}</h2>
               <p>{t("faq.lead")}</p>
             </header>

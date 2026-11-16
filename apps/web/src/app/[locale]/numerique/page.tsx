@@ -26,7 +26,6 @@ export default async function DigitalPage({ params }: { params: Promise<{ locale
   return (
     <PageShell narrow>
       <header className="flow-head">
-        <p className="eyebrow">{t("eyebrow")}</p>
         <h1>{t("title")}</h1>
         <p>{t("lead")}</p>
       </header>

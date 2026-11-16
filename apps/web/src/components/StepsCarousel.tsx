@@ -88,7 +88,7 @@ export function StepsCarousel({ id, title, steps }: { id: string; title: string;
         onPointerCancel={() => (startX.current = null)}
       >
         {steps.map((s, k) => (
-          <div key={s.key} className="steps-slide" data-step-slide aria-hidden={k !== i} data-active={k === i ? "true" : undefined}>
+          <div key={s.key} className="steps-slide" data-step-slide aria-hidden={k !== i} data-active={k === i ? "true" : undefined} data-before={k < i ? "true" : undefined}>
             {s.img ? <img src={s.img} alt="" width={600} height={600} loading={k === 0 ? undefined : "lazy"} draggable={false} /> : <NailRing className="steps-ring" />}
           </div>
         ))}

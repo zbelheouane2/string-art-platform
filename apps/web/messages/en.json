@@ -20,7 +20,10 @@
     "kitPage": "The kit in detail",
     "code": "I have a code",
     "guideDemo": "Try the voice guide",
-    "main": "Main navigation"
+    "main": "Main navigation",
+    "delivery": "Delivery",
+    "contact": "Contact",
+    "track": "Track my order"
   },
   "hero": {
     "badge": "Gift idea",
@@ -750,7 +753,10 @@
     "tablist": "Steps",
     "stepOf": "Step {n} of {total}",
     "pause": "Pause the slideshow",
-    "play": "Play the slideshow"
+    "play": "Play the slideshow",
+    "prev": "Previous",
+    "next": "Next",
+    "goTo": "Go to slide {n} of {total}"
   },
   "home": {
     "intro": {
@@ -1076,5 +1082,49 @@
         "text": "Assembly takes a few hours, so make it your own moment. Light the candle, start the voice guide and work nail by nail in soft light. A thoughtful touch in a gift, too."
       }
     }
+  },
+  "contact": {
+    "title": "A question?",
+    "lead": "An order, a photo you're unsure about, a code that won't go through: write to us and a real person will answer.",
+    "whatsapp": "WhatsApp:",
+    "hours": "A real person reads every message and replies as soon as possible.",
+    "unavailable": "WhatsApp contact is not set up yet.",
+    "fields": {
+      "name": "Your name",
+      "order": "Order number (optional)",
+      "message": "Your message"
+    },
+    "send": "Send on WhatsApp",
+    "errorMessage": "Write your message (a few words are enough).",
+    "privacy": "The message opens in WhatsApp so you can read it before sending. Nothing is stored on this site."
+  },
+  "track": {
+    "title": "Track my order",
+    "lead": "Enter the number you received after ordering and the phone number you gave.",
+    "number": "Order number",
+    "phone": "Phone used for the order",
+    "submit": "Check my order",
+    "searching": "Searching…",
+    "help": "The number starts with DK- and is shown at the end of the order.",
+    "order": "Order",
+    "placed": "Placed on {date} · {total}",
+    "errors": {
+      "format": "Check the number (DK- and 6 characters) and the phone.",
+      "notFound": "No order matches this number and phone.",
+      "tooMany": "Too many attempts. Try again in fifteen minutes or write to us."
+    },
+    "status": {
+      "PENDING": "Received",
+      "CONFIRMED": "Confirmed by phone",
+      "SHIPPED": "With the courier",
+      "DELIVERED": "Delivered",
+      "CANCELLED": "Order cancelled",
+      "RETURNED": "Order returned"
+    }
+  },
+  "reviews": {
+    "title": "They made their portrait",
+    "rating": "Rating: {n} out of 5",
+    "photoAlt": "Portrait made by {name}"
   }
 }

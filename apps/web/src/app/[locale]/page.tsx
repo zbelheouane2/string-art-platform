@@ -9,6 +9,8 @@ import { ProductSection } from "@/components/ProductSection";
 import { Reveal } from "@/components/Reveal";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { AutoCarousel } from "@/components/AutoCarousel";
+import { Reviews } from "@/components/Reviews";
 import { StepsCarousel } from "@/components/StepsCarousel";
 import { StickyBar } from "@/components/StickyBar";
 import { WeavingBoard } from "@/components/WeavingBoard";
@@ -84,7 +86,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               </figure>
             </div>
             <div className="hero-copy" data-reveal style={{ ["--i" as string]: 1 }}>
-              <p className="eyebrow">{t("hero.eyebrow")}</p>
               <h1 id="hero-title">
                 {t("hero.titleStart")} <em>{t("hero.titleAccent")}</em>
               </h1>
@@ -128,7 +129,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <div className="wrap">
             <div className="intro-card" data-reveal>
               <div className="intro-copy">
-                <p className="eyebrow">{t("home.intro.eyebrow")}</p>
                 <h2 id="intro-title">{t("home.intro.title", { brand: brand.name })}</h2>
                 {INTRO.map((k) => (
                   <div key={k} className="intro-block">
@@ -151,7 +151,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <section className="section bg-cream" id="comment" aria-labelledby="how-title">
           <div className="wrap">
             <header className="section-head center" data-reveal>
-              <p className="eyebrow">{t("kit.how.eyebrow")}</p>
               <h2 id="how-title">{t("kit.how.title")}</h2>
               <p>{t("kit.how.lead")}</p>
             </header>
@@ -166,7 +165,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <div className="wrap">
             <div className="transform-card" data-reveal>
               <div className="transform-copy">
-                <p className="eyebrow">{t("home.transform.eyebrow")}</p>
                 <h2 id="transform-title">{t("home.transform.title")}</h2>
                 <p className="transform-text">{t("home.transform.text")}</p>
                 <a className="btn btn-primary btn-lg" href="#acheter">
@@ -185,7 +183,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <section className="section bg-cream" id="contenu" aria-labelledby="box-title">
           <div className="wrap">
             <header className="section-head center" data-reveal>
-              <p className="eyebrow">{t("home.box.eyebrow")}</p>
               <h2 id="box-title">{t("home.box.title")}</h2>
               <p>{t("home.box.lead")}</p>
             </header>
@@ -208,14 +205,13 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <div className="wrap">
             <header className="section-head split-head" data-reveal>
               <div>
-                <p className="eyebrow">{t("kit.app.eyebrow")}</p>
                 <h2 id="app-title">{t("home.app.title")}</h2>
               </div>
               <p>{t("kit.app.lead")}</p>
             </header>
-            <ol className="app-scroller" aria-label={t("home.app.scroll")} tabIndex={0}>
+            <AutoCarousel className="app-scroller" label={t("home.app.title")}>
               {APP_SCREENS.map((a, i) => (
-                <li key={a.key}>
+                <div key={a.key}>
                   <img src={`/visuels/etapes/${a.img}-${locale}.webp`} alt="" width={1000} height={1000} loading="lazy" />
                   <h3>
                     <span className="num-badge" aria-hidden="true">
@@ -224,9 +220,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                     {t(`kit.app.steps.${a.key}.title`)}
                   </h3>
                   <p>{t(`kit.app.steps.${a.key}.text`)}</p>
-                </li>
+                </div>
               ))}
-            </ol>
+            </AutoCarousel>
             <ul className="chips" data-reveal>
               {APP_CHIPS.map((c) => (
                 <li key={c}>{t(`kit.app.chips.${c}`)}</li>
@@ -242,7 +238,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <div className="wrap">
             <header className="section-head split-head" data-reveal>
               <div>
-                <p className="eyebrow">{t("gifts.eyebrow")}</p>
                 <h2 id="gifts-title">{t("gifts.title")}</h2>
               </div>
               <p>{t("gifts.lead")}</p>
@@ -277,11 +272,13 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </div>
         </section>
 
+        {/* Avis clients : masqués tant qu'il n'y a pas de vrais avis (config/reviews.ts). */}
+        <Reviews />
+
         {/* FAQ : intro avec bouton contour, accordéon. */}
         <section className="section bg-sand" id="faq" aria-labelledby="faq-title">
           <div className="wrap faq-grid">
             <header className="section-head" data-reveal>
-              <p className="eyebrow">{t("faq.eyebrow")}</p>
               <h2 id="faq-title">{t("faq.title")}</h2>
               <p>{t("faq.lead")}</p>
               <a className="btn btn-outline btn-lg faq-contact" href={brand.supportEmail ? `mailto:${brand.supportEmail}` : "#contact"}>

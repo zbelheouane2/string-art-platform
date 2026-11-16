@@ -20,7 +20,10 @@
     "kitPage": "Le kit en détail",
     "code": "J'ai un code",
     "guideDemo": "Essayer le guide vocal",
-    "main": "Navigation principale"
+    "main": "Navigation principale",
+    "delivery": "Livraison",
+    "contact": "Contact",
+    "track": "Suivre ma commande"
   },
   "hero": {
     "badge": "Idée cadeau",
@@ -750,7 +753,10 @@
     "tablist": "Étapes",
     "stepOf": "Étape {n} sur {total}",
     "pause": "Mettre le défilement en pause",
-    "play": "Relancer le défilement"
+    "play": "Relancer le défilement",
+    "prev": "Précédent",
+    "next": "Suivant",
+    "goTo": "Aller à la diapositive {n} sur {total}"
   },
   "home": {
     "intro": {
@@ -1076,5 +1082,49 @@
         "text": "Le montage prend quelques heures : faites-en un moment à vous. Allumez la bougie, lancez le guide vocal et avancez clou après clou, dans une lumière douce. Une jolie attention aussi dans un cadeau."
       }
     }
+  },
+  "contact": {
+    "title": "Une question ?",
+    "lead": "Une commande, une photo qui hésite, un code qui ne passe pas : écrivez-nous, une vraie personne vous répond.",
+    "whatsapp": "WhatsApp :",
+    "hours": "Une vraie personne lit chaque message et vous répond dès que possible.",
+    "unavailable": "Le contact par WhatsApp n'est pas encore configuré.",
+    "fields": {
+      "name": "Votre nom",
+      "order": "N° de commande (facultatif)",
+      "message": "Votre message"
+    },
+    "send": "Envoyer sur WhatsApp",
+    "errorMessage": "Écrivez votre message (quelques mots suffisent).",
+    "privacy": "Le message s'ouvre dans WhatsApp : vous le relisez avant de l'envoyer. Rien n'est enregistré sur ce site."
+  },
+  "track": {
+    "title": "Suivre ma commande",
+    "lead": "Entrez le numéro reçu après la commande et le téléphone donné à ce moment-là.",
+    "number": "Numéro de commande",
+    "phone": "Téléphone utilisé pour la commande",
+    "submit": "Voir où en est ma commande",
+    "searching": "Recherche…",
+    "help": "Le numéro commence par DK-, il est affiché à la fin de la commande.",
+    "order": "Commande",
+    "placed": "Passée le {date} · {total}",
+    "errors": {
+      "format": "Vérifiez le numéro (DK- et 6 caractères) et le téléphone.",
+      "notFound": "Aucune commande ne correspond à ce numéro et ce téléphone.",
+      "tooMany": "Trop d’essais. Réessayez dans un quart d’heure ou écrivez-nous."
+    },
+    "status": {
+      "PENDING": "Reçue",
+      "CONFIRMED": "Confirmée par téléphone",
+      "SHIPPED": "Remise au livreur",
+      "DELIVERED": "Livrée",
+      "CANCELLED": "Commande annulée",
+      "RETURNED": "Commande retournée"
+    }
+  },
+  "reviews": {
+    "title": "Ils ont tendu leur portrait",
+    "rating": "Note : {n} sur 5",
+    "photoAlt": "Portrait réalisé par {name}"
   }
 }
