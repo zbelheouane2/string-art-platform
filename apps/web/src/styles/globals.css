@@ -3709,3 +3709,20 @@ h1 em {
 .gift-toggle {
   padding: 0.6rem 0.9rem;
 }
+
+.order-form fieldset > * {
+  clear: both;
+}
+
+.field-pair {
+  align-items: start;
+}
+
+.field-pair > .field-group,
+.field-pair > .field-group + .field-group {
+  margin-block: 0 0.75rem;
+}
+
+.order-form .field-group + .field-group {
+  margin-block-start: 0;
+}
