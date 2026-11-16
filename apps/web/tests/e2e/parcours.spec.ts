@@ -235,40 +235,40 @@ test.describe("commande", () => {
     }
   });
 
-  test("options : sans prix elles sont « bientôt » ; avec un prix elles s'ajoutent au total et à la feuille", async ({ page }) => {
+  test("options support et bougie : choisies sur la fiche, ajoutées au total, à la commande et à la feuille", async ({ page }) => {
     await page.goto("/fr/kit");
-    const stand = page.locator("#acheter").getByRole("switch", { name: "Support chevalet en bois" });
-    await expect(stand).toBeDisabled();
-    await expect(page.locator("#acheter .accessory")).toHaveCount(2);
-    await expect(page.locator("#acheter").getByText("Prix bientôt disponible").first()).toBeVisible();
+    const box = page.locator("#acheter");
+    await expect(box.locator(".accessory")).toHaveCount(2);
+    await expect(box.getByText("+ 400 DA")).toBeVisible();
+    await expect(box.getByText("+ 800 DA")).toBeVisible();
+    const stand = box.getByRole("switch", { name: "Support chevalet en bois" });
+    await stand.click();
+    await expect(stand).toHaveAttribute("aria-checked", "true");
+    await box.getByRole("link", { name: "Commander" }).click();
+    await expect(page).toHaveURL(/\/fr\/commander\?options=support-chevalet$/);
 
-    // Prix d'essai posé en base le temps du test (le vrai prix viendra du catalogue).
-    const sql = (q: string) => execFileSync("psql", [process.env.DATABASE_URL!, "-qtAc", q]);
-    const where = `"productId" = (SELECT id FROM "Product" WHERE slug = 'bougie-parfumee') AND "marketId" = (SELECT id FROM "Market" WHERE code = 'DZ')`;
-    sql(`DELETE FROM "Price" WHERE ${where}; INSERT INTO "Price" (id, "productId", "marketId", "amountMinor", currency) SELECT 'e2e-bougie', (SELECT id FROM "Product" WHERE slug = 'bougie-parfumee'), (SELECT id FROM "Market" WHERE code = 'DZ'), 120000, 'DZD'`);
-    try {
-      await page.goto("/fr/commander?options=bougie-parfumee,inconnue");
-      const candle = page.getByRole("switch", { name: "Bougie parfumée" });
-      await expect(candle).toHaveAttribute("aria-checked", "true");
-      await expect(page.getByRole("switch", { name: "Support chevalet en bois" })).toHaveCount(0);
-      await expect(page.locator(".order-total strong")).toHaveText("6 100 DA");
-      await candle.click();
-      await expect(page.locator(".order-total strong")).toHaveText("4 900 DA");
-      await candle.click();
+    await expect(page.getByRole("switch", { name: "Support chevalet en bois" })).toHaveAttribute("aria-checked", "true");
+    await expect(page.locator(".order-total strong")).toHaveText("5 300 DA");
+    const candle = page.getByRole("switch", { name: "Bougie parfumée" });
+    await candle.click();
+    await expect(page.locator(".order-total strong")).toHaveText("6 100 DA");
 
-      await page.getByLabel("Nom et prénom").fill("Client Options");
-      await page.getByLabel("Téléphone mobile").fill("0555 66 77 88");
-      await page.getByLabel("Wilaya").selectOption("31");
-      await page.getByLabel("Commune", { exact: true }).selectOption("Oran");
-      await page.getByRole("button", { name: "Valider ma commande" }).click();
-      await expect(page).toHaveURL(/\/fr\/commande\/DK-[0-9A-Z]{6}$/);
-      await expect(page.locator(".order-total strong")).toHaveText("6 100 DA");
-      const number = page.url().split("/").pop();
-      const items = sql(`SELECT p.slug || ':' || i."unitPriceMinor" FROM "OrderItem" i JOIN "Order" o ON o.id = i."orderId" JOIN "Product" p ON p.id = i."productId" WHERE o.number = '${number}' ORDER BY p.slug`).toString().trim();
-      expect(items.split("\n")).toEqual(["bougie-parfumee:120000", "kit-portrait-50:490000"]);
-    } finally {
-      sql(`DELETE FROM "Price" WHERE ${where}`);
-    }
+    await page.getByLabel("Nom et prénom").fill("Client Options");
+    await page.getByLabel("Téléphone mobile").fill("0555 66 77 88");
+    await page.getByLabel("Wilaya").selectOption("31");
+    await page.getByLabel("Commune", { exact: true }).selectOption("Oran");
+    await page.getByRole("button", { name: "Valider ma commande" }).click();
+    await expect(page).toHaveURL(/\/fr\/commande\/DK-[0-9A-Z]{6}$/);
+    await expect(page.locator(".order-total strong")).toHaveText("6 100 DA");
+    const number = page.url().split("/").pop();
+    const items = execFileSync("psql", [process.env.DATABASE_URL!, "-qtAc", `SELECT p.slug || ':' || i."unitPriceMinor" FROM "OrderItem" i JOIN "Order" o ON o.id = i."orderId" JOIN "Product" p ON p.id = i."productId" WHERE o.number = '${number}' ORDER BY p.slug`]).toString().trim();
+    expect(items.split("\n")).toEqual(["bougie-parfumee:80000", "kit-portrait-50:490000", "support-chevalet:40000"]);
+  });
+
+  test("une option inconnue dans l'adresse est ignorée", async ({ page }) => {
+    await page.goto("/fr/commander?options=inconnue");
+    await expect(page.getByRole("switch", { checked: true })).toHaveCount(0);
+    await expect(page.locator(".order-total strong")).toHaveText("4 900 DA");
   });
 
   test("le bouton du site mène à la commande", async ({ page }) => {

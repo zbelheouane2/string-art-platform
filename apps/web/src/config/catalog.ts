@@ -16,6 +16,7 @@ export const kitOffer: { slug: string; price: Price | null; provisional: boolean
 
 /**
  * Options proposées avec le kit (interrupteur sur la fiche et dans la commande).
+ * Prix provisoires donnés par le propriétaire le 16/11/2026 : support 400 DA, bougie 800 DA.
  * `price: null` = prix pas encore fixé par le propriétaire : l'option est
  * affichée « bientôt » et ne peut pas être choisie. Même règle que le kit : ce
  * prix remplit la table Price (seed), la commande relit le prix en base.
@@ -32,12 +33,12 @@ export const accessories: readonly Accessory[] = [
     slug: "support-chevalet",
     icon: "stand",
     names: { fr: "Support chevalet en bois", en: "Wooden display stand", ar: "حامل خشبي للعرض" },
-    price: null,
+    price: { amountMinor: 40000, currency: "DZD" },
   },
   {
     slug: "bougie-parfumee",
     icon: "candle",
     names: { fr: "Bougie parfumée", en: "Scented candle", ar: "شمعة معطّرة" },
-    price: null,
+    price: { amountMinor: 80000, currency: "DZD" },
   },
 ];
