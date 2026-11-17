@@ -9,6 +9,7 @@ import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import AxeBuilder from "@axe-core/playwright";
+import pg from "pg";
 import { expect, test, type Page } from "@playwright/test";
 
 /** Crée un lot de codes neufs (un par test qui en consomme un). */
@@ -80,6 +81,58 @@ test.describe("code d'activation", () => {
 
 test.describe("portrait et guide", () => {
   test.skip(!!process.env.SKIP_ENGINE, "moteur indisponible");
+
+  test("cadrage de la photo : visage centré, glisser, zoomer, recentrer, cadrage envoyé au calcul", async ({ page }) => {
+    test.setTimeout(120_000);
+    const [code] = freshCodes(1);
+    await page.goto("/fr/activer");
+    await page.getByLabel("Code à 8 caractères").fill(code);
+    await page.getByRole("button", { name: "Valider mon code" }).click();
+    await expect(page).toHaveURL(/\/fr\/creer$/);
+    await page.locator('input[type="file"]').setInputFiles(path.join(__dirname, "../fixtures/portrait-test.jpg"));
+
+    const view = page.getByRole("group", { name: /Cadrage de la photo/ });
+    await expect(view).toBeVisible();
+    await expect(page.getByText(/Visage trouvé et centré|Aucun visage détecté/)).toBeVisible({ timeout: 20_000 });
+    const recenter = page.getByRole("button", { name: "Recentrer" });
+    await expect(recenter).toBeDisabled();
+    const zoom = page.getByRole("slider", { name: "Zoom" });
+    const before = Number(await zoom.inputValue());
+
+    await zoom.fill(String(Math.min(6, before + 1)));
+    await expect.poll(async () => Number(await zoom.inputValue())).toBeGreaterThan(before + 0.5);
+    await expect(recenter).toBeEnabled();
+    const img = page.locator(".framer-img");
+    const left0 = await img.evaluate((el) => parseFloat((el as HTMLElement).style.left));
+    await view.scrollIntoViewIfNeeded();
+    const b = (await view.boundingBox())!;
+    await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(b.x + b.width / 2 + 40, b.y + b.height / 2, { steps: 4 });
+    await page.mouse.up();
+    await expect.poll(() => img.evaluate((el) => parseFloat((el as HTMLElement).style.left))).not.toBe(left0);
+    // La page ne déborde pas sur les côtés.
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
+
+    await recenter.click();
+    await expect(recenter).toBeDisabled();
+    await expect.poll(async () => Number(await zoom.inputValue())).toBeCloseTo(before, 1);
+    await page.getByRole("button", { name: "Zoomer", exact: true }).click();
+
+    const chosen = await view.getAttribute("data-box");
+    await page.getByRole("button", { name: "Calculer mon portrait" }).click();
+    await expect(page.getByRole("heading", { name: "Votre portrait en fil" })).toBeVisible({ timeout: 90_000 });
+    // Le moteur a calculé exactement le cadrage choisi.
+    const db = new pg.Client({ connectionString: process.env.DATABASE_URL });
+    await db.connect();
+    const { rows } = await db.query(
+      `select g.document->'crop_box' as box from "Generation" g join "ActivationCode" c on c.id = g."activationCodeId" where c.code = $1`,
+      [code],
+    );
+    await db.end();
+    expect(rows[0].box.join(",")).toBe(chosen);
+    await axe(page);
+  });
 
   test("photo → portrait → validation → guide ; le guide est réservé à l'appareil du code", async ({ page, browser }) => {
     test.setTimeout(120_000);

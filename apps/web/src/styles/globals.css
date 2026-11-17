@@ -5088,3 +5088,91 @@ h1 em {
 .guide-music input[type="range"] {
   inline-size: 100%;
 }
+
+/* Cadrage de la photo (studio) */
+.framer {
+  display: grid;
+  gap: 0.6rem;
+  inline-size: min(100%, 26rem);
+  margin-inline: auto;
+}
+
+.framer-view {
+  position: relative;
+  inline-size: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: var(--color-text, #2a1f1a);
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.framer-view:active {
+  cursor: grabbing;
+}
+
+.framer-view:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.framer-img {
+  position: absolute;
+  max-width: none;
+  max-inline-size: none;
+  pointer-events: none;
+}
+
+/* Hors du cercle : voile sombre ; le cercle = la planche. */
+.framer-ring {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle closest-side,
+    transparent calc(100% - 2px),
+    rgb(255 255 255 / 0.95) calc(100% - 2px),
+    rgb(255 255 255 / 0.95) 100%,
+    rgb(20 14 10 / 0.6) 100%
+  );
+}
+
+.framer-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.framer-slider {
+  flex: 1 1 8rem;
+  min-inline-size: 0;
+  accent-color: var(--accent);
+}
+
+.framer-zoom-btn {
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.framer-recenter {
+  flex: 1 1 100%;
+}
+
+.framer-change {
+  justify-self: center;
+  cursor: pointer;
+}
+
+@media (min-width: 30rem) {
+  .framer-recenter {
+    flex: 0 0 auto;
+  }
+}

@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
+import { PhotoFramer } from "@/components/PhotoFramer";
+import { type Box, type Size, boxToParam, centeredBox, clampBox } from "@/lib/frame";
 
 interface Portrait {
   id: string;
@@ -29,6 +31,12 @@ export function PortraitStudio({ remaining: initialRemaining, maxBytes }: { rema
   const [portrait, setPortrait] = useState<Portrait | null>(null);
   const [remaining, setRemaining] = useState(initialRemaining);
   const resultRef = useRef<HTMLDivElement>(null);
+  const [size, setSize] = useState<Size | null>(null);
+  const [box, setBox] = useState<Box | null>(null);
+  const [autoBox, setAutoBox] = useState<Box | null>(null);
+  const [face, setFace] = useState<"detecting" | "found" | "none" | null>(null);
+  const touched = useRef(false);
+  const pickId = useRef(0);
 
   useEffect(() => () => void (photoUrl && URL.revokeObjectURL(photoUrl)), [photoUrl]);
 
@@ -38,9 +46,66 @@ export function PortraitStudio({ remaining: initialRemaining, maxBytes }: { rema
     if (!f) return;
     if (!ACCEPT.includes(f.type)) return setError("fileType");
     if (f.size > maxBytes) return setError("fileSize");
+    const id = ++pickId.current;
+    const url = URL.createObjectURL(f);
     setFile(f);
-    setPhotoUrl(URL.createObjectURL(f));
+    setPhotoUrl(url);
+    setSize(null);
+    setBox(null);
+    setAutoBox(null);
+    setFace("detecting");
+    touched.current = false;
+
+    // Taille de la photo telle que le navigateur l'affiche (orientation appliquée) : cadrage central d'abord.
+    const img = new Image();
+    const loaded = new Promise<Size | null>((resolve) => {
+      img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+      img.onerror = () => resolve(null);
+    });
+    img.src = url;
+
+    // En parallèle : cadrage proposé par le moteur (visage centré), sans consommer d'essai.
+    const form = new FormData();
+    form.set("photo", f);
+    const proposed = fetch("/api/generations/frame", { method: "POST", body: form })
+      .then(async (res) => ({ status: res.status, body: await res.json().catch(() => ({})) }))
+      .catch(() => null);
+
+    loaded.then((sz) => {
+      if (id !== pickId.current) return;
+      if (!sz) {
+        setFace(null);
+        return setError("photo");
+      }
+      setSize(sz);
+      const centre = centeredBox(sz);
+      setAutoBox(centre);
+      setBox(centre);
+      proposed.then((r) => {
+        if (id !== pickId.current) return;
+        if (!r) return setFace(null);
+        if (r.status === 401) return router.push("/activer");
+        if (r.status !== 200) {
+          setFace(null);
+          if (typeof r.body.error === "string" && r.body.error !== "engine") setError(r.body.error);
+          return;
+        }
+        const { crop, faceDetected, width, height } = r.body as { crop: [number, number, number]; faceDetected: boolean; width: number; height: number };
+        setFace(faceDetected ? "found" : "none");
+        // Même photo, éventuellement réduite : on ramène le cadrage à l'échelle affichée.
+        const k = sz.width / width;
+        if (Math.abs(sz.height / height - k) > 0.02) return;
+        const proposal = clampBox({ x: crop[0] * k, y: crop[1] * k, side: crop[2] * k }, sz);
+        setAutoBox(proposal);
+        if (!touched.current) setBox(proposal);
+      });
+    });
   }
+
+  const moveBox = (b: Box) => {
+    touched.current = true;
+    setBox(b);
+  };
 
   async function generate() {
     if (!file) return;
@@ -50,6 +115,7 @@ export function PortraitStudio({ remaining: initialRemaining, maxBytes }: { rema
     form.set("photo", file);
     form.set("variant", variant);
     form.set("background", keepBackground ? "keep" : "light");
+    if (box) form.set("crop", boxToParam(box));
     try {
       const res = await fetch("/api/generations", { method: "POST", body: form });
       const body = await res.json().catch(() => ({}));
@@ -82,18 +148,30 @@ export function PortraitStudio({ remaining: initialRemaining, maxBytes }: { rema
         <h2 id="studio-photo" className="studio-title">
           <span className="studio-num">1</span> {t("photo.title")}
         </h2>
-        <label className="drop">
-          <input type="file" accept={ACCEPT.join(",")} className="visually-hidden" onChange={(e) => pick(e.target.files?.[0])} />
-          {photoUrl ? (
-            <img src={photoUrl} alt={t("photo.alt")} className="drop-img" />
-          ) : (
-            <span className="drop-text">
-              <strong>{t("photo.choose")}</strong>
-              <span>{t("photo.hint")}</span>
-            </span>
-          )}
-        </label>
-        {photoUrl && <p className="field-help">{t("photo.change")}</p>}
+        {photoUrl && size && box && autoBox ? (
+          <>
+            <PhotoFramer src={photoUrl} size={size} box={box} autoBox={autoBox} onChange={moveBox} />
+            <p className="field-help" aria-live="polite">
+              {face === "detecting" ? t("frame.detecting") : face === "found" ? t("frame.face") : face === "none" ? t("frame.noFace") : null}
+            </p>
+            <label className="btn btn-outline framer-change">
+              <input type="file" accept={ACCEPT.join(",")} className="visually-hidden" onChange={(e) => pick(e.target.files?.[0])} />
+              {t("frame.change")}
+            </label>
+          </>
+        ) : (
+          <label className="drop">
+            <input type="file" accept={ACCEPT.join(",")} className="visually-hidden" onChange={(e) => pick(e.target.files?.[0])} />
+            {photoUrl ? (
+              <img src={photoUrl} alt={t("photo.alt")} className="drop-img" />
+            ) : (
+              <span className="drop-text">
+                <strong>{t("photo.choose")}</strong>
+                <span>{t("photo.hint")}</span>
+              </span>
+            )}
+          </label>
+        )}
       </section>
 
       <section className="studio-step" aria-labelledby="studio-style">

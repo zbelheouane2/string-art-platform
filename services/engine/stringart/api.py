@@ -19,7 +19,9 @@ from typing import Annotated, Literal
 from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile
 from pydantic import BaseModel
 
-from . import imaging, pipeline
+import numpy as np
+
+from . import faces, imaging, pipeline
 from .instructions import ENGINE_VERSION
 from .solver import SolverParams
 
@@ -58,6 +60,30 @@ def _parse_crop(value: str | None) -> tuple[int, int, int] | None:
     if x < 0 or y < 0 or side <= 0:
         raise HTTPException(status_code=422, detail="crop invalide")
     return x, y, side
+
+
+class Frame(BaseModel):
+    crop_box: tuple[int, int, int]
+    face_detected: bool
+    width: int
+    height: int
+
+
+@app.post("/v1/frames", response_model=Frame, dependencies=[Depends(check_token)])
+def create_frame(photo: Annotated[UploadFile, File()]) -> Frame:
+    """Cadrage proposé (visage centré, sinon carré central), en pixels de la photo redressée.
+
+    Rapide (aucun calcul de fils) : sert de point de départ au cadrage manuel du client.
+    """
+    raw = photo.file.read(imaging.MAX_FILE_BYTES + 1)
+    try:
+        img, _ = imaging.load_image_bytes(raw)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    face = faces.detect_main_face(np.asarray(img))
+    crop = faces.auto_crop(img.size, face, imaging.PreprocessParams().face_fraction) if face is not None else None
+    box = imaging.square_box(img.size, crop)
+    return Frame(crop_box=box, face_detected=face is not None, width=img.size[0], height=img.size[1])
 
 
 @app.post("/v1/generations", response_model=GenerationResult, dependencies=[Depends(check_token)])

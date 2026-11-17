@@ -863,7 +863,6 @@
       "title": "Votre photo",
       "choose": "Choisir une photo",
       "hint": "JPG, PNG ou WebP, 15 Mo maximum. Depuis votre téléphone ou votre ordinateur.",
-      "change": "Touchez la photo pour en choisir une autre.",
       "alt": "Votre photo"
     },
     "style": {
@@ -914,6 +913,19 @@
       "used": "Un portrait est déjà validé pour ce code.",
       "disabled": "Ce code a été désactivé.",
       "noSession": "Entrez d'abord votre code."
+    },
+    "frame": {
+      "area": "Cadrage de la photo : le cercle montre ce qui sera sur la planche",
+      "help": "Faites glisser la photo pour la placer, pincez ou utilisez le curseur pour zoomer. Au clavier : flèches pour déplacer, + et − pour zoomer.",
+      "zoom": "Zoom",
+      "zoomValue": "Zoom × {z}",
+      "zoomIn": "Zoomer",
+      "zoomOut": "Dézoomer",
+      "recenter": "Recentrer",
+      "detecting": "Recherche du visage…",
+      "face": "Visage trouvé et centré. Ajustez si besoin.",
+      "noFace": "Aucun visage détecté : placez le visage dans le cercle vous-même.",
+      "change": "Changer de photo"
     }
   },
   "guide": {

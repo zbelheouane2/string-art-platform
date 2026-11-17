@@ -863,7 +863,6 @@
       "title": "Your photo",
       "choose": "Choose a photo",
       "hint": "JPG, PNG or WebP, up to 15 MB. From your phone or computer.",
-      "change": "Tap the photo to pick another one.",
       "alt": "Your photo"
     },
     "style": {
@@ -914,6 +913,19 @@
       "used": "A portrait is already chosen for this code.",
       "disabled": "This code has been disabled.",
       "noSession": "Enter your code first."
+    },
+    "frame": {
+      "area": "Photo framing: the circle shows what will be on the board",
+      "help": "Drag the photo to place it, pinch or use the slider to zoom. Keyboard: arrows to move, + and − to zoom.",
+      "zoom": "Zoom",
+      "zoomValue": "Zoom × {z}",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "recenter": "Recentre",
+      "detecting": "Looking for the face…",
+      "face": "Face found and centred. Adjust if needed.",
+      "noFace": "No face detected: place the face in the circle yourself.",
+      "change": "Change photo"
     }
   },
   "guide": {

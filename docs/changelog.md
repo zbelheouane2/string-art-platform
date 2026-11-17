@@ -1,6 +1,7 @@
 # Historique
 
 ## 2026-11-17
+- **Cadrage manuel de la photo** (demande du propriétaire) : après le choix de la photo, le cercle montre exactement ce qui sera sur la planche ; la photo se déplace au doigt ou à la souris, se zoome en pinçant, à la molette, au curseur ou avec les boutons + et − (jusqu'à × 6), au clavier aussi. Le cadrage de départ est proposé par le moteur (visage centré, nouvel appel `/v1/frames` qui ne consomme pas d'essai) ; « Recentrer » y revient. Le calcul utilise exactement le cadrage choisi (vérifié en test). FR, EN, AR. 5 tests unitaires, 3 tests moteur et 2 tests navigateur ajoutés.
 - **Hébergement** : installation de production pour serveur VPS (`deploy/`, Docker, HTTPS automatique, essai complet réalisé), guide Oracle Cloud gratuit, et **hébergement gratuit Render + Supabase** retenu par le propriétaire : un seul service site + moteur (`Dockerfile.render`, `render.yaml`), base mise à jour au démarrage sans effacer les réglages. Essai avec 512 Mo de mémoire : calcul d'un portrait, commande et admin fonctionnent (pic à 364 Mo). Réveil permanent par UptimeRobot. Guides : `docs/hebergement-render.md`, `docs/hebergement-oracle.md`.
 - **Admin : codes d'activation** : création d'un lot (nombre, nom du lot) et téléchargement du fichier pour l'imprimeur (uniquement les codes), tableau des lots avec codes utilisés et désactivés. Nécessaire sur un hébergement sans accès en ligne de commande. 1 test navigateur ajouté.
 

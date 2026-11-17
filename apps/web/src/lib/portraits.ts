@@ -2,7 +2,7 @@ import "server-only";
 import { createHash } from "node:crypto";
 import { commerce } from "@/config/commerce";
 import { db } from "./db";
-import { EngineError, generate } from "./engine";
+import { EngineError, frame, generate } from "./engine";
 
 export const VARIANTS = ["doux", "standard", "contraste"] as const;
 export type Variant = (typeof VARIANTS)[number];
@@ -32,6 +32,41 @@ export async function codeState(codeId: string) {
   };
 }
 
+/** Refus communs à l'envoi d'une photo (code utilisable, type et taille du fichier). */
+async function checkUpload(codeId: string, photo: File): Promise<PortraitError | null> {
+  const state = await codeState(codeId);
+  if (!state) return "noSession";
+  if (state.status === "DISABLED") return "disabled";
+  if (state.chosenId) return "used";
+  if (!(commerce.acceptedPhotoTypes as readonly string[]).includes(photo.type)) return "fileType";
+  if (photo.size > commerce.maxPhotoBytes) return "fileSize";
+  return null;
+}
+
+export interface PhotoFrame {
+  crop: [number, number, number];
+  faceDetected: boolean;
+  width: number;
+  height: number;
+}
+
+/**
+ * Cadrage proposé pour une photo (visage centré). Ne compte pas comme un essai
+ * et ne garde rien : la photo est transmise au moteur puis oubliée.
+ */
+export async function proposeFrame(codeId: string, photo: File): Promise<{ ok: true; frame: PhotoFrame } | { ok: false; error: PortraitError }> {
+  const refused = await checkUpload(codeId, photo);
+  if (refused) return { ok: false, error: refused };
+  try {
+    const f = await frame(new Blob([Buffer.from(await photo.arrayBuffer())], { type: photo.type }));
+    return { ok: true, frame: { crop: f.crop_box, faceDetected: f.face_detected, width: f.width, height: f.height } };
+  } catch (err) {
+    if (err instanceof EngineError && err.status === 422) return { ok: false, error: "photo" };
+    console.error("cadrage : moteur indisponible", err instanceof Error ? err.message : err);
+    return { ok: false, error: "engine" };
+  }
+}
+
 /**
  * Calcule un portrait pour le code ouvert. La photo est transmise au moteur
  * puis oubliée : seule son empreinte SHA-256 est conservée avec la séquence.
@@ -39,21 +74,24 @@ export async function codeState(codeId: string) {
 export async function createPortrait(
   codeId: string,
   photo: File,
-  options: { variant: Variant; background: "light" | "keep" },
+  options: { variant: Variant; background: "light" | "keep"; crop?: [number, number, number] | null },
 ): Promise<{ ok: true; portrait: PortraitPreview } | { ok: false; error: PortraitError }> {
+  const refused = await checkUpload(codeId, photo);
+  if (refused) return { ok: false, error: refused };
   const state = await codeState(codeId);
-  if (!state) return { ok: false, error: "noSession" };
-  if (state.status === "DISABLED") return { ok: false, error: "disabled" };
-  if (state.chosenId) return { ok: false, error: "used" };
-  if (state.remaining <= 0) return { ok: false, error: "limit" };
-  if (!(commerce.acceptedPhotoTypes as readonly string[]).includes(photo.type)) return { ok: false, error: "fileType" };
-  if (photo.size > commerce.maxPhotoBytes) return { ok: false, error: "fileSize" };
+  if (!state || state.remaining <= 0) return { ok: false, error: state ? "limit" : "noSession" };
 
   const bytes = Buffer.from(await photo.arrayBuffer());
   const sha = createHash("sha256").update(bytes).digest("hex");
   let result;
   try {
-    result = await generate({ photo: new Blob([bytes], { type: photo.type }), variant: options.variant, background: options.background, previewSize: 800 });
+    result = await generate({
+      photo: new Blob([bytes], { type: photo.type }),
+      variant: options.variant,
+      background: options.background,
+      crop: options.crop ?? undefined,
+      previewSize: 800,
+    });
   } catch (err) {
     // 422 : photo refusée par le moteur (trop petite, illisible). Le reste est une panne.
     if (err instanceof EngineError && err.status === 422) return { ok: false, error: "photo" };

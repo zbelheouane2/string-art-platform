@@ -52,6 +52,25 @@ export async function generate(req: GenerationRequest, timeoutMs = 60000): Promi
   return res.json();
 }
 
+export interface EngineFrame {
+  crop_box: [number, number, number];
+  face_detected: boolean;
+  width: number;
+  height: number;
+}
+
+/** Cadrage proposé (visage centré), sans calcul de fils. */
+export async function frame(photo: Blob, timeoutMs = 20000): Promise<EngineFrame> {
+  const form = new FormData();
+  form.set("photo", photo);
+  const res = await fetch(`${ENGINE_URL}/v1/frames`, { method: "POST", body: form, headers: headers(), signal: AbortSignal.timeout(timeoutMs) });
+  if (!res.ok) {
+    const detail = await res.json().catch(() => ({}));
+    throw new EngineError(res.status, typeof detail?.detail === "string" ? detail.detail : "erreur du moteur");
+  }
+  return res.json();
+}
+
 export class EngineError extends Error {
   constructor(
     public readonly status: number,
