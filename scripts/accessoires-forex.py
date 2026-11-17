@@ -1,8 +1,9 @@
 """Accessoires du kit à découper (Forex, MDF ou carton, plusieurs épaisseurs), assemblés sans colle.
 
-- Support de téléphone : 2 flancs + 2 traverses (assemblages à mi-bois).
-- Support de bobine : socle + potence avec œillet + stabilisateur (tenons dans une mortaise en croix).
-- Chevalet de la planche 50 x 50 cm (MDF 17 mm) : 2 flancs + 2 traverses.
+Pièces reprises de la photo « Préparez le kit » :
+- Support de téléphone : une plaque + une patte arrière à encoche (mi-bois incliné à 70°).
+- Dévidoir : 2 crochets en L clipsés sur le bord haut de la planche (fourche de 17,2 mm),
+  2 traverses, 1 axe de bobine (bobine couchée), 1 barre-guide percée pour le fil.
 
 Toutes les encoches ont des « dogbones » (petits dégagements ronds) pour qu'une fraise
 de 3,175 mm donne des fonds d'encoche vraiment carrés.
@@ -120,105 +121,123 @@ class Piece:
     name: str
     shape: Polygon      # coordonnées en mm, Y vers le haut
     group: str
+    pose: "Pose | None" = None
 
 
 # --------------------------------------------------------------------------
-# Support de téléphone : 2 flancs + traverse avant (butée) + traverse arrière
+# Pose 3D (pour l'aperçu monté) : point 3D = o + a·e1 + b·e2, épaisseur selon n (centrée)
 # --------------------------------------------------------------------------
-PHONE_GAP = 60.0  # écart intérieur entre les flancs
+@dataclass
+class Pose:
+    o: tuple[float, float, float]
+    e1: tuple[float, float, float]
+    e2: tuple[float, float, float]
+    n: tuple[float, float, float]
+
+
+def generic_slot(p: Params, cx: float, z_edge: float, depth: float, width: float, from_top: bool) -> Polygon:
+    """Encoche de largeur quelconque (fourche du crochet), avec dogbones au fond."""
+    w = width / 2
+    if from_top:
+        rect, z = box(cx - w, z_edge - depth, cx + w, z_edge + 50), z_edge - depth
+        dogs = [dogbone(p, (cx - w, z), (-1, -1)), dogbone(p, (cx + w, z), (1, -1))]
+    else:
+        rect, z = box(cx - w, z_edge - 50, cx + w, z_edge + depth), z_edge + depth
+        dogs = [dogbone(p, (cx - w, z), (-1, 1)), dogbone(p, (cx + w, z), (1, 1))]
+    return unary_union([rect, *dogs])
+
+
+# --------------------------------------------------------------------------
+# Support de téléphone (photo « Préparez le kit ») : plaque + patte arrière à encoche
+# --------------------------------------------------------------------------
+PHONE_ANGLE = 70.0      # inclinaison de la plaque
+PLATE_W, PLATE_H = 75.0, 140.0
 
 
 def phone_stand(p: Params) -> list[Piece]:
-    a = math.radians(65)
-    u = (math.cos(a), math.sin(a))
-    nb = (math.sin(a), -math.cos(a))
-    lw = p.wide                           # largeur de la butée avant (encochée)
-    q0 = (lw + 14.0, 14.0)                # pied de l'appui ; rebord de 14 mm pour le téléphone
-    q1 = (q0[0] + 115 * u[0], q0[1] + 115 * u[1])
-    q1b = (q1[0] + 20 * nb[0], q1[1] + 20 * nb[1])
-    base_top = 16.0
-    t = (q1b[1] - base_top) / u[1]
-    arm_foot = (q1b[0] - t * u[0], base_top)
-    back = max(130.0, arm_foot[0] + 40 + p.slot)
-    side = Polygon([(0, 0), (back, 0), (back, base_top), arm_foot, q1b, q1, q0, (lw, 14), (lw, 28), (0, 28)])
-    side = side.difference(edge_slot(p, lw / 2, 0, 14, from_top=False))              # traverse avant
-    side = side.difference(edge_slot(p, back - 15 - p.slot / 2, base_top, 8, from_top=True))  # arrière
+    a = math.radians(PHONE_ANGLE)
+    u = (math.cos(a), math.sin(a))            # le long de la plaque, vers le haut et l'arrière
+    n = (math.sin(a), -math.cos(a))           # épaisseur de la plaque, vers l'arrière
+    f0 = (30.0, p.thickness * math.cos(a))    # pied de la face avant : le coin arrière touche la table
+    H = 35.0                                  # hauteur de la patte au droit de la plaque
+    at = lambda s, c: (f0[0] + s * u[0] + c * n[0], f0[1] + s * u[1] + c * n[1])  # noqa: E731
+    s12, sH = 12 / u[1], H / u[1]
+    leg = Polygon([(12, 0), (110, 0), (110, 8), (at(sH, 0)[0] + 20, H), at(sH, 0), at(s12, 0),
+                   (20, 12), (20, 22), (12, 22)])
+    s0 = sH / 2                               # mi-bois : moitié de la hauteur, le long de la plaque
+    strip = Polygon([at(s0, -1), at(s0 + 80, -1), at(s0 + 80, p.slot), at(s0, p.slot)])
+    dog = Polygon()
+    if p.router:
+        k = p.tool_d / 2 / math.sqrt(2)
+        c = at(s0 + k * 1, p.slot - k * 1)
+        c = (c[0], c[1])
+        dog = Point(c).buffer(p.dog_r, 32)
+    leg = leg.difference(unary_union([strip, dog]))
 
-    length = PHONE_GAP + 2 * p.thickness + 2 * max(8.0, p.thickness)
-    off = PHONE_GAP / 2 + p.thickness / 2
-    front = box(-length / 2, 0, length / 2, 28)
-    rear = box(-length / 2, 0, length / 2, base_top)
-    for x in (-off, off):
-        front = front.difference(edge_slot(p, x, 28, 14, from_top=True))
-        rear = rear.difference(edge_slot(p, x, 0, 8, from_top=False))
-    g = "Support de téléphone"
-    return [Piece("Téléphone · flanc", side, g), Piece("Téléphone · flanc", side, g),
-            Piece("Téléphone · traverse avant", front, g), Piece("Téléphone · traverse arrière", rear, g)]
+    lift = 0.0                                # le bord bas de la plaque repose sur la table
+    plate = unary_union([box(-PLATE_W / 2, 0, PLATE_W / 2, PLATE_H).buffer(-8).buffer(8, 16),
+                         box(-PLATE_W / 2, 0, PLATE_W / 2, 20)])   # coins bas vifs : appui stable
+    plate = plate.difference(edge_slot(p, 0, 0, s0 - lift, from_top=False))
 
-
-# --------------------------------------------------------------------------
-# Support de bobine : socle + potence (œillet au-dessus de la bobine) + stabilisateur
-# --------------------------------------------------------------------------
-SPOOL_H = 230.0     # hauteur de la potence au-dessus du socle
-
-
-def spool_stand(p: Params) -> list[Piece]:
     T = p.thickness
-    TENON = max(30.0, 4 * p.slot)
-    sw = p.wide / 2                      # demi-largeur du montant
-    base = box(-60, -90, 60, 75).buffer(-12).buffer(12, 16)
-    base = base.difference(unary_union([mortise(p, 0, -55, TENON, True), mortise(p, 0, -55, TENON, False)]))
+    leg_pose = Pose((-T / 2, 0, 0), (0, 1, 0), (0, 0, 1), (1, 0, 0))
+    base = at(lift, 0)
+    plate_pose = Pose((0, base[0], base[1]), (1, 0, 0), (0, u[0], u[1]), (0, n[0], n[1]))
+    g = "Support de téléphone"
+    return [Piece("Téléphone · plaque", plate, g, plate_pose), Piece("Téléphone · patte", leg, g, leg_pose)]
 
-    # Potence, dans le plan (s = avant/arrière, z) : s = -55 est l'axe du montant
-    h = SPOOL_H
-    potence = unary_union([
-        box(-55 - TENON / 2, -T, -55 + TENON / 2, 0),        # tenon dans le socle
-        box(-55 - TENON / 2 - 5, 0, -55 + TENON / 2 + 5, 40),  # épaulement
-        box(-55 - sw, 0, -55 + sw, h),                      # montant
-        box(-55 - sw, h - 20, 25, h),                       # bras
-        Point(25, h - 10).buffer(10, 32),                   # bout arrondi
+
+# --------------------------------------------------------------------------
+# Dévidoir (photo « Préparez le kit ») : 2 crochets en L + 4 barres (2 traverses,
+# 1 axe de bobine, 1 barre-guide percée). Les crochets se clipsent sur le bord
+# haut de la planche MDF : fourche à peine plus large que la planche (serrage).
+# --------------------------------------------------------------------------
+SPOOL_SPAN = 180.0      # écart intérieur entre les deux crochets (longueur de bobine maxi)
+FORK_PLAY = 0.2         # jeu de la fourche sur la planche de 17 mm
+ARM_Z0, ARM_H = 100.0, 25.0
+
+
+def devidoir(p: Params) -> list[Piece]:
+    T = p.thickness
+    prong = max(10.0, 2 * T)
+    gap = p.board_thickness + FORK_PLAY
+    W = gap + 2 * prong                        # largeur du montant
+    yc = W / 2                                 # axe de la planche
+    z_top = ARM_Z0 + ARM_H
+    hook = unary_union([
+        box(0, -35, W, z_top),                                   # montant
+        box(-60, ARM_Z0, 120, z_top),                            # bras
+        Polygon([(0, ARM_Z0), (-30, ARM_Z0), (0, ARM_Z0 - 30)]),  # goussets
+        Polygon([(W, ARM_Z0), (W + 30, ARM_Z0), (W, ARM_Z0 - 30)]),
     ])
-    potence = potence.difference(Point(25, h - 10).buffer(2.75, 32))   # œillet Ø 5,5 au-dessus de la bobine
-    mid = (40 - T) / 2 + 0.0                                            # mi-hauteur de la zone croisée (-T..40)
-    potence = potence.difference(edge_slot(p, -55, -T, mid + T, from_top=False))
+    hook = hook.difference(generic_slot(p, yc, -35, 35, gap, from_top=False))   # fourche
+    rails_y = (-50.0, 85.0)
+    guide_y = 110.0
+    for y in (*rails_y, guide_y):
+        hook = hook.difference(edge_slot(p, y, ARM_Z0, ARM_H / 2, from_top=False))
+    cradle = 10.0
+    hook = hook.difference(edge_slot(p, yc, z_top, cradle, from_top=True))      # berceau de l'axe
 
-    stab = unary_union([box(-TENON / 2 - 20, 0, TENON / 2 + 20, 40), box(-TENON / 2, -T, TENON / 2, 0)])
-    stab = stab.difference(edge_slot(p, 0, 40, 40 - mid, from_top=True))
-    g = "Support de bobine"
-    return [Piece("Bobine · socle", base, g), Piece("Bobine · potence", potence, g),
-            Piece("Bobine · stabilisateur", stab, g)]
+    length = SPOOL_SPAN + 2 * T + 30
+    xs = (-(SPOOL_SPAN + T) / 2, (SPOOL_SPAN + T) / 2)
+    rail = box(-length / 2, 0, length / 2, ARM_H)
+    for x in xs:
+        rail = rail.difference(edge_slot(p, x, ARM_H, ARM_H / 2, from_top=True))
+    guide = rail.difference(Point(0, ARM_H / 2).buffer(3.0, 32))               # œillet Ø 6
+    axle_h, lock = 15.0, 3.0
+    axle = box(-length / 2, 0, length / 2, axle_h)
+    for x in xs:
+        axle = axle.difference(edge_slot(p, x, 0, lock, from_top=False))
 
-
-# --------------------------------------------------------------------------
-# Chevalet de la planche 50 x 50 cm : 2 flancs + 2 traverses
-# --------------------------------------------------------------------------
-EASEL_GAP = 300.0
-
-
-def easel(p: Params) -> list[Piece]:
-    a = math.radians(70)          # planche inclinée à 70° (20° vers l'arrière)
-    u = (math.cos(a), math.sin(a))
-    nf = (-math.sin(a), math.cos(a))
-    q0 = (30.0, 15.0)
-    seat = p.board_thickness + 2
-    s = (q0[0] + seat * nf[0], q0[1] + seat * nf[1])
-    lip_top = (s[0] + 14 * u[0], s[1] + 14 * u[1])
-    lip_out = (lip_top[0] + 8 * nf[0], lip_top[1] + 8 * nf[1])
-    q1 = (q0[0] + 280 * u[0], q0[1] + 280 * u[1])
-    q1b = (q1[0] - 30 * nf[0], q1[1] - 30 * nf[1])
-    side = Polygon([(4, 0), (240, 0), q1b, q1, q0, s, lip_top, lip_out])
-    # dogbones dans les deux angles droits du siège : la planche s'y pose à fond
-    side = side.difference(dogbone_at_angle(p, side, q0)).difference(dogbone_at_angle(p, side, s))
-    for x in (70, 200):
-        side = side.difference(edge_slot(p, x, 0, 20, from_top=False))
-
-    length = EASEL_GAP + 2 * p.thickness + 30
-    bar = box(-length / 2, 0, length / 2, 40)
-    for x in (-(EASEL_GAP + p.thickness) / 2, (EASEL_GAP + p.thickness) / 2):
-        bar = bar.difference(edge_slot(p, x, 40, 20, from_top=True))
-    g = "Chevalet"
-    return [Piece("Chevalet · flanc", side, g), Piece("Chevalet · flanc", side, g),
-            Piece("Chevalet · traverse", bar, g), Piece("Chevalet · traverse", bar, g)]
+    g = "Dévidoir"
+    hook_poses = [Pose((x - T / 2, 0, 0), (0, 1, 0), (0, 0, 1), (1, 0, 0)) for x in xs]
+    bar_pose = lambda y, z: Pose((0, y - T / 2, z), (1, 0, 0), (0, 0, 1), (0, 1, 0))  # noqa: E731
+    axle_z = z_top - cradle - lock
+    return [Piece("Dévidoir · crochet", hook, g, hook_poses[0]), Piece("Dévidoir · crochet", hook, g, hook_poses[1]),
+            Piece("Dévidoir · traverse", rail, g, bar_pose(rails_y[0], ARM_Z0)),
+            Piece("Dévidoir · traverse", rail, g, bar_pose(rails_y[1], ARM_Z0)),
+            Piece("Dévidoir · barre-guide percée", guide, g, bar_pose(guide_y, ARM_Z0)),
+            Piece("Dévidoir · axe de bobine", axle, g, bar_pose(yc, axle_z))]
 
 
 def dogbone_at_angle(p: Params, poly: Polygon, v: tuple[float, float]) -> Polygon:
@@ -242,7 +261,7 @@ def _unit(v):
 
 
 def all_pieces(p: Params) -> list[Piece]:
-    return phone_stand(p) + spool_stand(p) + (easel(p) if p.easel else [])
+    return phone_stand(p) + devidoir(p)
 
 
 # --------------------------------------------------------------------------
