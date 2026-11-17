@@ -34,6 +34,33 @@ test.describe("espace admin", () => {
     await expect(page).toHaveURL(/\/admin\/connexion$/);
   });
 
+  test("codes d'activation : lot créé, fichier téléchargé, codes valides et utilisables", async ({ page, request }) => {
+    expect((await request.get("/admin/codes/lot-x/codes.csv")).status()).toBe(401);
+    await login(page);
+    await page.goto("/admin/codes");
+    const batch = `e2e-${Date.now()}`;
+    await page.getByLabel("Nombre de codes").fill("abc");
+    await page.getByRole("button", { name: "Créer les codes" }).click();
+    await expect(page.locator(".a-flash-error")).toContainText("entre 1 et");
+    await page.getByLabel("Nombre de codes").fill("5");
+    await page.getByLabel(/Nom du lot/).fill(batch);
+    await page.getByRole("button", { name: "Créer les codes" }).click();
+    await expect(page.getByText(`5 codes créés dans le lot ${batch}.`)).toBeVisible();
+    const row = page.locator("tr", { hasText: batch });
+    await expect(row.locator("td").nth(1)).toHaveText("5");
+    const csv = await page.request.get(`/admin/codes/${batch}/codes.csv`);
+    expect(csv.status()).toBe(200);
+    const codes = (await csv.text()).trim().split(/\r?\n/);
+    expect(codes[0]).toBe("code");
+    expect(codes.slice(1)).toHaveLength(5);
+    for (const c of codes.slice(1)) expect(c).toMatch(/^[2-9A-HJKMNPQRTV-Z]{4}-[2-9A-HJKMNPQRTV-Z]{4}$/);
+    // Un code du lot est reconnu sur la page d'activation.
+    await page.goto("/fr/activer");
+    await page.getByLabel(/code/i).first().fill(codes[1]);
+    await page.getByRole("button", { name: /Continuer|Valider|Activer/ }).first().click();
+    await expect(page).not.toHaveURL(/\/fr\/activer$/, { timeout: 10_000 });
+  });
+
   test("prix : enregistrés tels quels, montant invalide refusé", async ({ page }) => {
     await login(page);
     await page.goto("/admin/prix");

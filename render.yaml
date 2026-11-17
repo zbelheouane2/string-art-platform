@@ -1,0 +1,31 @@
+# Blueprint Render (offre gratuite) : un seul service, site + moteur. Voir docs/hebergement-render.md.
+services:
+  - type: web
+    name: deekra
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile.render
+    dockerContext: .
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ENGINE_TOKEN
+        generateValue: true
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: PUBLIC_BASE_URL
+        sync: false
+      - key: ORDER_SHEET_URL
+        sync: false
+      - key: ORDER_SHEET_SECRET
+        sync: false
+      - key: NEXT_PUBLIC_ORDERING_OPEN
+        value: "true"
+      - key: NEXT_PUBLIC_SUPPORT_EMAIL
+        value: deekraart@gmail.com
+      - key: NEXT_PUBLIC_WHATSAPP
+        value: "213771704033"

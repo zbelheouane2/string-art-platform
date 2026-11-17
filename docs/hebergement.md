@@ -10,6 +10,10 @@ Ce dossier contient tout le site DeeKra : le site web (`apps/web`) et le moteur 
 
 Les deux Dockerfile sont prêts : la plupart des hébergeurs (Railway, Render, un serveur VPS avec Docker) savent les utiliser directement.
 
+## Gratuit, conseillé : Render + Supabase
+
+Guide complet : `docs/hebergement-render.md` (un seul service : site + moteur, `Dockerfile.render`, `render.yaml`).
+
 ## Gratuit : Oracle Cloud « Always Free »
 
 Guide complet : `docs/hebergement-oracle.md`.

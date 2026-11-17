@@ -16,6 +16,7 @@ import {
   recordLoginFailure,
   requireAdmin,
 } from "@/lib/admin/auth";
+import { createCodeBatch, MAX_BATCH, BATCH_RE } from "@/lib/admin/codeBatches";
 import { normalizePromo } from "@/lib/promoRules";
 import { parseRateFile, type RateRow } from "@/lib/shipping/rateFile";
 import { currentRates, diffRates, saveRates, type RateChange } from "@/lib/shipping/saveRates";
@@ -275,4 +276,17 @@ export async function applyRateFileAction(form: FormData): Promise<void> {
   await audit("rates.imported", code.data!, r);
   refreshSite();
   go(back, { ok: `Import terminé : ${r.set} montants enregistrés, ${r.cleared} supprimés.` });
+}
+
+/* ---------------- Codes d'activation ---------------- */
+
+export async function createCodesAction(form: FormData): Promise<void> {
+  await requireAdmin();
+  const count = Number(String(form.get("count") ?? "").trim());
+  const batch = String(form.get("batch") ?? "").trim();
+  if (!BATCH_RE.test(batch)) go("/admin/codes", { erreur: "Nom de lot invalide (lettres, chiffres et tirets seulement)." });
+  if (!Number.isInteger(count) || count < 1 || count > MAX_BATCH) go("/admin/codes", { erreur: `Indiquez un nombre de codes entre 1 et ${MAX_BATCH}.` });
+  const created = await createCodeBatch(db(), batch, count);
+  await audit("codes.created", batch, { created });
+  go("/admin/codes", { ok: `${created} codes créés dans le lot ${batch}.` });
 }
