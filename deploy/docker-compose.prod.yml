@@ -1,0 +1,86 @@
+# Production sur un serveur VPS (ex. Octenium VPS 2) : base, moteur, site et HTTPS automatique.
+# Depuis le dossier deploy/ :
+#   cp .env.prod.example .env   (puis remplir)
+#   docker compose -f docker-compose.prod.yml up -d --build
+#   docker compose -f docker-compose.prod.yml run --rm migrate
+name: deekra
+
+x-public: &public
+  NEXT_PUBLIC_BRAND_NAME: ${NEXT_PUBLIC_BRAND_NAME:-DeeKra}
+  NEXT_PUBLIC_ORDERING_OPEN: ${NEXT_PUBLIC_ORDERING_OPEN:-true}
+  NEXT_PUBLIC_SUPPORT_EMAIL: ${NEXT_PUBLIC_SUPPORT_EMAIL:-}
+  NEXT_PUBLIC_WHATSAPP: ${NEXT_PUBLIC_WHATSAPP:-}
+  NEXT_PUBLIC_INSTAGRAM_URL: ${NEXT_PUBLIC_INSTAGRAM_URL:-}
+  NEXT_PUBLIC_FACEBOOK_URL: ${NEXT_PUBLIC_FACEBOOK_URL:-}
+  NEXT_PUBLIC_TIKTOK_URL: ${NEXT_PUBLIC_TIKTOK_URL:-}
+  NEXT_PUBLIC_LEGAL_ANPDP: ${NEXT_PUBLIC_LEGAL_ANPDP:-}
+
+x-server: &server
+  DATABASE_URL: postgresql://deekra:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD manquant}@db:5432/deekra
+  ENGINE_URL: http://engine:8000
+  ENGINE_TOKEN: ${ENGINE_TOKEN:?ENGINE_TOKEN manquant}
+  SESSION_SECRET: ${SESSION_SECRET:?SESSION_SECRET manquant}
+  ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+  PUBLIC_BASE_URL: https://${DOMAIN:?DOMAIN manquant}
+  ORDER_SHEET_URL: ${ORDER_SHEET_URL:-}
+  ORDER_SHEET_SECRET: ${ORDER_SHEET_SECRET:-}
+
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: deekra
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: deekra
+    volumes: [db-data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U deekra"]
+      interval: 5s
+      retries: 10
+    # Aucun port ouvert vers l'extérieur : seule l'application y accède.
+
+  engine:
+    build: ../services/engine
+    restart: unless-stopped
+    environment:
+      ENGINE_TOKEN: ${ENGINE_TOKEN}
+
+  web:
+    build:
+      context: ../apps/web
+      args: *public
+    restart: unless-stopped
+    environment:
+      <<: [*server, *public]
+    depends_on:
+      db: { condition: service_healthy }
+      engine: { condition: service_started }
+
+  # Création / mise à jour des tables et données de départ (à lancer à la main).
+  migrate:
+    build:
+      context: ../apps/web
+      target: build
+      args: *public
+    profiles: [outils]
+    environment: *server
+    command: ["sh", "-c", "npx prisma migrate deploy && npx tsx prisma/seed.ts"]
+    depends_on:
+      db: { condition: service_healthy }
+
+  # HTTPS automatique (certificat Let's Encrypt) devant le site.
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+    depends_on: [web]
+
+volumes:
+  db-data:
+  caddy-data:

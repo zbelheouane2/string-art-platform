@@ -10,6 +10,40 @@ Ce dossier contient tout le site DeeKra : le site web (`apps/web`) et le moteur 
 
 Les deux Dockerfile sont prêts : la plupart des hébergeurs (Railway, Render, un serveur VPS avec Docker) savent les utiliser directement.
 
+## Option conseillée en Algérie : un serveur VPS (ex. Octenium VPS 2)
+
+Un hébergement mutualisé avec cPanel ne convient pas : il ne fournit pas PostgreSQL et ne permet pas de faire tourner le moteur des portraits en continu. Il faut un **serveur VPS Linux** avec un accès root. Prévoir **2 cœurs et 4 Go de mémoire au minimum** (avec 2 Go, la construction du site manque de mémoire).
+
+Tout est prêt dans le dossier `deploy/` : base, moteur, site et HTTPS automatique (certificat gratuit), en une seule commande.
+
+1. Commander le VPS avec **Ubuntu 24.04**. Noter son adresse IP et le mot de passe root.
+2. Chez le registraire du nom de domaine, créer deux enregistrements **A** : `@` et `www`, vers l'adresse IP du VPS.
+3. Se connecter au serveur (`ssh root@ADRESSE_IP`) et installer Docker :
+   ```bash
+   curl -fsSL https://get.docker.com | sh
+   ```
+4. Envoyer le fichier zip du site sur le serveur (par exemple avec FileZilla en SFTP), puis :
+   ```bash
+   apt install -y unzip && unzip deekra-site-complet.zip && cd deekra/deploy
+   cp .env.prod.example .env && nano .env      # remplir le domaine et les mots de passe
+   ```
+   Pour inventer un mot de passe : `openssl rand -hex 24`.
+5. Lancer le site (10 à 15 minutes la première fois) :
+   ```bash
+   docker compose -f docker-compose.prod.yml up -d --build
+   docker compose -f docker-compose.prod.yml run --rm migrate    # tables et données de départ
+   ```
+6. Ouvrir `https://votre-domaine/api/health`, puis `/admin`.
+
+Mise à jour : envoyer le nouveau zip, le décompresser au même endroit (le fichier `.env` est conservé), puis relancer les deux commandes de l'étape 5.
+
+Sauvegarde de la base (à programmer chaque jour) :
+```bash
+docker compose -f docker-compose.prod.yml exec -T db pg_dump -U deekra deekra | gzip > sauvegarde-$(date +%F).sql.gz
+```
+
+## Autre hébergeur (Railway, Render…)
+
 ## 1. Créer la base de données
 
 Créez une base PostgreSQL 16 chez l'hébergeur et copiez son adresse de connexion (elle commence par `postgresql://`). C'est la variable `DATABASE_URL`.
