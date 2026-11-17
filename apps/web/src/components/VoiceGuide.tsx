@@ -11,6 +11,9 @@ const POSITIONS = nailPositions();
 /** Niveaux de zoom de la planche ; au-delà de 1, la vue suit le clou à atteindre. */
 const ZOOMS = [1, 1.5, 2, 3] as const;
 const ZOOM_KEY = "dk-guide-zoom";
+/** Vitesses proposées : 1× = un fil toutes les SPEED.default secondes. */
+const SPEEDS = [0.5, 1, 1.5, 2] as const;
+const secondsFor = (factor: number) => Math.round((SPEED.default / factor) * 10) / 10;
 
 /** Choisit une voix de synthèse dans la langue demandée, si l'appareil en a une. */
 function pickVoice(lang: string): SpeechSynthesisVoice | null {
@@ -42,6 +45,12 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
   const viewportRef = useRef<HTMLDivElement>(null);
   const wakeLock = useRef<WakeLockSentinel | null>(null);
   const [speaking, setSpeaking] = useState(false);
+  const [musicOpen, setMusicOpen] = useState(false);
+  const settingsRef = useRef<HTMLDetailsElement>(null);
+  // Sur grand écran, le plan de la planche est visible d'emblée dans la colonne de droite.
+  useEffect(() => {
+    if (settingsRef.current && window.matchMedia("(min-width: 60rem)").matches) settingsRef.current.open = true;
+  }, []);
   const speakingTimer = useRef<number | undefined>(undefined);
 
   // Reprise : avancement sauvegardé sur cet appareil.
@@ -269,82 +278,122 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
   }, [sequence, step, total, zoom, boxSize]);
 
   const done = step >= total;
-  const from = done ? null : nailLabel(sequence[step]);
-  const to = done ? null : nailLabel(sequence[step + 1]);
+  const target = done ? null : sequence[step + 1];
+  const upcoming = done ? [] : sequence.slice(step + 1, step + 4).map(nailLabel);
+  const num = (n: number) => new Intl.NumberFormat(locale === "ar" ? "ar-DZ-u-nu-latn" : locale).format(n);
+  const decimal = (x: number) => String(x).replace(".", locale === "en" ? "." : ",");
 
   return (
     <div className="guide">
-      <div className="guide-board">
-        <div ref={viewportRef} className="guide-viewport" data-zoomed={zoom > 1 ? "true" : undefined}>
-          <canvas ref={canvasRef} className="guide-canvas" role="img" aria-label={t("boardAlt")} />
-        </div>
-        <div className="guide-zoom" role="group" aria-label={t("zoom")}>
-          {ZOOMS.map((z) => (
-            <button key={z} type="button" aria-pressed={zoom === z} onClick={() => chooseZoom(z)} aria-label={t("zoomTo", { z: String(z).replace(".", locale === "en" ? "." : ",") })}>
-              {String(z).replace(".", locale === "en" ? "." : ",")}×
+      <div className="guide-main">
+        <div className="guide-speeds" dir="ltr" role="group" aria-label={t("speedLabel")}>
+          {SPEEDS.map((f) => (
+            <button
+              key={f}
+              type="button"
+              aria-pressed={Math.abs(secondsPerStep - secondsFor(f)) < 0.05}
+              aria-label={t("speedX", { x: decimal(f), s: decimal(secondsFor(f)) })}
+              onClick={() => setSecondsPerStep(secondsFor(f))}
+            >
+              {decimal(f)}×
             </button>
           ))}
         </div>
-      </div>
 
-      <div className="guide-panel">
+        <GuideRing target={target} label={t("nextNail")} doneLabel={t("doneShort")} onNext={() => goTo(step + 1)} nextHint={target === null ? "" : t("nextTap", { nail: nailLabel(target) })} />
+
         <div className="guide-now" aria-live="polite" aria-atomic="true">
           {done ? (
             <p className="guide-done">{t("done")}</p>
           ) : (
             <>
-              <p className="guide-count">{t("thread", { n: step + 1, total })}</p>
-              <p className="guide-move" dir="ltr">
-                <span className="guide-from">{from}</span>
-                <span aria-hidden="true" className="guide-arrow">
-                  →
-                </span>
-                <span className="visually-hidden"> {t("to")} </span>
-                <span className="guide-to">{to}</span>
+              <p className="visually-hidden">{t("thread", { n: step + 1, total })}</p>
+              <p className="guide-upcoming" dir="ltr" aria-label={t("upcoming", { list: upcoming.join(", ") })}>
+                {upcoming.map((n, i) => (
+                  <span key={i} className={i === 0 ? "is-next" : undefined}>
+                    {i > 0 && <span aria-hidden="true" className="guide-arrow"> → </span>}
+                    {n}
+                  </span>
+                ))}
               </p>
             </>
           )}
         </div>
 
-        <progress className="guide-progress" max={total} value={step} aria-label={t("progress")} />
-        <p className="guide-meta">
-          {t("percent", { p: Math.floor((step / Math.max(1, total)) * 100) })} ·{" "}
-          {t("remaining", { min: remainingMinutes(sequence, step, secondsPerStep) })}
-        </p>
+        <div className="guide-progress-wrap">
+          <progress className="guide-progress" max={total} value={step} aria-label={t("progress")} />
+          <p className="guide-count" dir="ltr">
+            {t("count", { n: num(Math.min(step + 1, total)), total: num(total) })}
+          </p>
+          <p className="guide-meta">
+            {t("percent", { p: Math.floor((step / Math.max(1, total)) * 100) })} · {t("remaining", { min: remainingMinutes(sequence, step, secondsPerStep) })}
+          </p>
+        </div>
 
-        <div className="guide-controls">
-          <button type="button" className="btn btn-outline guide-btn" onClick={() => goTo(step - 1)} disabled={step === 0}>
-            {t("prev")}
+        <div className="guide-controls" dir="ltr">
+          <button type="button" className="guide-round" onClick={() => speak(step)} disabled={!voiceOn || done} aria-label={t("repeat")}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" />
+            </svg>
           </button>
-          <button type="button" className="btn btn-primary btn-lg guide-play" onClick={() => setPlaying((p) => !p)} disabled={done} aria-pressed={playing}>
-            {playing ? t("pause") : step === 0 ? t("start") : t("resume")}
+          <button type="button" className="guide-play" onClick={() => setPlaying((p) => !p)} disabled={done} aria-pressed={playing} aria-label={playing ? t("pause") : step === 0 ? t("start") : t("resume")}>
+            {playing ? (
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <rect x="7" y="5" width="3.2" height="14" rx="1" />
+                <rect x="13.8" y="5" width="3.2" height="14" rx="1" />
+              </svg>
+            ) : (
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M8 5.5v13l10.5-6.5z" />
+              </svg>
+            )}
           </button>
-          <button type="button" className="btn btn-outline guide-btn" onClick={() => goTo(step + 1)} disabled={done}>
-            {t("next")}
+          <button type="button" className="guide-round" onClick={() => setMusicOpen((o) => !o)} aria-expanded={musicOpen} aria-controls="guide-music-panel" aria-label={t("musicTitle")}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M9 18V5l11-2v13" />
+              <circle cx="6" cy="18" r="3" />
+              <circle cx="17" cy="16" r="3" />
+            </svg>
           </button>
         </div>
-        <button type="button" className="btn btn-outline btn-block" onClick={() => speak(step)} disabled={!voiceOn}>
-          {t("repeat")}
-        </button>
+        <p className="guide-state" aria-hidden="true">
+          {playing ? t("pause") : step === 0 ? t("start") : t("resume")}
+        </p>
 
-        <div className="guide-settings">
-          <label className="field-label" htmlFor="guide-speed">
-            {t("speed", { s: secondsPerStep })}
-          </label>
-          <input
-            id="guide-speed"
-            type="range"
-            min={SPEED.min}
-            max={SPEED.max}
-            step={1}
-            value={secondsPerStep}
-            onChange={(e) => setSecondsPerStep(Number(e.target.value))}
-          />
+        <div id="guide-music-panel" hidden={!musicOpen}>
+          <GuideMusic ducked={speaking} />
+        </div>
+
+        <button type="button" className="btn btn-outline btn-block guide-back" onClick={() => goTo(step - 1)} disabled={step === 0}>
+          {t("back")}
+        </button>
+      </div>
+
+      <details ref={settingsRef} className="guide-settings">
+        <summary>{t("settings")}</summary>
+        <div className="guide-settings-body">
+          <div className="guide-board">
+            <div ref={viewportRef} className="guide-viewport" data-zoomed={zoom > 1 ? "true" : undefined}>
+              <canvas ref={canvasRef} className="guide-canvas" role="img" aria-label={t("boardAlt")} />
+            </div>
+            <div className="guide-zoom" role="group" aria-label={t("zoom")}>
+              {ZOOMS.map((z) => (
+                <button key={z} type="button" aria-pressed={zoom === z} onClick={() => chooseZoom(z)} aria-label={t("zoomTo", { z: decimal(z) })}>
+                  {decimal(z)}×
+                </button>
+              ))}
+            </div>
+          </div>
+
           <label className="toggle">
             <input type="checkbox" checked={voiceOn} onChange={(e) => setVoiceOn(e.target.checked)} />
             <span>{t("voice")}</span>
           </label>
           {voiceOn && voiceMissing && <p className="field-help">{t("voiceMissing")}</p>}
+
+          <button type="button" className="btn btn-outline btn-block" onClick={() => goTo(step + 1)} disabled={done}>
+            {t("next")}
+          </button>
 
           <form
             className="guide-jump"
@@ -375,9 +424,56 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
           </form>
           <p className="field-help">{t("keys")}</p>
         </div>
+      </details>
+    </div>
+  );
+}
 
-        <GuideMusic ducked={speaking} />
-      </div>
+/**
+ * Anneau de la planche en 4 quarts (A en haut à gauche, puis B, C, D dans le
+ * sens horaire, comme sur la planche) : le quart du prochain clou est en
+ * couleur et un point marque sa place exacte. Le centre annonce le clou ;
+ * le toucher passe au clou suivant.
+ */
+function GuideRing({ target, label, doneLabel, onNext, nextHint }: { target: number | null; label: string; doneLabel: string; onNext: () => void; nextHint: string }) {
+  const sector = target === null ? -1 : Math.floor(target / NAILS_PER_SECTOR);
+  const C = 100;
+  const R = 78;
+  const W = 34;
+  // Quart k : de 180° - 90k à 90° - 90k (angles mathématiques, y vers le haut), petit jour entre les quarts.
+  const arc = (k: number) => {
+    const gap = 1.6;
+    const a0 = ((180 - 90 * k - gap) * Math.PI) / 180;
+    const a1 = ((90 - 90 * k + gap) * Math.PI) / 180;
+    const p = (a: number, r: number) => `${(C + r * Math.cos(a)).toFixed(2)} ${(C - r * Math.sin(a)).toFixed(2)}`;
+    const ro = R + W / 2;
+    const ri = R - W / 2;
+    return `M ${p(a0, ro)} A ${ro} ${ro} 0 0 1 ${p(a1, ro)} L ${p(a1, ri)} A ${ri} ${ri} 0 0 0 ${p(a0, ri)} Z`;
+  };
+  const dot = target === null ? null : POSITIONS[target];
+  return (
+    <div className="guide-ring" dir="ltr">
+      <svg viewBox="0 0 200 200" aria-hidden="true" className="guide-ring-svg">
+        {SECTORS.map((s, k) => (
+          <path key={s} d={arc(k)} className={k === sector ? "ring-q is-on" : "ring-q"} />
+        ))}
+        {dot && <circle cx={C + dot[0] * R} cy={C + dot[1] * R} r="5" className="ring-dot" />}
+      </svg>
+      {SECTORS.map((s, k) => (
+        <span key={s} className={`ring-letter ring-letter-${s}${k === sector ? " is-on" : ""}`} aria-hidden="true">
+          {s}
+        </span>
+      ))}
+      <button type="button" className="ring-center" onClick={onNext} disabled={target === null} aria-label={nextHint || doneLabel}>
+        {target === null ? (
+          <span className="ring-done">{doneLabel}</span>
+        ) : (
+          <>
+            <span className="ring-caption">{label}</span>
+            <span className="ring-nail">{nailLabel(target)}</span>
+          </>
+        )}
+      </button>
     </div>
   );
 }

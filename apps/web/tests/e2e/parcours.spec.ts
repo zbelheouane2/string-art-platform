@@ -149,7 +149,7 @@ test.describe("portrait et guide", () => {
 
     await page.getByRole("button", { name: "Je valide ce portrait" }).click();
     await expect(page).toHaveURL(/\/fr\/guide\/[a-z0-9]+$/);
-    await expect(page.getByText(/^Fil 1 sur \d+$/)).toBeVisible();
+    await expect(page.locator(".guide-count")).toHaveText(/^1 \/ /);
     const guideUrl = page.url();
 
     // Le code est désormais utilisé : le ressaisir rouvre directement le guide.
@@ -172,6 +172,13 @@ async function hydrated(page: Page) {
   await expect(page.locator(".guide-canvas")).toHaveAttribute("width", /^[1-9]\d*$/);
 }
 
+/** Ouvre le volet « Réglages et plan de la planche » (déjà ouvert sur grand écran). */
+async function openSettings(page: Page) {
+  const details = page.locator("details.guide-settings");
+  if (!(await details.evaluate((d) => (d as HTMLDetailsElement).open))) await details.locator("summary").click();
+  await expect(details).toHaveAttribute("open", "");
+}
+
 async function openGuide(page: Page, url: string) {
   await page.goto(url);
   await hydrated(page);
@@ -180,36 +187,48 @@ async function openGuide(page: Page, url: string) {
 test.describe("guide vocal (démonstration)", () => {
   test("avance, recule, saute à un fil et reprend où on s'était arrêté", async ({ page }) => {
     await openGuide(page, "/fr/guide/demo");
-    await expect(page.getByText(/^Fil 1 sur 3158$/)).toBeVisible();
-    await page.getByRole("button", { name: "Suivant", exact: true }).click();
-    await page.getByRole("button", { name: "Suivant", exact: true }).click();
-    await expect(page.getByText(/^Fil 3 sur 3158$/)).toBeVisible();
-    await page.getByRole("button", { name: "Précédent" }).click();
-    await expect(page.getByText(/^Fil 2 sur 3158$/)).toBeVisible();
+    const count = page.locator(".guide-count");
+    await expect(count).toHaveText(/^1 \/ 3\s?158$/);
+    // Toucher le centre de l'anneau = clou posé, on passe au suivant.
+    await page.getByRole("button", { name: /^Clou suivant :/ }).click();
+    await page.getByRole("button", { name: /^Clou suivant :/ }).click();
+    await expect(count).toHaveText(/^3 \/ 3\s?158$/);
+    await page.getByRole("button", { name: "Revenir d'un clou" }).click();
+    await expect(count).toHaveText(/^2 \/ 3\s?158$/);
+    await openSettings(page);
     await page.getByLabel("Perdu ? Reprenez au fil n°").fill("125");
     await page.getByRole("button", { name: "Aller" }).click();
-    await expect(page.getByText(/^Fil 125 sur 3158$/)).toBeVisible();
-    // Repères lisibles de A1 à D60.
-    await expect(page.locator(".guide-to")).toHaveText(/^[A-D]([1-9]|[1-5]\d|60)$/);
+    await expect(count).toHaveText(/^125 \/ 3\s?158$/);
+    // Repères lisibles de A1 à D60, le quart du clou en couleur, les 3 prochains clous.
+    const nail = (await page.locator(".ring-nail").textContent())!;
+    expect(nail).toMatch(/^[A-D]([1-9]|[1-5]\d|60)$/);
+    await expect(page.locator(".ring-letter.is-on")).toHaveText(nail[0]);
+    await expect(page.locator(".guide-upcoming > span")).toHaveCount(3);
+    await expect(page.locator(".guide-upcoming .is-next")).toHaveText(nail);
 
     await page.reload();
     await hydrated(page);
-    await expect(page.getByText(/^Fil 125 sur 3158$/)).toBeVisible();
+    await expect(count).toHaveText(/^125 \/ 3\s?158$/);
     await expect(page.getByRole("button", { name: "Reprendre" })).toBeVisible();
   });
 
-  test("lecture automatique : le fil suivant arrive tout seul", async ({ page }) => {
+  test("lecture automatique au choix de vitesse : le fil suivant arrive tout seul", async ({ page }) => {
     await openGuide(page, "/fr/guide/demo");
-    await page.evaluate(() => localStorage.setItem("dk-guide:demo", JSON.stringify({ step: 0, secondsPerStep: 3, voice: false })));
+    await page.evaluate(() => localStorage.setItem("dk-guide:demo", JSON.stringify({ step: 0, secondsPerStep: 7, voice: false })));
     await page.reload();
     await hydrated(page);
+    await expect(page.getByRole("button", { name: /^Vitesse 1× :/ })).toHaveAttribute("aria-pressed", "true");
+    await page.getByRole("button", { name: /^Vitesse 2× :/ }).click();
+    await expect(page.getByRole("button", { name: /^Vitesse 2× :/ })).toHaveAttribute("aria-pressed", "true");
     await page.getByRole("button", { name: "Commencer" }).click();
-    await expect(page.getByText(/^Fil 2 sur 3158$/)).toBeVisible({ timeout: 5_000 });
-    await page.getByRole("button", { name: "Pause" }).click();
+    await expect(page.locator(".guide-count")).toHaveText(/^2 \//, { timeout: 6_000 });
+    await page.getByRole("button", { name: "Pause", exact: true }).click();
+    await expect(page.getByRole("button", { name: "Reprendre" })).toBeVisible();
   });
 
   test("zoom sur la planche : la vue grossit, défile et le choix est gardé", async ({ page }) => {
     await openGuide(page, "/fr/guide/demo");
+    await openSettings(page);
     const viewport = page.locator(".guide-viewport");
     const width = await viewport.evaluate((v) => v.clientWidth);
     await page.getByRole("button", { name: "Zoom × 2" }).click();
@@ -219,6 +238,7 @@ test.describe("guide vocal (démonstration)", () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
     await page.reload();
     await hydrated(page);
+    await openSettings(page);
     await expect(page.getByRole("button", { name: "Zoom × 2" })).toHaveAttribute("aria-pressed", "true");
     await page.getByRole("button", { name: "Zoom × 1", exact: true }).click();
     await expect.poll(() => viewport.evaluate((v) => v.scrollWidth - v.clientWidth)).toBeLessThanOrEqual(1);
@@ -242,6 +262,7 @@ test.describe("guide vocal (démonstration)", () => {
     await page.evaluate(() => localStorage.setItem("dk-guide:demo", JSON.stringify({ step: 0, secondsPerStep: 7, voice: true })));
     await page.reload();
     await hydrated(page);
+    await page.getByRole("button", { name: "Musique pendant le montage" }).click();
 
     const files = ["Premier morceau.wav", "Deuxieme_morceau.wav"].map((name) => ({ name, mimeType: "audio/wav", buffer: silentWav(20) }));
     await page.locator("#guide-music-files").setInputFiles(files);
@@ -258,7 +279,7 @@ test.describe("guide vocal (démonstration)", () => {
     await expect.poll(() => audio.evaluate((a: HTMLAudioElement) => a.volume)).toBeCloseTo(0.8, 1);
 
     // Annonce d'un clou : la musique baisse, puis remonte.
-    await page.getByRole("button", { name: "Suivant", exact: true }).click();
+    await page.getByRole("button", { name: /^Clou suivant :/ }).click();
     await expect.poll(() => audio.evaluate((a: HTMLAudioElement) => a.volume)).toBeLessThan(0.3);
     await expect.poll(() => audio.evaluate((a: HTMLAudioElement) => a.volume), { timeout: 5_000 }).toBeCloseTo(0.8, 1);
 
@@ -268,19 +289,22 @@ test.describe("guide vocal (démonstration)", () => {
     await expect(page.locator(".guide-music button", { hasText: "Choisir des morceaux sur mon téléphone" })).toBeVisible();
   });
 
-  for (const [locale, dir, label] of [
-    ["fr", "ltr", "Fil 1 sur 3158"],
-    ["en", "ltr", "Thread 1 of 3158"],
-    ["ar", "rtl", "الخيط 1 من 3158"],
+  for (const [locale, dir, caption] of [
+    ["fr", "ltr", "Clou suivant"],
+    ["en", "ltr", "Next nail"],
+    ["ar", "rtl", "المسمار التالي"],
   ] as const) {
-    test(`guide ${locale} : sens d'écriture, repères de gauche à droite, accessibilité, pas de défilement horizontal`, async ({ page }) => {
+    test(`guide ${locale} : sens d'écriture, anneau et repères de gauche à droite, accessibilité, pas de défilement horizontal`, async ({ page }) => {
       await page.emulateMedia({ reducedMotion: "reduce" });
       await openGuide(page, `/${locale}/guide/demo`);
       await expect(page.locator("html")).toHaveAttribute("dir", dir);
-      await expect(page.getByText(label, { exact: true })).toBeVisible();
-      await expect(page.locator(".guide-move")).toHaveAttribute("dir", "ltr");
+      await expect(page.locator(".ring-caption")).toHaveText(caption);
+      await expect(page.locator(".guide-count")).toHaveText(/^1 \/ 3[\s.,]?158$/);
+      await expect(page.locator(".guide-ring")).toHaveAttribute("dir", "ltr");
+      await expect(page.locator(".guide-upcoming")).toHaveAttribute("dir", "ltr");
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       expect(overflow).toBeLessThanOrEqual(0);
+      await openSettings(page);
       await axe(page);
     });
   }
