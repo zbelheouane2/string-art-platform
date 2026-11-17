@@ -10,7 +10,11 @@ Ce dossier contient tout le site DeeKra : le site web (`apps/web`) et le moteur 
 
 Les deux Dockerfile sont prêts : la plupart des hébergeurs (Railway, Render, un serveur VPS avec Docker) savent les utiliser directement.
 
-## Option conseillée en Algérie : un serveur VPS (ex. Octenium VPS 2)
+## Gratuit : Oracle Cloud « Always Free »
+
+Guide complet : `docs/hebergement-oracle.md`.
+
+## Serveur VPS payant (ex. Octenium VPS 2)
 
 Un hébergement mutualisé avec cPanel ne convient pas : il ne fournit pas PostgreSQL et ne permet pas de faire tourner le moteur des portraits en continu. Il faut un **serveur VPS Linux** avec un accès root. Prévoir **2 cœurs et 4 Go de mémoire au minimum** (avec 2 Go, la construction du site manque de mémoire).
 

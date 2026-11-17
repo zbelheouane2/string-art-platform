@@ -69,6 +69,27 @@ services:
     depends_on:
       db: { condition: service_healthy }
 
+  # Oracle Cloud « Always Free » uniquement : réserve de la mémoire pour que le serveur ne soit
+  # jamais classé « inactif » (Oracle récupère les serveurs gratuits sous 20 % d'utilisation).
+  # Activer avec : COMPOSE_PROFILES=oracle dans .env
+  keepalive:
+    image: python:3.12-slim
+    profiles: [oracle]
+    restart: unless-stopped
+    environment:
+      KEEPALIVE_MB: ${KEEPALIVE_MB:-3000}
+    command:
+      - python
+      - -c
+      - |
+        import os, time
+        n = int(os.environ["KEEPALIVE_MB"]) * 1024 * 1024
+        b = bytearray(n)
+        while True:
+            for i in range(0, n, 4096):
+                b[i] = (b[i] + 1) % 256
+            time.sleep(600)
+
   # HTTPS automatique (certificat Let's Encrypt) devant le site.
   caddy:
     image: caddy:2
