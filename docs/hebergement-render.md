@@ -15,7 +15,7 @@ Aucune carte bancaire n'est demandée. Il suffit d'un compte GitHub (celui du pr
    - Region : **Central EU (Frankfurt)** ;
    - **Create new project**, puis attendre 2 minutes.
 3. En haut de la page du projet, cliquer sur **Connect**.
-4. Dans la liste, choisir **Session pooler** (pas « Direct connection »). Copier l'adresse affichée, qui commence par `postgresql://postgres.` et contient `pooler.supabase.com:5432`.
+4. Cliquer sur l'onglet **Direct (Connection string)**, puis, dans la liste **Method**, choisir **Session pooler** (pas « Direct connection »). Copier l'adresse affichée, qui commence par `postgresql://postgres.` et contient `pooler.supabase.com:5432`.
 5. Dans cette adresse, remplacer `[YOUR-PASSWORD]` par le mot de passe noté à l'étape 2. Gardez cette adresse complète : c'est la **DATABASE_URL**.
 
 ## 2. Le site : Render (15 minutes, puis 10 à 15 minutes d'attente)
