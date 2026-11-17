@@ -235,6 +235,13 @@ model Generation {
   /// Document d'instructions renvoyé par le moteur (séquence, étapes, métriques).
   document         Json?
   chosen           Boolean          @default(false)
+  /// Avancement du guide (fils déjà posés), pour reprendre sur n'importe quel appareil.
+  guideStep        Int              @default(0)
+  guideStepAt      DateTime?
+  /// Dernier fil atteint (portrait terminé) : point de départ du délai avant effacement.
+  guideDoneAt      DateTime?
+  /// Instructions (séquence) effacées pour libérer la base ; la trace du portrait reste.
+  purgedAt         DateTime?
   error            String?
   activationCode   ActivationCode   @relation(fields: [activationCodeId], references: [id])
   createdAt        DateTime         @default(now())
@@ -242,6 +249,7 @@ model Generation {
 
   @@index([activationCodeId])
   @@index([photoDeleteAfter])
+  @@index([guideDoneAt])
 }
 
 /// Journal des opérations importantes (sans données personnelles en clair).

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { NAILS_PER_SECTOR, SECTORS, nailLabel, nailPositions } from "@/lib/board";
-import { SPEED, clampStep, parseProgress, progressKey, remainingMinutes, stepCount } from "@/lib/guide";
+import { SPEED, type ServerProgress, clampStep, parseProgress, progressKey, remainingMinutes, resumeStep, stepCount } from "@/lib/guide";
 import { SPEECH_LANG, stepPhrase } from "@/lib/voice";
 import { GuideMusic } from "@/components/GuideMusic";
 
@@ -26,9 +26,21 @@ function pickVoice(lang: string): SpeechSynthesisVoice | null {
 /**
  * Guide de réalisation : annonce chaque clou à voix haute, avance tout seul au
  * rythme choisi, se met en pause, revient en arrière, garde l'écran allumé et
- * mémorise l'avancement sur l'appareil (reprise après fermeture).
+ * mémorise l'avancement sur l'appareil et, pour un vrai portrait, sur le serveur
+ * (reprise après fermeture, ou sur un autre téléphone avec le même code).
  */
-export function VoiceGuide({ portraitId, sequence }: { portraitId: string; sequence: number[] }) {
+export function VoiceGuide({
+  portraitId,
+  sequence,
+  serverProgress = null,
+  syncUrl = null,
+}: {
+  portraitId: string;
+  sequence: number[];
+  serverProgress?: ServerProgress | null;
+  /** Adresse d'enregistrement de l'avancement ; null pour la démonstration. */
+  syncUrl?: string | null;
+}) {
   const t = useTranslations("guide");
   const locale = useLocale();
   const total = stepCount(sequence);
@@ -53,7 +65,7 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
   }, []);
   const speakingTimer = useRef<number | undefined>(undefined);
 
-  // Reprise : avancement sauvegardé sur cet appareil.
+  // Reprise : l'avancement le plus récent, de cet appareil ou du serveur.
   useEffect(() => {
     let saved = null;
     try {
@@ -62,20 +74,66 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
       /* stockage indisponible (navigation privée) : on part du début */
     }
     const p = parseProgress(saved, sequence);
-    setStep(p.step);
+    setStep(resumeStep(p, serverProgress, sequence));
     setSecondsPerStep(p.secondsPerStep);
     setVoiceOn(p.voice);
     setRestored(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- lu une seule fois à l'ouverture
   }, [portraitId, sequence]);
 
   useEffect(() => {
     if (!restored) return;
     try {
-      localStorage.setItem(progressKey(portraitId), JSON.stringify({ step, secondsPerStep, voice: voiceOn }));
+      localStorage.setItem(progressKey(portraitId), JSON.stringify({ step, secondsPerStep, voice: voiceOn, at: Date.now() }));
     } catch {
       /* ignoré */
     }
   }, [restored, portraitId, step, secondsPerStep, voiceOn]);
+
+  // Enregistrement sur le serveur : quelques secondes après le dernier fil posé,
+  // et à la fermeture ou à la mise en arrière-plan de la page.
+  const syncedStep = useRef<number | null>(null);
+  const stepRef = useRef(step);
+  stepRef.current = step;
+  const pushProgress = useCallback(
+    (onLeave: boolean) => {
+      if (!syncUrl || syncedStep.current === stepRef.current) return;
+      const body = JSON.stringify({ step: stepRef.current });
+      const sent = stepRef.current;
+      if (onLeave && typeof navigator.sendBeacon === "function") {
+        if (navigator.sendBeacon(syncUrl, new Blob([body], { type: "application/json" }))) syncedStep.current = sent;
+        return;
+      }
+      fetch(syncUrl, { method: "POST", body, headers: { "Content-Type": "application/json" }, keepalive: true })
+        .then((r) => {
+          if (r.ok) syncedStep.current = sent;
+        })
+        .catch(() => {
+          /* hors ligne : nouvel essai au prochain fil ou à la fermeture */
+        });
+    },
+    [syncUrl],
+  );
+  useEffect(() => {
+    if (!restored || !syncUrl) return;
+    if (syncedStep.current === null) {
+      syncedStep.current = step; // valeur de reprise : rien à renvoyer
+      return;
+    }
+    const timer = window.setTimeout(() => pushProgress(false), 3000);
+    return () => window.clearTimeout(timer);
+  }, [restored, syncUrl, step, pushProgress]);
+  useEffect(() => {
+    if (!syncUrl) return;
+    const leave = () => pushProgress(true);
+    const hidden = () => document.visibilityState === "hidden" && leave();
+    window.addEventListener("pagehide", leave);
+    document.addEventListener("visibilitychange", hidden);
+    return () => {
+      window.removeEventListener("pagehide", leave);
+      document.removeEventListener("visibilitychange", hidden);
+    };
+  }, [syncUrl, pushProgress]);
 
   // Zoom gardé sur l'appareil, comme l'avancement.
   useEffect(() => {

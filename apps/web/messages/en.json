@@ -970,7 +970,10 @@
     "upcoming": "Next nails: {list}",
     "count": "{n} / {total}",
     "back": "Go back one nail",
-    "settings": "Settings and board plan"
+    "settings": "Settings and board plan",
+    "purgedTitle": "Portrait finished",
+    "purgedText": "Well done, this portrait is finished. Its instructions were deleted {days} days after the last thread, as planned, to protect your data. A new portrait needs a new kit.",
+    "purgedCta": "See the kit"
   },
   "order": {
     "eyebrow": "Order",

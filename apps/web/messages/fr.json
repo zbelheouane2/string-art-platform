@@ -970,7 +970,10 @@
     "upcoming": "Prochains clous : {list}",
     "count": "{n} / {total}",
     "back": "Revenir d'un clou",
-    "settings": "Réglages et plan de la planche"
+    "settings": "Réglages et plan de la planche",
+    "purgedTitle": "Portrait terminé",
+    "purgedText": "Bravo, ce portrait est terminé. Ses instructions ont été effacées {days} jours après le dernier fil, comme prévu, pour protéger vos données. Pour un nouveau portrait, il faut un nouveau kit.",
+    "purgedCta": "Voir le kit"
   },
   "order": {
     "eyebrow": "Commande",

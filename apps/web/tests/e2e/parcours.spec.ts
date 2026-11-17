@@ -165,6 +165,71 @@ test.describe("portrait et guide", () => {
     await expect(otherPage).toHaveURL(/\/fr\/activer$/);
     await other.close();
   });
+
+  test("reprise sur un autre téléphone au même fil, puis effacement 7 jours après le dernier fil", async ({ page, browser }) => {
+    test.setTimeout(150_000);
+    const [code] = freshCodes(1);
+    await page.goto("/fr/activer");
+    await page.getByLabel("Code à 8 caractères").fill(code);
+    await page.getByRole("button", { name: "Valider mon code" }).click();
+    await page.locator('input[type="file"]').setInputFiles(path.join(__dirname, "../fixtures/portrait-test.jpg"));
+    await page.getByRole("button", { name: "Calculer mon portrait" }).click();
+    await expect(page.getByRole("heading", { name: "Votre portrait en fil" })).toBeVisible({ timeout: 90_000 });
+    await page.getByRole("button", { name: "Je valide ce portrait" }).click();
+    await expect(page).toHaveURL(/\/fr\/guide\/[a-z0-9]+$/);
+    await hydrated(page);
+    const guideUrl = page.url();
+    const id = guideUrl.split("/").pop()!;
+
+    // Trois fils posés : l'avancement part au serveur quelques secondes après.
+    const saved = page.waitForResponse((r) => r.url().endsWith(`/api/generations/${id}/progress`) && r.status() === 204);
+    for (let i = 0; i < 3; i++) await page.locator(".ring-center").click();
+    await expect(page.locator(".guide-count")).toHaveText(/^4 \//);
+    await saved;
+
+    // Autre téléphone : le même code rouvre le guide au fil 4.
+    const other = await browser.newContext();
+    const phone = await other.newPage();
+    await phone.goto("/fr/activer");
+    await phone.getByLabel("Code à 8 caractères").fill(code);
+    await phone.getByRole("button", { name: "Valider mon code" }).click();
+    await expect(phone).toHaveURL(guideUrl);
+    await expect(phone.locator(".guide-count")).toHaveText(/^4 \//);
+
+    // Un numéro hors limites est borné ; sans code ouvert, l'enregistrement est refusé.
+    const stranger = await browser.newContext();
+    expect((await stranger.request.post(`/api/generations/${id}/progress`, { data: { step: 5 } })).status()).toBe(401);
+    await stranger.close();
+    expect((await phone.request.post(`/api/generations/${id}/progress`, { data: { step: "x" } })).status()).toBe(400);
+
+    // Dernier fil atteint : le portrait est « terminé ».
+    expect((await phone.request.post(`/api/generations/${id}/progress`, { data: { step: 999_999 } })).status()).toBe(204);
+    const db = new pg.Client({ connectionString: process.env.DATABASE_URL });
+    await db.connect();
+    const row = async () => (await db.query(`select "guideStep", "guideDoneAt", "purgedAt", document is null as gone from "Generation" where id = $1`, [id])).rows[0];
+    const done = await row();
+    expect(done.guideDoneAt).not.toBeNull();
+    expect(done.guideStep).toBeGreaterThan(1000);
+
+    // Moins de 7 jours : rien n'est effacé.
+    execFileSync("npx", ["tsx", "scripts/purge-portraits.ts"], { stdio: "ignore" });
+    expect((await row()).gone).toBe(false);
+
+    // Plus de 7 jours après le dernier fil : la séquence est effacée, la trace reste.
+    await db.query(`update "Generation" set "guideDoneAt" = now() - interval '8 days' where id = $1`, [id]);
+    execFileSync("npx", ["tsx", "scripts/purge-portraits.ts"], { stdio: "ignore" });
+    const purged = await row();
+    expect(purged.gone).toBe(true);
+    expect(purged.purgedAt).not.toBeNull();
+    const codeRow = await db.query(`select status from "ActivationCode" where code = $1`, [code]);
+    expect(codeRow.rows[0].status).toBe("USED");
+    await db.end();
+
+    await phone.goto(guideUrl);
+    await expect(phone.getByRole("heading", { name: "Portrait terminé" })).toBeVisible();
+    await expect(phone.getByRole("link", { name: "Voir le kit" })).toBeVisible();
+    await other.close();
+  });
 });
 
 /** Le guide est interactif une fois la planche dessinée (évite de cliquer avant l'hydratation). */

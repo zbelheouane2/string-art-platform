@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { nailPositions, type DemoPortrait } from "@/lib/board";
-import { SPEED, clampStep, parseProgress, remainingMinutes, stepAt, stepCount } from "@/lib/guide";
+import { SPEED, clampStep, parseProgress, remainingMinutes, resumeStep, stepAt, stepCount } from "@/lib/guide";
 import { spokenNail, stepPhrase } from "@/lib/voice";
 
 const seq = [0, 99, 159, 5];
@@ -23,9 +23,20 @@ describe("guide", () => {
   });
 
   it("relit une sauvegarde abîmée sans planter", () => {
-    expect(parseProgress(null, seq)).toEqual({ step: 0, secondsPerStep: SPEED.default, voice: true });
+    expect(parseProgress(null, seq)).toEqual({ step: 0, secondsPerStep: SPEED.default, voice: true, at: 0 });
     expect(parseProgress("{pas du json", seq).step).toBe(0);
-    expect(parseProgress(JSON.stringify({ step: 50, secondsPerStep: 999, voice: false }), seq)).toEqual({ step: 3, secondsPerStep: SPEED.default, voice: false });
+    expect(parseProgress(JSON.stringify({ step: 50, secondsPerStep: 999, voice: false }), seq)).toEqual({ step: 3, secondsPerStep: SPEED.default, voice: false, at: 0 });
+  });
+
+  it("reprend à l'enregistrement le plus récent, de l'appareil ou du serveur", () => {
+    const local = parseProgress(JSON.stringify({ step: 1, at: 2000 }), seq);
+    expect(resumeStep(local, null, seq)).toBe(1);
+    expect(resumeStep(local, { step: 2, at: 1000 }, seq)).toBe(1); // l'appareil est plus récent
+    expect(resumeStep(local, { step: 2, at: 3000 }, seq)).toBe(2); // un autre téléphone a avancé depuis
+    expect(resumeStep(local, { step: 99, at: 3000 }, seq)).toBe(3); // borné à la séquence
+    // Ancienne sauvegarde sans date, ou appareil neuf : le serveur l'emporte.
+    expect(resumeStep(parseProgress(JSON.stringify({ step: 1 }), seq), { step: 2, at: 1 }, seq)).toBe(2);
+    expect(resumeStep(parseProgress(null, seq), { step: 2, at: 1 }, seq)).toBe(2);
   });
 });
 

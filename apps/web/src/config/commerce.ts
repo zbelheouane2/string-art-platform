@@ -22,6 +22,11 @@ export const commerce = {
   maxGenerationsPerCode: 10,
   /** Conservation de la photo : elle n'est pas stockée (0 jour), seule son empreinte reste. */
   photoRetentionDays: 0,
+  /**
+   * Jours pendant lesquels un portrait terminé (dernier fil atteint) reste
+   * consultable, avant l'effacement de ses instructions pour libérer la base.
+   */
+  finishedPortraitRetentionDays: 7,
   /** Taille maximale d'une photo envoyée. */
   maxPhotoBytes: 15 * 1024 * 1024,
   acceptedPhotoTypes: ["image/jpeg", "image/png", "image/webp"],

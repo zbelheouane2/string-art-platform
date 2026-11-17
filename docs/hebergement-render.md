@@ -66,4 +66,4 @@ Chaque nouvelle version envoyée sur la branche du projet est mise en ligne auto
 ## Limites de l'offre gratuite
 
 - Mémoire : 512 Mo. Le site et le calcul d'un portrait tiennent dedans, mais deux calculs lancés exactement en même temps peuvent ralentir le site. Le jour où les ventes augmentent, passer à l'offre **Starter** de Render (environ 7 $ par mois) depuis **Settings** → **Instance Type**, sans rien réinstaller.
-- Base Supabase : 500 Mo, de quoi stocker des dizaines de milliers de commandes. Pas de sauvegarde automatique en gratuit : exporter régulièrement les commandes depuis l'admin.
+- Base Supabase : 500 Mo, de quoi stocker des dizaines de milliers de commandes. Les instructions d'un portrait sont effacées toutes seules 7 jours après son dernier fil (le code et la commande restent), ce qui évite de remplir la base. Pas de sauvegarde automatique en gratuit : exporter régulièrement les commandes depuis l'admin.

@@ -5,9 +5,10 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageShell } from "@/components/PageShell";
 import { VoiceGuide } from "@/components/VoiceGuide";
 import { brand } from "@/config/brand";
-import { redirect } from "@/i18n/navigation";
+import { Link, redirect } from "@/i18n/navigation";
+import { commerce } from "@/config/commerce";
 import type { DemoPortrait } from "@/lib/board";
-import { portraitSequence } from "@/lib/portraits";
+import { portraitSequence, purgedPortrait } from "@/lib/portraits";
 import { currentCodeId } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 async function demoPortrait() {
   const file = path.join(process.cwd(), "public", "demo", "portrait-demo.json");
   const demo: DemoPortrait = JSON.parse(await readFile(file, "utf-8"));
-  return { id: "demo", sequence: demo.sequence, lines: demo.lines, threadLengthM: demo.thread_length_m };
+  return { id: "demo", sequence: demo.sequence, lines: demo.lines, threadLengthM: demo.thread_length_m, saved: null };
 }
 
 /**
@@ -37,6 +38,7 @@ export default async function GuidePage({ params }: { params: Promise<{ locale: 
   } else {
     const codeId = await currentCodeId();
     portrait = codeId ? await portraitSequence(codeId, id) : null;
+    if (!portrait && codeId && (await purgedPortrait(codeId, id))) return <PurgedPortrait />;
     if (!portrait) redirect({ href: "/activer", locale });
   }
   const t = await getTranslations("guide");
@@ -46,7 +48,25 @@ export default async function GuidePage({ params }: { params: Promise<{ locale: 
         <h1>{t("title")}</h1>
         <p>{t("lead", { lines: portrait!.lines, meters: Math.round(portrait!.threadLengthM) })}</p>
       </header>
-      <VoiceGuide portraitId={portrait!.id} sequence={portrait!.sequence} />
+      <VoiceGuide portraitId={portrait!.id} sequence={portrait!.sequence} serverProgress={portrait!.saved} syncUrl={id === "demo" ? null : `/api/generations/${portrait!.id}/progress`} />
+    </PageShell>
+  );
+}
+
+/** Portrait terminé dont les instructions ont été effacées après le délai prévu. */
+async function PurgedPortrait() {
+  const t = await getTranslations("guide");
+  return (
+    <PageShell>
+      <header className="flow-head guide-head">
+        <h1>{t("purgedTitle")}</h1>
+        <p>{t("purgedText", { days: commerce.finishedPortraitRetentionDays })}</p>
+        <p>
+          <Link href="/kit" className="btn btn-primary">
+            {t("purgedCta")}
+          </Link>
+        </p>
+      </header>
     </PageShell>
   );
 }
