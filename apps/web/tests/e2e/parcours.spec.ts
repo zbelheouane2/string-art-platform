@@ -21,6 +21,39 @@ function freshCodes(count: number): string[] {
   return readFileSync(out, "utf-8").trim().split("\n").slice(1);
 }
 
+/** Retire tous les tarifs ZR Express (retour à « aucune grille saisie » : 0 DA). */
+function clearZrRates() {
+  sql(`DELETE FROM "DeliveryRate" WHERE "deliveryMethodId" IN (SELECT id FROM "DeliveryMethod" WHERE provider = 'zrexpress')`);
+}
+
+function sql(q: string) {
+  execFileSync("psql", [process.env.DATABASE_URL!, "-qtAc", q]);
+}
+
+/**
+ * Société de livraison propre au test (créée après ZR Express, donc proposée en
+ * second), active le temps du test avec sa grille de tarifs, puis désactivée :
+ * les tests qui tournent en parallèle gardent ZR Express sans grille.
+ */
+async function withTestCarrier(code: string, csv: string, run: (name: string) => Promise<void>) {
+  const name = `Test ${code}`;
+  sql(`INSERT INTO "Carrier" (id, code, name, active, "createdAt", "updatedAt") VALUES ('c_${code}', '${code}', '${name}', true, now(), now())
+       ON CONFLICT (code) DO UPDATE SET active = true`);
+  for (const kind of ["home", "desk"])
+    sql(`INSERT INTO "DeliveryMethod" (id, "marketId", code, provider, active) SELECT 'm_${code}_${kind}', id, '${code}_${kind}', '${code}', true FROM "Market" WHERE code = 'DZ'
+         ON CONFLICT ("marketId", code) DO UPDATE SET active = true`);
+  sql(`DELETE FROM "DeliveryRate" WHERE "deliveryMethodId" IN (SELECT id FROM "DeliveryMethod" WHERE provider = '${code}')`);
+  const dir = mkdtempSync(path.join(tmpdir(), "tarifs-"));
+  const file = path.join(dir, "tarifs.csv");
+  writeFileSync(file, csv);
+  execFileSync("npx", ["tsx", "scripts/import-rates.ts", "--carrier", code, "--file", file], { stdio: "ignore" });
+  try {
+    await run(name);
+  } finally {
+    sql(`UPDATE "Carrier" SET active = false WHERE code = '${code}'`);
+  }
+}
+
 /** Fichier WAV silencieux (mono, 8 kHz) pour tester le lecteur de musique. */
 function silentWav(seconds: number): Buffer {
   const rate = 8000;
@@ -377,6 +410,7 @@ test.describe("guide vocal (démonstration)", () => {
 
 test.describe("commande", () => {
   test("paiement à la livraison : erreurs claires puis commande enregistrée", async ({ page }) => {
+    clearZrRates(); // aucune grille saisie : 0 DA en attendant l'import
     await page.goto("/fr/commander");
     await page.getByRole("button", { name: "Valider ma commande" }).click();
     await expect(page.getByText("Vérifiez les champs signalés.")).toBeVisible();
@@ -384,7 +418,7 @@ test.describe("commande", () => {
 
     await page.getByLabel("Nom et prénom").fill("Client Test");
     await page.getByLabel("Téléphone mobile").fill("+213 555 12 34 56");
-    await page.getByLabel("Wilaya").selectOption("16");
+    await page.getByLabel("Wilaya", { exact: true }).selectOption("16");
     await page.getByLabel("Commune", { exact: true }).selectOption("Bab Ezzouar");
     await page.getByLabel("Au bureau de livraison").check();
     await page.getByLabel("À domicile").check();
@@ -407,27 +441,45 @@ test.describe("commande", () => {
     await expect(page.getByText("Client Test")).toHaveCount(0);
   });
 
-  test("frais de livraison connus : ajoutés au total selon la wilaya et le mode", async ({ page }) => {
-    const dir = mkdtempSync(path.join(tmpdir(), "tarifs-"));
-    const file = path.join(dir, "tarifs.csv");
-    writeFileSync(file, "wilaya;domicile;bureau\n09 - Blida;600;400\n");
-    execFileSync("npx", ["tsx", "scripts/import-rates.ts", "--carrier", "zrexpress", "--file", file], { stdio: "ignore" });
+  test("frais de livraison connus : ajoutés au total selon la wilaya et le mode", async ({ page }, info) => {
+    await withTestCarrier(`zzb${info.project.name}`, "wilaya;domicile;bureau\n09 - Blida;600;400\n", async (name) => {
+      await page.goto("/fr/commander");
+      await expect(page.getByText("Choisissez votre wilaya pour voir les frais de livraison.")).toBeVisible();
+      await page.getByRole("radiogroup", { name: "Société de livraison" }).getByLabel(new RegExp(name)).check();
+      await page.getByLabel("Wilaya", { exact: true }).selectOption("09");
+      await expect(page.getByText("Frais de livraison : 600 DA.")).toBeVisible();
+      await expect(page.locator(".order-total strong")).toHaveText("5 500 DA");
+      await page.getByLabel(/Au bureau de livraison/).check();
+      await expect(page.locator(".order-total strong")).toHaveText("5 300 DA");
 
-    await page.goto("/fr/commander");
-    await expect(page.getByText("Choisissez votre wilaya pour voir les frais de livraison.")).toBeVisible();
-    await page.getByLabel("Wilaya").selectOption("09");
-    await expect(page.getByText("Frais de livraison : 600 DA.")).toBeVisible();
-    await expect(page.locator(".order-total strong")).toHaveText("5 500 DA");
-    await page.getByLabel("Au bureau de livraison").check();
-    await expect(page.locator(".order-total strong")).toHaveText("5 300 DA");
+      await page.getByLabel("Nom et prénom").fill("Client Blida");
+      await page.getByLabel("Téléphone mobile").fill("0661223344");
+      await page.getByLabel("Commune", { exact: true }).selectOption("Boufarik");
+      await page.getByRole("button", { name: "Valider ma commande" }).click();
+      await expect(page).toHaveURL(/\/fr\/commande\/DK-[0-9A-Z]{6}$/);
+      await expect(page.getByText("Total livraison comprise")).toBeVisible();
+      await expect(page.locator(".order-total strong")).toHaveText("5 300 DA");
+    });
+  });
 
-    await page.getByLabel("Nom et prénom").fill("Client Blida");
-    await page.getByLabel("Téléphone mobile").fill("0661223344");
-    await page.getByLabel("Commune", { exact: true }).selectOption("Boufarik");
-    await page.getByRole("button", { name: "Valider ma commande" }).click();
-    await expect(page).toHaveURL(/\/fr\/commande\/DK-[0-9A-Z]{6}$/);
-    await expect(page.getByText("Total livraison comprise")).toBeVisible();
-    await expect(page.locator(".order-total strong")).toHaveText("5 300 DA");
+  test("wilaya absente de la grille du transporteur : livraison indisponible, commande bloquée", async ({ page }, info) => {
+    // Grille saisie : Alger (domicile et bureau), Blida (domicile seul), pas Illizi.
+    await withTestCarrier(`zzn${info.project.name}`, "wilaya;domicile;bureau\n16 - Alger;500;360\n09 - Blida;600;\n", async (name) => {
+      await page.goto("/fr/commander");
+      await page.getByRole("radiogroup", { name: "Société de livraison" }).getByLabel(new RegExp(name)).check();
+      const submit = page.getByRole("button", { name: "Valider ma commande" });
+      await page.getByLabel("Wilaya", { exact: true }).selectOption("33");
+      await expect(page.getByText(/Livraison pas encore disponible dans cette wilaya/)).toBeVisible();
+      await expect(submit).toBeDisabled();
+      // Blida : domicile possible, bureau non.
+      await page.getByLabel("Wilaya", { exact: true }).selectOption("09");
+      await page.getByLabel(/À domicile/).check();
+      await expect(page.getByText("Frais de livraison : 600 DA.")).toBeVisible();
+      await expect(submit).toBeEnabled();
+      await page.getByLabel(/Au bureau de livraison/).check();
+      await expect(page.getByText(/Livraison pas encore disponible dans cette wilaya/)).toBeVisible();
+      await expect(submit).toBeDisabled();
+    });
   });
 
   test("communes : la liste suit la wilaya, en arabe aussi, avec saisie libre en dernier recours", async ({ page }) => {
@@ -501,7 +553,7 @@ test.describe("commande", () => {
 
     await page.getByLabel("Nom et prénom").fill("Client Options");
     await page.getByLabel("Téléphone mobile").fill("0555 66 77 88");
-    await page.getByLabel("Wilaya").selectOption("31");
+    await page.getByLabel("Wilaya", { exact: true }).selectOption("31");
     await page.getByLabel("Commune", { exact: true }).selectOption("Oran");
     await page.getByRole("button", { name: "Valider ma commande" }).click();
     await expect(page).toHaveURL(/\/fr\/commande\/DK-[0-9A-Z]{6}$/);
@@ -589,7 +641,7 @@ test.describe("commande", () => {
 
     await page.getByLabel("Nom et prénom").fill("Client Promo");
     await page.getByLabel("Téléphone mobile").fill("0555 11 22 33");
-    await page.getByLabel("Wilaya").selectOption("16");
+    await page.getByLabel("Wilaya", { exact: true }).selectOption("16");
     await page.getByLabel("Commune", { exact: true }).selectOption("Bab Ezzouar");
     await page.getByRole("button", { name: "Valider ma commande" }).click();
     await expect(page).toHaveURL(/\/fr\/commande\/DK-[0-9A-Z]{6}$/);
@@ -631,7 +683,7 @@ test.describe("suivi et contact", () => {
     await page.goto("/fr/commander");
     await page.getByLabel("Nom et prénom").fill("Client Suivi");
     await page.getByLabel("Téléphone mobile").fill("0555 98 76 54");
-    await page.getByLabel("Wilaya").selectOption("16");
+    await page.getByLabel("Wilaya", { exact: true }).selectOption("16");
     await page.getByLabel("Commune", { exact: true }).selectOption("Bab Ezzouar");
     await page.getByLabel("Au bureau de livraison").check();
     await page.getByRole("button", { name: "Valider ma commande" }).click();

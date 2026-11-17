@@ -1072,7 +1072,8 @@
       "promoExpired": "This promo code is no longer valid.",
       "promoUnavailable": "We can't check the code right now, please try again.",
       "promoMinimum": "The minimum amount for this promo code isn't reached.",
-      "promoPerPhone": "This promo code has already been used with this number."
+      "promoPerPhone": "This promo code has already been used with this number.",
+      "deliveryArea": "Delivery is not yet available to this wilaya with this option."
     },
     "feePickWilaya": "Choose your wilaya to see the delivery fee.",
     "feeKnown": "Delivery fee: {fee}.",
@@ -1098,7 +1099,9 @@
     "feeAfterWilaya": "depends on your wilaya",
     "promoMinimumHint": "Valid from {min} of items.",
     "promoShippingLater": "Free delivery: the discount shows once the fee is known.",
-    "lineShippingDiscount": "Free delivery"
+    "lineShippingDiscount": "Free delivery",
+    "notServed": "Delivery is not yet available to this wilaya with this option. Choose the other option if offered, or message us on WhatsApp.",
+    "notServedShort": "not available"
   },
   "confirmation": {
     "eyebrow": "Thank you!",

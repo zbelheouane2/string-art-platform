@@ -1,6 +1,5 @@
 "use client";
 
-import { commerce } from "@/config/commerce";
 import {
   useActionState,
   useEffect,
@@ -15,6 +14,7 @@ import { WILAYAS } from "@/config/wilayas";
 import { QuantityStepper, useCart } from "@/components/Cart";
 import type { CheckoutAccessory, CheckoutCarrier } from "@/lib/orders";
 import { formatPrice, type Price } from "@/lib/price";
+import { NOT_SERVED, deliveryFee } from "@/lib/shipping/fee";
 import {
   promoDiscount,
   promoMinimumMet,
@@ -124,7 +124,10 @@ export function OrderForm({
   const [wilaya, setWilaya] = useState(v.wilaya ?? "");
   const [commune, setCommune] = useState(v.commune ?? "");
   const communes = communesOf(wilaya);
-  const fee = wilaya ? (rates[mode]?.[wilaya] ?? commerce.missingRateFeeMinor) : null;
+  const quote = wilaya ? deliveryFee(rates, mode, wilaya) : null;
+  // Wilaya absente de la grille de ce mode : pas de livraison, commande bloquée.
+  const notServed = quote === NOT_SERVED;
+  const fee = notServed ? null : quote;
   const money = (amountMinor: number) =>
     formatPrice({ amountMinor, currency: price.currency }, locale);
   // Articles : ceux du panier (partagé avec le tiroir). Panier vide = 1 kit.
@@ -329,7 +332,7 @@ export function OrderForm({
               <div className="choice-row choice-compact">
                 {carriers.map((c) => {
                   const m = c[kind] ?? c.home ?? c.desk;
-                  const f = wilaya && m ? (rates[m]?.[wilaya] ?? commerce.missingRateFeeMinor) : null;
+                  const f = wilaya && m ? deliveryFee(rates, m, wilaya) : null;
                   return (
                     <label key={c.code} className="choice carrier-choice">
                       <input
@@ -355,9 +358,11 @@ export function OrderForm({
                         <small>
                           {!wilaya
                             ? t("feeAfterWilaya")
-                            : f === null
-                              ? t("feeLater")
-                              : money(f)}
+                            : f === NOT_SERVED
+                              ? t("notServedShort")
+                              : f === null
+                                ? t("feeLater")
+                                : money(f)}
                         </small>
                       </span>
                     </label>
@@ -371,7 +376,7 @@ export function OrderForm({
               .filter((k) => carrier?.[k])
               .map((k) => {
                 const m = carrier![k]!;
-                const f = wilaya ? (rates[m]?.[wilaya] ?? commerce.missingRateFeeMinor) : null;
+                const f = wilaya ? deliveryFee(rates, m, wilaya) : null;
                 return (
                   <label key={k} className="choice">
                     <input
@@ -385,7 +390,7 @@ export function OrderForm({
                       <strong>{t(`delivery.${k}.name`)}</strong>
                       <small>
                         {t(`delivery.${k}.text`, { carrier: carrier!.name })}
-                        {f !== null && ` · ${money(f)}`}
+                        {f === NOT_SERVED ? ` · ${t("notServedShort")}` : f !== null && ` · ${money(f)}`}
                       </small>
                     </span>
                   </label>
@@ -459,12 +464,14 @@ export function OrderForm({
               />
             </Field>
           )}
-          <p className="field-help" aria-live="polite">
+          <p className={notServed ? "field-error" : "field-help"} aria-live="polite">
             {!wilaya
               ? t("feePickWilaya")
-              : fee === null
-                ? t("deliveryFees")
-                : t("feeKnown", { fee: money(fee) })}
+              : notServed
+                ? t("notServed")
+                : fee === null
+                  ? t("deliveryFees")
+                  : t("feeKnown", { fee: money(fee) })}
           </p>
         </fieldset>
 
@@ -546,7 +553,7 @@ export function OrderForm({
         <button
           type="submit"
           className="btn btn-primary btn-lg btn-block"
-          disabled={pending}
+          disabled={pending || notServed}
         >
           {pending ? t("sending") : t("submit")}
         </button>
@@ -738,9 +745,11 @@ export function OrderForm({
               <dd aria-live="polite">
                 {!wilaya
                   ? t("feeAfterWilaya")
-                  : fee === null
-                    ? t("feeLater")
-                    : money(fee)}
+                  : notServed
+                    ? t("notServedShort")
+                    : fee === null
+                      ? t("feeLater")
+                      : money(fee)}
               </dd>
             </div>
           </dl>

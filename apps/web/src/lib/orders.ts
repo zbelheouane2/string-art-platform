@@ -2,6 +2,7 @@ import "server-only";
 import { randomInt } from "node:crypto";
 import { accessories as accessoryCatalog } from "@/config/catalog";
 import { commerce } from "@/config/commerce";
+import { NOT_SERVED, deliveryFee } from "@/lib/shipping/fee";
 import { CODE_ALPHABET } from "./codes";
 import { db } from "./db";
 import type { ValidOrder } from "./orderSchema";
@@ -174,7 +175,8 @@ export type CreateOrderResult =
         | "promoInvalid"
         | "promoExpired"
         | "promoMinimum"
-        | "promoPerPhone";
+        | "promoPerPhone"
+        | "deliveryArea";
     };
 
 /**
@@ -213,8 +215,10 @@ export async function createOrder(
   const provider = paymentProvider(method.provider);
   if (!provider) return { ok: false, error: "payment" };
 
-  // Frais de livraison lus en base ; inconnus = confirmés par téléphone (null).
-  const fee: number | null = options.rates[input.delivery]?.[input.wilaya] ?? commerce.missingRateFeeMinor;
+  // Frais de livraison lus en base ; wilaya absente de la grille du mode = non desservie.
+  const quote = deliveryFee(options.rates, input.delivery, input.wilaya);
+  if (quote === NOT_SERVED) return { ok: false, error: "deliveryArea" };
+  const fee: number | null = quote;
   const extrasTotal = chosen.reduce(
     (sum, e) => sum + e.a.price.amountMinor * e.quantity,
     0,

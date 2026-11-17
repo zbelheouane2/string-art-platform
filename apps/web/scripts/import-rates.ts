@@ -4,7 +4,8 @@
  *   npm run rates:import -- --carrier zrexpress --file tarifs.csv
  *
  * Modèle : prisma/data/tarifs-livraison-modele.csv (69 wilayas, montants vides).
- * Une cellule vide supprime le tarif (le client verra « confirmé par téléphone »).
+ * Une cellule vide supprime le tarif : dès qu'une grille est saisie pour un mode,
+ * une wilaya sans tarif n'est pas livrée avec ce mode (commande bloquée).
  */
 import "dotenv/config";
 import { readFileSync } from "node:fs";

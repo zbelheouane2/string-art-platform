@@ -1072,7 +1072,8 @@
       "promoExpired": "Ce code promo n'est plus valable.",
       "promoUnavailable": "Vérification impossible pour le moment, réessayez.",
       "promoMinimum": "Le montant minimal pour ce code promo n'est pas atteint.",
-      "promoPerPhone": "Ce code promo a déjà été utilisé avec ce numéro."
+      "promoPerPhone": "Ce code promo a déjà été utilisé avec ce numéro.",
+      "deliveryArea": "Livraison pas encore disponible dans cette wilaya avec ce mode."
     },
     "feePickWilaya": "Choisissez votre wilaya pour voir les frais de livraison.",
     "feeKnown": "Frais de livraison : {fee}.",
@@ -1098,7 +1099,9 @@
     "feeAfterWilaya": "selon votre wilaya",
     "promoMinimumHint": "Valable à partir de {min} d'articles.",
     "promoShippingLater": "Livraison offerte : la remise s'affiche dès que les frais sont connus.",
-    "lineShippingDiscount": "Livraison offerte"
+    "lineShippingDiscount": "Livraison offerte",
+    "notServed": "Livraison pas encore disponible dans cette wilaya avec ce mode. Choisissez l'autre mode s'il est proposé, ou écrivez-nous sur WhatsApp.",
+    "notServedShort": "non disponible"
   },
   "confirmation": {
     "eyebrow": "Merci !",
