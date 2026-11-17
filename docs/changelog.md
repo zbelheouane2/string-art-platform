@@ -1,5 +1,8 @@
 # Historique
 
+## 2026-11-17
+- **Fabrication CNC de la planche** (`services/engine/stringart/fabrication.py`) : DXF, SVG et G-code GRBL générés depuis la géométrie du moteur, pour MDF 17 mm : perçage des 240 avant-trous (foret 1,2 mm, 10 mm, débourrage), gravure facultative des repères A-D et numéros, découpe 500 × 500 en 9 passes avec attaches. Origine X0 Y0 au coin bas-gauche (secteur D). 4 tests. Fichiers et guide : `plateforme/fabrication/` du dossier projet.
+
 ## 2026-11-13
 - **Commande, suite** : ZR Express par défaut, frais par wilaya (import CSV), 1 541 communes par wilaya (loi 26-06), adresse complète retirée, option « cadeau depuis l'étranger », page de l'offre numérique diaspora (paiement à venir). Migration `delivery_rates`.
 - **Site fonctionnel, tranche 1** (`docs/parcours-client.md`) : commande avec paiement à la livraison (69 wilayas, envoi vers Google Sheet), codes d'activation (lots, clé de contrôle, anti force brute), création du portrait par le moteur, guide vocal (FR/EN/AR), architecture de paiement et de transporteurs extensible. Migration `activation_code_batch`.
