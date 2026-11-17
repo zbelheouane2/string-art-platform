@@ -2,6 +2,7 @@
 
 ## 2026-11-17
 - **Fabrication CNC de la planche** (`services/engine/stringart/fabrication.py`) : DXF, SVG et G-code GRBL générés depuis la géométrie du moteur, pour MDF 17 mm : perçage des 240 avant-trous (foret 1,2 mm, 10 mm, débourrage), gravure facultative des repères A-D et numéros, découpe 500 × 500 en 9 passes avec attaches. Origine X0 Y0 au coin bas-gauche (secteur D). 4 tests. Fichiers et guide : `plateforme/fabrication/` du dossier projet.
+- **Feuille de numérotation 50 × 50 cm pour traceur** (`scripts/feuille-numerotation.py` + `-pdf.cjs`) : PDF 1:1, page 540 mm avec traits de coupe et fond perdu, zones A-D, point et repère de chaque clou, centre vierge, pointillés de déchirure, deux règles de 100 mm.
 
 ## 2026-11-13
 - **Commande, suite** : ZR Express par défaut, frais par wilaya (import CSV), 1 541 communes par wilaya (loi 26-06), adresse complète retirée, option « cadeau depuis l'étranger », page de l'offre numérique diaspora (paiement à venir). Migration `delivery_rates`.
