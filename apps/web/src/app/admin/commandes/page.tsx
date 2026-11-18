@@ -38,7 +38,7 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
         <p className="a-muted">Aucune commande.</p>
       ) : (
         <div className="a-table-wrap">
-          <table className="a-table">
+          <table className="a-table a-table-cards">
             <thead>
               <tr>
                 <th>Commande</th>
@@ -55,18 +55,18 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
                 const carrier = carriers.find((c) => c.code === o.deliveryMethod?.provider);
                 return (
                   <tr key={o.id}>
-                    <td>
+                    <td data-label="Commande">
                       <strong>{o.number}</strong>
                       <br />
                       <span className="a-muted">{dateFr(o.createdAt)}</span>
                     </td>
-                    <td>
+                    <td data-label="Client">
                       {a.recipient?.fullName}
                       <br />
                       <a href={`tel:${a.recipient?.phone}`}>{a.recipient?.phone}</a>
                       {a.gift && <span className="a-tag">Cadeau · acheteur {o.customer.fullName} {o.customer.phone}</span>}
                     </td>
-                    <td>
+                    <td data-label="Livraison">
                       {a.wilaya} - {wilayaName(a.wilaya ?? "", "fr")}, {a.commune}
                       <br />
                       <span className="a-muted">
@@ -74,7 +74,7 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
                       </span>
                       {a.note && <span className="a-tag">Note : {a.note}</span>}
                     </td>
-                    <td>
+                    <td data-label="Articles">
                       {o.items.map((i) => (
                         <div key={i.id}>
                           {i.quantity} × {(i.product.names as { fr: string }).fr}
@@ -86,10 +86,10 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
                         </span>
                       )}
                     </td>
-                    <td>
+                    <td data-label="Total">
                       <strong>{da(o.totalMinor)}</strong>
                     </td>
-                    <td>
+                    <td data-label="État">
                       <form action={setOrderStatusAction} className="a-inline">
                         <input type="hidden" name="number" value={o.number} />
                         <label className="visually-hidden" htmlFor={`st-${o.number}`}>

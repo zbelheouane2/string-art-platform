@@ -1,5 +1,8 @@
 # Historique
 
+## 2026-11-18
+- **Admin sur téléphone** (retour du propriétaire) : l'en-tête n'empile plus le menu sur tout l'écran et ne recouvre plus le contenu. Logo et « Se déconnecter » sur une ligne, rubriques en onglets sur une seule ligne qui défile de côté (l'onglet ouvert est amené à l'écran), en-tête non collant sur téléphone. Commandes et codes promo affichés en fiches (une ligne par information) au lieu d'un tableau trop large. Textes de la page Livraison mis à jour (wilaya sans tarif = non livrée). Ordinateur inchangé. 1 test navigateur téléphone ajouté.
+
 ## 2026-11-17
 - **Wilayas non livrées** (demande du propriétaire) : dès qu'une grille de tarifs est saisie pour un mode (domicile ou bureau d'une société), une wilaya absente de cette grille n'est pas livrée avec ce mode : le formulaire affiche « Livraison pas encore disponible dans cette wilaya avec ce mode », le bouton de commande est bloqué et le serveur refuse aussi la commande. Sans aucune grille saisie, les frais restent à `commerce.missingRateFeeMinor` (0 DA). Fichier ZR Express préparé à partir de la grille du propriétaire (65 wilayas sur 69 ; les 11 nouvelles wilayas reprennent le tarif de leur ancienne wilaya ; Illizi, Tindouf, Bordj Badji Mokhtar et Djanet non livrées). Tests : règle unitaire, et tests navigateur des frais isolés dans une société de test propre à chaque test.
 - **Étape 6 « Accrochez-le »** : nouvelle photo fournie par le propriétaire (portrait en fil accroché au-dessus d'une console), en WebP 1000 px (`public/visuels/etapes/accrocher-mur.webp`, 97 Ko). La photo de la présentation en haut de l'accueil ne change pas.

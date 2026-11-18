@@ -75,7 +75,7 @@ export default async function PromosPage({ searchParams }: { searchParams: Promi
         <p className="a-muted">Aucun code pour l&apos;instant.</p>
       ) : (
         <div className="a-table-wrap">
-          <table className="a-table">
+          <table className="a-table a-table-cards">
             <thead>
               <tr>
                 <th>Code</th>
@@ -91,14 +91,14 @@ export default async function PromosPage({ searchParams }: { searchParams: Promi
                 const upcoming = p.startsAt && p.startsAt > now;
                 return (
                   <tr key={p.id}>
-                    <td>
+                    <td data-label="Code">
                       <strong>{p.code}</strong>
                       {p.note && <span className="a-tag">{p.note}</span>}
                     </td>
-                    <td>
+                    <td data-label="Remise">
                       {p.kind === "PERCENT" ? `${p.value} %` : da(p.value)} sur {SCOPE[p.scope]}
                     </td>
-                    <td className="a-small">
+                    <td className="a-small" data-label="Conditions">
                       {p.minOrderMinor !== null && <div>Dès {da(p.minOrderMinor)} d&apos;articles</div>}
                       {(p.startsAt || p.endsAt) && (
                         <div>
@@ -108,11 +108,11 @@ export default async function PromosPage({ searchParams }: { searchParams: Promi
                       {p.maxUsesPerPhone !== null && <div>{p.maxUsesPerPhone} fois par client</div>}
                       {p.minOrderMinor === null && !p.startsAt && !p.endsAt && p.maxUsesPerPhone === null && <span className="a-muted">aucune</span>}
                     </td>
-                    <td>
+                    <td data-label="Utilisations">
                       {p.uses}
                       {p.maxUses !== null && ` / ${p.maxUses}`}
                     </td>
-                    <td>
+                    <td data-label="État">
                       <form action={togglePromoAction} className="a-inline">
                         <input type="hidden" name="code" value={p.code} />
                         <span className={`a-pill ${p.active && !expired && !upcoming ? "a-pill-on" : ""}`}>

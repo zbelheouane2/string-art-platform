@@ -61,7 +61,7 @@ export default async function CarrierPage({ params, searchParams }: { params: Pr
       <section className="a-card">
         <h2>Importer un fichier de tarifs</h2>
         <p className="a-muted">
-          Quand {carrier.name} change ses prix : envoyez son fichier Excel (.xlsx) ou CSV avec trois colonnes <b>wilaya</b>, <b>domicile</b>, <b>bureau</b> (montants en DA). Vous verrez les changements avant de valider. Cellule vide = tarif supprimé (confirmé par téléphone).{" "}
+          Quand {carrier.name} change ses prix : envoyez son fichier Excel (.xlsx) ou CSV avec trois colonnes <b>wilaya</b>, <b>domicile</b>, <b>bureau</b> (montants en DA). Vous verrez les changements avant de valider. Cellule vide = wilaya non livrée avec ce mode (le client ne peut pas commander).{" "}
           <a href={`/admin/livraison/${carrier.code}/tarifs.csv`}>Télécharger les tarifs actuels (modèle)</a>
         </p>
         <RateImport code={carrier.code} />

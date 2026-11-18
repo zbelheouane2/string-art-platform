@@ -14,7 +14,7 @@ export default async function CarriersPage({ searchParams }: { searchParams: Pro
   return (
     <AdminShell title="Livraison" current="/admin/livraison">
       <Flash ok={q.ok} error={q.erreur} />
-      <p className="a-muted">Chaque société a ses tarifs par wilaya, à domicile et au bureau. Si plusieurs sociétés sont actives, le client choisit la sienne et voit son prix pour sa wilaya. Une wilaya sans tarif s&apos;affiche « confirmée par téléphone ».</p>
+      <p className="a-muted">Chaque société a ses tarifs par wilaya, à domicile et au bureau. Si plusieurs sociétés sont actives, le client choisit la sienne et voit son prix pour sa wilaya. Une wilaya sans tarif n&apos;est pas livrée par cette société : le client ne peut pas la choisir avec ce mode.</p>
       <ul className="a-cards">
         {carriers.map((c) => {
           const ms = methods.filter((m) => m.provider === c.code);

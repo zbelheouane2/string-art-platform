@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { logoutAction } from "./actions";
+import { AdminNavScroll } from "./AdminNavScroll";
 
 const NAV = [
   { href: "/admin", label: "Tableau de bord" },
@@ -30,6 +31,7 @@ export function AdminShell({ title, current, children }: { title: string; curren
             ))}
           </ul>
         </nav>
+        <AdminNavScroll />
         <form action={logoutAction}>
           <button type="submit" className="a-btn a-btn-ghost">
             Se déconnecter

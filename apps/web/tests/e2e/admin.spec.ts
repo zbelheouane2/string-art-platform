@@ -157,3 +157,33 @@ test.describe("espace admin", () => {
     }
   });
 });
+
+test.describe("espace admin sur téléphone", () => {
+  test.skip(({ isMobile }) => !isMobile, "affichage téléphone");
+
+  test("en-tête compact : rubriques sur une ligne qui défile, contenu jamais recouvert, commandes en fiches", async ({ page }) => {
+    await login(page);
+    for (const url of ["/admin", "/admin/commandes", "/admin/promos", "/admin/livraison"]) {
+      await page.goto(url);
+      const header = page.locator(".admin-top");
+      // L'en-tête tient en deux lignes (logo + déconnexion, puis onglets).
+      expect((await header.boundingBox())!.height).toBeLessThan(130);
+      // Les onglets restent sur une seule ligne, l'onglet ouvert est visible.
+      const tabs = page.locator(".admin-top nav a");
+      const tops = await tabs.evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top)));
+      expect(new Set(tops).size).toBe(1);
+      await expect(page.locator('.admin-top nav a[aria-current="page"]')).toBeInViewport();
+      // En défilant, l'en-tête part avec la page : il ne recouvre pas le contenu.
+      await page.evaluate(() => window.scrollTo(0, 400));
+      expect(await header.evaluate((h) => getComputedStyle(h).position)).toBe("static");
+      expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
+    }
+    await page.goto("/admin/commandes");
+    const row = page.locator(".a-table-cards tbody tr").first();
+    if (await row.count()) {
+      expect(await page.locator(".a-table-cards thead").evaluate((t) => getComputedStyle(t).display)).toBe("none");
+      const box = (await row.boundingBox())!;
+      expect(box.x + box.width).toBeLessThanOrEqual(page.viewportSize()!.width);
+    }
+  });
+});
