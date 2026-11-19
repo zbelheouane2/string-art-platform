@@ -73,6 +73,11 @@ export function SiteHeader() {
           >
             {open ? <CloseIcon /> : <MenuIcon />}
           </button>
+          {/* Téléphone : accès direct au générateur pour ceux qui ont déjà le kit. */}
+          <Link href="/activer" className="header-code">
+            <span className="header-code-long">{t("code")}</span>
+            <span className="header-code-short">{t("codeShort")}</span>
+          </Link>
         </div>
         <Link href="/" className="header-logo">
           <Logo />

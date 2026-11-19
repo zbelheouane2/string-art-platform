@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { accessories as accessoryCatalog, kitOffer } from "@/config/catalog";
 import { commerce } from "@/config/commerce";
 import { checkoutOptions } from "./orders";
@@ -13,7 +14,9 @@ const KIT_NAMES = { fr: "Kit portrait 50 × 50 cm", en: "50 × 50 cm portrait ki
  * sur la configuration si la base ne répond pas (le panier reste affichable ;
  * la commande, elle, relit toujours la base).
  */
-export async function shopCatalog(): Promise<ShopCatalog | null> {
+export const shopCatalog = cache(loadShopCatalog);
+
+async function loadShopCatalog(): Promise<ShopCatalog | null> {
   const base = { maxQuantity: commerce.maxQuantity, orderingOpen: kitOffer.orderingOpen, provisional: kitOffer.provisional };
   try {
     const o = await checkoutOptions();

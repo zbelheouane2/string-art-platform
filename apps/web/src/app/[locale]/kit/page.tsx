@@ -49,9 +49,6 @@ async function loadDemo(): Promise<DemoPortrait> {
   return JSON.parse(await readFile(file, "utf-8"));
 }
 
-/** Les prix viennent de la base : la page est régénérée après une modification dans l'admin (et au plus tard toutes les 5 minutes). */
-export const revalidate = 300;
-
 export default async function KitPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);

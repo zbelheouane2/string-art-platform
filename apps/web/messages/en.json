@@ -30,7 +30,8 @@
       "large": "Large",
       "xlarge": "Extra large",
       "xxlarge": "Largest"
-    }
+    },
+    "codeShort": "My code"
   },
   "hero": {
     "badge": "Gift idea",
@@ -838,6 +839,13 @@
     "app": {
       "title": "How does our online generator work?",
       "scroll": "Scroll to see the screens"
+    },
+    "kitCard": {
+      "eyebrow": "The kit page",
+      "title": "Everything about the kit",
+      "text": "Board, voice guide, online generator: everything is explained step by step, with portrait examples.",
+      "cta": "See the kit in detail",
+      "alt": "Thread portrait hanging on a wall above a console table"
     }
   },
   "activate": {

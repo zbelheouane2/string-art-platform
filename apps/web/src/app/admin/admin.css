@@ -484,3 +484,35 @@
     color: #6b5d54;
   }
 }
+
+/* Confirmation manuelle des commandes (WhatsApp) */
+.a-status {
+  display: inline-block;
+  margin-block-end: 0.4rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: #efe7df;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.a-status-pending {
+  background: #fdecc8;
+  color: #6b4500;
+}
+
+.a-status-confirmed {
+  background: #d8f0e1;
+  color: #145a32;
+}
+
+.a-confirm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-block-end: 0.5rem;
+}
+
+.a-btn-wa {
+  background: #157347;
+}

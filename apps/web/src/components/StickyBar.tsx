@@ -12,7 +12,7 @@ export function StickyBar({ watchId, price, orderingOpen = false }: { watchId: s
   useEffect(() => {
     const el = document.getElementById(watchId);
     if (!el) return;
-    const io = new IntersectionObserver(([entry]) => setVisible(!entry.isIntersecting && entry.boundingClientRect.top < 0));
+    const io = new IntersectionObserver(([entry]) => setVisible(!entry.isIntersecting));
     io.observe(el);
     return () => io.disconnect();
   }, [watchId]);

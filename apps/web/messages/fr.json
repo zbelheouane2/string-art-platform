@@ -30,7 +30,8 @@
       "large": "Grande",
       "xlarge": "Très grande",
       "xxlarge": "Maximale"
-    }
+    },
+    "codeShort": "Mon code"
   },
   "hero": {
     "badge": "Idée cadeau",
@@ -838,6 +839,13 @@
     "app": {
       "title": "Comment fonctionne notre générateur en ligne ?",
       "scroll": "Faites défiler pour voir les écrans"
+    },
+    "kitCard": {
+      "eyebrow": "La fiche du kit",
+      "title": "Tout savoir sur le kit",
+      "text": "Planche, guide vocal, générateur en ligne : tout est expliqué, étape par étape, avec des exemples de portraits.",
+      "cta": "Voir le kit en détail",
+      "alt": "Portrait en fil accroché au mur au-dessus d'une console"
     }
   },
   "activate": {
