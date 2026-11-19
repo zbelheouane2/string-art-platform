@@ -5399,3 +5399,141 @@ h1 em {
   text-decoration: underline;
   cursor: pointer;
 }
+
+/* Carte « Tout savoir sur le kit » (accueil) : toute la carte mène à la fiche du kit. */
+.kit-card {
+  display: grid;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: var(--white);
+  box-shadow: var(--shadow-hero);
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.kit-card img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.kit-card-body {
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 0.75rem;
+  padding: clamp(1.25rem, 0.75rem + 2.5vw, 3rem);
+}
+
+.kit-card-eyebrow {
+  color: var(--accent);
+  font-size: var(--step--1);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.kit-card-title {
+  font-family: var(--font-display, inherit);
+  font-size: clamp(1.6rem, 1.2rem + 2vw, 2.4rem);
+  line-height: 1.15;
+}
+
+.kit-card-text {
+  color: var(--ink-soft);
+  max-inline-size: 30rem;
+}
+
+.kit-card-cta {
+  margin-block-start: 0.5rem;
+}
+
+.kit-card:hover {
+  transform: translateY(-3px);
+}
+
+.kit-card:hover img {
+  transform: scale(1.03);
+}
+
+.kit-card:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+
+@media (min-width: 48rem) {
+  .kit-card {
+    grid-template-columns: 1.1fr 1fr;
+  }
+
+  .kit-card img {
+    aspect-ratio: auto;
+    min-block-size: 22rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kit-card,
+  .kit-card img {
+    transition: none;
+  }
+}
+
+/* « J'ai un code » toujours visible en haut sur téléphone et tablette (sur ordinateur, il est dans le menu). */
+.header-code {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2.25rem;
+  margin-inline-start: 0.25rem;
+  padding: 0.3rem 0.75rem;
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius-pill);
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.header-code:hover {
+  background: var(--accent);
+  color: var(--white);
+}
+
+.header-code-short {
+  display: none;
+}
+
+/* Petits téléphones : libellé court pour ne pas toucher le logo. */
+@media (max-width: 26rem) {
+  .header-code {
+    margin-inline-start: 0;
+    padding-inline: 0.6rem;
+  }
+
+  .header-code-long {
+    display: none;
+  }
+
+  .header-code-short {
+    display: inline;
+  }
+}
+
+@media (min-width: 64rem) {
+  .header-code {
+    display: none;
+  }
+}
+
+@media (max-width: 22rem) {
+  .header-code {
+    padding-inline: 0.45rem;
+    font-size: 0.72rem;
+  }
+}

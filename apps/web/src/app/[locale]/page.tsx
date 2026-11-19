@@ -5,12 +5,10 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BeforeAfter } from "@/components/BeforeAfter";
 import { GiftIcon, HeartThreadIcon, PlusIcon } from "@/components/Icons";
 import { NailRing } from "@/components/NailRing";
-import { BoardPlan } from "@/components/BoardPlan";
 import { ProductSection } from "@/components/ProductSection";
 import { Reveal } from "@/components/Reveal";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { AutoCarousel } from "@/components/AutoCarousel";
 import { Reviews } from "@/components/Reviews";
 import { StepsCarousel } from "@/components/StepsCarousel";
 import { StickyBar } from "@/components/StickyBar";
@@ -44,20 +42,6 @@ const GIFTS = [
   { key: "occasion", name: "bebe", occasions: ["birth", "birthday", "wedding", "memory", "other"] },
 ] as const;
 const INTRO = ["gift", "hobby"] as const;
-const BOX = [
-  { key: "box", img: "/visuels/etapes/ouvrir.webp" },
-  { key: "board", img: null },
-  { key: "spool", img: "/visuels/devidoir.webp" },
-  { key: "stand", img: "/visuels/etapes/preparer.webp" },
-  { key: "code", img: "/visuels/etapes/code-{locale}.webp" },
-  { key: "voice", img: "/visuels/etapes/voice-photo-{locale}.webp" },
-] as const;
-const APP_SCREENS = [
-  { key: "code", img: "code" },
-  { key: "photo", img: "photo" },
-  { key: "thread", img: "voice" },
-] as const;
-const APP_CHIPS = ["voice", "speed", "pause", "progress"] as const;
 const FAQ = ["who", "skills", "photo", "time", "privacy", "payment"] as const;
 
 async function loadDemo(): Promise<DemoPortrait> {
@@ -199,55 +183,23 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </div>
         </section>
 
-        {/* Que contient le kit : grille de 6 éléments. */}
-        <section className="section bg-cream" id="contenu" aria-labelledby="box-title">
+        {/* Vers la fiche du kit : grande carte entièrement cliquable (photo, titre, bouton). */}
+        <section className="section bg-cream" aria-labelledby="kitcard-title">
           <div className="wrap">
-            <header className="section-head center" data-reveal>
-              <h2 id="box-title">{t("home.box.title")}</h2>
-              <p>{t("home.box.lead")}</p>
-            </header>
-            <ul className="box-grid">
-              {BOX.map((b, i) => (
-                <li key={b.key} data-reveal style={{ ["--i" as string]: i % 3 }}>
-                  <div className="box-media">
-                    {b.img ? <img src={b.key === "code" && locale === "fr" ? "/visuels/etapes/code-photo-fr.webp" : b.img.replace("{locale}", locale)} alt="" width={1000} height={1000} loading="lazy" /> : <BoardPlan className="box-plan" />}
-                  </div>
-                  <h3>{t(`home.box.items.${b.key}.title`)}</h3>
-                  <p>{t(`home.box.items.${b.key}.text`)}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-
-        {/* Le générateur en ligne : écrans de téléphone qui défilent à l'horizontale. */}
-        <section className="section bg-blush" aria-labelledby="app-title">
-          <div className="wrap">
-            <header className="section-head split-head" data-reveal>
-              <div>
-                <h2 id="app-title">{t("home.app.title")}</h2>
-              </div>
-              <p>{t("kit.app.lead")}</p>
-            </header>
-            <AutoCarousel className="app-scroller" label={t("home.app.title")}>
-              {APP_SCREENS.map((a, i) => (
-                <div key={a.key}>
-                  <img src={`/visuels/etapes/${a.img}-${locale}.webp`} alt="" width={1000} height={1000} loading="lazy" />
-                  <h3>
-                    <span className="num-badge" aria-hidden="true">
-                      {i + 1}
-                    </span>
-                    {t(`kit.app.steps.${a.key}.title`)}
-                  </h3>
-                  <p>{t(`kit.app.steps.${a.key}.text`)}</p>
-                </div>
-              ))}
-            </AutoCarousel>
-            <ul className="chips" data-reveal>
-              {APP_CHIPS.map((c) => (
-                <li key={c}>{t(`kit.app.chips.${c}`)}</li>
-              ))}
-            </ul>
+            <Link href="/kit" className="kit-card" data-reveal>
+              <img src="/visuels/etapes/accrocher-mur.webp" alt={t("home.kitCard.alt")} width={1000} height={1000} loading="lazy" />
+              <span className="kit-card-body">
+                <span className="kit-card-eyebrow">{t("home.kitCard.eyebrow")}</span>
+                <span className="kit-card-title" id="kitcard-title" role="heading" aria-level={2}>
+                  {t("home.kitCard.title")}
+                </span>
+                <span className="kit-card-text">{t("home.kitCard.text")}</span>
+                <span className="btn btn-primary btn-lg kit-card-cta">
+                  {t("home.kitCard.cta")}
+                  <span aria-hidden="true"> →</span>
+                </span>
+              </span>
+            </Link>
           </div>
         </section>
 

@@ -206,17 +206,16 @@ test("le bouton « Comment ça marche ? » mène à la page du kit", async ({ pa
   await expect(page).toHaveURL(/\/fr\/kit$/);
 });
 
-test("le plan de la planche montre 240 clous numérotés de 1 à 60 par secteur", async ({ page }) => {
+test("accueil : grande carte vers la fiche du kit, sans les rubriques détaillées de la fiche", async ({ page }) => {
   await page.goto("/fr");
-  const plan = page.locator("svg.box-plan");
-  // 240 clous + le disque central et son contour.
-  await expect(plan.locator("circle")).toHaveCount(242);
-  const nums = await plan.locator("g > text").allTextContents();
-  expect(nums).toHaveLength(240);
-  expect(nums.slice(0, 3)).toEqual(["1", "2", "3"]);
-  expect(nums[59]).toBe("60");
-  expect(nums[60]).toBe("1");
-  expect(nums[239]).toBe("60");
+  // « Que contient le kit » et « Le générateur en ligne » sont sur la fiche du kit seulement.
+  await expect(page.locator("#box-title, #app-title")).toHaveCount(0);
+  const card = page.getByRole("link", { name: /Tout savoir sur le kit/ });
+  await card.scrollIntoViewIfNeeded();
+  await expect(card.locator("img")).toBeVisible();
+  await expect(card.getByText("Voir le kit en détail")).toBeVisible();
+  await card.click();
+  await expect(page).toHaveURL(/\/fr\/kit$/);
 });
 
 test("le prix provisoire s'affiche et le bouton ajoute au panier", async ({ page }) => {
@@ -245,24 +244,19 @@ test("menu horizontal sur ordinateur, menu repliable sur téléphone", async ({ 
   }
 });
 
-test("les écrans du générateur défilent seuls sur téléphone, avec points et pause", async ({ page, isMobile }) => {
-  test.skip(!isMobile, "sur ordinateur les trois écrans tiennent sur une ligne");
+test("« J'ai un code » toujours visible en haut sur téléphone, dans le menu sur ordinateur", async ({ page, isMobile }) => {
   await page.goto("/fr");
-  const carousel = page.locator(".app-scroller");
-  await carousel.scrollIntoViewIfNeeded();
-  await page.mouse.move(0, 0);
-  const track = carousel.locator(".auto-track");
-  const dots = carousel.locator(".auto-dot");
-  await expect(dots).toHaveCount(3);
-  await expect(dots.nth(0)).toHaveAttribute("aria-current", "true");
-  // Avance seul en 4 s.
-  await expect(dots.nth(1)).toHaveAttribute("aria-current", "true", { timeout: 8000 });
-  await expect.poll(() => track.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
-  // Un point mène à sa diapositive ; le bouton pause arrête le défilement.
-  await dots.nth(2).click();
-  await expect(dots.nth(2)).toHaveAttribute("aria-current", "true");
-  await carousel.getByRole("button", { name: "Mettre le défilement en pause" }).click();
-  await expect(carousel.getByRole("button", { name: "Relancer le défilement" })).toHaveAttribute("aria-pressed", "true");
+  const code = page.locator(".header-code");
+  if (isMobile) {
+    await expect(code).toBeVisible();
+    await expect(code).toBeInViewport();
+    await page.evaluate(() => window.scrollTo(0, 3000));
+    await code.click();
+    await expect(page).toHaveURL(/\/fr\/activer$/);
+  } else {
+    await expect(code).toBeHidden();
+    await expect(page.getByRole("navigation", { name: "Navigation principale" }).getByRole("link", { name: "J'ai un code" })).toBeVisible();
+  }
 });
 
 test("sur ordinateur, les 5 écrans du générateur tiennent sur une ligne, sans commandes", async ({ page, isMobile }) => {
