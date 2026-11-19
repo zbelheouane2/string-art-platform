@@ -458,7 +458,7 @@
           "h": "Pourquoi nous les utilisons",
           "p": [
             "Pour confirmer, préparer et livrer votre commande, calculer votre portrait, vous guider pendant la réalisation et protéger le site contre les abus.",
-            "Nous ne vendons pas vos données, nous ne les utilisons pas pour de la publicité et nous ne publions jamais vos photos."
+            "Nous ne vendons pas vos données et nous ne publions jamais vos photos. Votre nom, votre téléphone et vos photos ne sont jamais transmis à des outils de mesure ou de publicité."
           ]
         },
         {
@@ -472,6 +472,7 @@
           "p": [
             "Notre équipe, pour traiter votre commande.",
             "La société de livraison, qui reçoit uniquement ce qui est nécessaire à la livraison : nom, téléphone, wilaya, commune et montant à encaisser.",
+            "Seulement si vous l'acceptez : Google (Google Analytics), Meta (Facebook, Instagram) et TikTok, pour mesurer la fréquentation du site et l'efficacité de nos publicités. Ces sociétés sont établies hors d'Algérie.",
             "Nos prestataires techniques (hébergement, suivi des commandes), tenus à la confidentialité. Si des données devaient être hébergées hors d'Algérie, ce transfert ne se ferait que dans les conditions prévues par la loi n° 18-07."
           ]
         },
@@ -494,7 +495,9 @@
         {
           "h": "Cookies",
           "p": [
-            "Le site utilise seulement les cookies nécessaires à son fonctionnement : la langue choisie et l'accès à votre code. Aucun cookie publicitaire ni traceur de mesure d'audience."
+            "Cookies nécessaires, toujours actifs : la langue choisie, votre panier et l'accès à votre code.",
+            "Cookies de mesure, seulement avec votre accord : Google Analytics et les pixels Meta et TikTok enregistrent les pages vues et les étapes d'achat (article consulté, ajout au panier, début de commande, commande validée avec son numéro et son montant). Ils ne reçoivent ni votre nom, ni votre téléphone, ni votre adresse, ni vos photos.",
+            "Vous pouvez accepter ou refuser dans le bandeau qui s'affiche à la première visite, et changer d'avis à tout moment avec le lien « Cookies » en bas de chaque page. Refuser ne change rien au fonctionnement du site."
           ]
         },
         {
@@ -1229,5 +1232,13 @@
     "deliveryNote": "Livraison en {min} à {max} jours ouvrables. Frais de livraison calculés à l'étape suivante.",
     "checkout": "Passer la commande",
     "addToCart": "Ajouter au panier"
+  },
+  "consent": {
+    "title": "Cookies de mesure",
+    "text": "Avec votre accord, nous mesurons la fréquentation du site et l'efficacité de nos publicités (Google Analytics, pixels Meta et TikTok). Votre nom, votre téléphone et vos photos ne sont jamais transmis.",
+    "privacy": "En savoir plus",
+    "accept": "Accepter",
+    "refuse": "Refuser",
+    "settings": "Cookies"
   }
 }

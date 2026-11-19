@@ -16,6 +16,10 @@
 - `npm test` — tests unitaires : repères de clous identiques au moteur, cohérence du portrait de démonstration, mêmes clés de traduction dans les trois langues, liens WhatsApp et réseaux (`contact.test.ts`).
 - `npm run test:e2e` — 34 tests navigateur (bureau 1440 px et mobile 390 px) : choix de langue selon le navigateur, `lang` et `dir` (RTL en arabe), pas de défilement horizontal, accessibilité WCAG 2.1 A/AA (axe) en FR/EN/AR, sélecteur de langue, tissage complet, FAQ au clavier, santé base + moteur. `infos.spec.ts` : les 4 pages d'information en FR/EN/AR (titre, largeur, accessibilité), liens du pied de page, WhatsApp affiché et réseaux masqués, engagements sous le bouton Commander.
 
+- `seo.test.ts` (unitaires) : versions linguistiques, adresse canonique, aperçu des liens, sitemap, robots, fiche produit schema.org, lecture des identifiants de mesure.
+- `seo.spec.ts` (navigateur) : balises Open Graph et hreflang, image d'aperçu de moins de 300 Ko, fiche produit avec le prix, pages personnelles en `noindex`, `robots.txt` et `sitemap.xml`.
+- `consent.spec.ts` (navigateur, avec un site construit avec des identifiants de test et `ANALYTICS_E2E=1`) : rien n'est chargé avant l'accord, refus mémorisé, accord qui charge les 3 outils (interceptés), lien « Cookies » du pied de page, bandeau en arabe et accessibilité.
+
 ## Essais visuels
 Photo libre de droits (scikit-image « astronaut », recadrée sur le visage) : portrait reconnaissable, 1 800–2 300 fils, ~0,7–0,9 km de fil, ~1 s de calcul + ~2 s de rendu.
 

@@ -5,6 +5,7 @@ import { INFO_PAGES, type InfoPageKey } from "@/config/infoPages";
 import { policies } from "@/config/policies";
 import { Link } from "@/i18n/navigation";
 import { displayPhone, ltr, whatsappUrl } from "@/lib/contact";
+import { pageMetadata } from "@/lib/seo";
 import { WhatsAppIcon } from "./ContactIcons";
 import { PageShell } from "./PageShell";
 
@@ -29,7 +30,7 @@ function formatDate(iso: string, locale: string): string {
 
 export async function infoPageMetadata(locale: string, page: InfoPageKey): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: `legal.${page}` });
-  return { title: `${t("title")} — ${brand.name}`, description: t("lead") };
+  return pageMetadata({ locale, path: INFO_PAGES[page], title: `${t("title")} — ${brand.name}`, description: t("lead") });
 }
 
 /** Gabarit commun : titre, sections, vendeur, contact, autres pages. */

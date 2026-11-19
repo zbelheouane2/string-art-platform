@@ -11,5 +11,5 @@ export const policies = {
   /** Délai de remboursement quand l'échange est impossible (loi 18-05, art. 23). */
   refundDays: 15,
   /** Date de dernière mise à jour des pages d'information (AAAA-MM-JJ). */
-  updated: "2026-11-16",
+  updated: "2026-11-19",
 } as const;

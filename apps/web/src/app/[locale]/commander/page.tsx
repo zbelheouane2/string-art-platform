@@ -7,6 +7,7 @@ import { commerce } from "@/config/commerce";
 import { kitOffer } from "@/config/catalog";
 import { checkoutOptions } from "@/lib/orders";
 import { OrderForm } from "./OrderForm";
+import { TrackCheckout } from "@/components/Analytics";
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +35,7 @@ export default async function OrderPage({
       <header className="flow-head">
         <h1>{t("title")}</h1>
       </header>
+      {options && <TrackCheckout />}
       {options ? (
         <OrderForm
           price={options.price}

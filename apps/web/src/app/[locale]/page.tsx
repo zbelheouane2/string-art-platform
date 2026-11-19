@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BeforeAfter } from "@/components/BeforeAfter";
 import { GiftIcon, HeartThreadIcon, PlusIcon } from "@/components/Icons";
@@ -21,6 +22,15 @@ import { shopCatalog } from "@/lib/shop";
 import { howSteps } from "@/config/howSteps";
 import { Link } from "@/i18n/navigation";
 import type { DemoPortrait } from "@/lib/board";
+import { pageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/JsonLd";
+import { kitProductJsonLd, organizationJsonLd } from "@/lib/structuredData";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "meta" });
+  return pageMetadata({ locale, path: "", title: t("title", { brand: brand.name }), description: t("description") });
+}
 
 const TRUST = ["cod", "delivery", "voice", "nails"] as const;
 const PROOF = ["cod", "nails", "voice"] as const;
@@ -76,6 +86,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <p className="announcement">{t("announcement")}</p>
       <SiteHeader />
       <main id="main">
+        <JsonLd data={organizationJsonLd(locale)} />
+        {catalog && <JsonLd data={kitProductJsonLd(catalog, locale, t("meta.description"))} />}
         {/* Héros : carte visuelle (pastille + médaillon) et texte avec ligne de preuves. */}
         <section className="hero" aria-labelledby="hero-title">
           <div className="wrap hero-grid">

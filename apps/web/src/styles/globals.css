@@ -5326,3 +5326,59 @@ h1 em {
     flex: 0 0 auto;
   }
 }
+
+/* Bandeau de consentement (mesure d'audience) : au-dessus de la barre d'achat, sous le tiroir du panier. */
+.consent {
+  position: fixed;
+  inset-inline: 0.75rem;
+  inset-block-end: 0.75rem;
+  z-index: 60;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  max-inline-size: 46rem;
+  margin-inline: auto;
+  padding: 1rem 1.25rem;
+  background: var(--white);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-sticky);
+  font-size: var(--step--1);
+}
+
+.consent p {
+  flex: 1 1 18rem;
+  margin: 0;
+}
+
+.consent a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.consent-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1 1 auto;
+  justify-content: flex-end;
+}
+
+.consent-actions .btn {
+  flex: 1 1 0;
+  min-block-size: 44px;
+  padding-inline: 1.1rem;
+  font-size: var(--step--1);
+}
+
+.link-button {
+  margin-inline-start: 0.75rem;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}

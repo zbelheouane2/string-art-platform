@@ -458,7 +458,7 @@
           "h": "Why we use it",
           "p": [
             "To confirm, prepare and deliver your order, calculate your portrait, guide you while you make it and protect the site against abuse.",
-            "We do not sell your data, we do not use it for advertising and we never publish your photos."
+            "We do not sell your data and we never publish your photos. Your name, phone number and photos are never shared with measurement or advertising tools."
           ]
         },
         {
@@ -472,6 +472,7 @@
           "p": [
             "Our team, to process your order.",
             "The delivery company, which receives only what delivery requires: name, phone, wilaya, commune and amount to collect.",
+            "Only if you accept: Google (Google Analytics), Meta (Facebook, Instagram) and TikTok, to measure visits to the site and how well our ads work. These companies are based outside Algeria.",
             "Our technical providers (hosting, order tracking), bound by confidentiality. If any data were hosted outside Algeria, that transfer would only take place under the conditions set by Law No. 18-07."
           ]
         },
@@ -494,7 +495,9 @@
         {
           "h": "Cookies",
           "p": [
-            "The site only uses cookies it needs to work: your chosen language and access to your code. No advertising cookies and no audience tracking."
+            "Necessary cookies, always on: your chosen language, your cart and access to your code.",
+            "Measurement cookies, only with your consent: Google Analytics and the Meta and TikTok pixels record pages viewed and purchase steps (item viewed, added to cart, checkout started, order placed with its number and amount). They never receive your name, phone number, address or photos.",
+            "You can accept or decline in the banner shown on your first visit, and change your mind at any time with the “Cookies” link at the bottom of every page. Declining does not change how the site works."
           ]
         },
         {
@@ -1229,5 +1232,13 @@
     "deliveryNote": "Delivered in {min} to {max} working days. Delivery fees are calculated at the next step.",
     "checkout": "Checkout",
     "addToCart": "Add to cart"
+  },
+  "consent": {
+    "title": "Measurement cookies",
+    "text": "With your consent, we measure visits to the site and how well our ads work (Google Analytics, Meta and TikTok pixels). Your name, phone number and photos are never shared.",
+    "privacy": "Learn more",
+    "accept": "Accept",
+    "refuse": "Decline",
+    "settings": "Cookies"
   }
 }

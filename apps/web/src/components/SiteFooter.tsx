@@ -4,6 +4,7 @@ import { INFO_PAGES, type InfoPageKey } from "@/config/infoPages";
 import { Link } from "@/i18n/navigation";
 import { displayPhone, ltr, socialLinks, whatsappUrl } from "@/lib/contact";
 import { MailIcon, SOCIAL_ICONS, WhatsAppIcon } from "./ContactIcons";
+import { ConsentSettingsButton } from "./Analytics";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Logo } from "./Logo";
 
@@ -104,7 +105,10 @@ export async function SiteFooter() {
         </div>
       </div>
       <div className="wrap footer-bottom">
-        <p>{t("rights", { year: new Date().getFullYear(), brand: brand.name })}</p>
+        <p>
+          {t("rights", { year: new Date().getFullYear(), brand: brand.name })}
+          <ConsentSettingsButton />
+        </p>
       </div>
     </footer>
   );

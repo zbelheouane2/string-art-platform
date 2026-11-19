@@ -4,6 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { policies } from "@/config/policies";
+import { track } from "@/lib/analytics";
 import { formatPrice } from "@/lib/price";
 import type { CartLines, ShopCatalog, ShopItem } from "@/lib/shopTypes";
 import { CloseIcon } from "./Icons";
@@ -106,8 +107,16 @@ export function CartProvider({ catalog, children }: { catalog: ShopCatalog | nul
       for (const [slug, q] of Object.entries(items)) next[slug] = clamp((next[slug] ?? 0) + q);
       write(next);
       if (openAfter) setOpen(true);
+      // Mesure (seulement si le visiteur a accepté) : articles ajoutés et leur montant.
+      const added = known.filter((i) => items[i.slug] > 0);
+      if (added.length)
+        track("add_to_cart", {
+          valueMinor: added.reduce((s, i) => s + i.price.amountMinor * items[i.slug], 0),
+          currency: added[0].price.currency,
+          items: added.map((i) => i.slug),
+        });
     },
-    [clamp],
+    [clamp, known],
   );
   const replace = useCallback((l: CartLines) => write(l), []);
 

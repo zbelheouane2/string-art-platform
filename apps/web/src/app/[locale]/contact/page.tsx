@@ -3,13 +3,14 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { WhatsAppIcon } from "@/components/ContactIcons";
 import { PageShell } from "@/components/PageShell";
 import { brand } from "@/config/brand";
+import { pageMetadata } from "@/lib/seo";
 import { displayPhone, ltr, whatsappUrl } from "@/lib/contact";
 import { ContactForm } from "./ContactForm";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "contact" });
-  return { title: `${t("title")} — ${brand.name}`, description: t("lead") };
+  return pageMetadata({ locale, path: "/contact", title: `${t("title")} — ${brand.name}`, description: t("lead") });
 }
 
 /**

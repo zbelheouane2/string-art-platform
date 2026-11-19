@@ -20,6 +20,10 @@ import { shopCatalog } from "@/lib/shop";
 import { howSteps } from "@/config/howSteps";
 import { Link } from "@/i18n/navigation";
 import type { DemoPortrait } from "@/lib/board";
+import { pageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/JsonLd";
+import { kitProductJsonLd } from "@/lib/structuredData";
+import { TrackOnView } from "@/components/Analytics";
 
 const WHAT = ["kit", "model", "voice"] as const;
 const ENGINE = ["site", "code", "photo", "preview", "voice"] as const;
@@ -37,7 +41,7 @@ const FAQ = ["who", "skills", "photo", "time", "privacy", "payment"] as const;
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "kit.meta" });
-  return { title: t("title", { brand: brand.name }), description: t("description") };
+  return pageMetadata({ locale, path: "/kit", title: t("title", { brand: brand.name }), description: t("description") });
 }
 
 async function loadDemo(): Promise<DemoPortrait> {
@@ -66,6 +70,8 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
       <p className="announcement">{t("announcement")}</p>
       <SiteHeader />
       <main id="main">
+        {catalog && <JsonLd data={kitProductJsonLd(catalog, locale, t("kit.meta.description"))} />}
+        {catalog && <TrackOnView event="view_item" value={catalog.kit.price.amountMinor} currency={catalog.kit.price.currency} item={catalog.kit.slug} />}
         <div id="hero-actions" />
         <ProductSection accessories={extras} price={price} provisional={kitOffer.provisional} orderingOpen={kitOffer.orderingOpen} headingLevel={1} />
 

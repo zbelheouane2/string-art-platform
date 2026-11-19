@@ -100,6 +100,10 @@ Ne mettez jamais ces valeurs dans le code ni dans un fichier envoyé par e-mail 
 | `NEXT_PUBLIC_WHATSAPP` | non | Numéro WhatsApp affiché, sans `+` ni espaces |
 | `NEXT_PUBLIC_INSTAGRAM_URL`, `NEXT_PUBLIC_FACEBOOK_URL`, `NEXT_PUBLIC_TIKTOK_URL` | non | Réseaux sociaux. Vide = masqué |
 | `NEXT_PUBLIC_LEGAL_ANPDP` | non | Numéro de récépissé ANPDP (loi 18-07). Vide = masqué |
+| `NEXT_PUBLIC_SITE_URL` | **oui** | Adresse publique du site sans « / » final (ex. `https://deekra.dz`) : aperçus des liens WhatsApp/Facebook, sitemap, adresses canoniques |
+| `NEXT_PUBLIC_GA4_ID` | non | Google Analytics 4 (`G-…`). Vide = désactivé |
+| `NEXT_PUBLIC_META_PIXEL_ID` | non | Pixel Meta (Facebook, Instagram). Vide = désactivé |
+| `NEXT_PUBLIC_TIKTOK_PIXEL_ID` | non | Pixel TikTok. Vide = désactivé |
 | `DEFAULT_MARKET` | non | `DZ` par défaut |
 
 Les variables qui commencent par `NEXT_PUBLIC_` sont lues au moment de la construction du site : après les avoir changées, relancez un déploiement.
