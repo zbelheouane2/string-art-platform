@@ -59,3 +59,54 @@ test("bandeau accessible (WCAG 2.1 AA)", async ({ page }) => {
   const results = await new AxeBuilder({ page }).include(".consent").withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
   expect(results.violations.map((v) => `${v.id}: ${v.nodes.length}`)).toEqual([]);
 });
+
+test("pixel Meta : événements standards du parcours d'achat, achat en DZD compté une fois", async ({ page }) => {
+  test.skip(test.info().project.name !== "desktop", "un seul passage suffit (commande réelle en base)");
+  // Faux fbevents.js : enregistre chaque appel fbq (gardé d'une page à l'autre).
+  await page.route(TOOLS, (route) => {
+    const body = route.request().url().includes("connect.facebook.net")
+      ? `(function(){var f=window.fbq;function rec(a){var l=JSON.parse(sessionStorage.getItem("fb")||"[]");l.push(a);sessionStorage.setItem("fb",JSON.stringify(l));}
+         (f.queue||[]).forEach(function(a){rec(Array.prototype.slice.call(a));});f.queue=[];f.callMethod=function(){rec(Array.prototype.slice.call(arguments));};})();`
+      : "";
+    return route.fulfill({ status: 200, contentType: "application/javascript", body });
+  });
+  type Call = [string, string, Record<string, unknown>?, Record<string, unknown>?];
+  const calls = async () => (await page.evaluate(() => JSON.parse(sessionStorage.getItem("fb") || "[]"))) as Call[];
+  const tracked = async (name: string) => (await calls()).filter((c) => c[0] === "track" && c[1] === name);
+
+  await page.goto("/fr/kit");
+  await page.getByRole("button", { name: "Accepter" }).click();
+  await expect.poll(async () => (await calls()).some((c) => c[0] === "init" && /^\d+$/.test(c[1]))).toBe(true);
+  await expect.poll(async () => (await tracked("PageView")).length).toBeGreaterThan(0);
+  await expect.poll(async () => (await tracked("ViewContent")).length).toBe(1);
+  const [view] = await tracked("ViewContent");
+  expect(view[2]).toMatchObject({ currency: "DZD", content_type: "product" });
+
+  await page.locator("#acheter").getByRole("button", { name: "Ajouter au panier" }).click();
+  await expect.poll(async () => (await tracked("AddToCart")).length).toBe(1);
+  expect((await tracked("AddToCart"))[0][2]).toMatchObject({ currency: "DZD", value: view[2]!.value });
+
+  await page.getByRole("dialog").getByRole("link", { name: "Passer la commande" }).click();
+  await expect(page).toHaveURL(/\/fr\/commander$/);
+  await expect.poll(async () => (await tracked("InitiateCheckout")).length).toBe(1);
+
+  await page.getByLabel("Nom et prénom").fill("Client Pixel");
+  await page.getByLabel("Téléphone mobile").fill(`0771${String(Date.now()).slice(-6)}`);
+  await page.getByLabel("Wilaya", { exact: true }).selectOption("16");
+  await page.getByLabel("Commune", { exact: true }).selectOption("Bab Ezzouar");
+  await page.getByLabel("Au bureau de livraison").check();
+  await page.getByRole("button", { name: "Valider ma commande" }).click();
+  await expect(page).toHaveURL(/\/fr\/commande\/DK-[0-9A-Z]{6}$/);
+  const number = page.url().split("/").pop()!;
+  const total = Number((await page.locator(".order-total strong").innerText()).replace(/\D/g, ""));
+  await expect.poll(async () => (await tracked("Purchase")).length).toBe(1);
+  const [purchase] = await tracked("Purchase");
+  expect(purchase[2]).toMatchObject({ currency: "DZD", value: total });
+  expect(purchase[3]).toEqual({ eventID: number });
+  // Aucune donnée personnelle dans les événements.
+  expect(JSON.stringify(await calls())).not.toMatch(/Client Pixel|0771/);
+
+  await page.reload();
+  await expect.poll(async () => (await tracked("PageView")).length).toBeGreaterThan(2);
+  expect((await tracked("Purchase")).length).toBe(1);
+});
