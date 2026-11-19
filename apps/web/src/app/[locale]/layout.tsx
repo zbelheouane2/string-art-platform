@@ -24,6 +24,14 @@ const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans", display
 const naskh = Noto_Naskh_Arabic({ weight: ["500", "600"], subsets: ["arabic"], variable: "--font-naskh", display: "swap" });
 const alexandria = Alexandria({ subsets: ["arabic", "latin"], variable: "--font-alexandria", display: "swap" });
 
+/**
+ * Toutes les pages relisent le prix en base à chaque visite (en-tête, panier,
+ * fiche produit). Sans cela, les pages construites pendant la mise en ligne
+ * (base inaccessible à ce moment) gardaient le prix de secours de la
+ * configuration (4 900 DA) au lieu du prix saisi dans l'admin.
+ */
+export const dynamic = "force-dynamic";
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
