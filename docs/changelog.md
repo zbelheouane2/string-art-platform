@@ -1,6 +1,10 @@
 # Historique
 
 ## 2026-11-19
+- **Confirmation manuelle des commandes par WhatsApp** (demande du propriétaire, avant l'API WhatsApp Business) : dans l'admin, chaque commande « À confirmer » affiche son état et un bouton « Confirmer sur WhatsApp » qui ouvre wa.me vers le numéro du client (converti au format international 213…), avec un message prérempli dans la langue de la commande (français, arabe ; anglais pour une commande passée en anglais) : prénom, kit, total (« + livraison » si les frais ne sont pas encore connus), wilaya, numéro de commande et demande de confirmation. Pour un cadeau, le message va à l'acheteur et cite le destinataire. Le bouton « Marquer confirmée » passe la commande en « Confirmée » d'un clic (le menu des états reste disponible). Aucun envoi automatique ; aucun changement de base (les états « À confirmer » et « Confirmée » existaient déjà). Code : `src/lib/admin/orderConfirmation.ts`.
+- Tests : 5 tests unitaires (`orderConfirmation.test.ts`) et 1 test navigateur (commande passée, lien WhatsApp vérifié, passage en « Confirmée »).
+
+## 2026-11-19
 - **Accueil plus court et plus direct** (validé par le propriétaire) : « Que contient le kit » et « Le générateur en ligne » retirés de l'accueil (ils sont détaillés sur la fiche du kit), remplacés par une grande carte cliquable « Tout savoir sur le kit » (photo du portrait accroché, bouton « Voir le kit en détail »). Accueil : 11 300 → 9 700 px sur téléphone. Composant `BoardPlan` retiré (plus utilisé).
 - **Téléphone : visuel animé avant le titre**, titre visible sans défiler ; la barre « prix + Commander » s'affiche tant que les boutons du haut ne sont pas à l'écran.
 - **« J'ai un code » toujours visible en haut sur téléphone et tablette** (« Mon code » sur petit écran), à côté du menu ; sur ordinateur, il reste dans la barre de menu.

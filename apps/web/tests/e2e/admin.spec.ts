@@ -73,6 +73,39 @@ test.describe("espace admin", () => {
     await expect(page.getByLabel("Bougie parfumée", { exact: true })).toHaveValue("800");
   });
 
+  test("confirmation manuelle : WhatsApp prérempli, puis « Confirmée » en un clic", async ({ page }) => {
+    const phone = `0770${String(Date.now()).slice(-6)}`;
+    await page.goto("/fr/commander");
+    await page.getByLabel("Nom et prénom").fill("Yasmine Confirm");
+    await page.getByLabel("Téléphone mobile").fill(phone);
+    await page.getByLabel("Wilaya", { exact: true }).selectOption("16");
+    await page.getByLabel("Commune", { exact: true }).selectOption("Bab Ezzouar");
+    await page.getByLabel("Au bureau de livraison").check();
+    await page.getByRole("button", { name: "Valider ma commande" }).click();
+    await expect(page).toHaveURL(/\/fr\/commande\/DK-[0-9A-Z]{6}$/);
+    const number = page.url().split("/").pop()!;
+
+    await login(page);
+    await page.goto("/admin/commandes?etat=PENDING");
+    const row = page.locator("tr", { hasText: number });
+    await expect(row.locator(".a-status")).toHaveText("À confirmer");
+    const wa = row.getByRole("link", { name: "Confirmer sur WhatsApp" });
+    await expect(wa).toHaveAttribute("target", "_blank");
+    const href = (await wa.getAttribute("href"))!;
+    expect(href).toMatch(new RegExp(`^https://wa\\.me/213${phone.slice(1)}\\?text=`));
+    const text = decodeURIComponent(href.split("text=")[1]);
+    expect(text).toContain("Bonjour Yasmine,");
+    expect(text).toContain(number);
+    expect(text).toContain("Wilaya : Alger");
+    expect(text).toMatch(/Total : [\d\s\u202f]+ DA/);
+
+    await row.getByRole("button", { name: "Marquer confirmée" }).click();
+    await expect(page.getByRole("status")).toHaveText(`Commande ${number} mise à jour.`);
+    const done = page.locator("tr", { hasText: number });
+    await expect(done.locator(".a-status")).toHaveText("Confirmée");
+    await expect(done.getByRole("link", { name: "Confirmer sur WhatsApp" })).toHaveCount(0);
+  });
+
   test("codes promo : création avec conditions, minimum vérifié à la commande, désactivation", async ({ page }) => {
     const code = `ADM${Date.now().toString(36).toUpperCase()}`;
     await login(page);

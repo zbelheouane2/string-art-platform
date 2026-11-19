@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/auth";
 import { db } from "@/lib/db";
 import { wilayaName } from "@/config/wilayas";
+import { confirmationLink } from "@/lib/admin/orderConfirmation";
 import { setOrderStatusAction } from "../actions";
 import { AdminShell, Flash, STATUS_FR, da, dateFr } from "../AdminShell";
 
@@ -53,6 +54,22 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
               {orders.map((o) => {
                 const a = o.shippingAddress as Address;
                 const carrier = carriers.find((c) => c.code === o.deliveryMethod?.provider);
+                // Cadeau : on confirme avec l'acheteur (le destinataire ne doit pas forcément savoir).
+                const contact = a.gift ? { fullName: o.customer.fullName, phone: o.customer.phone ?? "" } : { fullName: a.recipient?.fullName ?? "", phone: a.recipient?.phone ?? "" };
+                const waLink =
+                  o.status === "PENDING"
+                    ? confirmationLink({
+                        number: o.number,
+                        locale: o.customer.locale,
+                        ...contact,
+                        items: o.items.map((i) => ({ quantity: i.quantity, names: i.product.names as Record<string, string> })),
+                        totalMinor: o.totalMinor,
+                        currency: o.currency,
+                        deliveryPending: o.deliveryFeeMinor === null,
+                        wilaya: a.wilaya ?? "",
+                        giftRecipient: a.gift ? (a.recipient?.fullName ?? null) : null,
+                      })
+                    : null;
                 return (
                   <tr key={o.id}>
                     <td data-label="Commande">
@@ -90,6 +107,25 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
                       <strong>{da(o.totalMinor)}</strong>
                     </td>
                     <td data-label="État">
+                      <span className={`a-status a-status-${o.status.toLowerCase()}`}>{STATUS_FR[o.status]}</span>
+                      {o.status === "PENDING" && (
+                        <div className="a-confirm">
+                          {waLink ? (
+                            <a className="a-btn a-btn-sm a-btn-wa" href={waLink} target="_blank" rel="noopener noreferrer">
+                              Confirmer sur WhatsApp
+                            </a>
+                          ) : (
+                            <span className="a-muted">Numéro WhatsApp invalide</span>
+                          )}
+                          <form action={setOrderStatusAction}>
+                            <input type="hidden" name="number" value={o.number} />
+                            <input type="hidden" name="status" value="CONFIRMED" />
+                            <button type="submit" className="a-btn a-btn-sm a-btn-ghost">
+                              Marquer confirmée
+                            </button>
+                          </form>
+                        </div>
+                      )}
                       <form action={setOrderStatusAction} className="a-inline">
                         <input type="hidden" name="number" value={o.number} />
                         <label className="visually-hidden" htmlFor={`st-${o.number}`}>
