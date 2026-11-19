@@ -5,7 +5,15 @@ import { useFormatter, useTranslations } from "next-intl";
 import { NAILS_PER_SECTOR, SECTORS, nailLabel, type DemoPortrait } from "@/lib/board";
 import { PauseIcon, PlayIcon, ReplayIcon } from "./Icons";
 
-const DURATION_MS = 16000;
+/**
+ * Tissage complet en 9 s, rapide au début (le visage apparaît en 3 s environ),
+ * puis une pause de 3,5 s sur le portrait fini et on recommence.
+ * Avec « réduire les animations » : un seul tissage court de 3,5 s, sans boucle.
+ */
+const WEAVE_MS = 9000;
+const SHORT_MS = 3500;
+const HOLD_MS = 3500;
+const ease = (p: number) => 1 - (1 - p) ** 2.2;
 /** Fil réel : 0,12 mm, opacité 0,95, cercle de clous de 470 mm (comme le moteur). */
 const THREAD_MM = 0.12;
 const THREAD_OPACITY = 0.95;
@@ -24,10 +32,12 @@ const NAIL = "#a9803f";
 export function WeavingBoard({ demo }: { demo: DemoPortrait }) {
   const t = useTranslations("hero");
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const total = demo.sequence.length - 1;
   const drawnRef = useRef(0);
+  const elapsedRef = useRef(0);
   const [count, setCount] = useState(0);
   const [playing, setPlaying] = useState(true);
-  const total = demo.sequence.length - 1;
+  const [reduced, setReduced] = useState(false);
 
   const geometry = useCallback(() => {
     const canvas = canvasRef.current;
@@ -94,47 +104,56 @@ export function WeavingBoard({ demo }: { demo: DemoPortrait }) {
     return () => ro.disconnect();
   }, [reset, drawLines]);
 
-  // Mouvement réduit : le portrait apparaît terminé.
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      reset();
-      drawLines(0, total);
-      drawnRef.current = total;
-      setCount(total);
-      setPlaying(false);
-    }
-  }, [reset, drawLines, total]);
+    setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
 
   useEffect(() => {
     if (!playing) return;
     let raf = 0;
+    let hold = 0;
     let last = performance.now();
     let frame = 0;
-    const perMs = total / DURATION_MS;
-    let budget = 0;
+    const duration = reduced ? SHORT_MS : WEAVE_MS;
     const tick = (now: number) => {
-      budget += (now - last) * perMs;
+      elapsedRef.current += Math.min(100, now - last);
       last = now;
-      const target = Math.min(total, drawnRef.current + Math.floor(budget));
-      budget -= target - drawnRef.current;
+      const p = Math.min(1, elapsedRef.current / duration);
+      const target = Math.min(total, Math.floor(total * ease(p)));
       if (target > drawnRef.current) {
         drawLines(drawnRef.current, target);
         drawnRef.current = target;
       }
-      if (++frame % 4 === 0 || target === total) setCount(target);
-      if (target >= total) {
+      if (++frame % 4 === 0 || p >= 1) setCount(drawnRef.current);
+      if (p < 1) {
+        raf = requestAnimationFrame(tick);
+        return;
+      }
+      if (reduced) {
         setPlaying(false);
         return;
       }
-      raf = requestAnimationFrame(tick);
+      // Boucle : pause sur le portrait fini, puis la planche se vide et le tissage reprend.
+      hold = window.setTimeout(() => {
+        reset();
+        drawnRef.current = 0;
+        elapsedRef.current = 0;
+        setCount(0);
+        last = performance.now();
+        raf = requestAnimationFrame(tick);
+      }, HOLD_MS);
     };
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [playing, drawLines, total]);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.clearTimeout(hold);
+    };
+  }, [playing, reduced, drawLines, reset, total]);
 
   const replay = () => {
     reset();
     drawnRef.current = 0;
+    elapsedRef.current = 0;
     setCount(0);
     setPlaying(true);
   };

@@ -13,15 +13,20 @@ une ligne dans votre Google Sheet. Aucun compte développeur Google n'est néces
 5. Copiez l'URL de l'application Web (`https://script.google.com/macros/s/…/exec`) :
    c'est `ORDER_SHEET_URL` côté site.
 
+La colonne « Options » liste les options ajoutées au kit (support, bougie…) ;
+leur prix est déjà compris dans le total. Si vous aviez installé une version
+précédente du script, recollez celui-ci et redéployez (Gérer les déploiements →
+Modifier → Nouvelle version), puis insérez une colonne « Options » après « Quantité ».
+
 Le mot secret empêche quelqu'un qui connaîtrait l'URL d'ajouter de fausses lignes.
 
 ```javascript
 const SECRET = "CHANGEZ-MOI";
 const COLUMNS = ["number", "createdAt", "fullName", "phone", "wilaya", "commune",
-  "delivery", "payment", "quantity", "deliveryFee", "total", "currency", "note", "locale",
+  "delivery", "payment", "quantity", "options", "deliveryFee", "total", "currency", "note", "locale",
   "gift", "buyerName", "buyerPhone", "buyerEmail", "giftMessage"];
 const HEADERS = ["Commande", "Date", "Nom", "Téléphone", "Wilaya", "Commune",
-  "Livraison", "Paiement", "Quantité", "Frais de livraison", "Total", "Devise", "Remarque", "Langue",
+  "Livraison", "Paiement", "Quantité", "Options", "Frais de livraison", "Total", "Devise", "Remarque", "Langue",
   "Cadeau", "Acheteur", "Tél. acheteur", "E-mail acheteur", "Message cadeau", "Statut"];
 
 function doPost(e) {

@@ -6,7 +6,7 @@
  *   16;400;250
  *   01 - Adrar;1400;900
  *
- * Montants en dinars, cellule vide = tarif inconnu (confirmé par téléphone).
+ * Montants en dinars, cellule vide = wilaya non livrée avec ce mode (voir shipping/fee.ts).
  * La colonne wilaya accepte « 16 », « 16 - Alger » ou « Alger ».
  */
 import { WILAYAS } from "@/config/wilayas";

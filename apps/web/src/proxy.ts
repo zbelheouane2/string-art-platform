@@ -4,6 +4,6 @@ import { routing } from "./i18n/routing";
 export default createMiddleware(routing);
 
 export const config = {
-  // Tout sauf l'API, les fichiers internes de Next et les fichiers statiques.
-  matcher: "/((?!api|_next|_vercel|.*\\..*).*)",
+  // Tout sauf l'API, l'espace admin (en français, sans préfixe de langue), les fichiers internes de Next et les fichiers statiques.
+  matcher: "/((?!api|admin|_next|_vercel|.*\\..*).*)",
 };

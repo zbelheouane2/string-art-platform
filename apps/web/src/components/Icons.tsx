@@ -119,3 +119,21 @@ export const HeartThreadIcon = (p: SVGProps<SVGSVGElement>) => (
     <path d="M7.5 10.5l9 3.5M8.5 14l7.5-5" />
   </svg>
 );
+
+/** Planche carrée avec cercle de clous (rubrique « Inclus »). */
+export const BoardIcon = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...step} {...p}>
+    <rect x="3.5" y="3.5" width="17" height="17" rx="1.5" />
+    <circle cx="12" cy="12" r="5.5" strokeDasharray="0.6 2.3" strokeWidth="1.8" />
+    <path d="M8.2 9.5l7.6 5M9 15.6l6-7.2" />
+  </svg>
+);
+
+/** Carte-message dans son enveloppe. */
+export const CardIcon = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...step} {...p}>
+    <rect x="3" y="6" width="18" height="13" rx="1.5" />
+    <path d="M3.5 6.8l8.5 6.4 8.5-6.4" />
+    <path d="M12 3.2c-.9-1-2.6-.6-2.6.8 0 1.2 2.6 2.4 2.6 2.4s2.6-1.2 2.6-2.4c0-1.4-1.7-1.8-2.6-.8z" />
+  </svg>
+);

@@ -1,11 +1,17 @@
+import { TEXT_SIZE_BOOT } from "@/lib/textSize";
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { Alexandria, DM_Sans, DM_Serif_Display, Noto_Naskh_Arabic } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { brand } from "@/config/brand";
+import { site } from "@/config/site";
+import { Analytics } from "@/components/Analytics";
+import { CartProvider } from "@/components/Cart";
+import { shopCatalog } from "@/lib/shop";
 import { direction, routing } from "@/i18n/routing";
 import "@/styles/globals.css";
+import "@/styles/info.css";
 
 const dmSerif = DM_Serif_Display({
   weight: "400",
@@ -25,10 +31,14 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta" });
+  // Valeurs par défaut (pages non indexées comprises) ; les pages publiques les précisent avec pageMetadata().
   return {
+    metadataBase: new URL(site.url),
     title: t("title", { brand: brand.name }),
     description: t("description"),
-    alternates: { languages: Object.fromEntries(routing.locales.map((l) => [l, `/${l}`])) },
+    applicationName: brand.name,
+    openGraph: { type: "website", siteName: brand.name, locale: site.ogLocales[locale] ?? locale, images: [site.ogImage] },
+    twitter: { card: "summary_large_image" },
   };
 }
 
@@ -44,13 +54,19 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
+  const catalog = await shopCatalog();
   const fonts = [dmSerif, dmSans, naskh, alexandria].map((f) => f.variable).join(" ");
   return (
     <html lang={locale} dir={direction(locale)} className={fonts} suppressHydrationWarning>
       <body>
         {/* Active les animations d'apparition seulement si JavaScript tourne (évite le contenu invisible). */}
-        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js');" + TEXT_SIZE_BOOT }} />
+        <NextIntlClientProvider>
+          <CartProvider catalog={catalog}>
+            {children}
+            <Analytics />
+          </CartProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

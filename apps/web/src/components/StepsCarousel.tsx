@@ -19,14 +19,14 @@ export interface Step {
  * Carrousel « Comment ça marche » : une grande image qui change avec l'étape,
  * une rangée d'onglets à icônes et la légende de l'étape active.
  * Avance seul (la barre de progression de l'onglet actif sert de minuterie),
- * se met en pause au survol, au focus, hors écran ou sur demande ; glisse au doigt.
- * Sans animation si l'utilisateur a demandé moins de mouvement.
+ * avance toutes les 4 s en boucle, sans s'arrêter (souhait du propriétaire) : un clic
+ * sur une étape l'affiche et le compte repart de 4 s. Seul le bouton pause l'arrête.
+ * Glisse au doigt. Avec « réduire les animations », il avance sans glissement.
  */
 export function StepsCarousel({ id, title, steps }: { id: string; title: string; steps: Step[] }) {
   const t = useTranslations("carousel");
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [offscreen, setOffscreen] = useState(true);
   const root = useRef<HTMLDivElement>(null);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const startX = useRef<number | null>(null);
@@ -37,15 +37,6 @@ export function StepsCarousel({ id, title, steps }: { id: string; title: string;
     setI(next);
     if (focus) tabs.current[next]?.focus();
   };
-
-  // Ne défile pas quand le carrousel n'est pas à l'écran.
-  useEffect(() => {
-    const el = root.current;
-    if (!el) return;
-    const io = new IntersectionObserver(([e]) => setOffscreen(!e.isIntersecting), { threshold: 0.35 });
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
 
   const isRtl = () => root.current?.closest("[dir=rtl]") !== null;
 
@@ -76,7 +67,7 @@ export function StepsCarousel({ id, title, steps }: { id: string; title: string;
       ref={root}
       className="steps"
       data-steps
-      data-paused={paused || offscreen ? "true" : undefined}
+      data-paused={paused ? "true" : undefined}
       role="group"
       aria-roledescription={t("roledescription")}
       aria-label={title}
@@ -88,7 +79,7 @@ export function StepsCarousel({ id, title, steps }: { id: string; title: string;
         onPointerCancel={() => (startX.current = null)}
       >
         {steps.map((s, k) => (
-          <div key={s.key} className="steps-slide" data-step-slide aria-hidden={k !== i} data-active={k === i ? "true" : undefined}>
+          <div key={s.key} className="steps-slide" data-step-slide aria-hidden={k !== i} data-active={k === i ? "true" : undefined} data-before={k < i ? "true" : undefined}>
             {s.img ? <img src={s.img} alt="" width={600} height={600} loading={k === 0 ? undefined : "lazy"} draggable={false} /> : <NailRing className="steps-ring" />}
           </div>
         ))}

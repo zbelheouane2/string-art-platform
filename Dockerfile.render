@@ -1,0 +1,60 @@
+# Un seul service pour l'offre gratuite de Render : site (Node) + moteur des portraits (Python).
+# La base est mise à jour au démarrage (migrations + données de départ, sans effacer les réglages).
+# Voir docs/hebergement-render.md.
+
+FROM node:22-slim AS web
+WORKDIR /app
+COPY apps/web/package.json apps/web/package-lock.json ./
+RUN npm ci
+COPY apps/web/ ./
+# Réglages publics fixés à la construction (Render transmet les variables d'environnement).
+ARG NEXT_PUBLIC_BRAND_NAME=DeeKra
+ARG NEXT_PUBLIC_ORDERING_OPEN=true
+ARG NEXT_PUBLIC_SUPPORT_EMAIL=
+ARG NEXT_PUBLIC_WHATSAPP=
+ARG NEXT_PUBLIC_INSTAGRAM_URL=
+ARG NEXT_PUBLIC_FACEBOOK_URL=
+ARG NEXT_PUBLIC_TIKTOK_URL=
+ARG NEXT_PUBLIC_LEGAL_ANPDP=
+ARG NEXT_PUBLIC_SITE_URL=
+ARG NEXT_PUBLIC_GA4_ID=
+ARG NEXT_PUBLIC_META_PIXEL_ID=
+ARG NEXT_PUBLIC_TIKTOK_PIXEL_ID=
+ENV NEXT_PUBLIC_BRAND_NAME=$NEXT_PUBLIC_BRAND_NAME NEXT_PUBLIC_ORDERING_OPEN=$NEXT_PUBLIC_ORDERING_OPEN \
+    NEXT_PUBLIC_SUPPORT_EMAIL=$NEXT_PUBLIC_SUPPORT_EMAIL NEXT_PUBLIC_WHATSAPP=$NEXT_PUBLIC_WHATSAPP \
+    NEXT_PUBLIC_INSTAGRAM_URL=$NEXT_PUBLIC_INSTAGRAM_URL NEXT_PUBLIC_FACEBOOK_URL=$NEXT_PUBLIC_FACEBOOK_URL \
+    NEXT_PUBLIC_TIKTOK_URL=$NEXT_PUBLIC_TIKTOK_URL NEXT_PUBLIC_LEGAL_ANPDP=$NEXT_PUBLIC_LEGAL_ANPDP \
+    NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL NEXT_PUBLIC_GA4_ID=$NEXT_PUBLIC_GA4_ID \
+    NEXT_PUBLIC_META_PIXEL_ID=$NEXT_PUBLIC_META_PIXEL_ID NEXT_PUBLIC_TIKTOK_PIXEL_ID=$NEXT_PUBLIC_TIKTOK_PIXEL_ID
+# Adresse factice pour la construction seulement (aucune connexion) ; la vraie est donnée au démarrage.
+RUN DATABASE_URL=postgresql://build:build@localhost:5432/build npx prisma generate \
+ && DATABASE_URL=postgresql://build:build@localhost:5432/build npm run build \
+ && rm -rf node_modules/playwright-core node_modules/@playwright node_modules/vitest node_modules/@vitest
+
+FROM node:22-slim AS node
+
+FROM python:3.12-slim
+WORKDIR /app
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+RUN useradd --system --uid 10001 app
+# Moteur
+COPY services/engine/pyproject.toml engine/
+COPY services/engine/stringart engine/stringart
+COPY services/engine/boards engine/boards
+RUN pip install --no-cache-dir -e "./engine[api]"
+# Site (serveur autonome) et outils de migration
+COPY --from=web /app/.next/standalone web/
+COPY --from=web /app/.next/static web/.next/static
+COPY --from=web /app/public web/public
+COPY --from=web --chown=app /app/node_modules tools/node_modules
+COPY --from=web /app/prisma tools/prisma
+COPY --from=web /app/prisma.config.ts /app/package.json tools/
+COPY --from=web /app/src/generated tools/src/generated
+COPY --from=web /app/src/config tools/src/config
+COPY deploy/render-start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+USER app
+ENV NODE_ENV=production HOSTNAME=0.0.0.0 PORT=10000 ENGINE_URL=http://127.0.0.1:8000 \
+    NODE_OPTIONS=--max-old-space-size=256 PYTHONUNBUFFERED=1
+EXPOSE 10000
+CMD ["/app/start.sh"]

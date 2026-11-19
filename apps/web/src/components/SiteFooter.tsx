@@ -1,6 +1,10 @@
 import { getTranslations } from "next-intl/server";
 import { brand } from "@/config/brand";
+import { INFO_PAGES, type InfoPageKey } from "@/config/infoPages";
 import { Link } from "@/i18n/navigation";
+import { displayPhone, ltr, socialLinks, whatsappUrl } from "@/lib/contact";
+import { MailIcon, SOCIAL_ICONS, WhatsAppIcon } from "./ContactIcons";
+import { ConsentSettingsButton } from "./Analytics";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Logo } from "./Logo";
 
@@ -13,6 +17,8 @@ const LINKS = [
 
 export async function SiteFooter() {
   const t = await getTranslations("footer");
+  const wa = whatsappUrl();
+  const social = socialLinks();
   return (
     <footer className="site-footer">
       <div className="wrap footer-grid">
@@ -48,25 +54,61 @@ export async function SiteFooter() {
             <li>
               <Link href="/kit">{t("infoLinks.kitPage")}</Link>
             </li>
-            <li>
-              <Link href={{ pathname: "/", hash: "faq" }}>{t("infoLinks.privacy")}</Link>
-            </li>
-            <li>
-              <Link href={{ pathname: "/", hash: "faq" }}>{t("infoLinks.payment")}</Link>
-            </li>
+            {(Object.keys(INFO_PAGES) as InfoPageKey[]).map((k) => (
+              <li key={k}>
+                <Link href={INFO_PAGES[k]}>{t(`infoLinks.${k}`)}</Link>
+              </li>
+            ))}
           </ul>
         </nav>
         <div id="contact">
           <h2>{t("contact")}</h2>
           <p>{t("contactText")}</p>
-          {brand.supportEmail && <a href={`mailto:${brand.supportEmail}`}>{brand.supportEmail}</a>}
+          <ul className="footer-contact">
+            {wa && (
+              <li>
+                <a href={wa} target="_blank" rel="noopener noreferrer">
+                  <WhatsAppIcon />
+                  {t("whatsapp", { phone: ltr(displayPhone()) })}
+                </a>
+              </li>
+            )}
+            {brand.supportEmail && (
+              <li>
+                <a href={`mailto:${brand.supportEmail}`}>
+                  <MailIcon />
+                  {brand.supportEmail}
+                </a>
+              </li>
+            )}
+          </ul>
+          {social.length > 0 && (
+            <>
+              <h2 className="footer-social-title">{t("social")}</h2>
+              <ul className="footer-social">
+                {social.map(({ key, url }) => {
+                  const Icon = SOCIAL_ICONS[key];
+                  return (
+                    <li key={key}>
+                      <a href={url} target="_blank" rel="noopener noreferrer" aria-label={t(`socialNames.${key}`)}>
+                        <Icon width={22} height={22} />
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
+          )}
         </div>
         <div className="footer-lang">
           <LanguageSwitcher />
         </div>
       </div>
       <div className="wrap footer-bottom">
-        <p>{t("rights", { year: new Date().getFullYear(), brand: brand.name })}</p>
+        <p>
+          {t("rights", { year: new Date().getFullYear(), brand: brand.name })}
+          <ConsentSettingsButton />
+        </p>
       </div>
     </footer>
   );

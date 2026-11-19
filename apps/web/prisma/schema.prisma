@@ -29,6 +29,7 @@ enum ProductKind {
   KIT            // kit physique avec code inclus
   EXTRA_CODE     // code supplémentaire
   ARTWORK        // tableau fini
+  ACCESSORY      // option ajoutée au kit (support, bougie…)
 }
 
 model Product {
@@ -137,8 +138,11 @@ model Order {
   currency         String          @db.Char(3)
   /// Frais de livraison retenus à la commande (null : à confirmer par téléphone).
   deliveryFeeMinor Int?
-  /// Total articles + livraison connue.
+  /// Total articles − remise + livraison connue.
   totalMinor       Int
+  /// Code promo appliqué (en majuscules) et remise accordée sur les articles.
+  promoCode        String?
+  discountMinor    Int             @default(0)
   /// Adresse figée au moment de la commande.
   shippingAddress  Json
   customer         Customer        @relation(fields: [customerId], references: [id])
@@ -231,6 +235,13 @@ model Generation {
   /// Document d'instructions renvoyé par le moteur (séquence, étapes, métriques).
   document         Json?
   chosen           Boolean          @default(false)
+  /// Avancement du guide (fils déjà posés), pour reprendre sur n'importe quel appareil.
+  guideStep        Int              @default(0)
+  guideStepAt      DateTime?
+  /// Dernier fil atteint (portrait terminé) : point de départ du délai avant effacement.
+  guideDoneAt      DateTime?
+  /// Instructions (séquence) effacées pour libérer la base ; la trace du portrait reste.
+  purgedAt         DateTime?
   error            String?
   activationCode   ActivationCode   @relation(fields: [activationCodeId], references: [id])
   createdAt        DateTime         @default(now())
@@ -238,6 +249,7 @@ model Generation {
 
   @@index([activationCodeId])
   @@index([photoDeleteAfter])
+  @@index([guideDoneAt])
 }
 
 /// Journal des opérations importantes (sans données personnelles en clair).
@@ -250,4 +262,58 @@ model AuditLog {
   createdAt DateTime @default(now())
 
   @@index([action, createdAt])
+}
+
+enum PromoKind {
+  PERCENT
+  FIXED
+}
+
+/// Sur quoi porte la remise : le kit seul, tous les articles, ou la livraison.
+enum PromoScope {
+  KIT
+  ORDER
+  SHIPPING
+}
+
+/// Code promo saisi à la commande. La remise porte sur les articles (pas sur la livraison).
+model PromoCode {
+  id          String    @id @default(cuid())
+  /// En majuscules, sans espaces (« BIENVENUE10 »).
+  code        String    @unique
+  kind        PromoKind
+  scope       PromoScope @default(ORDER)
+  /// Pourcentage (1 à 100) ou montant en unité mineure.
+  value       Int
+  /// Montant minimal des articles pour utiliser le code (unité mineure).
+  minOrderMinor   Int?
+  /// Utilisations maximales par client (même numéro de téléphone).
+  maxUsesPerPhone Int?
+  /// Note interne (campagne, partenaire…), jamais affichée au client.
+  note        String?
+  currency    String?   @db.Char(3)
+  active      Boolean   @default(true)
+  startsAt    DateTime?
+  endsAt      DateTime?
+  /// Nombre maximal d'utilisations (null : illimité).
+  maxUses     Int?
+  uses        Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+/// Société de livraison (ZR Express, Yalidine…). Ses modes de livraison
+/// (DeliveryMethod.provider = code) portent les tarifs par wilaya.
+model Carrier {
+  id             String    @id @default(cuid())
+  /// Identifiant technique (« zrexpress ») : préfixe des modes « zrexpress_home » / « zrexpress_desk ».
+  code           String    @unique
+  name           String
+  /// Logo (chemin public ou URL https), facultatif.
+  logoUrl        String?
+  active         Boolean   @default(true)
+  /// Dernière mise à jour des tarifs (import ou modification).
+  ratesUpdatedAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 }

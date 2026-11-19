@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { engineHealth } from "@/lib/engine";
+import { maybeHousekeep } from "@/lib/housekeeping";
 
 export const dynamic = "force-dynamic";
 
 /** État des dépendances : base de données et moteur. Ne renvoie aucune donnée privée. */
 export async function GET() {
+  maybeHousekeep();
   const [database, engine] = await Promise.allSettled([db().$queryRaw`SELECT 1`, engineHealth()]);
   const body = {
     status: database.status === "fulfilled" && engine.status === "fulfilled" ? "ok" : "degraded",

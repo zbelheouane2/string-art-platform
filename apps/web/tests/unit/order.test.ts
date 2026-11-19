@@ -78,4 +78,17 @@ describe("commande", () => {
     // Sans la case cadeau, les champs acheteur sont ignorés.
     expect(orderSchema.safeParse({ ...base, buyerName: "x", giftMessage: "y" }).data).toMatchObject({ buyer: null, giftMessage: "" });
   });
+
+  it("options du kit : slugs avec quantité (panier), regroupés, rien par défaut", () => {
+    expect(orderSchema.parse(base).options).toEqual([]);
+    expect(orderSchema.parse({ ...base, options: "bougie-parfumee,support-chevalet:2,bougie-parfumee" }).options).toEqual([
+      { slug: "bougie-parfumee", quantity: 2 },
+      { slug: "support-chevalet", quantity: 2 },
+    ]);
+    expect(orderSchema.safeParse({ ...base, options: "bougie-parfumee:0" }).success).toBe(false);
+    expect(orderSchema.safeParse({ ...base, options: "bougie-parfumee:99" }).success).toBe(false);
+    const bad = orderSchema.safeParse({ ...base, options: "<script>" });
+    expect(bad.success).toBe(false);
+    expect(bad.error?.issues[0].message).toBe("unavailable");
+  });
 });

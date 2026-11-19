@@ -14,6 +14,8 @@ export type OrderState = {
 
 export async function orderAction(_prev: OrderState, form: FormData): Promise<OrderState> {
   const values = Object.fromEntries([...form.entries()].map(([k, v]) => [k, String(v).slice(0, 400)]));
+  // Plusieurs cases « options » cochées : on les regroupe en une liste.
+  values.options = form.getAll("options").map(String).join(",").slice(0, 400);
   const parsed = orderSchema.safeParse(values);
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {};

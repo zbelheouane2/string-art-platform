@@ -1,39 +1,57 @@
 import { getTranslations } from "next-intl/server";
 import { Gallery } from "./Gallery";
 import { Link } from "@/i18n/navigation";
-import { PlusIcon } from "./Icons";
+import { BoardIcon, CardIcon, PhoneCodeIcon, PlusIcon, SpoolIcon, VoiceIcon } from "./Icons";
+import { PriceTag } from "./PriceTag";
+import { KitFacts } from "./KitFacts";
+import { KitBuyBox } from "./KitBuyBox";
+import { accessories as configAccessories, type Accessory } from "@/config/catalog";
+import { Reassurance } from "./Reassurance";
 
-const INCLUDES = ["board", "thread", "code", "guide", "card"] as const;
+const INCLUDES = [
+  { key: "board", Icon: BoardIcon },
+  { key: "thread", Icon: SpoolIcon },
+  { key: "code", Icon: PhoneCodeIcon },
+  { key: "guide", Icon: VoiceIcon },
+  { key: "card", Icon: CardIcon },
+] as const;
 const ACCORDION = ["box", "photo", "app", "gift"] as const;
 
 /** Album : chaque portrait en fil est suivi de sa photo de départ. */
-const portrait = (name: string, alt: string) => [
-  { src: `/visuels/${name}-fil.webp`, alt },
-  { src: `/visuels/${name}-photo.webp`, alt: `${alt}Photo` },
-];
+/** Photos du kit (fournies par le propriétaire) puis rendus réels du logiciel. */
+const kit = (name: string, alt: string) => ({ src: `/visuels/kit/${name}.webp`, thumb: `/visuels/kit/${name}-vignette.webp`, alt });
+const render = (name: string, alt: string) => ({ src: `/visuels/${name}-fil.webp`, alt });
 const GALLERY = [
-  ...portrait("monalisa", "monalisa"),
+  kit("bureau", "kitDesk"),
+  kit("boite-support", "kitBox"),
+  kit("assemblage", "kitAssembly"),
+  kit("generateur", "kitGenerator"),
+  kit("bobine", "kitSpool"),
+  kit("accrocher", "kitHang"),
+  kit("fierte", "kitProud"),
+  kit("salon", "kitLiving"),
+  kit("entree", "kitEntrance"),
+  kit("langues", "kitLanguages"),
+  kit("notice", "kitNotice"),
   { src: "/visuels/planche-plan.webp", alt: "board" },
-  ...portrait("salah", "salah"),
-  ...portrait("benmhidi", "benmhidi"),
-  ...portrait("soi", "self"),
-  ...portrait("femme", "woman"),
-  ...portrait("haik", "haik"),
-  ...portrait("touareg", "tuareg"),
-  ...portrait("grandpere", "grandpa"),
-  ...portrait("fillette", "girl"),
-  ...portrait("bebe", "baby"),
-  ...portrait("couple", "couple"),
-  ...portrait("chat", "pet"),
+  render("femme", "woman"),
+  render("haik", "haik"),
+  render("grandpere", "grandpa"),
+  render("touareg", "tuareg"),
+  render("couple", "couple"),
+  render("chat", "pet"),
 ];
 
 /** Bloc d'achat (accueil et page du kit) : galerie qui glisse + colonne d'infos collante. */
 export async function ProductSection({
+  accessories = configAccessories,
   price,
   provisional = false,
   orderingOpen = false,
   headingLevel = 2,
 }: {
+  /** Options proposées (prix lus en base par la page). */
+  accessories?: readonly Accessory[];
   price: string | null;
   provisional?: boolean;
   orderingOpen?: boolean;
@@ -46,30 +64,39 @@ export async function ProductSection({
       <div className="wrap shop-grid">
         <div data-reveal>
           <Gallery
-            images={GALLERY.map((g) => ({ src: g.src, alt: t(`galleryAlt.${g.alt}`) }))}
+            images={GALLERY.map((g) => ({ src: g.src, thumb: "thumb" in g ? g.thumb : undefined, alt: t(`galleryAlt.${g.alt}`) }))}
           />
         </div>
         <div className="shop-info" data-reveal style={{ ["--i" as string]: 1 }}>
           <Heading id="shop-title">{t("title")}</Heading>
-          <p className="shop-price">{price ?? t("priceSoon")}</p>
-          {price && provisional && <p className="shop-price-note">{t("priceProvisional")}</p>}
+          <div className="shop-price-row">
+            {price ? <PriceTag className="shop-price" value={price} /> : <p className="shop-price">{t("priceSoon")}</p>}
+            {price && provisional && <p className="shop-price-note">{t("priceProvisional")}</p>}
+          </div>
+          <KitFacts />
           <p className="shop-lead">{t("lead")}</p>
           <p className="shop-desc">{t("description")}</p>
           <h3>{t("includesTitle")}</h3>
-          <ul className="check-list">
-            {INCLUDES.map((k) => (
-              <li key={k}>{t(`includes.${k}`)}</li>
+          {/* Contenu du kit : icônes en ligne, libellé court dessous (texte complet pour les lecteurs d'écran). */}
+          <ul className="kit-includes">
+            {INCLUDES.map(({ key, Icon }) => (
+              <li key={key} title={t(`includes.${key}`)}>
+                <span className="kit-includes-icon">
+                  <Icon />
+                </span>
+                <span aria-hidden="true">{t(`includesShort.${key}`)}</span>
+                <span className="visually-hidden">{t(`includes.${key}`)}</span>
+              </li>
             ))}
           </ul>
           {price && orderingOpen ? (
-            <Link href="/commander" className="btn btn-primary btn-lg btn-block">
-              {t("cta")}
-            </Link>
+            <KitBuyBox accessories={accessories} />
           ) : (
             <button type="button" className="btn btn-primary btn-lg btn-block" disabled>
               {t("ctaSoon")}
             </button>
           )}
+          <Reassurance />
           <p className="shop-note">
             <Link href="/activer">{t("haveCode")}</Link>
           </p>

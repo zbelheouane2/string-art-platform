@@ -3,6 +3,7 @@ import path from "node:path";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BeforeAfter } from "@/components/BeforeAfter";
+import { EngineCarousel } from "@/components/EngineCarousel";
 import { PlusIcon } from "@/components/Icons";
 import { NailRing } from "@/components/NailRing";
 import { ProductSection } from "@/components/ProductSection";
@@ -15,22 +16,21 @@ import { WeavingBoard } from "@/components/WeavingBoard";
 import { brand } from "@/config/brand";
 import { kitOffer } from "@/config/catalog";
 import { formatPrice } from "@/lib/price";
+import { shopCatalog } from "@/lib/shop";
 import { howSteps } from "@/config/howSteps";
 import { Link } from "@/i18n/navigation";
 import type { DemoPortrait } from "@/lib/board";
+import { pageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/JsonLd";
+import { kitProductJsonLd } from "@/lib/structuredData";
+import { TrackOnView } from "@/components/Analytics";
 
 const WHAT = ["kit", "model", "voice"] as const;
+const ENGINE = ["site", "code", "photo", "preview", "voice"] as const;
 const EXAMPLES = [
-  { key: "portrait", name: "astronaute" },
+  { key: "portrait", name: "boucles" },
   { key: "pet", name: "chat" },
-  { key: "group", name: "photographe" },
-] as const;
-const APP = [
-  { key: "site", img: null },
-  { key: "code", img: null },
-  { key: "photo", img: "/visuels/astronaute-photo.webp" },
-  { key: "preview", img: "/visuels/astronaute-fil.webp" },
-  { key: "thread", img: "/visuels/chat-fil.webp" },
+  { key: "group", name: "jeune" },
 ] as const;
 const APP_CHIPS = ["voice", "speed", "pause", "progress"] as const;
 const GIFT_CHIPS = ["code", "cod", "langs"] as const;
@@ -41,7 +41,7 @@ const FAQ = ["who", "skills", "photo", "time", "privacy", "payment"] as const;
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "kit.meta" });
-  return { title: t("title", { brand: brand.name }), description: t("description") };
+  return pageMetadata({ locale, path: "/kit", title: t("title", { brand: brand.name }), description: t("description") });
 }
 
 async function loadDemo(): Promise<DemoPortrait> {
@@ -49,12 +49,18 @@ async function loadDemo(): Promise<DemoPortrait> {
   return JSON.parse(await readFile(file, "utf-8"));
 }
 
+/** Les prix viennent de la base : la page est régénérée après une modification dans l'admin (et au plus tard toutes les 5 minutes). */
+export const revalidate = 300;
+
 export default async function KitPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations();
   const demo = await loadDemo();
-  const price = kitOffer.price ? formatPrice(kitOffer.price, locale) : null;
+  // Prix lus en base (modifiables dans l'admin), repli sur la configuration.
+  const catalog = await shopCatalog();
+  const price = catalog ? formatPrice(catalog.kit.price, locale) : null;
+  const extras = catalog?.accessories.map((a) => ({ slug: a.slug, icon: a.icon!, names: a.names, price: a.price })) ?? [];
 
   return (
     <>
@@ -64,8 +70,10 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
       <p className="announcement">{t("announcement")}</p>
       <SiteHeader />
       <main id="main">
+        {catalog && <JsonLd data={kitProductJsonLd(catalog, locale, t("kit.meta.description"))} />}
+        {catalog && <TrackOnView event="view_item" value={catalog.kit.price.amountMinor} currency={catalog.kit.price.currency} item={catalog.kit.slug} />}
         <div id="hero-actions" />
-        <ProductSection price={price} provisional={kitOffer.provisional} orderingOpen={kitOffer.orderingOpen} headingLevel={1} />
+        <ProductSection accessories={extras} price={price} provisional={kitOffer.provisional} orderingOpen={kitOffer.orderingOpen} headingLevel={1} />
 
         {/* Qu'est-ce que c'est : la planche animée tient le rôle de la vidéo. */}
         <section className="section bg-sand" aria-labelledby="kit-what-title">
@@ -75,7 +83,6 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
             </div>
             <div>
               <header className="section-head" data-reveal>
-                <p className="eyebrow">{t("kit.what.eyebrow")}</p>
                 <h2 id="kit-what-title">{t("kit.what.title")}</h2>
                 <p>{t("kit.what.lead")}</p>
               </header>
@@ -95,12 +102,11 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
         <section className="section bg-cream" aria-labelledby="kit-check-title">
           <div className="wrap split">
             <div data-reveal>
-              <BeforeAfter photo="/visuels/astronaute-photo.webp" thread="/visuels/astronaute-fil.webp" />
+              <BeforeAfter photo="/visuels/boucles-photo.webp" thread="/visuels/boucles-fil.webp" />
               <p className="ba-hint-below">{t("what.slider.hint")}</p>
             </div>
             <div>
               <header className="section-head" data-reveal>
-                <p className="eyebrow">{t("kit.check.eyebrow")}</p>
                 <h2 id="kit-check-title">{t("kit.check.title")}</h2>
                 <p>{t("kit.check.lead")}</p>
               </header>
@@ -121,11 +127,29 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
           </div>
         </section>
 
+        {/* Comment fonctionne le générateur : le vrai calcul du moteur, en 5 étapes. */}
+        <section className="section bg-sand" id="generateur" aria-labelledby="kit-engine-title">
+          <div className="wrap">
+            <header className="section-head center" data-reveal>
+              <h2 id="kit-engine-title">{t("kit.engine.title")}</h2>
+              <p>{t("kit.engine.lead")}</p>
+            </header>
+            <EngineCarousel
+              labels={{ title: t("kit.engine.title"), step: t("kit.engine.step") }}
+              steps={ENGINE.map((key) => ({
+                key,
+                img: `/visuels/generateur/${key}-${locale}.webp`,
+                title: t(`kit.engine.steps.${key}.title`),
+                text: t(`kit.engine.steps.${key}.text`),
+              }))}
+            />
+          </div>
+        </section>
+
         {/* Comment ça marche : carrousel, grande image + onglets à icônes. */}
         <section className="section bg-sand" id="comment" aria-labelledby="kit-how-title">
           <div className="wrap">
             <header className="section-head center" data-reveal>
-              <p className="eyebrow">{t("kit.how.eyebrow")}</p>
               <h2 id="kit-how-title">{t("kit.how.title")}</h2>
               <p>{t("kit.how.lead")}</p>
             </header>
@@ -139,34 +163,9 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
         <section className="section bg-inverse" aria-labelledby="kit-app-title">
           <div className="wrap">
             <header className="section-head app-head" data-reveal>
-              <p className="eyebrow">{t("kit.app.eyebrow")}</p>
               <h2 id="kit-app-title">{t("kit.app.title")}</h2>
               <p>{t("kit.app.lead")}</p>
             </header>
-            <ol className="app-grid">
-              {APP.map((s, i) => (
-                <li key={s.key} data-reveal style={{ ["--i" as string]: i }}>
-                  <div className="phone">
-                    <div className="phone-screen">
-                      {s.img ? (
-                        <img src={s.img} alt="" width={300} height={300} loading="lazy" />
-                      ) : s.key === "code" ? (
-                        <span className="phone-code" dir="ltr">
-                          ••••-••••
-                        </span>
-                      ) : (
-                        <NailRing />
-                      )}
-                    </div>
-                  </div>
-                  <div className="app-title">
-                    <span aria-hidden="true">{i + 1}</span>
-                    <h3>{t(`kit.app.steps.${s.key}.title`)}</h3>
-                  </div>
-                  <p>{t(`kit.app.steps.${s.key}.text`)}</p>
-                </li>
-              ))}
-            </ol>
             <div className="app-footer" data-reveal>
               <ul className="chips chips-dark">
                 {APP_CHIPS.map((c) => (
@@ -175,9 +174,9 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
               </ul>
               <div className="app-cta">
                 <span>{t("kit.app.note")}</span>
-                <button type="button" className="btn btn-primary btn-lg" disabled>
+                <Link className="btn btn-primary btn-lg" href="/activer">
                   {t("kit.app.cta")}
-                </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -186,9 +185,8 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
         {/* Pour offrir : image + texte, puces, bouton. */}
         <section className="section bg-blush" aria-labelledby="kit-gift-title">
           <div className="wrap feature" data-reveal>
-            <img src="/visuels/photographe-fil.webp" alt="" width={600} height={600} loading="lazy" />
+            <img src="/visuels/jeune-fil.webp" alt="" width={600} height={600} loading="lazy" />
             <div>
-              <p className="eyebrow">{t("kit.gift.eyebrow")}</p>
               <h2 id="kit-gift-title">{t("kit.gift.title")}</h2>
               <p className="feature-lead">{t("kit.gift.lead")}</p>
               <ul className="chips">
@@ -207,7 +205,6 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
         <section className="section bg-sand" aria-labelledby="kit-why-title">
           <div className="wrap">
             <header className="section-head center" data-reveal>
-              <p className="eyebrow">{t("kit.why.eyebrow")}</p>
               <h2 id="kit-why-title">{t("kit.why.title")}</h2>
               <p>{t("kit.why.lead")}</p>
             </header>
@@ -237,7 +234,6 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
         <section className="section bg-sand faq-band" id="faq" aria-labelledby="faq-title">
           <div className="wrap faq-grid">
             <header className="section-head" data-reveal>
-              <p className="eyebrow">{t("faq.eyebrow")}</p>
               <h2 id="faq-title">{t("kit.faqTitle")}</h2>
               <p>{t("faq.lead")}</p>
             </header>

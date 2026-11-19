@@ -12,7 +12,7 @@ export const HOW_STEPS = [
   { key: "code", icon: "code", img: "/visuels/etapes/code-{locale}.webp" },
   { key: "photo", icon: "photo", img: "/visuels/etapes/photo-{locale}.webp" },
   { key: "thread", icon: "voice", img: "/visuels/etapes/voice-photo-{locale}.webp" },
-  { key: "hang", icon: "frame", img: "/visuels/etapes/accrocher.webp" },
+  { key: "hang", icon: "frame", img: "/visuels/etapes/accrocher-mur.webp" },
 ] as const;
 
 export function howSteps(t: (key: string) => string, locale: string): Step[] {

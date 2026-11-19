@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createPortrait, VARIANTS, type PortraitError, type Variant } from "@/lib/portraits";
 import { currentCodeId } from "@/lib/session";
+import { parseBoxParam } from "@/lib/frame";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -27,7 +28,9 @@ export async function POST(req: Request) {
   const variant: Variant = (VARIANTS as readonly string[]).includes(variantRaw) ? (variantRaw as Variant) : "standard";
   const background = form?.get("background") === "keep" ? "keep" : "light";
 
-  const result = await createPortrait(codeId, photo, { variant, background });
+  const crop = parseBoxParam(form?.get("crop"));
+
+  const result = await createPortrait(codeId, photo, { variant, background, crop });
   if (!result.ok) return NextResponse.json({ error: result.error }, { status: STATUS[result.error] });
   return NextResponse.json(result.portrait, { headers: { "Cache-Control": "no-store" } });
 }

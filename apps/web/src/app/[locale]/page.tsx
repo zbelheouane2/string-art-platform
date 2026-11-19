@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BeforeAfter } from "@/components/BeforeAfter";
 import { GiftIcon, HeartThreadIcon, PlusIcon } from "@/components/Icons";
@@ -9,21 +10,33 @@ import { ProductSection } from "@/components/ProductSection";
 import { Reveal } from "@/components/Reveal";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { AutoCarousel } from "@/components/AutoCarousel";
+import { Reviews } from "@/components/Reviews";
 import { StepsCarousel } from "@/components/StepsCarousel";
 import { StickyBar } from "@/components/StickyBar";
 import { WeavingBoard } from "@/components/WeavingBoard";
 import { brand } from "@/config/brand";
 import { kitOffer } from "@/config/catalog";
 import { formatPrice } from "@/lib/price";
+import { shopCatalog } from "@/lib/shop";
 import { howSteps } from "@/config/howSteps";
 import { Link } from "@/i18n/navigation";
 import type { DemoPortrait } from "@/lib/board";
+import { pageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/JsonLd";
+import { kitProductJsonLd, organizationJsonLd } from "@/lib/structuredData";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "meta" });
+  return pageMetadata({ locale, path: "", title: t("title", { brand: brand.name }), description: t("description") });
+}
 
 const TRUST = ["cod", "delivery", "voice", "nails"] as const;
 const PROOF = ["cod", "nails", "voice"] as const;
 const GIFTS = [
   { key: "couples", name: "couple" },
-  { key: "parents", name: "salah", caption: true },
+  { key: "parents", name: "haik" },
   { key: "grandparents", name: "fillette" },
   { key: "pets", name: "chat" },
   { key: "memory", name: "benmhidi" },
@@ -52,12 +65,18 @@ async function loadDemo(): Promise<DemoPortrait> {
   return JSON.parse(await readFile(file, "utf-8"));
 }
 
+/** Les prix viennent de la base : la page est régénérée après une modification dans l'admin (et au plus tard toutes les 5 minutes). */
+export const revalidate = 300;
+
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations();
   const demo = await loadDemo();
-  const price = kitOffer.price ? formatPrice(kitOffer.price, locale) : null;
+  // Prix lus en base (modifiables dans l'admin), repli sur la configuration.
+  const catalog = await shopCatalog();
+  const price = catalog ? formatPrice(catalog.kit.price, locale) : null;
+  const extras = catalog?.accessories.map((a) => ({ slug: a.slug, icon: a.icon!, names: a.names, price: a.price })) ?? [];
 
   return (
     <>
@@ -67,6 +86,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <p className="announcement">{t("announcement")}</p>
       <SiteHeader />
       <main id="main">
+        <JsonLd data={organizationJsonLd(locale)} />
+        {catalog && <JsonLd data={kitProductJsonLd(catalog, locale, t("meta.description"))} />}
         {/* Héros : carte visuelle (pastille + médaillon) et texte avec ligne de preuves. */}
         <section className="hero" aria-labelledby="hero-title">
           <div className="wrap hero-grid">
@@ -84,11 +105,14 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               </figure>
             </div>
             <div className="hero-copy" data-reveal style={{ ["--i" as string]: 1 }}>
-              <p className="eyebrow">{t("hero.eyebrow")}</p>
               <h1 id="hero-title">
                 {t("hero.titleStart")} <em>{t("hero.titleAccent")}</em>
               </h1>
               <p className="hero-lead">{t("hero.lead")}</p>
+              <p className="hero-price">
+                <strong>{price ?? t("shop.priceSoon")}</strong>
+                <span>{t("hero.priceNote")}</span>
+              </p>
               <div className="hero-actions" id="hero-actions">
                 <a className="btn btn-primary btn-lg" href="#acheter">
                   {t("hero.cta")}
@@ -128,7 +152,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <div className="wrap">
             <div className="intro-card" data-reveal>
               <div className="intro-copy">
-                <p className="eyebrow">{t("home.intro.eyebrow")}</p>
                 <h2 id="intro-title">{t("home.intro.title", { brand: brand.name })}</h2>
                 {INTRO.map((k) => (
                   <div key={k} className="intro-block">
@@ -151,7 +174,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <section className="section bg-cream" id="comment" aria-labelledby="how-title">
           <div className="wrap">
             <header className="section-head center" data-reveal>
-              <p className="eyebrow">{t("kit.how.eyebrow")}</p>
               <h2 id="how-title">{t("kit.how.title")}</h2>
               <p>{t("kit.how.lead")}</p>
             </header>
@@ -166,7 +188,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <div className="wrap">
             <div className="transform-card" data-reveal>
               <div className="transform-copy">
-                <p className="eyebrow">{t("home.transform.eyebrow")}</p>
                 <h2 id="transform-title">{t("home.transform.title")}</h2>
                 <p className="transform-text">{t("home.transform.text")}</p>
                 <a className="btn btn-primary btn-lg" href="#acheter">
@@ -185,7 +206,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <section className="section bg-cream" id="contenu" aria-labelledby="box-title">
           <div className="wrap">
             <header className="section-head center" data-reveal>
-              <p className="eyebrow">{t("home.box.eyebrow")}</p>
               <h2 id="box-title">{t("home.box.title")}</h2>
               <p>{t("home.box.lead")}</p>
             </header>
@@ -208,14 +228,13 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <div className="wrap">
             <header className="section-head split-head" data-reveal>
               <div>
-                <p className="eyebrow">{t("kit.app.eyebrow")}</p>
                 <h2 id="app-title">{t("home.app.title")}</h2>
               </div>
               <p>{t("kit.app.lead")}</p>
             </header>
-            <ol className="app-scroller" aria-label={t("home.app.scroll")} tabIndex={0}>
+            <AutoCarousel className="app-scroller" label={t("home.app.title")}>
               {APP_SCREENS.map((a, i) => (
-                <li key={a.key}>
+                <div key={a.key}>
                   <img src={`/visuels/etapes/${a.img}-${locale}.webp`} alt="" width={1000} height={1000} loading="lazy" />
                   <h3>
                     <span className="num-badge" aria-hidden="true">
@@ -224,9 +243,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                     {t(`kit.app.steps.${a.key}.title`)}
                   </h3>
                   <p>{t(`kit.app.steps.${a.key}.text`)}</p>
-                </li>
+                </div>
               ))}
-            </ol>
+            </AutoCarousel>
             <ul className="chips" data-reveal>
               {APP_CHIPS.map((c) => (
                 <li key={c}>{t(`kit.app.chips.${c}`)}</li>
@@ -235,14 +254,13 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </div>
         </section>
 
-        <ProductSection price={price} provisional={kitOffer.provisional} orderingOpen={kitOffer.orderingOpen} />
+        <ProductSection accessories={extras} price={price} provisional={kitOffer.provisional} orderingOpen={kitOffer.orderingOpen} />
 
         {/* Idées cadeaux : en-tête scindé, cartes-liens avec petite œuvre superposée. */}
         <section className="section bg-cream" id="cadeaux" aria-labelledby="gifts-title">
           <div className="wrap">
             <header className="section-head split-head" data-reveal>
               <div>
-                <p className="eyebrow">{t("gifts.eyebrow")}</p>
                 <h2 id="gifts-title">{t("gifts.title")}</h2>
               </div>
               <p>{t("gifts.lead")}</p>
@@ -260,8 +278,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                         </span>
                       )}
                     </div>
-                    {"caption" in g && <p className="gift-caption">{t(`gifts.items.${g.key}.caption`)}</p>}
-                    <h3 className={"caption" in g ? "has-caption" : undefined}>{t(`gifts.items.${g.key}.title`)}</h3>
+                    <h3>{t(`gifts.items.${g.key}.title`)}</h3>
                     <p>{t(`gifts.items.${g.key}.text`)}</p>
                     {"occasions" in g && (
                       <ul className="gift-occasions">
@@ -277,16 +294,18 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </div>
         </section>
 
+        {/* Avis clients : masqués tant qu'il n'y a pas de vrais avis (config/reviews.ts). */}
+        <Reviews />
+
         {/* FAQ : intro avec bouton contour, accordéon. */}
         <section className="section bg-sand" id="faq" aria-labelledby="faq-title">
           <div className="wrap faq-grid">
             <header className="section-head" data-reveal>
-              <p className="eyebrow">{t("faq.eyebrow")}</p>
               <h2 id="faq-title">{t("faq.title")}</h2>
               <p>{t("faq.lead")}</p>
-              <a className="btn btn-outline btn-lg faq-contact" href={brand.supportEmail ? `mailto:${brand.supportEmail}` : "#contact"}>
+              <Link className="btn btn-outline btn-lg faq-contact" href="/contact">
                 {t("faq.contact")}
-              </a>
+              </Link>
             </header>
             <div className="faq-list" data-reveal style={{ ["--i" as string]: 1 }}>
               {FAQ.map((q) => (

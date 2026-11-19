@@ -1,0 +1,10 @@
+# Construction depuis la racine (Dockerfile.render)
+**/node_modules
+**/.next
+**/.env
+**/test-results
+**/__pycache__
+**/*.egg-info
+apps/web/src/generated
+replica
+docs

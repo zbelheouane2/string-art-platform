@@ -119,7 +119,7 @@ test("le carrousel « Comment ça marche » : onglets, clavier, avance seul, pau
   await how.scrollIntoViewIfNeeded();
   await page.mouse.move(0, 0);
   await expect(tabs.nth(0)).toHaveAttribute("aria-selected", "true");
-  // Avance seul après environ 5,5 s.
+  // Avance seul après 4 s.
   await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true", { timeout: 9000 });
   await tabs.nth(4).click();
   await expect(how.getByRole("tabpanel")).toContainText("Suivez la voix");
@@ -134,27 +134,70 @@ test("le carrousel « Comment ça marche » : onglets, clavier, avance seul, pau
   await expect(how.getByRole("button", { name: "Relancer le défilement" })).toHaveAttribute("aria-pressed", "true");
 });
 
-test("le carrousel ne défile pas seul avec « réduire les animations »", async ({ browser }) => {
+test("avec « réduire les animations », le carrousel avance quand même et reprend après un clic", async ({ browser }) => {
   const context = await browser.newContext({ reducedMotion: "reduce" });
   const page = await context.newPage();
   await page.goto("/fr");
   const how = page.locator("#comment");
   await how.scrollIntoViewIfNeeded();
-  await page.waitForTimeout(7000);
-  await expect(how.getByRole("tab").nth(0)).toHaveAttribute("aria-selected", "true");
+  await how.getByRole("tab").nth(2).click();
+  await page.mouse.move(0, 0);
+  await expect(how.getByRole("tab").nth(3)).toHaveAttribute("aria-selected", "true", { timeout: 8000 });
+  await expect(how.getByRole("button", { name: "Mettre le défilement en pause" })).toBeVisible();
   await context.close();
 });
 
-test("la galerie produit glisse avec les flèches et les vignettes", async ({ page }) => {
+test("la galerie produit : flèches, vignettes en colonne (ordinateur), points (téléphone)", async ({ page, isMobile }) => {
   await page.goto("/fr/kit");
   const count = page.locator(".gallery-count");
-  await expect(count).toHaveText("1 / 25");
+  await expect(count).toHaveText("1 / 18");
   await page.getByRole("button", { name: "Visuel suivant" }).click();
-  await expect(count).toHaveText("2 / 25");
-  await page.locator(".gallery-thumbs button").nth(4).click();
-  await expect(count).toHaveText("5 / 25");
+  await expect(count).toHaveText("2 / 18");
+  if (isMobile) {
+    await expect(page.locator(".gallery-thumbs")).toBeHidden();
+    await expect(page.locator(".gallery-dots span[data-on]")).toHaveCount(1);
+  } else {
+    const thumbs = page.locator(".gallery-thumbs button");
+    // Colonne verticale à gauche de la grande image.
+    const [a, b] = [await thumbs.nth(0).boundingBox(), await thumbs.nth(1).boundingBox()];
+    expect(Math.round(a!.x)).toBe(Math.round(b!.x));
+    expect(b!.y).toBeGreaterThan(a!.y);
+    await thumbs.nth(4).click();
+    await expect(count).toHaveText("5 / 18");
+  }
   await page.getByRole("button", { name: "Visuel précédent" }).click();
-  await expect(count).toHaveText("4 / 25");
+  await expect(count).toHaveText(isMobile ? "1 / 18" : "4 / 18");
+  // Les photos du kit sont légères : vignettes à part.
+  await expect(page.locator(".gallery-track img").first()).toHaveAttribute("src", "/visuels/kit/bureau.webp");
+});
+
+test("souris posée dessus et « réduire les animations » : les carrousels avancent toutes les 4 s", async ({ browser }) => {
+  const context = await browser.newContext({ reducedMotion: "reduce" });
+  const page = await context.newPage();
+  // Étapes : la souris reste sur la grande image, l'étape suivante arrive quand même.
+  await page.goto("/fr");
+  const how = page.locator("#comment");
+  await how.scrollIntoViewIfNeeded();
+  await how.locator(".steps-stage").hover();
+  const tabs = how.getByRole("tab");
+  await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true", { timeout: 6000 });
+  await expect(tabs.nth(2)).toHaveAttribute("aria-selected", "true", { timeout: 6000 });
+  // Galerie : avance seule, un clic sur une vignette l'affiche puis elle repart 4 s après.
+  await page.goto("/fr/kit");
+  const count = page.locator(".gallery-count");
+  await page.locator(".gallery-main").hover();
+  await expect(count).toHaveText("2 / 18", { timeout: 6000 });
+  await page.getByRole("button", { name: "Visuel suivant" }).click();
+  await expect(count).toHaveText("3 / 18");
+  await page.waitForTimeout(2500);
+  await expect(count).toHaveText("3 / 18");
+  await expect(count).toHaveText("4 / 18", { timeout: 4000 });
+  // Seul le bouton pause l'arrête.
+  await page.locator(".gallery-toggle").click();
+  await expect(page.locator(".gallery-toggle")).toHaveAttribute("aria-pressed", "true");
+  await page.waitForTimeout(5000);
+  await expect(count).toHaveText("4 / 18");
+  await context.close();
 });
 
 test("le bouton « Comment ça marche ? » mène à la page du kit", async ({ page }) => {
@@ -176,11 +219,88 @@ test("le plan de la planche montre 240 clous numérotés de 1 à 60 par secteur"
   expect(nums[239]).toBe("60");
 });
 
-test("le prix provisoire s'affiche et le bouton mène à la commande", async ({ page }) => {
+test("le prix provisoire s'affiche et le bouton ajoute au panier", async ({ page }) => {
   await page.goto("/fr");
   const shop = page.locator("#acheter");
-  await expect(shop.locator(".shop-price")).toHaveText(/4\s900\sDA/);
+  await expect(shop.locator(".shop-price")).toHaveText(/4\s900\s?DA/);
   await expect(shop.locator(".shop-price-note")).toHaveText("Prix de lancement provisoire");
-  await expect(shop.getByRole("link", { name: "Commander" })).toHaveAttribute("href", "/fr/commander");
+  await shop.getByRole("button", { name: "Ajouter au panier" }).click();
+  await expect(page.getByRole("dialog", { name: /Panier/ })).toBeVisible();
+  await expect(page.getByRole("dialog").getByRole("link", { name: "Passer la commande" })).toHaveAttribute("href", "/fr/commander");
+  await page.keyboard.press("Escape");
   await expect(page.locator(".gift-wide .gift-occasions li")).toHaveCount(5);
 });
+
+test("menu horizontal sur ordinateur, menu repliable sur téléphone", async ({ page, isMobile }) => {
+  await page.goto("/fr");
+  const bar = page.getByRole("navigation", { name: "Navigation principale" });
+  if (isMobile) {
+    await expect(bar).toBeHidden();
+    await expect(page.getByRole("button", { name: "Ouvrir la navigation" })).toBeVisible();
+  } else {
+    await expect(bar.getByRole("link")).toHaveCount(8);
+    for (const name of ["Livraison", "Contact", "Suivre ma commande"]) await expect(bar.getByRole("link", { name })).toBeVisible();
+    await bar.getByRole("link", { name: "Le kit" }).click();
+    await expect(page).toHaveURL(/\/fr\/kit$/);
+  }
+});
+
+test("les écrans du générateur défilent seuls sur téléphone, avec points et pause", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "sur ordinateur les trois écrans tiennent sur une ligne");
+  await page.goto("/fr");
+  const carousel = page.locator(".app-scroller");
+  await carousel.scrollIntoViewIfNeeded();
+  await page.mouse.move(0, 0);
+  const track = carousel.locator(".auto-track");
+  const dots = carousel.locator(".auto-dot");
+  await expect(dots).toHaveCount(3);
+  await expect(dots.nth(0)).toHaveAttribute("aria-current", "true");
+  // Avance seul en 4 s.
+  await expect(dots.nth(1)).toHaveAttribute("aria-current", "true", { timeout: 8000 });
+  await expect.poll(() => track.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
+  // Un point mène à sa diapositive ; le bouton pause arrête le défilement.
+  await dots.nth(2).click();
+  await expect(dots.nth(2)).toHaveAttribute("aria-current", "true");
+  await carousel.getByRole("button", { name: "Mettre le défilement en pause" }).click();
+  await expect(carousel.getByRole("button", { name: "Relancer le défilement" })).toHaveAttribute("aria-pressed", "true");
+});
+
+test("sur ordinateur, les 5 écrans du générateur tiennent sur une ligne, sans commandes", async ({ page, isMobile }) => {
+  test.skip(isMobile, "ordinateur seulement");
+  await page.goto("/fr/kit");
+  const carousel = page.locator("#generateur .auto-carousel");
+  await expect(carousel.locator(".engine-card")).toHaveCount(5);
+  await expect(carousel.locator(".auto-controls")).toBeHidden();
+  const tops = await carousel.locator(".auto-item").evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top)));
+  expect(new Set(tops).size).toBe(1);
+});
+
+test("premier écran : titre, prix et bouton visibles sans défiler", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/fr");
+  await expect(page.locator(".hero-price strong")).toHaveText("4 900 DA");
+  await expect(page.locator(".hero-price")).toBeInViewport();
+  await expect(page.getByRole("link", { name: "Offrir le kit" }).first()).toBeInViewport();
+});
+
+for (const locale of ["fr", "ar"] as const) {
+  test(`taille du texte ${locale} : le site grossit, reste sans défilement horizontal, et le choix est gardé`, async ({ page }) => {
+    await page.goto(`/${locale}`);
+    const desktopMenu = page.locator(".header-end .text-menu");
+    if (await desktopMenu.isVisible()) {
+      await desktopMenu.locator("summary").click();
+      await desktopMenu.locator('[data-text-size="150"]').click();
+    } else {
+      await page.locator('[aria-controls="nav-drawer"]').click();
+      await page.locator('.text-size-row [data-text-size="150"]').click();
+    }
+    await expect.poll(() => page.evaluate(() => document.documentElement.style.fontSize)).toBe("150%");
+    await page.reload();
+    expect(await page.evaluate(() => document.documentElement.style.fontSize)).toBe("150%");
+    for (const path of ["", "/kit", "/commander", "/guide/demo"]) {
+      await page.goto(`/${locale}${path}`);
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      expect(overflow, path || "/").toBeLessThanOrEqual(0);
+    }
+  });
+}

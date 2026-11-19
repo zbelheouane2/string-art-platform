@@ -37,10 +37,27 @@ export interface SavedProgress {
   step: number;
   secondsPerStep: number;
   voice: boolean;
+  /** Date de l'enregistrement (ms), 0 si inconnue (anciennes sauvegardes). */
+  at: number;
+}
+
+/** Avancement enregistré sur le serveur pour ce portrait (lié au code). */
+export interface ServerProgress {
+  step: number;
+  at: number;
+}
+
+/**
+ * Fil de reprise : l'enregistrement le plus récent l'emporte, qu'il vienne de
+ * cet appareil ou du serveur (autre téléphone). À égalité, l'appareil.
+ */
+export function resumeStep(local: SavedProgress, server: ServerProgress | null, sequence: readonly number[]): number {
+  if (!server || local.at >= server.at) return local.step;
+  return clampStep(server.step, sequence);
 }
 
 export function parseProgress(raw: string | null, sequence: readonly number[]): SavedProgress {
-  const fallback: SavedProgress = { step: 0, secondsPerStep: SPEED.default, voice: true };
+  const fallback: SavedProgress = { step: 0, secondsPerStep: SPEED.default, voice: true, at: 0 };
   if (!raw) return fallback;
   try {
     const data = JSON.parse(raw) as Partial<SavedProgress>;
@@ -49,6 +66,7 @@ export function parseProgress(raw: string | null, sequence: readonly number[]): 
       step: clampStep(Number(data.step), sequence),
       secondsPerStep: speed >= SPEED.min && speed <= SPEED.max ? speed : SPEED.default,
       voice: data.voice !== false,
+      at: Number.isFinite(Number(data.at)) && Number(data.at) > 0 ? Number(data.at) : 0,
     };
   } catch {
     return fallback;

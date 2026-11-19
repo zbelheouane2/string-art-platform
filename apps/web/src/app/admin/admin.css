@@ -1,0 +1,486 @@
+/* Espace admin : sobre, lisible, mêmes couleurs que le site. */
+.admin {
+  margin: 0;
+  background: #f7f3ef;
+  color: var(--color-text);
+  font: 15px/1.5 var(--font-dm-sans), system-ui, sans-serif;
+}
+
+.admin a {
+  color: var(--color-accent);
+}
+
+.admin h1 {
+  margin: 0 0 1.25rem;
+  font-size: 1.6rem;
+}
+
+.admin h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.15rem;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.admin-top {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  padding: 0.6rem 1.25rem;
+  background: #fff;
+  border-block-end: 1px solid var(--color-border);
+}
+
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text) !important;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.admin-top nav {
+  flex: 1;
+}
+
+.admin-top ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.admin-top nav a {
+  display: block;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  color: var(--color-text) !important;
+  text-decoration: none;
+}
+
+.admin-top nav a[aria-current="page"] {
+  background: var(--color-text);
+  color: #fff !important;
+}
+
+.admin-main {
+  max-inline-size: 72rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 4rem;
+}
+
+.a-card {
+  margin-block-end: 1.25rem;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.a-stack {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.a-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 0.9rem 1rem;
+  align-items: end;
+  margin-block-start: 1rem;
+}
+
+.a-grid label {
+  display: grid;
+  gap: 0.3rem;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.a-span {
+  grid-column: 1 / -1;
+}
+
+.a-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.a-checks legend {
+  font-weight: 700;
+  margin-block-end: 0.4rem;
+}
+
+.a-checks label {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  font-weight: 500;
+}
+
+.a-input {
+  inline-size: 100%;
+  box-sizing: border-box;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid #cfc3b8;
+  border-radius: 8px;
+  background: #fff;
+  font: inherit;
+  color: inherit;
+}
+
+.a-input:focus-visible,
+.a-btn:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-accent) 35%, transparent);
+  outline-offset: 1px;
+}
+
+.a-input-num {
+  max-inline-size: 8rem;
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.a-input-sm {
+  padding: 0.35rem 0.5rem;
+  inline-size: auto;
+}
+
+.a-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.1rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: #fff !important;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.a-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.a-btn-sm {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.88rem;
+}
+
+.a-btn-ghost {
+  background: transparent;
+  color: var(--color-text) !important;
+  border: 1px solid #cfc3b8;
+}
+
+.a-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.a-table-wrap {
+  overflow-x: auto;
+}
+
+.a-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.a-table th,
+.a-table td {
+  padding: 0.6rem 0.7rem;
+  border-block-end: 1px solid #eee5dc;
+  text-align: start;
+  vertical-align: top;
+}
+
+.a-table th {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b5d54;
+}
+
+.a-rates {
+  max-block-size: 34rem;
+  overflow-y: auto;
+  margin-block-end: 1rem;
+}
+
+.a-rates thead th {
+  position: sticky;
+  inset-block-start: 0;
+  background: #fff;
+}
+
+.a-muted {
+  color: #6b5d54;
+}
+
+.a-small {
+  font-size: 0.88rem;
+}
+
+.a-tag {
+  display: block;
+  margin-block-start: 0.25rem;
+  font-size: 0.8rem;
+  color: #6b5d54;
+}
+
+.a-pill {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: #eee5dc;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.a-pill-on {
+  background: #dcefe0;
+  color: #1f5a2c;
+}
+
+.a-flash {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: #dcefe0;
+  color: #1f5a2c;
+  font-weight: 600;
+}
+
+.a-flash-error {
+  background: #fbe3e1;
+  color: #8c2823;
+}
+
+.a-error {
+  margin: 0;
+  color: #8c2823;
+  font-weight: 600;
+}
+
+.a-summary {
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.a-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 1rem;
+  margin: 0 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.a-stats li {
+  display: grid;
+  gap: 0.25rem;
+  padding: 1rem;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+}
+
+.a-stats strong {
+  font-size: 1.6rem;
+}
+
+.a-stats strong.a-small {
+  font-size: 1rem;
+}
+
+.a-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.a-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.a-card-head strong {
+  flex: 1;
+}
+
+.a-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-block-end: 1rem;
+}
+
+.a-filters a {
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.a-filters a[aria-current="page"] {
+  background: var(--color-text);
+  color: #fff;
+}
+
+.a-preview {
+  padding: 1rem;
+  border-radius: 10px;
+  background: #fbf7f2;
+}
+
+.a-sticky-btn {
+  position: sticky;
+  inset-block-end: 1rem;
+}
+
+.admin-login {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  max-inline-size: 22rem;
+  margin: 10vh auto;
+  padding: 1rem;
+  text-align: center;
+}
+
+.admin-login form {
+  inline-size: 100%;
+  text-align: start;
+}
+
+.a-table td strong {
+  white-space: nowrap;
+}
+
+/*
+ * Téléphone : en-tête compact et non collant (il ne recouvre plus le contenu) :
+ * logo et « Se déconnecter » sur une ligne, puis les rubriques en onglets qui
+ * défilent de côté, sur une seule ligne.
+ */
+@media (max-width: 47.99rem) {
+  .admin-top {
+    position: static;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.5rem 0.75rem;
+    padding: 0.5rem 0.75rem 0;
+  }
+  .admin-brand img {
+    inline-size: 32px;
+    block-size: auto;
+  }
+  .admin-top form {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .admin-top form .a-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+  .admin-top nav {
+    position: relative;
+    grid-column: 1 / -1;
+    margin-inline: -0.75rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .admin-top nav::-webkit-scrollbar {
+    display: none;
+  }
+  .admin-top ul {
+    flex-wrap: nowrap;
+    padding: 0 0.75rem 0.5rem;
+  }
+  .admin-top nav a {
+    white-space: nowrap;
+    padding: 0.5rem 0.85rem;
+    background: #f3ede7;
+  }
+  .admin-top nav a[aria-current="page"] {
+    background: var(--color-text);
+  }
+  .admin-main {
+    padding-inline: 0.75rem;
+  }
+}
+
+/* Téléphone : commandes et codes promo en fiches lisibles au lieu d'un tableau trop large. */
+@media (max-width: 47.99rem) {
+  .a-table-cards thead {
+    display: none;
+  }
+  .a-table-cards,
+  .a-table-cards tbody,
+  .a-table-cards tr,
+  .a-table-cards td {
+    display: block;
+    box-sizing: border-box;
+    inline-size: 100%;
+  }
+  .a-table-cards {
+    background: transparent;
+  }
+  .a-table-cards tr {
+    margin-block-end: 0.75rem;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background: #fff;
+  }
+  .a-table-cards td {
+    position: relative;
+    padding: 0.5rem 0 0.5rem 7rem;
+  }
+  .a-table-cards td:last-child {
+    border-block-end: 0;
+  }
+  .a-table-cards td::before {
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: 0.6rem;
+    content: attr(data-label);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6b5d54;
+  }
+}

@@ -17,12 +17,15 @@
   --brass: var(--color-brass);
   --font-body: var(--font-sans);
 
+  /* Échelle de texte unique (audit) : 12, 14, 15, 17 px puis titres fluides. */
+  --text-xs: 0.75rem;
   --step--1: var(--text-sm);
-  --step-0: var(--text-base);
-  --step-1: var(--text-lead);
-  --step-2: clamp(1.4rem, 1.25rem + 0.6vw, var(--text-h3));
-  --step-3: clamp(2.1rem, 1.5rem + 2.2vw, var(--text-h2));
-  --step-4: clamp(2.6rem, 1.8rem + 3.4vw, var(--text-h1));
+  /* Échelle resserrée (retour du propriétaire : site trop « zoomé ») : environ 20 % plus petit que les relevés. */
+  --step-0: var(--text-body);
+  --step-1: 1.0625rem;
+  --step-2: clamp(1.2rem, 1.1rem + 0.45vw, 1.4rem);
+  --step-3: clamp(1.65rem, 1.25rem + 1.5vw, 2.4rem);
+  --step-4: clamp(2rem, 1.4rem + 2.3vw, 3.1rem);
 
   --gutter: clamp(1rem, 0.4rem + 2.5vw, 2rem);
   --max: calc(var(--layout-max) + 2 * var(--gutter));
@@ -158,6 +161,9 @@ figure {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  max-inline-size: 100%;
+  text-align: center;
+  overflow-wrap: anywhere;
   min-block-size: 3rem;
   padding: 0.75rem 1.5rem;
   border-radius: var(--radius-pill);
@@ -174,7 +180,7 @@ figure {
 .btn-lg {
   min-block-size: var(--control-height);
   padding-inline: var(--control-pad-x);
-  font-size: 1.0625rem;
+  font-size: var(--step-1);
 }
 
 .btn-block {
@@ -260,7 +266,7 @@ figure {
 
 .header-row {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   min-block-size: 4.5rem;
   padding-block: 0.35rem;
@@ -294,15 +300,17 @@ figure {
 }
 
 /* Logo image (2,1:1) : 56 px de haut sur téléphone, 76 px sur ordinateur. */
+/* Logo « Deekra — L'art du fil » (tête en fils + nom), empilé : un peu plus haut que l'ancien. */
+/* Taille fixe en pixels : le logo ne grossit pas avec la taille du texte. */
 .logo {
   display: block;
-  block-size: 3.5rem;
+  block-size: 64px;
   inline-size: auto;
 }
 
 @media (min-width: 48rem) {
   .logo {
-    block-size: 4.75rem;
+    block-size: 88px;
   }
 }
 
@@ -334,6 +342,8 @@ figure {
 .nav-drawer {
   border-block-start: 1px solid var(--line);
   background: var(--white);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .nav-drawer ul {
@@ -459,9 +469,10 @@ h1 em {
 
 .sector-label {
   position: absolute;
-  font-size: 0.7rem;
+  font-size: var(--text-xs);
   font-weight: 700;
-  color: var(--brass);
+  /* Laiton assombri : contraste 4,5:1 sur le blanc de la planche. */
+  color: color-mix(in srgb, var(--brass) 72%, var(--ink));
 }
 
 .plaque-bar {
@@ -487,7 +498,7 @@ h1 em {
 }
 
 .plaque-credit {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   color: var(--ink-soft);
   margin-block-start: 0.25rem;
 }
@@ -521,7 +532,7 @@ h1 em {
 
 /* Sections */
 .section {
-  padding-block: clamp(3.5rem, 2rem + 5vw, 6rem);
+  padding-block: clamp(2.25rem, 1.5rem + 2.6vw, 3.75rem);
 }
 
 .bg-cream {
@@ -537,7 +548,7 @@ h1 em {
 }
 
 .section-head {
-  margin-block-end: clamp(2rem, 1.5rem + 2vw, 3.25rem);
+  margin-block-end: clamp(1.25rem, 1rem + 1vw, 2rem);
 }
 
 .section-head p:not(.eyebrow) {
@@ -607,7 +618,7 @@ h1 em {
   background: rgb(255 255 255 / 0.85);
   border-radius: var(--radius-pill);
   padding: 0.15rem 0.6rem;
-  font-size: 0.7rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   color: var(--ink-soft);
 }
@@ -745,7 +756,7 @@ h1 em {
   background: var(--accent);
   color: var(--on-accent);
   font-family: var(--font-display);
-  font-size: 1.35rem;
+  font-size: var(--step-2);
 }
 
 .num-steps h3 {
@@ -868,6 +879,27 @@ h1 em {
   font-variant-numeric: tabular-nums;
 }
 
+.gallery-toggle {
+  position: absolute;
+  inset-block-end: 1rem;
+  inset-inline-start: 1rem;
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.92);
+  color: var(--color-text);
+  cursor: pointer;
+  box-shadow: var(--shadow-pop);
+}
+
+.gallery-toggle svg {
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+}
+
 .gallery-nav {
   position: absolute;
   inset-block-start: 50%;
@@ -950,6 +982,42 @@ h1 em {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-block-end: 0.75rem;
+}
+
+/* « Inclus » : icônes en ligne, libellé court dessous. Glisse sur téléphone. */
+.kit-includes {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.35rem;
+  margin-block: 0 1.75rem;
+}
+
+.kit-includes li {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0.55rem;
+  text-align: center;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.kit-includes-icon {
+  display: grid;
+  place-items: center;
+  inline-size: clamp(3rem, 2.4rem + 2vw, 3.75rem);
+  block-size: clamp(3rem, 2.4rem + 2vw, 3.75rem);
+  border-radius: 50%;
+  background: var(--sand);
+  color: var(--accent);
+}
+
+@media (max-width: 30rem) {
+  .kit-includes li {
+    font-size: 0.7rem;
+  }
 }
 
 .check-list {
@@ -1080,7 +1148,7 @@ h1 em {
 }
 
 .site-footer .logo {
-  block-size: 4.5rem;
+  block-size: 7rem;
 }
 
 .site-footer p {
@@ -1439,12 +1507,20 @@ h1 em {
 /* En-tête : menu de langue déroulant */
 .lang-menu {
   position: relative;
+}
+
+/* Téléphone : la langue reste dans l'en-tête, sous forme courte (FR, EN, ع). */
+.lang-long {
   display: none;
 }
 
 @media (min-width: 48rem) {
-  .lang-menu {
-    display: block;
+  .lang-long {
+    display: inline;
+  }
+
+  .lang-short {
+    display: none;
   }
 }
 
@@ -1495,6 +1571,97 @@ h1 em {
 .lang-menu a:hover,
 .lang-menu a[aria-current="true"] {
   background: var(--color-surface-sand);
+}
+
+/* En-tête : taille du texte (même menu déroulant que la langue). Sur petit
+   téléphone, le réglage est dans le menu (place réservée au logo). */
+.header-end .text-menu {
+  display: none;
+}
+
+@media (min-width: 30rem) {
+  .header-end .text-menu {
+    display: block;
+  }
+}
+
+.text-size-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin-block-start: 1rem;
+}
+
+.text-size-row > div {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.text-size-row button {
+  display: grid;
+  place-items: center;
+  min-inline-size: 2.75rem;
+  min-block-size: 2.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--white);
+  color: var(--ink);
+  font: 600 1rem/1 var(--font-body);
+  cursor: pointer;
+}
+
+.text-size-row button[aria-pressed="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--white);
+}
+
+.text-menu summary {
+  padding-inline: 0.55rem;
+}
+
+.text-menu-icon {
+  font: 600 1rem/1 var(--font-body);
+  letter-spacing: -0.02em;
+}
+
+.text-menu-icon span {
+  font-size: 1.35em;
+}
+
+.text-menu ul {
+  min-inline-size: 12rem;
+  max-inline-size: calc(100vw - 2rem);
+}
+
+.text-menu button {
+  display: block;
+  inline-size: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: inherit;
+  text-align: start;
+  font-family: var(--font-body);
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.text-menu button:hover,
+.text-menu button[aria-pressed="true"] {
+  background: var(--color-surface-sand);
+}
+
+.text-menu button[aria-pressed="true"] {
+  font-weight: 600;
+}
+
+@media (max-width: 24rem) {
+  .header-end .lang-menu summary {
+    padding-inline: 0.4rem;
+  }
 }
 
 /* Héros : ligne de preuves */
@@ -1600,7 +1767,7 @@ h1 em {
   background: var(--color-surface-blush);
   color: var(--color-accent);
   font-family: var(--font-body);
-  font-size: 0.97rem;
+  font-size: var(--text-body);
   font-weight: 700;
 }
 
@@ -1630,7 +1797,7 @@ h1 em {
   border-radius: 50%;
   background: var(--color-surface-blush);
   color: var(--color-accent);
-  font-size: 0.97rem;
+  font-size: var(--text-body);
   font-weight: 700;
 }
 
@@ -1728,11 +1895,47 @@ h1 em {
   font-size: clamp(2rem, 1.5rem + 1.8vw, 2.875rem);
 }
 
+/* Prix : montant en serif de la marque, couleur accent, devise plus petite. */
+.shop-price-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.9rem;
+  margin-block: 0.6rem 0.25rem;
+}
+
 .shop-price {
+  margin: 0;
   font-family: var(--font-body);
   font-size: clamp(1.6rem, 1.3rem + 1vw, 2.125rem);
   font-weight: 700;
-  margin-block: 0.75rem 0;
+}
+
+.price-tag {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3em;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.price-tag-amount {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 2rem + 1.8vw, 3.4rem);
+  letter-spacing: -0.01em;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.price-tag-cur {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+:lang(ar) .price-tag-cur {
+  letter-spacing: 0;
 }
 
 .shop-desc {
@@ -1914,7 +2117,7 @@ h1 em {
 
 .phone-code {
   font-family: var(--font-body);
-  font-size: 1.2rem;
+  font-size: var(--step-2);
   font-weight: 700;
   letter-spacing: 0.1em;
   padding: 0.6rem 0.8rem;
@@ -1949,7 +2152,7 @@ h1 em {
 .app-footer {
   display: grid;
   gap: 1.5rem;
-  margin-block-start: 3rem;
+  margin-block-start: 1.5rem;
   align-items: center;
 }
 
@@ -2039,7 +2242,7 @@ h1 em {
   margin-block-start: auto;
   padding-block-start: 0.75rem;
   border-block-start: 1px solid var(--color-border);
-  font-size: 0.84rem;
+  font-size: var(--text-sm);
 }
 
 .stats {
@@ -2109,7 +2312,7 @@ h1 em {
 
 /* ---------- Carrousel « Comment ça marche » ---------- */
 .steps {
-  --steps-delay: 5.5s;
+  --steps-delay: 4s;
   display: grid;
   gap: 1.5rem;
 }
@@ -2124,6 +2327,9 @@ h1 em {
 
 .steps-stage {
   position: relative;
+  inline-size: 100%;
+  max-inline-size: 34rem;
+  justify-self: center;
   aspect-ratio: 1;
   border-radius: var(--radius-xl);
   overflow: hidden;
@@ -2139,13 +2345,35 @@ h1 em {
   display: grid;
   place-items: center;
   opacity: 0;
-  transform: scale(1.04);
-  transition: opacity 600ms ease-in-out, transform 900ms ease-out;
+  transform: translateX(14%);
+  transition: opacity 500ms ease-in-out, transform 700ms cubic-bezier(0.22, 0.8, 0.2, 1);
 }
 
-.steps-slide[data-active] {
+/* La diapositive sortante part d'un côté, l'entrante arrive de l'autre (miroir en arabe). */
+.steps-slide[data-before] {
+  transform: translateX(-14%);
+}
+
+[dir="rtl"] .steps-slide {
+  transform: translateX(-14%);
+}
+
+[dir="rtl"] .steps-slide[data-before] {
+  transform: translateX(14%);
+}
+
+.steps-slide[data-active],
+[dir="rtl"] .steps-slide[data-active] {
   opacity: 1;
   transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .steps-slide,
+  [dir="rtl"] .steps-slide {
+    transform: none;
+    transition: opacity 200ms linear;
+  }
 }
 
 .steps-slide img {
@@ -2167,7 +2395,7 @@ h1 em {
   background: rgb(255 255 255 / 0.9);
   border-radius: var(--radius-pill);
   padding: 0.25rem 0.75rem;
-  font-size: 0.85rem;
+  font-size: var(--text-sm);
   font-weight: 700;
   color: var(--color-text);
 }
@@ -2242,9 +2470,12 @@ h1 em {
 }
 
 .steps-label {
-  font-size: 0.78rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   line-height: 1.25;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+  hyphens: auto;
 }
 
 .steps-bar {
@@ -2278,9 +2509,7 @@ h1 em {
   }
 }
 
-.steps[data-paused] .steps-fill,
-.steps:hover .steps-fill,
-.steps:focus-within .steps-fill {
+.steps[data-paused] .steps-fill {
   animation-play-state: paused;
 }
 
@@ -2291,7 +2520,7 @@ h1 em {
 
 .steps-num {
   color: var(--color-accent);
-  font-size: 0.85rem;
+  font-size: var(--text-sm);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -2325,7 +2554,7 @@ h1 em {
 }
 
 .steps-label {
-  font-size: 0.72rem;
+  font-size: var(--text-xs);
 }
 
 @media (min-width: 30rem) {
@@ -2338,7 +2567,7 @@ h1 em {
     block-size: 30px;
   }
   .steps-label {
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
   }
 }
 
@@ -2351,13 +2580,7 @@ h1 em {
   .steps-panel p:not(.steps-num) {
     animation: none;
   }
-  .steps-fill {
-    animation: none;
-    transform: none;
-  }
-  .steps-toggle {
-    display: none;
-  }
+  /* Le carrousel continue d'avancer (souhait du propriétaire), sans glissement : bouton pause visible. */
 }
 
 /* ---------- Accueil : « Qu'est-ce que c'est ? » ---------- */
@@ -2487,32 +2710,19 @@ h1 em {
 }
 
 .box-grid p {
-  font-size: 0.95rem;
+  font-size: var(--text-body);
 }
 
 /* ---------- Accueil : générateur en ligne (défilement horizontal) ---------- */
 .app-scroller {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: min(78%, 22rem);
-  gap: 1.25rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding-block-end: 1rem;
+  --auto-col: min(78%, 20rem);
   margin-block-end: 1.5rem;
-  scrollbar-width: thin;
 }
 
 @media (min-width: 60rem) {
   .app-scroller {
-    grid-auto-flow: row;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    overflow: visible;
+    --auto-col: calc((100% - 2 * var(--auto-gap, 1.25rem)) / 3);
   }
-}
-
-.app-scroller li {
-  scroll-snap-align: start;
 }
 
 .app-scroller img {
@@ -2596,7 +2806,7 @@ h1 em {
     row-gap: 1rem;
   }
   .steps-label {
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
     overflow-wrap: break-word;
     max-inline-size: 100%;
   }
@@ -2664,9 +2874,13 @@ h1 em {
 }
 
 .shop-price-note {
-  margin-block-start: -0.25rem;
-  color: var(--ink-soft);
-  font-size: var(--step--1);
+  margin: 0;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+  color: var(--accent-deep);
+  font-size: var(--text-xs);
+  font-weight: 600;
 }
 
 /* ------------------------------------------------------------------ */
@@ -2728,8 +2942,7 @@ h1 em {
 .form-card,
 .order-form .form-section,
 .studio-step,
-.studio-result,
-.guide-panel {
+.studio-result {
   background: var(--white);
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
@@ -2952,69 +3165,183 @@ h1 em {
   margin-block-end: 1rem;
 }
 
-/* Guide vocal */
+/* Guide vocal : écran principal comme la maquette (vitesse, anneau A/B/C/D,
+   prochain clou en grand, prochains clous, avancement, commandes rondes) ;
+   réglages et plan de la planche repliés dessous. Sur grand écran : deux colonnes. */
 .guide {
   display: grid;
-  gap: 1.5rem;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
   align-items: start;
+  max-inline-size: 28rem;
+  margin-inline: auto;
 }
 
 @media (min-width: 60rem) {
   .guide {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    max-inline-size: none;
+    grid-template-columns: minmax(0, 28rem) minmax(0, 1fr);
+  }
+  .guide-settings {
+    position: sticky;
+    inset-block-start: 1rem;
   }
 }
 
-.guide-board {
-  background: var(--white);
-  border-radius: var(--radius-2xl);
-  border: 1px solid var(--line);
-  padding: clamp(0.5rem, 2vw, 1.25rem);
-  box-shadow: var(--shadow-card);
-}
-
-.guide-canvas {
-  display: block;
-  inline-size: 100%;
-  aspect-ratio: 1;
-}
-
-.guide-panel {
+.guide-main {
   display: grid;
   gap: 1rem;
+  justify-items: center;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-2xl);
+  padding: clamp(1rem, 0.6rem + 2vw, 1.75rem);
+  box-shadow: var(--shadow-card);
+  color: var(--ink);
+}
+
+.guide-speeds {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.guide-speeds button,
+.guide-zoom button {
+  min-inline-size: 2.75rem;
+  min-block-size: 2.75rem;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--white);
+  color: var(--ink);
+  font: 600 var(--text-sm, 0.875rem) / 1 var(--font-body);
+  cursor: pointer;
+}
+
+.guide-speeds button[aria-pressed="true"],
+.guide-zoom button[aria-pressed="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--white);
+}
+
+/* Anneau en 4 quarts : lettres aux coins, comme sur la planche. */
+.guide-ring {
+  position: relative;
+  inline-size: min(100%, 20rem, 46svh);
+  aspect-ratio: 1;
+  padding: 1.6rem;
+}
+
+.guide-ring-svg {
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+}
+
+.ring-q {
+  fill: var(--sand);
+  transition: fill 0.25s ease;
+}
+
+.ring-q.is-on {
+  fill: var(--accent);
+}
+
+.ring-dot {
+  fill: var(--white);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.ring-letter {
+  position: absolute;
+  font: 400 clamp(1.4rem, 1rem + 2vw, 1.9rem) / 1 var(--font-display);
+  color: var(--ink);
+}
+
+.ring-letter.is-on {
+  color: var(--accent);
+}
+
+.ring-letter-A {
+  inset-block-start: 0.4rem;
+  inset-inline-start: 0.4rem;
+}
+
+.ring-letter-B {
+  inset-block-start: 0.4rem;
+  inset-inline-end: 0.4rem;
+}
+
+.ring-letter-C {
+  inset-block-end: 0.4rem;
+  inset-inline-end: 0.4rem;
+}
+
+.ring-letter-D {
+  inset-block-end: 0.4rem;
+  inset-inline-start: 0.4rem;
+}
+
+.ring-center {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  translate: -50% -50%;
+  display: grid;
+  place-content: center;
+  inline-size: 46%;
+  aspect-ratio: 1;
+  border: 0;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: 0 6px 24px rgb(42 31 26 / 0.12);
+  color: var(--ink);
+  cursor: pointer;
+  text-align: center;
+}
+
+.ring-center:disabled {
+  cursor: default;
+}
+
+.ring-caption {
+  font: 500 clamp(0.7rem, 0.6rem + 0.5vw, 0.85rem) / 1.2 var(--font-body);
+  color: var(--ink-soft);
+}
+
+.ring-nail {
+  font: 400 clamp(2.4rem, 1.6rem + 4vw, 3.4rem) / 1 var(--font-display);
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.ring-done {
+  font: 400 var(--step-1) / 1.2 var(--font-display);
+  color: var(--accent);
+  padding: 0.5rem;
 }
 
 .guide-now {
   text-align: center;
+  inline-size: 100%;
 }
 
-.guide-count {
-  color: var(--ink-soft);
+.guide-upcoming {
   margin: 0;
-}
-
-.guide-move {
-  display: flex;
-  justify-content: center;
-  align-items: baseline;
-  gap: 0.75rem;
-  margin: 0.25rem 0 0;
-  font: 400 clamp(2.6rem, 1.8rem + 4vw, 4.25rem) / 1.1 var(--font-display);
+  color: var(--ink-soft);
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
-.guide-from {
-  color: var(--ink-soft);
-  font-size: 0.6em;
+.guide-upcoming .is-next {
+  color: var(--ink);
 }
 
 .guide-arrow {
   color: var(--brass);
-  font-size: 0.6em;
-}
-
-.guide-to {
-  color: var(--accent);
 }
 
 .guide-done {
@@ -3022,9 +3349,16 @@ h1 em {
   margin: 0;
 }
 
+.guide-progress-wrap {
+  inline-size: 100%;
+  display: grid;
+  gap: 0.35rem;
+  justify-items: center;
+}
+
 .guide-progress {
   inline-size: 100%;
-  block-size: 0.6rem;
+  block-size: 0.5rem;
   appearance: none;
   border: 0;
   border-radius: var(--radius-pill);
@@ -3044,45 +3378,157 @@ h1 em {
   background: var(--accent);
 }
 
+.guide-count {
+  margin: 0;
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
 .guide-meta {
-  text-align: center;
+  margin: 0;
   color: var(--ink-soft);
   font-size: var(--step--1);
-  margin: -0.5rem 0 0;
+  text-align: center;
 }
 
 .guide-controls {
-  display: grid;
-  grid-template-columns: 1fr 1.4fr 1fr;
-  gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 4vw, 2rem);
 }
 
-.guide-btn,
+.guide-round {
+  display: grid;
+  place-items: center;
+  inline-size: 3rem;
+  block-size: 3rem;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.guide-round[aria-expanded="true"] {
+  background: var(--sand);
+}
+
+.guide-round:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
 .guide-play {
-  padding-inline: 0.75rem;
+  display: grid;
+  place-items: center;
+  inline-size: 4.5rem;
+  block-size: 4.5rem;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--white);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 35%, transparent);
+  cursor: pointer;
+}
+
+.guide-play:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.guide-state {
+  margin: -0.5rem 0 0;
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+}
+
+#guide-music-panel {
+  inline-size: 100%;
+}
+
+.guide-back {
+  inline-size: 100%;
 }
 
 .guide-settings {
-  border-block-start: 1px solid var(--line);
-  padding-block-start: 1rem;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 0.25rem 1rem;
 }
 
-.guide-settings input[type="range"] {
+.guide-settings > summary {
+  min-block-size: 2.75rem;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.guide-settings-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  padding-block: 0.5rem 1rem;
+}
+
+.guide-board {
+  position: relative;
+  inline-size: min(100%, 60svh);
+  margin-inline: auto;
+}
+
+.guide-viewport {
   inline-size: 100%;
-  accent-color: var(--accent);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius-lg, 1rem);
+  overscroll-behavior: contain;
+}
+
+.guide-viewport[data-zoomed] {
+  overflow: auto;
+  scrollbar-width: none;
+  touch-action: pan-x pan-y;
+}
+
+.guide-viewport[data-zoomed]::-webkit-scrollbar {
+  display: none;
+}
+
+.guide-canvas {
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: 1;
+  /* La règle globale des canvas limite à 100 % ; zoomée, la planche doit déborder pour défiler. */
+  max-width: none;
+  max-inline-size: none;
+}
+
+.guide-zoom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-block-start: 0.6rem;
 }
 
 .guide-jump {
-  margin-block-start: 0.5rem;
+  margin-block-start: 0.25rem;
 }
 
 .jump-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
 }
 
 .jump-row .field {
-  max-inline-size: 9rem;
+  flex: 1 1 6rem;
+  min-inline-size: 0;
+  max-inline-size: 12rem;
 }
 
 /* Commande */
@@ -3157,4 +3603,1782 @@ h1 em {
 
 .form-lead {
   margin: -0.5rem 0 1rem;
+}
+
+/* Repères rapides sous le prix du kit. */
+.kit-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-block: 1rem 1.25rem;
+}
+
+.kit-facts li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: var(--sand);
+  font-size: var(--step--1);
+  line-height: 1.3;
+}
+
+.kit-facts svg {
+  flex: none;
+  color: var(--brass);
+}
+
+/* Générateur en 5 étapes : 5 téléphones sur une ligne (ordinateur), carrousel sinon. */
+.engine-carousel {
+  --auto-col: min(70%, 16rem);
+}
+
+@media (min-width: 64rem) {
+  .engine-carousel {
+    --auto-col: calc((100% - 4 * var(--auto-gap, 1.25rem)) / 5);
+  }
+}
+
+.engine-card {
+  position: relative;
+  text-align: center;
+  padding: 0.5rem 0.25rem 0.5rem;
+}
+
+.engine-card h3 {
+  font-size: var(--step-1);
+  margin: 1rem 0.25rem 0.35rem;
+}
+
+.engine-card p {
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+  margin: 0 0.25rem;
+}
+
+/* Téléphone dessiné en CSS autour de la capture du site. */
+/* Cadre de téléphone : une barre d'état laisse la place à l'encoche, puis
+   l'écran entier (capture 390 × 844), sans rognage sur les côtés. */
+.phone {
+  position: relative;
+  inline-size: min(100%, 13.5rem);
+  margin-inline: auto;
+  padding-block-start: 1.35rem;
+  border: 0.55rem solid #1d1a18;
+  border-radius: 2.1rem;
+  background: var(--color-surface);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.phone::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 0.35rem;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  inline-size: 32%;
+  block-size: 0.85rem;
+  border-radius: var(--radius-pill);
+  background: #1d1a18;
+}
+
+[dir="rtl"] .phone::before {
+  translate: 50% 0;
+}
+
+.phone img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 390 / 844;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 0 0 1.55rem 1.55rem;
+}
+
+.engine-num {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0.75rem;
+  display: grid;
+  place-items: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: 400 1.1rem/1 var(--font-display);
+}
+
+/* Options du kit avec interrupteur. */
+.accessories {
+  margin-block: 0.5rem 1.25rem;
+}
+
+.accessories-title {
+  font-weight: 700;
+  font-size: var(--step--1);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 0.6rem;
+}
+
+:lang(ar) .accessories-title {
+  letter-spacing: 0;
+}
+
+.accessories ul {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.accessory {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: stretch;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: linear-gradient(90deg, var(--sand), var(--cream));
+  border: 1.5px solid transparent;
+  transition: border-color var(--motion-fast) var(--ease-out);
+}
+
+.accessory[data-on="true"] {
+  border-color: var(--color-success);
+}
+
+/* Zone gauche : photo + texte, ouvre la fenêtre de détail. */
+.accessory-main {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-inline-size: 0;
+  padding: 0.75rem 1rem;
+  padding-inline-end: 0.5rem;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.accessory-main:hover .accessory-more {
+  color: var(--accent);
+}
+
+/* Zone droite : prix + interrupteur, toute la hauteur de la carte est cliquable. */
+.accessory-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-inline-size: 6.5rem;
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-inline-start: 1px dashed color-mix(in srgb, var(--ink) 18%, transparent);
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-out);
+}
+
+.accessory-toggle:hover:not(:disabled) {
+  background: rgb(255 255 255 / 0.55);
+}
+
+.accessory-toggle:disabled {
+  cursor: not-allowed;
+}
+
+.accessory-main:focus-visible,
+.accessory-toggle:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  outline-offset: -3px;
+  border-radius: var(--radius-md);
+}
+
+.accessory-text {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.accessory-tag {
+  color: var(--color-success);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.accessory-name {
+  font-weight: 600;
+}
+
+.accessory-price {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: var(--step--1);
+}
+
+/* Interrupteur façon téléphone. */
+.switch {
+  position: relative;
+  display: block;
+  flex: none;
+  inline-size: 3.1rem;
+  block-size: 1.85rem;
+  border-radius: var(--radius-pill);
+  border: 0;
+  background: #d9d3cc;
+  transition: background-color var(--motion-fast) var(--ease-out);
+}
+
+.switch::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 0.2rem;
+  inset-inline-start: 0.2rem;
+  inline-size: 1.45rem;
+  block-size: 1.45rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: inset-inline-start var(--motion-fast) var(--ease-out);
+}
+
+.accessory-toggle[aria-checked="true"] .switch {
+  background: var(--color-success);
+}
+
+.accessory-toggle[aria-checked="true"] .switch::after {
+  inset-inline-start: 1.45rem;
+}
+
+.accessory-toggle:disabled .switch {
+  opacity: 0.45;
+}
+
+/* Options : vignette photo, lien « En savoir plus », fenêtre de détail. */
+.accessory-thumb {
+  flex: none;
+  border-radius: var(--radius-sm, 8px);
+  overflow: hidden;
+  background: #fff;
+  inline-size: 4rem;
+  block-size: 4rem;
+}
+
+.accessory-thumb img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.accessory-dialog-close:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  outline-offset: 2px;
+}
+
+.accessory-more {
+  justify-self: start;
+  color: var(--ink);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.accessory-dialog {
+  inline-size: min(56rem, calc(100vw - 2rem));
+  max-block-size: calc(100dvh - 2rem);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-lg, 16px);
+  background: var(--color-bg, #fff);
+  color: var(--ink);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+}
+
+.accessory-dialog::backdrop {
+  background: rgba(20, 14, 10, 0.55);
+}
+
+.accessory-dialog-body {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.accessory-dialog-body > img {
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+
+.accessory-dialog-text {
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  padding-inline-end: 2rem;
+}
+
+.accessory-dialog-text h2 {
+  font-size: var(--step-2);
+  margin: 0;
+}
+
+.accessory-dialog-text p {
+  margin: 0;
+}
+
+.accessory-dialog-name {
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.accessory-dialog-name strong {
+  color: var(--accent);
+}
+
+.accessory-dialog-close {
+  position: absolute;
+  inset-block-start: 0.75rem;
+  inset-inline-end: 0.75rem;
+  display: grid;
+  place-items: center;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border: 0;
+  border-radius: 50%;
+  background: var(--sand);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+@media (max-width: 40rem) {
+  .accessory-dialog-body {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .accessory-dialog-text {
+    padding-inline-end: 0;
+  }
+}
+
+/* Menu horizontal sur ordinateur : logo à gauche, menu, langue et panier à droite. */
+.header-nav {
+  display: none;
+}
+
+@media (min-width: 64rem) {
+  /* Deux lignes : logo au centre (langue et panier à droite), puis le menu centré. */
+  .header-start {
+    visibility: hidden;
+  }
+
+  .header-row {
+    min-block-size: 4rem;
+  }
+
+  .header-nav {
+    display: block;
+    border-block-start: 1px solid var(--line);
+  }
+
+  .header-nav ul {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0 2rem;
+    margin: 0 auto;
+    padding-block: 0;
+    list-style: none;
+  }
+
+  .header-nav a {
+    display: block;
+    color: var(--ink);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding-block: 0.7rem 0.6rem;
+    border-block-end: 2px solid transparent;
+  }
+
+  :lang(ar) .header-nav a {
+    letter-spacing: 0;
+    font-size: var(--text-body);
+  }
+
+  .header-nav a:hover,
+  .header-nav a:focus-visible {
+    border-block-end-color: var(--accent);
+  }
+}
+
+/* Densité (retour du propriétaire) : pages plus courtes, images moins hautes. */
+.hero {
+  padding-block: clamp(1.25rem, 0.75rem + 2.5vw, 3rem);
+}
+
+@media (min-width: 60rem) {
+  .hero-media {
+    max-inline-size: 30rem;
+    justify-self: center;
+  }
+
+  .gift-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .box-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem 1.25rem;
+  }
+}
+
+/* Que contient le kit : les 6 éléments sur une seule ligne sur grand écran, comme la référence. */
+@media (min-width: 72rem) {
+  .box-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 1.25rem 1rem;
+  }
+
+  .box-grid h3 {
+    font-size: var(--step-1);
+  }
+
+  .box-grid p {
+    font-size: var(--step--1);
+  }
+}
+
+@media (min-width: 60rem) {
+  .gift-grid > li.gift-wide {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 39.99rem) {
+  .gift-wide .gift-img {
+    max-inline-size: 11rem;
+  }
+}
+
+/* Formulaire de commande resserré. */
+.order-form {
+  gap: 0.9rem;
+}
+
+.order-form .form-section {
+  padding: clamp(1rem, 0.75rem + 1vw, 1.5rem);
+}
+
+.order-form legend {
+  font-size: var(--step-1);
+  margin-block-end: 0.6rem;
+}
+
+.order-form .field-group {
+  margin-block-end: 0.75rem;
+}
+
+.field-pair {
+  display: grid;
+  gap: 0 1rem;
+}
+
+@media (min-width: 36rem) {
+  .field-pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.choice-compact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-block-end: 0.75rem;
+}
+
+.choice-compact .choice {
+  padding: 0.6rem 0.75rem;
+  align-items: center;
+}
+
+.choice-compact .choice small {
+  display: none;
+}
+
+.field-inline .field-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.field-inline .field-label {
+  margin: 0;
+}
+
+.order-form .accessories {
+  margin-block: 0.25rem 0.75rem;
+}
+
+.order-form .accessory-main {
+  padding: 0.5rem 0.75rem;
+  gap: 0.75rem;
+}
+
+.order-form .accessory-toggle {
+  min-inline-size: 5.5rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.order-form .accessory-thumb {
+  inline-size: 3rem;
+  block-size: 3rem;
+}
+
+.order-form .accessory-tag {
+  display: none;
+}
+
+.form-more {
+  margin-block-end: 0.75rem;
+}
+
+.form-more summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: var(--step--1);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.form-more[open] summary {
+  margin-block-end: 0.5rem;
+}
+
+.form-more .field-label {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.gift-toggle {
+  padding: 0.6rem 0.9rem;
+}
+
+.order-form fieldset > * {
+  clear: both;
+}
+
+.field-pair {
+  align-items: start;
+}
+
+.field-pair > .field-group,
+.field-pair > .field-group + .field-group {
+  margin-block: 0 0.75rem;
+}
+
+.order-form .field-group + .field-group {
+  margin-block-start: 0;
+}
+
+/* Page Contact : présentation à gauche, formulaire à droite sur ordinateur. */
+.contact-grid {
+  display: grid;
+  gap: 2rem;
+  align-items: start;
+}
+
+.contact-intro h1 {
+  margin: 0 0 0.5rem;
+  font-size: var(--step-3);
+}
+
+.contact-intro > p {
+  margin: 0 0 1rem;
+  color: var(--ink-soft);
+}
+
+.contact-wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-block-end: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--cream);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.contact-wa:hover,
+.contact-wa:focus-visible {
+  border-color: var(--accent);
+}
+
+.contact-wa svg {
+  flex: none;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+}
+
+.contact-form,
+.track-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.contact-form .field-group + .field-group,
+.track-form .field-group + .field-group {
+  margin-block-start: 0;
+}
+
+@media (min-width: 56rem) {
+  .contact-grid {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: 3.5rem;
+  }
+}
+
+/* Suivi de commande : étapes horizontales, l'étape atteinte est colorée. */
+.track {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.track-result .order-number {
+  margin: 0 0 1rem;
+}
+
+.track-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: track;
+}
+
+.track-steps li {
+  counter-increment: track;
+  padding-block-start: 0.6rem;
+  border-block-start: 3px solid var(--line);
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+  font-weight: 600;
+}
+
+.track-steps li[data-done="true"] {
+  border-block-start-color: var(--accent);
+  color: var(--ink);
+}
+
+.track-steps li[aria-current="step"] {
+  color: var(--accent-deep);
+}
+
+.track-status {
+  margin: 0 0 1rem;
+  font-weight: 600;
+}
+
+/* Carrousel automatique commun (AutoCarousel) : glisse au doigt, avance seul toutes les 5 s. */
+.auto-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: var(--auto-col, min(80%, 19rem));
+  gap: var(--auto-gap, 1.25rem);
+  margin: 0;
+  padding: 0.25rem 0 0.75rem;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.auto-track::-webkit-scrollbar {
+  display: none;
+}
+
+.auto-track:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  outline-offset: 4px;
+}
+
+.auto-item {
+  scroll-snap-align: start;
+  min-inline-size: 0;
+}
+
+.auto-controls {
+  display: none;
+}
+
+.auto-carousel[data-controls] .auto-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-block-start: 0.5rem;
+}
+
+.auto-arrow {
+  border: 1.5px solid var(--ink);
+}
+
+[dir="rtl"] .auto-arrow svg {
+  transform: scaleX(-1);
+}
+
+.auto-dots {
+  display: flex;
+  align-items: center;
+}
+
+/* Le bouton fait 28 px (cible tactile), le point visible 8 px ; l'actif s'allonge et se remplit. */
+.auto-dot {
+  display: grid;
+  place-items: center;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.auto-dot::before {
+  content: "";
+  grid-area: 1 / 1;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--ink) 25%, transparent);
+  transition: inline-size 0.3s var(--ease-out);
+}
+
+.auto-dot[aria-current] {
+  inline-size: 2.5rem;
+}
+
+.auto-dot[aria-current]::before {
+  inline-size: 2rem;
+}
+
+.auto-fill {
+  grid-area: 1 / 1;
+  justify-self: start;
+  inline-size: 2rem;
+  block-size: 0.5rem;
+  margin-inline-start: 0.25rem;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  transform-origin: left;
+  animation: steps-progress var(--auto-delay, 5s) linear forwards;
+  animation-play-state: paused;
+}
+
+[dir="rtl"] .auto-fill {
+  transform-origin: right;
+}
+
+.auto-carousel[data-playing] .auto-fill {
+  animation-play-state: running;
+}
+
+.auto-dot:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-pill);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auto-track {
+    scroll-behavior: auto;
+  }
+}
+
+/* Avis clients (affichés seulement s'il y en a de vrais). */
+.review-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.review-card {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--white);
+}
+
+.review-card img {
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+}
+
+.review-stars {
+  margin: 0;
+  color: var(--brass);
+  letter-spacing: 0.1em;
+}
+
+.review-stars span {
+  color: var(--line);
+}
+
+.review-card blockquote {
+  margin: 0;
+}
+
+.review-name {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+  font-weight: 600;
+}
+
+/* Héros (audit) : sur téléphone, titre, prix et bouton dans le premier écran, la planche ensuite. */
+.hero-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.6rem;
+  margin: 0 0 1.25rem;
+}
+
+.hero-price strong {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.6rem + 1.2vw, 2.6rem);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--accent);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.hero-price span {
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+}
+
+@media (max-width: 59.99rem) {
+  .hero-copy {
+    order: -1;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(1.75rem, 1.2rem + 2.6vw, 2.4rem);
+  }
+
+  .hero-lead {
+    margin-block: 0.75rem 1rem;
+  }
+
+  .hero-media {
+    inline-size: min(100%, 24rem);
+    justify-self: center;
+  }
+
+  .hero .proof {
+    margin-block-start: 1rem;
+  }
+}
+
+/* Commande (audit) : rappel du produit, engagements avant le bouton, total à payer au livreur. */
+.order-product {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.order-product img {
+  flex: none;
+  inline-size: 4.5rem;
+  block-size: 4.5rem;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  border: 1px solid var(--line);
+}
+
+.order-product span {
+  display: grid;
+}
+
+.order-product strong {
+  color: var(--ink);
+}
+
+.order-total > span {
+  display: grid;
+}
+
+.order-total small {
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+}
+
+.order-form > .reassure {
+  margin-block: 0 1rem;
+}
+
+/* Cibles tactiles d'au moins 24 px partout, 44 px pour les commandes principales sur téléphone. */
+.reassure a,
+.site-footer nav a,
+.form-more summary {
+  display: inline-block;
+  padding-block: 0.3rem;
+}
+
+@media (pointer: coarse) {
+  .auto-dot {
+    inline-size: 2.25rem;
+    block-size: 2.75rem;
+  }
+
+  .auto-dot[aria-current] {
+    inline-size: 2.75rem;
+  }
+
+  .lang-switch a {
+    min-inline-size: 2.75rem;
+    min-block-size: 2.75rem;
+  }
+}
+
+/* Idées cadeaux sur téléphone : une rangée qu'on fait glisser au lieu d'une longue pile. */
+@media (max-width: 39.99rem) {
+  .gift-grid {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 68%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    margin-inline: calc(-1 * var(--gutter));
+    padding-inline: var(--gutter);
+    padding-block-end: 0.75rem;
+    scrollbar-width: thin;
+  }
+
+  .gift-grid > li,
+  .gift-grid > li.gift-wide {
+    grid-column: auto;
+    scroll-snap-align: start;
+  }
+
+  .gift-wide .gift-img {
+    max-inline-size: none;
+  }
+}
+
+/* Galerie produit comme la référence : vignettes en colonne à gauche (ordinateur), points sur téléphone. */
+.gallery-dots {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-block-start: 0.75rem;
+}
+
+.gallery-dots span {
+  inline-size: 0.45rem;
+  block-size: 0.45rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ink) 22%, transparent);
+  transition: inline-size var(--motion-fast) var(--ease-out);
+}
+
+.gallery-dots span[data-on] {
+  inline-size: 1.25rem;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+}
+
+@media (max-width: 47.99rem) {
+  .gallery-thumbs {
+    display: none;
+  }
+}
+
+@media (min-width: 48rem) {
+  .gallery-dots {
+    display: none;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: 5.25rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .gallery-main {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  /* La colonne prend la hauteur de la grande image et défile si besoin. */
+  .gallery-thumbs {
+    grid-column: 1;
+    grid-row: 1;
+    flex-direction: column;
+    block-size: 0;
+    min-block-size: 100%;
+    margin: 0;
+    padding: 0.15rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+
+  .gallery-thumbs button {
+    inline-size: 100%;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Panier : bouton d'en-tête et tiroir latéral.                        */
+.cart-btn {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  inset-block-start: 0.1rem;
+  inset-inline-end: 0.05rem;
+  min-inline-size: 1.15rem;
+  block-size: 1.15rem;
+  padding-inline: 0.3rem;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.15rem;
+  text-align: center;
+}
+
+.cart-drawer {
+  margin: 0;
+  margin-inline-start: auto;
+  inline-size: min(30rem, 100vw);
+  max-inline-size: 100vw;
+  block-size: 100dvh;
+  max-block-size: 100dvh;
+  padding: 0;
+  border: 0;
+  background: var(--cream);
+  color: var(--ink);
+  box-shadow: -12px 0 40px rgb(0 0 0 / 0.18);
+}
+
+.cart-drawer[open] {
+  animation: cart-in var(--motion-base, 0.28s) var(--ease-out);
+}
+
+[dir="rtl"] .cart-drawer[open] {
+  animation-name: cart-in-rtl;
+}
+
+@keyframes cart-in {
+  from {
+    translate: 100% 0;
+  }
+}
+
+@keyframes cart-in-rtl {
+  from {
+    translate: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cart-drawer[open] {
+    animation: none;
+  }
+}
+
+.cart-drawer::backdrop {
+  background: rgb(42 31 26 / 0.45);
+}
+
+.cart-panel {
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  block-size: 100%;
+}
+
+.cart-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-block-end: 1px solid var(--line, #eadfd4);
+}
+
+.cart-head h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  font-size: var(--step-2);
+}
+
+.cart-count {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: 1.6rem;
+  block-size: 1.6rem;
+  padding-inline: 0.4rem;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: #fff;
+  font: 700 0.85rem/1 var(--font-body);
+}
+
+.cart-lines {
+  overflow-y: auto;
+  padding: 0.5rem 1.5rem;
+}
+
+.cart-line {
+  display: grid;
+  grid-template-columns: 4.75rem 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding-block: 1rem;
+  border-block-end: 1px solid var(--line, #eadfd4);
+}
+
+.cart-line img {
+  inline-size: 4.75rem;
+  block-size: 4.75rem;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  background: #fff;
+}
+
+.cart-line-text {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.cart-line-text strong {
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.cart-line-text span {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.cart-line-end {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+}
+
+.qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line, #e2d6ca);
+  border-radius: var(--radius-sm);
+  background: #fff;
+}
+
+.qty button {
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.qty button:disabled {
+  color: color-mix(in srgb, var(--ink) 30%, transparent);
+  cursor: default;
+}
+
+.qty output {
+  min-inline-size: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.link-btn {
+  padding: 0.2rem 0;
+  border: 0;
+  background: none;
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: var(--text-xs);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.link-btn:hover {
+  color: var(--accent);
+}
+
+.cart-empty {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+.cart-suggest {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0.75rem 1.5rem;
+}
+
+.cart-suggest p {
+  margin: 0;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+:lang(ar) .cart-suggest p {
+  letter-spacing: 0;
+}
+
+.cart-suggest-btn {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0.75rem 0.4rem 0.4rem;
+  border: 1px dashed color-mix(in srgb, var(--ink) 22%, transparent);
+  border-radius: var(--radius-md);
+  background: var(--sand);
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.cart-suggest-btn img {
+  border-radius: var(--radius-sm);
+}
+
+.cart-suggest-btn b {
+  color: var(--accent);
+}
+
+.cart-foot {
+  display: grid;
+  gap: 0.6rem;
+  padding: 1.25rem 1.5rem 1.5rem;
+  border-block-start: 1px solid var(--line, #eadfd4);
+  background: #fff;
+}
+
+.cart-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0;
+  font-size: var(--step-1);
+  font-weight: 700;
+}
+
+.cart-total strong {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--step-2);
+  color: var(--accent);
+}
+
+.cart-note {
+  margin: 0 0 0.4rem;
+  color: var(--ink-soft);
+  font-size: var(--text-xs);
+}
+
+.cart-checkout {
+  gap: 0.6rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Commande en deux colonnes : formulaire à gauche, récapitulatif fixe à droite. */
+.checkout {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (min-width: 60rem) {
+  .checkout {
+    grid-template-columns: minmax(0, 1fr) minmax(20rem, 26rem);
+    gap: 3rem;
+  }
+}
+
+.checkout-summary {
+  border-radius: var(--radius-md);
+  background: var(--sand);
+}
+
+@media (max-width: 59.99rem) {
+  /* Téléphone : le récapitulatif passe au-dessus, replié. */
+  .checkout-summary {
+    order: -1;
+  }
+
+  .checkout-summary:not([data-open]) .summary-body {
+    display: none;
+  }
+}
+
+@media (min-width: 60rem) {
+  .checkout-summary {
+    position: sticky;
+    inset-block-start: 7.5rem;
+    max-block-size: calc(100dvh - 9rem);
+    overflow-y: auto;
+  }
+
+  .summary-toggle {
+    display: none !important;
+  }
+}
+
+.summary-toggle {
+  display: flex;
+  inline-size: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border: 0;
+  background: none;
+  color: var(--accent-deep);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.summary-toggle strong {
+  color: var(--ink);
+  text-decoration: none;
+  font-size: var(--step-1);
+}
+
+.summary-body {
+  padding: 1.25rem;
+}
+
+@media (min-width: 60rem) {
+  .summary-body {
+    padding: 1.5rem;
+  }
+}
+
+.summary-title {
+  margin: 0 0 1rem;
+  font-size: var(--step-1);
+}
+
+.summary-items {
+  display: grid;
+  gap: 1rem;
+  margin-block-end: 1rem;
+}
+
+.summary-item {
+  display: grid;
+  grid-template-columns: 4rem 1fr auto;
+  gap: 0.9rem;
+  align-items: start;
+}
+
+.summary-thumb {
+  position: relative;
+}
+
+.summary-thumb img {
+  display: block;
+  inline-size: 4rem;
+  block-size: 4rem;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+
+.summary-qty {
+  position: absolute;
+  inset-block-start: -0.5rem;
+  inset-inline-end: -0.5rem;
+  min-inline-size: 1.4rem;
+  block-size: 1.4rem;
+  padding-inline: 0.3rem;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.4rem;
+  text-align: center;
+}
+
+.summary-name {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.summary-name strong {
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.summary-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.summary-controls .qty button {
+  inline-size: 2rem;
+  block-size: 2rem;
+}
+
+.summary-price {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.summary-add {
+  display: grid;
+  gap: 0.4rem;
+  margin-block-end: 1rem;
+}
+
+.summary-add .cart-suggest-btn {
+  background: rgb(255 255 255 / 0.6);
+}
+
+.promo {
+  padding-block: 1rem;
+  border-block: 1px solid var(--line);
+}
+
+.promo-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.promo-row .field {
+  flex: 1;
+  min-inline-size: 0;
+  text-transform: uppercase;
+}
+
+.promo-row .field::placeholder {
+  text-transform: none;
+}
+
+.promo-btn {
+  flex: none;
+  padding-inline: 1.1rem;
+}
+
+.promo-applied {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.checkout-summary .order-lines dt small {
+  display: block;
+  font-size: var(--text-xs);
+}
+
+.checkout-summary .line-discount {
+  color: var(--color-success);
+}
+
+.checkout-summary .order-total small {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+.checkout-summary .order-total strong {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--step-2);
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.carrier-pick {
+  margin-block-end: 0.75rem;
+}
+
+.carrier-choice strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.carrier-choice img {
+  border-radius: 6px;
+  object-fit: contain;
+  background: #fff;
+}
+
+.promo-min {
+  display: block;
+  color: var(--ink-soft);
+  font-weight: 400;
+  font-size: var(--text-xs);
+}
+
+/* Lecteur de musique du guide */
+.guide-music {
+  display: grid;
+  gap: 0.6rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl, 1.25rem);
+  background: var(--white);
+  min-inline-size: 0;
+}
+
+.guide-music-title {
+  margin: 0;
+  font: 600 var(--text-base, 1rem) / 1.3 var(--font-body);
+}
+
+.guide-music-now {
+  display: grid;
+  gap: 0.15rem;
+  margin: 0;
+  min-inline-size: 0;
+}
+
+.guide-music-count {
+  color: var(--ink-soft);
+  font-size: var(--text-sm, 0.875rem);
+}
+
+.guide-music-name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.guide-music-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.guide-music-controls > .btn {
+  flex: 1 1 auto;
+  min-inline-size: min-content;
+}
+
+.guide-music input[type="range"] {
+  inline-size: 100%;
+}
+
+/* Cadrage de la photo (studio) */
+.framer {
+  display: grid;
+  gap: 0.6rem;
+  inline-size: min(100%, 26rem);
+  margin-inline: auto;
+}
+
+.framer-view {
+  position: relative;
+  inline-size: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: var(--color-text, #2a1f1a);
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.framer-view:active {
+  cursor: grabbing;
+}
+
+.framer-view:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.framer-img {
+  position: absolute;
+  max-width: none;
+  max-inline-size: none;
+  pointer-events: none;
+}
+
+/* Hors du cercle : voile sombre ; le cercle = la planche. */
+.framer-ring {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle closest-side,
+    transparent calc(100% - 2px),
+    rgb(255 255 255 / 0.95) calc(100% - 2px),
+    rgb(255 255 255 / 0.95) 100%,
+    rgb(20 14 10 / 0.6) 100%
+  );
+}
+
+.framer-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.framer-slider {
+  flex: 1 1 8rem;
+  min-inline-size: 0;
+  accent-color: var(--accent);
+}
+
+.framer-zoom-btn {
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.framer-recenter {
+  flex: 1 1 100%;
+}
+
+.framer-change {
+  justify-self: center;
+  cursor: pointer;
+}
+
+@media (min-width: 30rem) {
+  .framer-recenter {
+    flex: 0 0 auto;
+  }
+}
+
+/* Bandeau de consentement (mesure d'audience) : au-dessus de la barre d'achat, sous le tiroir du panier. */
+.consent {
+  position: fixed;
+  inset-inline: 0.75rem;
+  inset-block-end: 0.75rem;
+  z-index: 60;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  max-inline-size: 46rem;
+  margin-inline: auto;
+  padding: 1rem 1.25rem;
+  background: var(--white);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-sticky);
+  font-size: var(--step--1);
+}
+
+.consent p {
+  flex: 1 1 18rem;
+  margin: 0;
+}
+
+.consent a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.consent-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1 1 auto;
+  justify-content: flex-end;
+}
+
+.consent-actions .btn {
+  flex: 1 1 0;
+  min-block-size: 44px;
+  padding-inline: 1.1rem;
+  font-size: var(--step--1);
+}
+
+.link-button {
+  margin-inline-start: 0.75rem;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
 }

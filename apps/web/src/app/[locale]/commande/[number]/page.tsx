@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { TrackOnView } from "@/components/Analytics";
 import { PageShell } from "@/components/PageShell";
 import { brand } from "@/config/brand";
 import { Link } from "@/i18n/navigation";
@@ -30,8 +31,8 @@ export default async function ConfirmationPage({ params }: { params: Promise<{ l
   const gift = Boolean((order.shippingAddress as { gift?: unknown } | null)?.gift);
   return (
     <PageShell narrow>
+      <TrackOnView event="purchase" value={order.totalMinor} currency={order.currency} orderId={order.number} />
       <header className="flow-head">
-        <p className="eyebrow">{t("eyebrow")}</p>
         <h1>{t("title")}</h1>
         <p>{t("lead")}</p>
       </header>

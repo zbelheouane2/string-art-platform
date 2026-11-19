@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { CartButton } from "./Cart";
 import { CloseIcon, MenuIcon } from "./Icons";
 import { LanguageMenu } from "./LanguageMenu";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Logo } from "./Logo";
+import { TextSizeMenu } from "./TextSizeMenu";
 
 const LINKS = [
   { href: { pathname: "/", hash: "acheter" }, key: "kit" },
@@ -14,13 +16,41 @@ const LINKS = [
   { href: { pathname: "/", hash: "comment" }, key: "how" },
   { href: { pathname: "/", hash: "cadeaux" }, key: "gift" },
   { href: { pathname: "/", hash: "faq" }, key: "faq" },
+  { href: { pathname: "/livraison" }, key: "delivery" },
+  { href: { pathname: "/suivi" }, key: "track" },
+  { href: { pathname: "/contact" }, key: "contact" },
   { href: { pathname: "/activer" }, key: "code" },
   { href: { pathname: "/guide/demo" }, key: "guideDemo" },
+] as const;
+
+/** Menu horizontal (ordinateur), sur une ligne sous le logo, comme une boutique classique. */
+const BAR = [
+  { href: { pathname: "/kit" }, key: "kit" },
+  { href: { pathname: "/", hash: "comment" }, key: "how" },
+  { href: { pathname: "/", hash: "cadeaux" }, key: "gift" },
+  { href: { pathname: "/", hash: "faq" }, key: "faq" },
+  { href: { pathname: "/livraison" }, key: "delivery" },
+  { href: { pathname: "/contact" }, key: "contact" },
+  { href: { pathname: "/suivi" }, key: "track" },
+  { href: { pathname: "/activer" }, key: "code" },
 ] as const;
 
 export function SiteHeader() {
   const t = useTranslations("nav");
   const [open, setOpen] = useState(false);
+
+  // Le menu tient dans l'écran (même texte agrandi) et défile à l'intérieur.
+  const drawerRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = drawerRef.current;
+    if (!open || !el) return;
+    const fit = () => {
+      el.style.maxBlockSize = `${Math.max(160, window.innerHeight - el.getBoundingClientRect().top)}px`;
+    };
+    fit();
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -48,17 +78,22 @@ export function SiteHeader() {
           <Logo />
         </Link>
         <div className="header-end">
+          <TextSizeMenu />
           <LanguageMenu />
-          <Link className="icon-btn" href="/commander" aria-label={t("cart")}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M6 8h12l-1 12H7L6 8z" />
-              <path d="M9 8V6a3 3 0 0 1 6 0v2" />
-            </svg>
-          </Link>
+          <CartButton />
         </div>
       </div>
+      <nav className="header-nav" aria-label={t("main")}>
+        <ul className="wrap">
+          {BAR.map((l) => (
+            <li key={l.key}>
+              <Link href={l.href}>{t(l.key)}</Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
       {open && (
-        <nav id="nav-drawer" className="nav-drawer" aria-label={t("menu")}>
+        <nav ref={drawerRef} id="nav-drawer" className="nav-drawer" aria-label={t("menu")}>
           <ul className="wrap">
             {LINKS.map((l) => (
               <li key={l.key}>
@@ -70,6 +105,7 @@ export function SiteHeader() {
           </ul>
           <div className="wrap drawer-lang">
             <LanguageSwitcher />
+            <TextSizeMenu inline />
           </div>
         </nav>
       )}

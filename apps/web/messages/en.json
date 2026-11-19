@@ -19,7 +19,18 @@
     "home": "Home",
     "kitPage": "The kit in detail",
     "code": "I have a code",
-    "guideDemo": "Try the voice guide"
+    "guideDemo": "Try the voice guide",
+    "main": "Main navigation",
+    "delivery": "Delivery",
+    "contact": "Contact",
+    "track": "Track my order",
+    "textSize": "Text size",
+    "textSizes": {
+      "normal": "Normal",
+      "large": "Large",
+      "xlarge": "Extra large",
+      "xxlarge": "Largest"
+    }
   },
   "hero": {
     "badge": "Gift idea",
@@ -41,7 +52,8 @@
       "cod": "Cash on delivery",
       "nails": "240 nails already set",
       "voice": "Voice guide in 3 languages"
-    }
+    },
+    "priceNote": "the complete kit, paid on delivery"
   },
   "trust": {
     "cod": "Cash on delivery",
@@ -60,8 +72,7 @@
       },
       "parents": {
         "title": "For your parents",
-        "text": "A family portrait for the living room",
-        "caption": "Algerian star: Salah Aougrout"
+        "text": "A family portrait for the living room"
       },
       "grandparents": {
         "title": "For grandparents",
@@ -160,6 +171,13 @@
       "guide": "Voice guide on your phone",
       "card": "Free message card for the occasion of your choice (birth, birthday, wedding, keepsake or other)"
     },
+    "includesShort": {
+      "board": "50 × 50 cm board, 240 nails set",
+      "thread": "Spool of black thread",
+      "code": "Code to create your pattern",
+      "guide": "Voice guide on your phone",
+      "card": "Free message card"
+    },
     "cta": "Order now",
     "ctaSoon": "Coming soon",
     "payment": "Cash on delivery in Algeria",
@@ -190,8 +208,6 @@
       "thread": "String portrait of Ali La Pointe, computed by our software",
       "spool": "The wooden spool holder to assemble, with its spool of black thread",
       "photo": "The archive photo of Ali La Pointe",
-      "salah": "String portrait of Salah Aougrout",
-      "salahPhoto": "The source photo of Salah Aougrout",
       "benmhidi": "String portrait of Larbi Ben M'hidi",
       "benmhidiPhoto": "The archive photo of Larbi Ben M'hidi",
       "self": "String portrait of a woman in a caftan",
@@ -214,13 +230,31 @@
       "woman": "String portrait of a young woman",
       "womanPhoto": "The source photo of the young woman",
       "tuareg": "String portrait of a Tuareg man in a blue veil",
-      "tuaregPhoto": "The source photo of the Tuareg man"
+      "tuaregPhoto": "The source photo of the Tuareg man",
+      "kitDesk": "A thread portrait on its board, with the phone guiding",
+      "kitBox": "The DeeKra box, which turns into a stand for the board",
+      "kitAssembly": "A woman winds the thread while listening to the voice guide",
+      "kitGenerator": "The phone guide: adjustable music, voice and speed",
+      "kitSpool": "One spool of thread and three thread portraits",
+      "kitHang": "A woman hangs her thread portrait on the wall",
+      "kitNotice": "The short guide: choose the photo and start",
+      "kitLanguages": "The generator in Arabic, English and French",
+      "kitProud": "A woman shows the thread portrait she made",
+      "kitLiving": "A thread portrait hanging in a living room",
+      "kitEntrance": "A thread portrait of a grandfather above a console table"
     },
     "priceProvisional": "Provisional launch price",
     "haveCode": "Already have your kit? Enter your code",
     "abroad": "Living abroad?",
     "abroadGift": "Send a kit to someone in Algeria",
-    "abroadDigital": "the digital offer"
+    "abroadDigital": "the digital offer",
+    "facts": {
+      "label": "The kit at a glance",
+      "board": "50 × 50 cm board, 240 nails already in place",
+      "time": "Making time: about 4 to 6 hours, at your own pace",
+      "app": "Online software in French, English and Arabic",
+      "voice": "Nail-by-nail voice guide"
+    }
   },
   "faq": {
     "eyebrow": "FAQ",
@@ -268,7 +302,7 @@
   "footer": {
     "menu": "Menu",
     "contact": "Contact",
-    "contactText": "A question about an order or a photo? Write to us.",
+    "contactText": "A question about an order, a photo or a code? Message us on WhatsApp.",
     "tagline": "Thread portraits to make at home.",
     "links": {
       "kit": "The kit",
@@ -284,13 +318,263 @@
     "info": "Information",
     "infoLinks": {
       "kitPage": "The kit in detail",
-      "privacy": "Photo privacy",
-      "payment": "Payment and delivery"
+      "delivery": "Delivery",
+      "returns": "Returns and exchanges",
+      "privacy": "Personal data",
+      "terms": "Terms of sale"
+    },
+    "whatsapp": "WhatsApp: {phone}",
+    "social": "Follow us",
+    "socialNames": {
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "tiktok": "TikTok"
     }
   },
   "notFound": {
     "title": "This page doesn't exist",
     "back": "Back to home"
+  },
+  "reassure": {
+    "label": "Our commitments",
+    "delivery": "Delivered in {min} to {max} working days",
+    "cod": "You pay on delivery, nothing upfront",
+    "guarantee": "Damaged or incomplete kit: replaced free of charge",
+    "help": "A question? WhatsApp {phone}",
+    "more": "Learn more"
+  },
+  "legal": {
+    "updated": "Last updated: {date}",
+    "related": "See also",
+    "contactTitle": "Contact us",
+    "contactText": "For any question or request, message us on WhatsApp with your order number (DK-…).",
+    "contactCta": "Message us on WhatsApp",
+    "seller": {
+      "title": "The seller",
+      "brand": "Brand",
+      "status": "Status",
+      "statusValue": "Self-employed (auto-entrepreneur)",
+      "anpdp": "ANPDP declaration",
+      "email": "Email",
+      "sales": "Sales department (phone and WhatsApp)"
+    },
+    "delivery": {
+      "title": "Delivery",
+      "lead": "Where, how and how fast we deliver your kit.",
+      "sections": [
+        {
+          "h": "Where do we deliver?",
+          "p": [
+            "Anywhere in Algeria, in every wilaya.",
+            "Living abroad? You can give a kit to someone in Algeria: they receive it and pay on delivery."
+          ]
+        },
+        {
+          "h": "Home or pick-up office",
+          "p": [
+            "When ordering, you choose home delivery or collection at the carrier's nearest office.",
+            "We do not ask for a full address: the courier calls you to agree on the place."
+          ]
+        },
+        {
+          "h": "Delivery times",
+          "p": [
+            "Allow {min} to {max} working days after our confirmation call. This is an estimate: it can take a little longer in the southern wilayas and during holidays.",
+            "For a gift with a fixed date (Eid, a birthday, Mother's Day), order a few days ahead."
+          ]
+        },
+        {
+          "h": "Delivery fees",
+          "p": [
+            "They depend on the wilaya and the delivery mode. They appear in the order form when known; otherwise we confirm them by phone before shipping."
+          ]
+        },
+        {
+          "h": "Confirmation and payment",
+          "p": [
+            "After you order, we call you to confirm it. Nothing ships without your agreement.",
+            "You pay the courier in cash when the parcel arrives. Check the parcel in their presence."
+          ]
+        }
+      ]
+    },
+    "returns": {
+      "title": "Returns and exchanges",
+      "lead": "A problem with your kit? We sort it out quickly.",
+      "sections": [
+        {
+          "h": "Damaged, incomplete or wrong kit",
+          "p": [
+            "Let us know within {report} working days of receiving it, on WhatsApp, with your order number and a few photos.",
+            "We send you a new kit or the missing part free of charge. If an exchange is not possible, we refund you within {refund} days."
+          ]
+        },
+        {
+          "h": "Code not working",
+          "p": [
+            "Message us with a photo of the code printed in the box. We check it and, if needed, give you a new one."
+          ]
+        },
+        {
+          "h": "Refusing the parcel",
+          "p": [
+            "You pay on delivery: if you refuse the parcel, you do not pay for the kit."
+          ]
+        },
+        {
+          "h": "Portrait already confirmed",
+          "p": [
+            "The pattern calculated from your photo is personal. Once you confirm the portrait with your code, it cannot be swapped for another one. Before confirming, you can try several photos and several styles."
+          ]
+        },
+        {
+          "h": "How to proceed",
+          "p": [
+            "Send us your order number, a description of the problem and photos on WhatsApp. We reply with the solution and, if a return is needed, the steps to follow."
+          ]
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Personal data protection",
+      "lead": "How we handle your data, in accordance with Algerian Law No. 18-07 of 10 June 2018 on the protection of individuals in the processing of personal data.",
+      "sections": [
+        {
+          "h": "Data controller",
+          "p": [
+            "The data controller is the seller named at the bottom of this page. For any question about your data, contact us on WhatsApp or by email."
+          ]
+        },
+        {
+          "h": "Data we collect",
+          "p": [
+            "For an order: first and last name, phone number, wilaya, commune, delivery mode and number of kits. For a gift sent from abroad: also the buyer's contact details, an optional email address and the card message.",
+            "To create your portrait: the photo you choose. It is used only for the calculation and is not kept; we keep only a digital fingerprint that cannot be used to rebuild it.",
+            "For the voice guide: your code and your progress, kept on your device.",
+            "For security: a fingerprint of your IP address, used to limit code attempts. The address itself is not stored."
+          ]
+        },
+        {
+          "h": "Why we use it",
+          "p": [
+            "To confirm, prepare and deliver your order, calculate your portrait, guide you while you make it and protect the site against abuse.",
+            "We do not sell your data and we never publish your photos. Your name, phone number and photos are never shared with measurement or advertising tools."
+          ]
+        },
+        {
+          "h": "Your consent",
+          "p": [
+            "By sending the order form or a photo, you agree to this data being processed for the purposes above. You can withdraw your consent at any time, except for data needed for an order in progress."
+          ]
+        },
+        {
+          "h": "Who has access?",
+          "p": [
+            "Our team, to process your order.",
+            "The delivery company, which receives only what delivery requires: name, phone, wilaya, commune and amount to collect.",
+            "Only if you accept: Google (Google Analytics), Meta (Facebook, Instagram) and TikTok, to measure visits to the site and how well our ads work. These companies are based outside Algeria.",
+            "Our technical providers (hosting, order tracking), bound by confidentiality. If any data were hosted outside Algeria, that transfer would only take place under the conditions set by Law No. 18-07."
+          ]
+        },
+        {
+          "h": "How long?",
+          "p": [
+            "Your photo: not kept.",
+            "Order data: for as long as it takes to process the order, the delivery and any exchange, then for the period required by our accounting and tax obligations.",
+            "The code on your device: 30 days, renewed each time you use it."
+          ]
+        },
+        {
+          "h": "Your rights",
+          "p": [
+            "Law No. 18-07 gives you the right to information, the right to access your data, the right to rectification and the right to object.",
+            "To exercise them, message us on WhatsApp or by email. We reply within the time limits set by law.",
+            "You can also contact the National Authority for the Protection of Personal Data (ANPDP)."
+          ]
+        },
+        {
+          "h": "Cookies",
+          "p": [
+            "Necessary cookies, always on: your chosen language, your cart and access to your code.",
+            "Measurement cookies, only with your consent: Google Analytics and the Meta and TikTok pixels record pages viewed and purchase steps (item viewed, added to cart, checkout started, order placed with its number and amount). They never receive your name, phone number, address or photos.",
+            "You can accept or decline in the banner shown on your first visit, and change your mind at any time with the “Cookies” link at the bottom of every page. Declining does not change how the site works."
+          ]
+        },
+        {
+          "h": "Security",
+          "p": [
+            "Exchanges with the site are encrypted. Access to order data is limited to the people who need it."
+          ]
+        }
+      ]
+    },
+    "terms": {
+      "title": "Terms of sale",
+      "lead": "The rules that apply when you order a kit on this site.",
+      "sections": [
+        {
+          "h": "Purpose",
+          "p": [
+            "These terms apply to sales made on this site between the seller named at the bottom of the page and the customer, in accordance with Algerian Law No. 18-05 of 10 May 2018 on electronic commerce."
+          ]
+        },
+        {
+          "h": "The product",
+          "p": [
+            "The kit includes a 50 × 50 cm board with 240 nails already in place, a spool of thread and a personal code. The code gives access to the software that calculates your portrait and to the voice guide.",
+            "One code lets you calculate up to 10 previews, then confirm one portrait. The result depends on the photo chosen: you see the preview before confirming anything."
+          ]
+        },
+        {
+          "h": "Prices",
+          "p": [
+            "Prices are shown in Algerian dinars. Delivery fees are added to the kit price; they are shown when ordering or confirmed by phone before shipping."
+          ]
+        },
+        {
+          "h": "Ordering",
+          "p": [
+            "You fill in the order form, then we call you to confirm it. The order is final after that confirmation."
+          ]
+        },
+        {
+          "h": "Payment",
+          "p": [
+            "In Algeria, you pay the courier in cash when the parcel arrives."
+          ]
+        },
+        {
+          "h": "Delivery",
+          "p": [
+            "Delivery modes, times and fees are described on the Delivery page."
+          ]
+        },
+        {
+          "h": "Guarantee, returns and exchanges",
+          "p": [
+            "A damaged, incomplete or wrong kit is replaced free of charge, or refunded if an exchange is not possible. The conditions are described on the Returns and exchanges page."
+          ]
+        },
+        {
+          "h": "Your photo",
+          "p": [
+            "You agree to use only photos you have the right to use. The photo is used only to calculate your portrait; it is neither kept nor published."
+          ]
+        },
+        {
+          "h": "Personal data",
+          "p": [
+            "How we process your data is described on the Personal data protection page."
+          ]
+        },
+        {
+          "h": "Governing law and disputes",
+          "p": [
+            "These terms are governed by Algerian law. If there is a problem, contact us first: we always look for an amicable solution. Failing that, the dispute falls under the competent Algerian courts."
+          ]
+        }
+      ]
+    }
   },
   "kit": {
     "meta": {
@@ -390,7 +674,7 @@
         "progress": "Progress saved"
       },
       "note": "Already have a kit?",
-      "cta": "Enter my code (soon)"
+      "cta": "Enter my code"
     },
     "gift": {
       "eyebrow": "Is it a gift?",
@@ -458,14 +742,47 @@
         }
       }
     },
-    "faqTitle": "Questions about the kit"
+    "faqTitle": "Questions about the kit",
+    "engine": {
+      "eyebrow": "Our generator",
+      "title": "How does our online generator work?",
+      "lead": "It isn't a filter: the software works out the real path of the thread across the 240 nails of your board, the one the voice will guide you through.",
+      "steps": {
+        "site": {
+          "title": "Open the DeeKra website",
+          "text": "On your phone or computer, tap “I have a code”."
+        },
+        "code": {
+          "title": "Enter your code",
+          "text": "The code printed on the kit card unlocks your creation."
+        },
+        "photo": {
+          "title": "Upload your photo",
+          "text": "Pick a look: soft, balanced or bold. The software frames the face and lightens the background."
+        },
+        "preview": {
+          "title": "See your portrait",
+          "text": "The software works out, thread by thread, the path across the 240 nails and shows you the result before you start."
+        },
+        "voice": {
+          "title": "Follow the voice",
+          "text": "The guide calls out every nail, from A1 to D60, at your pace, until the last thread."
+        }
+      },
+      "prev": "Previous step",
+      "next": "Next step",
+      "step": "Step"
+    }
   },
   "carousel": {
     "roledescription": "carousel",
     "tablist": "Steps",
     "stepOf": "Step {n} of {total}",
     "pause": "Pause the slideshow",
-    "play": "Play the slideshow"
+    "play": "Play the slideshow",
+    "prev": "Previous",
+    "next": "Next",
+    "goTo": "Go to slide {n} of {total}"
   },
   "home": {
     "intro": {
@@ -549,7 +866,6 @@
       "title": "Your photo",
       "choose": "Choose a photo",
       "hint": "JPG, PNG or WebP, up to 15 MB. From your phone or computer.",
-      "change": "Tap the photo to pick another one.",
       "alt": "Your photo"
     },
     "style": {
@@ -600,6 +916,19 @@
       "used": "A portrait is already chosen for this code.",
       "disabled": "This code has been disabled.",
       "noSession": "Enter your code first."
+    },
+    "frame": {
+      "area": "Photo framing: the circle shows what will be on the board",
+      "help": "Drag the photo to place it, pinch or use the slider to zoom. Keyboard: arrows to move, + and − to zoom.",
+      "zoom": "Zoom",
+      "zoomValue": "Zoom × {z}",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "recenter": "Recentre",
+      "detecting": "Looking for the face…",
+      "face": "Face found and centred. Adjust if needed.",
+      "noFace": "No face detected: place the face in the circle yourself.",
+      "change": "Change photo"
     }
   },
   "guide": {
@@ -609,24 +938,45 @@
     "lead": "{lines} threads, about {meters} m. Put your phone next to the board, press play and run the thread to each nail called out.",
     "boardAlt": "Board plan: threads already placed, current thread and the next nail",
     "thread": "Thread {n} of {total}",
-    "to": "to",
     "done": "Well done, your portrait is finished!",
     "progress": "Progress",
     "percent": "{p}% done",
     "remaining": "about {min} min left",
-    "prev": "Previous",
-    "next": "Next",
+    "next": "Skip to the next nail",
     "start": "Start",
     "resume": "Resume",
     "pause": "Pause",
     "repeat": "Repeat the nail",
-    "speed": "Speed: one thread every {s} seconds",
     "voice": "Call out the nails aloud",
     "voiceMissing": "Your device has no voice in this language, so the default voice is used. You can also follow on screen.",
     "lost": "Lost? Resume at thread no.",
     "jumpPlaceholder": "e.g. 125",
     "jump": "Go",
-    "keys": "Keyboard: space to pause, arrows to move, R to repeat. Your progress is kept on this device."
+    "keys": "Keyboard: space to pause, arrows to move, R to repeat. Your progress is kept on this device.",
+    "zoom": "Board zoom",
+    "zoomTo": "Zoom × {z}",
+    "musicTitle": "Music while you work",
+    "musicPick": "Choose songs from my phone",
+    "musicAdd": "Add songs",
+    "musicClear": "Remove the music",
+    "musicPlay": "Play",
+    "musicPause": "Pause",
+    "musicNext": "Next song",
+    "musicVolume": "Music volume: {v}%",
+    "musicCount": "Song {n} of {total}",
+    "musicNote": "Your songs stay on your phone, nothing is uploaded. The music lowers each time a nail is announced, then comes back up.",
+    "speedLabel": "Speed",
+    "speedX": "Speed {x}×: one thread every {s} seconds",
+    "nextNail": "Next nail",
+    "doneShort": "Done!",
+    "nextTap": "Next nail: {nail}. Tap once the thread is in place.",
+    "upcoming": "Next nails: {list}",
+    "count": "{n} / {total}",
+    "back": "Go back one nail",
+    "settings": "Settings and board plan",
+    "purgedTitle": "Portrait finished",
+    "purgedText": "Well done, this portrait is finished. Its instructions were deleted {days} days after the last thread, as planned, to protect your data. A new portrait needs a new kit.",
+    "purgedCta": "See the kit"
   },
   "order": {
     "eyebrow": "Order",
@@ -639,7 +989,8 @@
       "payment": "Payment",
       "summary": "Summary",
       "buyer": "You, the giver",
-      "recipient": "The recipient in Algeria"
+      "recipient": "The recipient in Algeria",
+      "more": "Details"
     },
     "fields": {
       "fullName": "Full name",
@@ -655,7 +1006,8 @@
       "communeOtherLabel": "Name of your town",
       "buyerPhone": "Your phone (with country code, e.g. +44)",
       "buyerEmail": "Your email (optional)",
-      "giftMessage": "Your message for the card (optional)"
+      "giftMessage": "Your message for the card (optional)",
+      "carrier": "Delivery company"
     },
     "delivery": {
       "yalidine_home": {
@@ -673,6 +1025,14 @@
       "zrexpress_desk": {
         "name": "Delivery office",
         "text": "Pick up the parcel at a ZR Express office"
+      },
+      "home": {
+        "name": "Home delivery",
+        "text": "Delivered to your door by {carrier}; the courier calls you for the exact place"
+      },
+      "desk": {
+        "name": "Pick-up point",
+        "text": "Collect your parcel at a {carrier} office"
       }
     },
     "payment": {
@@ -690,7 +1050,7 @@
       }
     },
     "deliveryFees": "The delivery fee for this wilaya is confirmed by phone before shipping.",
-    "total": "Total (excluding delivery)",
+    "total": "Items total",
     "submit": "Place my order",
     "sending": "Sending…",
     "privacy": "Your details are only used to deliver your order. We don't ask for your full address: the courier will call you.",
@@ -710,7 +1070,13 @@
       "buyerName": "Enter your full name.",
       "buyerPhone": "Number expected with country code (e.g. +44 7700 900123).",
       "buyerEmail": "Invalid email address.",
-      "giftMessageLong": "Message too long (200 characters)."
+      "giftMessageLong": "Message too long (200 characters).",
+      "promoInvalid": "This promo code doesn't exist.",
+      "promoExpired": "This promo code is no longer valid.",
+      "promoUnavailable": "We can't check the code right now, please try again.",
+      "promoMinimum": "The minimum amount for this promo code isn't reached.",
+      "promoPerPhone": "This promo code has already been used with this number.",
+      "deliveryArea": "Delivery is not yet available to this wilaya with this option."
     },
     "feePickWilaya": "Choose your wilaya to see the delivery fee.",
     "feeKnown": "Delivery fee: {fee}.",
@@ -723,7 +1089,22 @@
       "toggleText": "Living abroad? The kit is delivered to your loved one, who pays on delivery.",
       "recipientHelp": "The person receiving the kit: the courier calls them on this number.",
       "paymentHelp": "The recipient pays in cash on delivery. We let you know when the parcel has arrived."
-    }
+    },
+    "totalCod": "Paid in cash to the courier on delivery.",
+    "summaryShow": "Show order summary",
+    "summaryHide": "Hide order summary",
+    "removeItem": "Remove",
+    "promoApplied": "Code {code} applied",
+    "promoLabel": "Promo code",
+    "promoApply": "Apply",
+    "subtotal": "Subtotal",
+    "lineDiscount": "Discount ({code})",
+    "feeAfterWilaya": "depends on your wilaya",
+    "promoMinimumHint": "Valid from {min} of items.",
+    "promoShippingLater": "Free delivery: the discount shows once the fee is known.",
+    "lineShippingDiscount": "Free delivery",
+    "notServed": "Delivery is not yet available to this wilaya with this option. Choose the other option if offered, or message us on WhatsApp.",
+    "notServedShort": "not available"
   },
   "confirmation": {
     "eyebrow": "Thank you!",
@@ -767,5 +1148,97 @@
     "meanwhile": "Meanwhile:",
     "giftLink": "send a kit to someone in Algeria",
     "demoLink": "try the voice guide"
+  },
+  "accessories": {
+    "title": "Complete your gift",
+    "soon": "Price coming soon",
+    "tags": {
+      "stand": "No holes in the wall",
+      "candle": "Soft light"
+    },
+    "more": "Learn more",
+    "close": "Close",
+    "add": "Add to my order",
+    "remove": "Remove from my order",
+    "details": {
+      "stand": {
+        "title": "Stand it, don't hang it",
+        "alt": "Wooden display stand on its own, being assembled and holding a string portrait",
+        "text": "This wooden easel goes together in seconds: two pieces that slot into each other, no screws or tools. Your portrait stands upright on a dresser, a shelf or a desk, and moves whenever you like. No holes in the wall."
+      },
+      "candle": {
+        "title": "An evening of thread and candlelight",
+        "alt": "DeeKra candle in a black jar, lit next to a nail board and a string portrait",
+        "text": "Assembly takes a few hours, so make it your own moment. Light the candle, start the voice guide and work nail by nail in soft light. A thoughtful touch in a gift, too."
+      }
+    }
+  },
+  "contact": {
+    "title": "A question?",
+    "lead": "An order, a photo you're unsure about, a code that won't go through: write to us and a real person will answer.",
+    "whatsapp": "WhatsApp:",
+    "hours": "A real person reads every message and replies as soon as possible.",
+    "unavailable": "WhatsApp contact is not set up yet.",
+    "fields": {
+      "name": "Your name",
+      "order": "Order number (optional)",
+      "message": "Your message"
+    },
+    "send": "Send on WhatsApp",
+    "errorMessage": "Write your message (a few words are enough).",
+    "privacy": "The message opens in WhatsApp so you can read it before sending. Nothing is stored on this site."
+  },
+  "track": {
+    "title": "Track my order",
+    "lead": "Enter the number you received after ordering and the phone number you gave.",
+    "number": "Order number",
+    "phone": "Phone used for the order",
+    "submit": "Check my order",
+    "searching": "Searching…",
+    "help": "The number starts with DK- and is shown at the end of the order.",
+    "order": "Order",
+    "placed": "Placed on {date} · {total}",
+    "errors": {
+      "format": "Check the number (DK- and 6 characters) and the phone.",
+      "notFound": "No order matches this number and phone.",
+      "tooMany": "Too many attempts. Try again in fifteen minutes or write to us."
+    },
+    "status": {
+      "PENDING": "Received",
+      "CONFIRMED": "Confirmed by phone",
+      "SHIPPED": "With the courier",
+      "DELIVERED": "Delivered",
+      "CANCELLED": "Order cancelled",
+      "RETURNED": "Order returned"
+    }
+  },
+  "reviews": {
+    "title": "They made their portrait",
+    "rating": "Rating: {n} out of 5",
+    "photoAlt": "Portrait made by {name}"
+  },
+  "cart": {
+    "title": "Cart",
+    "open": "Open cart ({count, plural, =0 {empty} one {# item} other {# items}})",
+    "close": "Close cart",
+    "empty": "Your cart is empty.",
+    "addKit": "Add the kit",
+    "remove": "Remove",
+    "quantityOf": "Quantity: {name}",
+    "decrease": "Decrease quantity: {name}",
+    "increase": "Increase quantity: {name}",
+    "suggest": "Complete your gift",
+    "total": "Total",
+    "deliveryNote": "Delivered in {min} to {max} working days. Delivery fees are calculated at the next step.",
+    "checkout": "Checkout",
+    "addToCart": "Add to cart"
+  },
+  "consent": {
+    "title": "Measurement cookies",
+    "text": "With your consent, we measure visits to the site and how well our ads work (Google Analytics, Meta and TikTok pixels). Your name, phone number and photos are never shared.",
+    "privacy": "Learn more",
+    "accept": "Accept",
+    "refuse": "Decline",
+    "settings": "Cookies"
   }
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageShell } from "@/components/PageShell";
 import { brand } from "@/config/brand";
+import { pageMetadata } from "@/lib/seo";
 import { Link } from "@/i18n/navigation";
 
 const INCLUDES = ["code", "software", "voice", "template", "materials"] as const;
@@ -10,7 +11,7 @@ const STEPS = ["buy", "print", "build", "thread"] as const;
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "digital" });
-  return { title: `${t("title")} — ${brand.name}`, description: t("lead") };
+  return pageMetadata({ locale, path: "/numerique", title: `${t("title")} — ${brand.name}`, description: t("lead") });
 }
 
 /**
@@ -26,7 +27,6 @@ export default async function DigitalPage({ params }: { params: Promise<{ locale
   return (
     <PageShell narrow>
       <header className="flow-head">
-        <p className="eyebrow">{t("eyebrow")}</p>
         <h1>{t("title")}</h1>
         <p>{t("lead")}</p>
       </header>

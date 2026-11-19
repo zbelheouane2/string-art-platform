@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { parseRateFile, wilayaCode } from "@/lib/shipping/rateFile";
+import { commerce } from "@/config/commerce";
+import { NOT_SERVED, deliveryFee } from "@/lib/shipping/fee";
 
 describe("fichier de tarifs de livraison", () => {
   it("reconnaît la wilaya par numéro, numéro + nom, nom français ou arabe", () => {
@@ -32,5 +34,21 @@ describe("fichier de tarifs de livraison", () => {
     const { readFileSync } = await import("node:fs");
     const r = parseRateFile(readFileSync("prisma/data/tarifs-livraison-modele.csv", "utf-8"));
     expect(r.ok && r.rows.length).toBe(69);
+  });
+});
+
+describe("frais de livraison d'une wilaya", () => {
+  const rates = { zr_home: { "16": 50_000, "01": 140_000 }, zr_desk: { "16": 36_000 }, other_home: {} };
+  it("tarif saisi : son montant", () => {
+    expect(deliveryFee(rates, "zr_home", "16")).toBe(50_000);
+    expect(deliveryFee(rates, "zr_desk", "16")).toBe(36_000);
+  });
+  it("grille saisie mais wilaya absente : non desservie", () => {
+    expect(deliveryFee(rates, "zr_home", "33")).toBe(NOT_SERVED);
+    expect(deliveryFee(rates, "zr_desk", "01")).toBe(NOT_SERVED); // bureau absent, domicile possible
+  });
+  it("aucune grille pour ce mode : frais par défaut en attendant l'import", () => {
+    expect(deliveryFee(rates, "other_home", "33")).toBe(commerce.missingRateFeeMinor);
+    expect(deliveryFee(rates, "inconnu", "16")).toBe(commerce.missingRateFeeMinor);
   });
 });

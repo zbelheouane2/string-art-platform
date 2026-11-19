@@ -3,10 +3,17 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { NAILS_PER_SECTOR, SECTORS, nailLabel, nailPositions } from "@/lib/board";
-import { SPEED, clampStep, parseProgress, progressKey, remainingMinutes, stepCount } from "@/lib/guide";
+import { SPEED, type ServerProgress, clampStep, parseProgress, progressKey, remainingMinutes, resumeStep, stepCount } from "@/lib/guide";
 import { SPEECH_LANG, stepPhrase } from "@/lib/voice";
+import { GuideMusic } from "@/components/GuideMusic";
 
 const POSITIONS = nailPositions();
+/** Niveaux de zoom de la planche ; au-delà de 1, la vue suit le clou à atteindre. */
+const ZOOMS = [1, 1.5, 2, 3] as const;
+const ZOOM_KEY = "dk-guide-zoom";
+/** Vitesses proposées : 1× = un fil toutes les SPEED.default secondes. */
+const SPEEDS = [0.5, 1, 1.5, 2] as const;
+const secondsFor = (factor: number) => Math.round((SPEED.default / factor) * 10) / 10;
 
 /** Choisit une voix de synthèse dans la langue demandée, si l'appareil en a une. */
 function pickVoice(lang: string): SpeechSynthesisVoice | null {
@@ -19,9 +26,21 @@ function pickVoice(lang: string): SpeechSynthesisVoice | null {
 /**
  * Guide de réalisation : annonce chaque clou à voix haute, avance tout seul au
  * rythme choisi, se met en pause, revient en arrière, garde l'écran allumé et
- * mémorise l'avancement sur l'appareil (reprise après fermeture).
+ * mémorise l'avancement sur l'appareil et, pour un vrai portrait, sur le serveur
+ * (reprise après fermeture, ou sur un autre téléphone avec le même code).
  */
-export function VoiceGuide({ portraitId, sequence }: { portraitId: string; sequence: number[] }) {
+export function VoiceGuide({
+  portraitId,
+  sequence,
+  serverProgress = null,
+  syncUrl = null,
+}: {
+  portraitId: string;
+  sequence: number[];
+  serverProgress?: ServerProgress | null;
+  /** Adresse d'enregistrement de l'avancement ; null pour la démonstration. */
+  syncUrl?: string | null;
+}) {
   const t = useTranslations("guide");
   const locale = useLocale();
   const total = stepCount(sequence);
@@ -32,10 +51,21 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
   const [restored, setRestored] = useState(false);
   const [voiceMissing, setVoiceMissing] = useState(false);
   const [jump, setJump] = useState("");
+  const [zoom, setZoom] = useState<number>(1);
+  const [boxSize, setBoxSize] = useState(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const wakeLock = useRef<WakeLockSentinel | null>(null);
+  const [speaking, setSpeaking] = useState(false);
+  const [musicOpen, setMusicOpen] = useState(false);
+  const settingsRef = useRef<HTMLDetailsElement>(null);
+  // Sur grand écran, le plan de la planche est visible d'emblée dans la colonne de droite.
+  useEffect(() => {
+    if (settingsRef.current && window.matchMedia("(min-width: 60rem)").matches) settingsRef.current.open = true;
+  }, []);
+  const speakingTimer = useRef<number | undefined>(undefined);
 
-  // Reprise : avancement sauvegardé sur cet appareil.
+  // Reprise : l'avancement le plus récent, de cet appareil ou du serveur.
   useEffect(() => {
     let saved = null;
     try {
@@ -44,20 +74,93 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
       /* stockage indisponible (navigation privée) : on part du début */
     }
     const p = parseProgress(saved, sequence);
-    setStep(p.step);
+    setStep(resumeStep(p, serverProgress, sequence));
     setSecondsPerStep(p.secondsPerStep);
     setVoiceOn(p.voice);
     setRestored(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- lu une seule fois à l'ouverture
   }, [portraitId, sequence]);
 
   useEffect(() => {
     if (!restored) return;
     try {
-      localStorage.setItem(progressKey(portraitId), JSON.stringify({ step, secondsPerStep, voice: voiceOn }));
+      localStorage.setItem(progressKey(portraitId), JSON.stringify({ step, secondsPerStep, voice: voiceOn, at: Date.now() }));
     } catch {
       /* ignoré */
     }
   }, [restored, portraitId, step, secondsPerStep, voiceOn]);
+
+  // Enregistrement sur le serveur : quelques secondes après le dernier fil posé,
+  // et à la fermeture ou à la mise en arrière-plan de la page.
+  const syncedStep = useRef<number | null>(null);
+  const stepRef = useRef(step);
+  stepRef.current = step;
+  const pushProgress = useCallback(
+    (onLeave: boolean) => {
+      if (!syncUrl || syncedStep.current === stepRef.current) return;
+      const body = JSON.stringify({ step: stepRef.current });
+      const sent = stepRef.current;
+      if (onLeave && typeof navigator.sendBeacon === "function") {
+        if (navigator.sendBeacon(syncUrl, new Blob([body], { type: "application/json" }))) syncedStep.current = sent;
+        return;
+      }
+      fetch(syncUrl, { method: "POST", body, headers: { "Content-Type": "application/json" }, keepalive: true })
+        .then((r) => {
+          if (r.ok) syncedStep.current = sent;
+        })
+        .catch(() => {
+          /* hors ligne : nouvel essai au prochain fil ou à la fermeture */
+        });
+    },
+    [syncUrl],
+  );
+  useEffect(() => {
+    if (!restored || !syncUrl) return;
+    if (syncedStep.current === null) {
+      syncedStep.current = step; // valeur de reprise : rien à renvoyer
+      return;
+    }
+    const timer = window.setTimeout(() => pushProgress(false), 3000);
+    return () => window.clearTimeout(timer);
+  }, [restored, syncUrl, step, pushProgress]);
+  useEffect(() => {
+    if (!syncUrl) return;
+    const leave = () => pushProgress(true);
+    const hidden = () => document.visibilityState === "hidden" && leave();
+    window.addEventListener("pagehide", leave);
+    document.addEventListener("visibilitychange", hidden);
+    return () => {
+      window.removeEventListener("pagehide", leave);
+      document.removeEventListener("visibilitychange", hidden);
+    };
+  }, [syncUrl, pushProgress]);
+
+  // Zoom gardé sur l'appareil, comme l'avancement.
+  useEffect(() => {
+    try {
+      const z = Number(localStorage.getItem(ZOOM_KEY));
+      if ((ZOOMS as readonly number[]).includes(z)) setZoom(z);
+    } catch {
+      /* ignoré */
+    }
+  }, []);
+  const chooseZoom = (z: number) => {
+    setZoom(z);
+    try {
+      localStorage.setItem(ZOOM_KEY, String(z));
+    } catch {
+      /* ignoré */
+    }
+  };
+
+  // La planche suit la taille de l'écran (téléphone, tablette, ordinateur, rotation).
+  useEffect(() => {
+    const vp = viewportRef.current;
+    if (!vp || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => setBoxSize(Math.round(vp.clientWidth)));
+    ro.observe(vp);
+    return () => ro.disconnect();
+  }, []);
 
   // Voix disponible dans la langue de la page ?
   useEffect(() => {
@@ -73,6 +176,16 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
       if (!voiceOn || typeof speechSynthesis === "undefined") return;
       speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(stepPhrase(sequence, s, locale));
+      // La musique baisse pendant l'annonce ; filet de sécurité si la fin n'est jamais signalée.
+      const release = () => {
+        window.clearTimeout(speakingTimer.current);
+        setSpeaking(false);
+      };
+      setSpeaking(true);
+      window.clearTimeout(speakingTimer.current);
+      speakingTimer.current = window.setTimeout(release, 8000);
+      u.onend = release;
+      u.onerror = release;
       u.lang = SPEECH_LANG[locale] ?? "fr-FR";
       const voice = pickVoice(u.lang);
       if (voice) u.voice = voice;
@@ -143,10 +256,14 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
   // Dessin de la planche : fils déjà tendus, fil en cours, clou à atteindre.
   useEffect(() => {
     const canvas = canvasRef.current;
+    const vp = viewportRef.current;
     const ctx = canvas?.getContext("2d");
-    if (!canvas || !ctx) return;
-    const size = canvas.clientWidth || 360;
-    const dpr = window.devicePixelRatio || 1;
+    if (!canvas || !ctx || !vp) return;
+    const view = boxSize || vp.clientWidth || 360;
+    const size = Math.round(view * zoom);
+    canvas.style.inlineSize = `${size}px`;
+    canvas.style.blockSize = `${size}px`;
+    const dpr = Math.min(window.devicePixelRatio || 1, zoom > 1 ? 2 : 3);
     canvas.width = size * dpr;
     canvas.height = size * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -188,6 +305,16 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
     });
 
     if (step < total) {
+      // Zoom : la vue se place sur le fil en cours (milieu entre départ et arrivée, arrivée visible).
+      if (zoom > 1) {
+        const [ax, ay] = at(sequence[step + 1]);
+        const [bx, by] = at(sequence[step]);
+        const cx = Math.abs(ax - bx) < view * 0.8 ? (ax + bx) / 2 : ax;
+        const cy = Math.abs(ay - by) < view * 0.8 ? (ay + by) / 2 : ay;
+        const rtl = getComputedStyle(vp).direction === "rtl";
+        const left = cx - view / 2;
+        vp.scrollTo({ left: rtl ? -(size - view - left) : left, top: cy - view / 2 });
+      }
       const [x1, y1] = at(sequence[step]);
       const [x2, y2] = at(sequence[step + 1]);
       ctx.strokeStyle = accent;
@@ -206,76 +333,125 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
       ctx.arc(x1, y1, 5, 0, Math.PI * 2);
       ctx.stroke();
     }
-  }, [sequence, step, total]);
+  }, [sequence, step, total, zoom, boxSize]);
 
   const done = step >= total;
-  const from = done ? null : nailLabel(sequence[step]);
-  const to = done ? null : nailLabel(sequence[step + 1]);
+  const target = done ? null : sequence[step + 1];
+  const upcoming = done ? [] : sequence.slice(step + 1, step + 4).map(nailLabel);
+  const num = (n: number) => new Intl.NumberFormat(locale === "ar" ? "ar-DZ-u-nu-latn" : locale).format(n);
+  const decimal = (x: number) => String(x).replace(".", locale === "en" ? "." : ",");
 
   return (
     <div className="guide">
-      <div className="guide-board">
-        <canvas ref={canvasRef} className="guide-canvas" role="img" aria-label={t("boardAlt")} />
-      </div>
+      <div className="guide-main">
+        <div className="guide-speeds" dir="ltr" role="group" aria-label={t("speedLabel")}>
+          {SPEEDS.map((f) => (
+            <button
+              key={f}
+              type="button"
+              aria-pressed={Math.abs(secondsPerStep - secondsFor(f)) < 0.05}
+              aria-label={t("speedX", { x: decimal(f), s: decimal(secondsFor(f)) })}
+              onClick={() => setSecondsPerStep(secondsFor(f))}
+            >
+              {decimal(f)}×
+            </button>
+          ))}
+        </div>
 
-      <div className="guide-panel">
+        <GuideRing target={target} label={t("nextNail")} doneLabel={t("doneShort")} onNext={() => goTo(step + 1)} nextHint={target === null ? "" : t("nextTap", { nail: nailLabel(target) })} />
+
         <div className="guide-now" aria-live="polite" aria-atomic="true">
           {done ? (
             <p className="guide-done">{t("done")}</p>
           ) : (
             <>
-              <p className="guide-count">{t("thread", { n: step + 1, total })}</p>
-              <p className="guide-move" dir="ltr">
-                <span className="guide-from">{from}</span>
-                <span aria-hidden="true" className="guide-arrow">
-                  →
-                </span>
-                <span className="visually-hidden"> {t("to")} </span>
-                <span className="guide-to">{to}</span>
+              <p className="visually-hidden">{t("thread", { n: step + 1, total })}</p>
+              <p className="guide-upcoming" dir="ltr" aria-label={t("upcoming", { list: upcoming.join(", ") })}>
+                {upcoming.map((n, i) => (
+                  <span key={i} className={i === 0 ? "is-next" : undefined}>
+                    {i > 0 && <span aria-hidden="true" className="guide-arrow"> → </span>}
+                    {n}
+                  </span>
+                ))}
               </p>
             </>
           )}
         </div>
 
-        <progress className="guide-progress" max={total} value={step} aria-label={t("progress")} />
-        <p className="guide-meta">
-          {t("percent", { p: Math.floor((step / Math.max(1, total)) * 100) })} ·{" "}
-          {t("remaining", { min: remainingMinutes(sequence, step, secondsPerStep) })}
-        </p>
+        <div className="guide-progress-wrap">
+          <progress className="guide-progress" max={total} value={step} aria-label={t("progress")} />
+          <p className="guide-count" dir="ltr">
+            {t("count", { n: num(Math.min(step + 1, total)), total: num(total) })}
+          </p>
+          <p className="guide-meta">
+            {t("percent", { p: Math.floor((step / Math.max(1, total)) * 100) })} · {t("remaining", { min: remainingMinutes(sequence, step, secondsPerStep) })}
+          </p>
+        </div>
 
-        <div className="guide-controls">
-          <button type="button" className="btn btn-outline guide-btn" onClick={() => goTo(step - 1)} disabled={step === 0}>
-            {t("prev")}
+        <div className="guide-controls" dir="ltr">
+          <button type="button" className="guide-round" onClick={() => speak(step)} disabled={!voiceOn || done} aria-label={t("repeat")}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M11 17l-5-5 5-5M18 17l-5-5 5-5" />
+            </svg>
           </button>
-          <button type="button" className="btn btn-primary btn-lg guide-play" onClick={() => setPlaying((p) => !p)} disabled={done} aria-pressed={playing}>
-            {playing ? t("pause") : step === 0 ? t("start") : t("resume")}
+          <button type="button" className="guide-play" onClick={() => setPlaying((p) => !p)} disabled={done} aria-pressed={playing} aria-label={playing ? t("pause") : step === 0 ? t("start") : t("resume")}>
+            {playing ? (
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <rect x="7" y="5" width="3.2" height="14" rx="1" />
+                <rect x="13.8" y="5" width="3.2" height="14" rx="1" />
+              </svg>
+            ) : (
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M8 5.5v13l10.5-6.5z" />
+              </svg>
+            )}
           </button>
-          <button type="button" className="btn btn-outline guide-btn" onClick={() => goTo(step + 1)} disabled={done}>
-            {t("next")}
+          <button type="button" className="guide-round" onClick={() => setMusicOpen((o) => !o)} aria-expanded={musicOpen} aria-controls="guide-music-panel" aria-label={t("musicTitle")}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M9 18V5l11-2v13" />
+              <circle cx="6" cy="18" r="3" />
+              <circle cx="17" cy="16" r="3" />
+            </svg>
           </button>
         </div>
-        <button type="button" className="btn btn-outline btn-block" onClick={() => speak(step)} disabled={!voiceOn}>
-          {t("repeat")}
-        </button>
+        <p className="guide-state" aria-hidden="true">
+          {playing ? t("pause") : step === 0 ? t("start") : t("resume")}
+        </p>
 
-        <div className="guide-settings">
-          <label className="field-label" htmlFor="guide-speed">
-            {t("speed", { s: secondsPerStep })}
-          </label>
-          <input
-            id="guide-speed"
-            type="range"
-            min={SPEED.min}
-            max={SPEED.max}
-            step={1}
-            value={secondsPerStep}
-            onChange={(e) => setSecondsPerStep(Number(e.target.value))}
-          />
+        <div id="guide-music-panel" hidden={!musicOpen}>
+          <GuideMusic ducked={speaking} />
+        </div>
+
+        <button type="button" className="btn btn-outline btn-block guide-back" onClick={() => goTo(step - 1)} disabled={step === 0}>
+          {t("back")}
+        </button>
+      </div>
+
+      <details ref={settingsRef} className="guide-settings">
+        <summary>{t("settings")}</summary>
+        <div className="guide-settings-body">
+          <div className="guide-board">
+            <div ref={viewportRef} className="guide-viewport" data-zoomed={zoom > 1 ? "true" : undefined}>
+              <canvas ref={canvasRef} className="guide-canvas" role="img" aria-label={t("boardAlt")} />
+            </div>
+            <div className="guide-zoom" role="group" aria-label={t("zoom")}>
+              {ZOOMS.map((z) => (
+                <button key={z} type="button" aria-pressed={zoom === z} onClick={() => chooseZoom(z)} aria-label={t("zoomTo", { z: decimal(z) })}>
+                  {decimal(z)}×
+                </button>
+              ))}
+            </div>
+          </div>
+
           <label className="toggle">
             <input type="checkbox" checked={voiceOn} onChange={(e) => setVoiceOn(e.target.checked)} />
             <span>{t("voice")}</span>
           </label>
           {voiceOn && voiceMissing && <p className="field-help">{t("voiceMissing")}</p>}
+
+          <button type="button" className="btn btn-outline btn-block" onClick={() => goTo(step + 1)} disabled={done}>
+            {t("next")}
+          </button>
 
           <form
             className="guide-jump"
@@ -306,7 +482,56 @@ export function VoiceGuide({ portraitId, sequence }: { portraitId: string; seque
           </form>
           <p className="field-help">{t("keys")}</p>
         </div>
-      </div>
+      </details>
+    </div>
+  );
+}
+
+/**
+ * Anneau de la planche en 4 quarts (A en haut à gauche, puis B, C, D dans le
+ * sens horaire, comme sur la planche) : le quart du prochain clou est en
+ * couleur et un point marque sa place exacte. Le centre annonce le clou ;
+ * le toucher passe au clou suivant.
+ */
+function GuideRing({ target, label, doneLabel, onNext, nextHint }: { target: number | null; label: string; doneLabel: string; onNext: () => void; nextHint: string }) {
+  const sector = target === null ? -1 : Math.floor(target / NAILS_PER_SECTOR);
+  const C = 100;
+  const R = 78;
+  const W = 34;
+  // Quart k : de 180° - 90k à 90° - 90k (angles mathématiques, y vers le haut), petit jour entre les quarts.
+  const arc = (k: number) => {
+    const gap = 1.6;
+    const a0 = ((180 - 90 * k - gap) * Math.PI) / 180;
+    const a1 = ((90 - 90 * k + gap) * Math.PI) / 180;
+    const p = (a: number, r: number) => `${(C + r * Math.cos(a)).toFixed(2)} ${(C - r * Math.sin(a)).toFixed(2)}`;
+    const ro = R + W / 2;
+    const ri = R - W / 2;
+    return `M ${p(a0, ro)} A ${ro} ${ro} 0 0 1 ${p(a1, ro)} L ${p(a1, ri)} A ${ri} ${ri} 0 0 0 ${p(a0, ri)} Z`;
+  };
+  const dot = target === null ? null : POSITIONS[target];
+  return (
+    <div className="guide-ring" dir="ltr">
+      <svg viewBox="0 0 200 200" aria-hidden="true" className="guide-ring-svg">
+        {SECTORS.map((s, k) => (
+          <path key={s} d={arc(k)} className={k === sector ? "ring-q is-on" : "ring-q"} />
+        ))}
+        {dot && <circle cx={C + dot[0] * R} cy={C + dot[1] * R} r="5" className="ring-dot" />}
+      </svg>
+      {SECTORS.map((s, k) => (
+        <span key={s} className={`ring-letter ring-letter-${s}${k === sector ? " is-on" : ""}`} aria-hidden="true">
+          {s}
+        </span>
+      ))}
+      <button type="button" className="ring-center" onClick={onNext} disabled={target === null} aria-label={nextHint || doneLabel}>
+        {target === null ? (
+          <span className="ring-done">{doneLabel}</span>
+        ) : (
+          <>
+            <span className="ring-caption">{label}</span>
+            <span className="ring-nail">{nailLabel(target)}</span>
+          </>
+        )}
+      </button>
     </div>
   );
 }

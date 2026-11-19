@@ -11,6 +11,10 @@ Kits de portraits en fil personnalisés : boutique, génération du portrait à 
 | `docs/` | Cahier des charges, algorithme, tests, rétro-ingénierie, historique |
 | `PRODUCT.md`, `DESIGN.md` | Contexte produit et système visuel |
 
+## Mettre en ligne
+
+Voir `docs/hebergement.md` (base de données, moteur, site, variables).
+
 ## Démarrer en local
 
 Avec Docker :
