@@ -4496,9 +4496,13 @@ h1 em {
   font-size: var(--step--1);
 }
 
+/*
+ * Téléphone et tablette (choix du propriétaire) : le visuel animé d'abord, assez
+ * petit pour que le titre reste visible sans défiler, puis le texte.
+ */
 @media (max-width: 59.99rem) {
-  .hero-copy {
-    order: -1;
+  .hero-grid {
+    gap: 1.5rem;
   }
 
   .hero-copy h1 {
@@ -4510,8 +4514,21 @@ h1 em {
   }
 
   .hero-media {
-    inline-size: min(100%, 24rem);
+    inline-size: min(100%, 24rem, 40svh);
     justify-self: center;
+    padding: 0.75rem;
+    padding-block-start: 2.75rem;
+  }
+
+  .hero-media .badge {
+    inset-block-start: 0.6rem;
+    inset-inline-start: 0.6rem;
+    padding: 0.3rem 0.75rem;
+  }
+
+  .hero-media .medallion {
+    inline-size: 4.75rem;
+    border-width: 4px;
   }
 
   .hero .proof {

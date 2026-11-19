@@ -275,12 +275,24 @@ test("sur ordinateur, les 5 écrans du générateur tiennent sur une ligne, sans
   expect(new Set(tops).size).toBe(1);
 });
 
-test("premier écran : titre, prix et bouton visibles sans défiler", async ({ page }) => {
+test("premier écran : visuel, titre, prix et bouton visibles sans défiler", async ({ page, isMobile }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/fr");
   await expect(page.locator(".hero-price strong")).toHaveText("4 900 DA");
-  await expect(page.locator(".hero-price")).toBeInViewport();
-  await expect(page.getByRole("link", { name: "Offrir le kit" }).first()).toBeInViewport();
+  await expect(page.locator("#hero-title")).toBeInViewport({ ratio: 1 });
+  if (isMobile) {
+    // Téléphone : le visuel animé d'abord, puis le titre ; prix et bouton dans la barre du bas.
+    const media = (await page.locator(".hero-media").boundingBox())!;
+    const title = (await page.locator("#hero-title").boundingBox())!;
+    expect(media.y).toBeLessThan(title.y);
+    const bar = page.locator(".sticky-bar");
+    await expect(bar).toHaveAttribute("data-visible", "true");
+    await expect(bar.getByText("4 900 DA")).toBeInViewport();
+    await expect(bar.getByRole("link", { name: "Commander" })).toBeInViewport();
+  } else {
+    await expect(page.locator(".hero-price")).toBeInViewport();
+    await expect(page.getByRole("link", { name: "Offrir le kit" }).first()).toBeInViewport();
+  }
 });
 
 for (const locale of ["fr", "ar"] as const) {

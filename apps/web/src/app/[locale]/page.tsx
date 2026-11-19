@@ -88,7 +88,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         {/* Héros : carte visuelle (pastille + médaillon) et texte avec ligne de preuves. */}
         <section className="hero" aria-labelledby="hero-title">
           <div className="wrap hero-grid">
-            <div className="hero-media" data-reveal>
+            <div className="hero-media">
               <span className="badge">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <rect x="3" y="8" width="18" height="13" rx="1.5" />
@@ -101,7 +101,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 <img src="/visuels/caftan-photo.webp" alt={t("hero.medallion")} width={300} height={300} />
               </figure>
             </div>
-            <div className="hero-copy" data-reveal style={{ ["--i" as string]: 1 }}>
+            <div className="hero-copy">
               <h1 id="hero-title">
                 {t("hero.titleStart")} <em>{t("hero.titleAccent")}</em>
               </h1>
