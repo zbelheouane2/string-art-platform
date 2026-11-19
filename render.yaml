@@ -29,3 +29,8 @@ services:
         value: deekraart@gmail.com
       - key: NEXT_PUBLIC_WHATSAPP
         value: "213771704033"
+      # Identifiants publics (visibles dans le navigateur), pas des secrets.
+      - key: NEXT_PUBLIC_SITE_URL
+        value: https://deekra-iosi.onrender.com
+      - key: NEXT_PUBLIC_META_PIXEL_ID
+        value: "2653054011829833"
