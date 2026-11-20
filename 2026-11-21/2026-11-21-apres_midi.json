@@ -1,0 +1,18 @@
+{
+  "date": "2026-11-21",
+  "creneau": "apres_midi",
+  "heure": "17:30",
+  "famille": "pack",
+  "sujet": "pack-devidoir",
+  "brief": "Le dévidoir en bois : le fil se déroule sans s'emmêler.",
+  "rendu": "gemini",
+  "portrait": null,
+  "angle": null,
+  "ambiance": "low golden autumn light and warm earthy tones",
+  "registre": "fierté du patrimoine algérien",
+  "horaire": "normal",
+  "occasion": null,
+  "commercial": true,
+  "cta": "commande",
+  "statut": "a_generer"
+}
