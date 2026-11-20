@@ -42,8 +42,7 @@ def finaliser(data: bytes, largeur: int = 1080, hauteur: int = 1350, qualite: in
     if logo:
         marge = round(largeur * 0.045)
         lw = round(largeur * 0.2)
-        zone = img.crop((largeur - marge - lw, marge, largeur - marge, marge + lw // 2))
-        lg = _logo_pour(zone)
+        lg = _logo_pour(img.crop((largeur - marge - lw, marge, largeur - marge, marge + lw)))
         lg = lg.resize((lw, round(lg.height * lw / lg.width)), Image.LANCZOS)
         base = img.convert("RGBA")
         base.alpha_composite(lg, (largeur - marge - lw, marge))
@@ -64,7 +63,7 @@ CSS = """
 html, body { width: 1080px; height: 1350px; overflow: hidden; }
 body { background: %(plaster)s; color: %(ink)s; font-family: Figtree, system-ui, sans-serif;
        display: flex; flex-direction: column; padding: 72px 76px 64px; position: relative; }
-.logo { position: absolute; top: 40px; inset-inline-end: 52px; width: 260px; }
+.logo { position: absolute; top: 36px; inset-inline-end: 48px; width: 150px; }
 .fr { font-family: 'Young Serif', Georgia, serif; font-size: 66px; line-height: 1.1; max-width: 760px; }
 .ar { font-family: 'Noto Naskh Arabic', 'Alexandria', serif; font-size: 58px; line-height: 1.5;
       direction: rtl; text-align: right; color: %(emerald)s; }
