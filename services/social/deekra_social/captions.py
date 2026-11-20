@@ -33,10 +33,13 @@ CTA = {
 
 
 def prompt_image(sujet: dict, avec_portrait: bool, angle: str | None = None,
-                 ambiance: str | None = None, avec_produit: bool = False) -> str:
+                 ambiance: str | None = None, avec_produit: bool = False, fiche: str = "") -> str:
     regle = f" {PORTRAIT_RULE}" if avec_portrait else ""
     if avec_produit:
         regle += f" {PRODUCT_RULE}"
+    if fiche:
+        regle += ("\n\nPRODUCT — reproduce EXACTLY as in the reference images (shape, proportions, colours, construction); "
+                  "do not simplify, redesign or replace it:\n" + fiche)
     variation = ""
     if angle:
         variation += f"\nCamera: {angle}."

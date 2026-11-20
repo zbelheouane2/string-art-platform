@@ -402,6 +402,8 @@ def test_semi_auto_bout_en_bout(settings, tmp_path, monkeypatch):
     assert manuel.a_publier(tmp_path, d, gemini_slot.creneau) is None  # pas encore validé
     manuel.valider(tmp_path, d, [gemini_slot.creneau])
     assert manuel.a_publier(tmp_path, d, gemini_slot.creneau) == out
+    manuel.preparer(settings, d, tmp_path)  # relancer ne doit pas écraser un visuel validé
+    assert manuel.a_publier(tmp_path, d, gemini_slot.creneau) == out
 
     carte = next((p for p in plans if p.sujet["rendu"] == "carte"), None)
     if carte:
@@ -441,3 +443,18 @@ def test_programme_ne_fait_rien_sans_visuel(settings, tmp_path, monkeypatch):
     monkeypatch.delenv("SOCIAL_AUTOPUBLISH", raising=False)
     monkeypatch.setattr(cli, "_meta", lambda st: (_ for _ in ()).throw(AssertionError("ne doit pas publier")))
     assert cli.main(["programme", "--creneau", "midi", "--sortie", str(tmp_path)]) == 0
+
+
+def test_fiche_produit_dans_le_prompt(settings):
+    from deekra_social import manuel
+    sujet = next(s for s in settings.sujets if s["id"] == "pack-devidoir")
+    assert sujet["refs"][0] == "produit-devidoir"
+    plan = next(p for i in range(60) for p in plan_jour(settings, dt.date(2026, 11, 21) + dt.timedelta(days=i))
+                if p.sujet["id"] == "pack-devidoir")
+    prompt = manuel.prompt_detaille(settings, plan)
+    assert "RED plastic end caps" in prompt and "WHITE SQUARE board" in prompt and "EXACTLY" in prompt
+
+
+def test_toutes_les_refs_ont_une_fiche(settings):
+    refs = {r for s in settings.sujets for r in s.get("refs", []) if not r.startswith("portrait")}
+    assert refs <= set(settings.produit), refs - set(settings.produit)

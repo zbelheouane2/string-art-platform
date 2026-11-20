@@ -62,7 +62,8 @@ def references(settings: Settings, plan: Plan) -> list[tuple[str, Path]]:
 def prompt_detaille(settings: Settings, plan: Plan) -> str:
     refs = references(settings, plan)
     base = captions.prompt_image(plan.sujet, avec_portrait=bool(plan.portrait), angle=plan.angle,
-                                 ambiance=plan.ambiance, avec_produit=any(not r.startswith("portrait") for r in plan.refs))
+                                 ambiance=plan.ambiance, avec_produit=any(not r.startswith("portrait") for r in plan.refs),
+                                 fiche=settings.fiche_produit(plan.refs))
     joint = ""
     if refs:
         liste = "; ".join(f"image {i}: {d}" for i, (d, _) in enumerate(refs, 1))
@@ -83,10 +84,15 @@ def preparer(settings: Settings, date: dt.date, lots: Path) -> Path:
     for plan in plan_jour(settings, date):
         info = _meta_plan(plan)
         base = dossier / plan.slug
+        existant = json.loads(base.with_suffix(".json").read_text(encoding="utf-8")) if base.with_suffix(".json").exists() else {}
+        garder = existant.get("statut") in {"valide", "publie"} or (existant.get("statut") == "a_valider" and existant.get("legende"))
         titre = f"## {plan.heure} · {plan.famille} · {plan.sujet['id']}"
         if plan.occasion:
             titre += f" · {plan.occasion['nom']}"
         lignes += [titre, "", f"**Objectif :** {INTENTIONS.get(plan.famille, '')} {plan.sujet['brief']}", ""]
+        if garder:
+            lignes += [f"Déjà prêt (statut : {existant['statut']}).", ""]
+            continue
         if plan.sujet["rendu"] == "carte":
             image = pipeline._carte(settings, plan)
             base.with_suffix(".jpg").write_bytes(image)

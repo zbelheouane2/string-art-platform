@@ -129,7 +129,8 @@ def generer(settings: Settings, plan: Plan, gemini: GeminiClient, historique: Pa
         refs = _ref_images(settings, plan)
         prompt = captions.prompt_image(sujet, avec_portrait=bool(plan.portrait),
                                        angle=plan.angle, ambiance=plan.ambiance,
-                                       avec_produit=any(not r.startswith("portrait") for r in plan.refs))
+                                       avec_produit=any(not r.startswith("portrait") for r in plan.refs),
+                                       fiche=settings.fiche_produit(plan.refs))
         image = None
         for n in range(1, cfg["essais_max"] + 2):
             try:

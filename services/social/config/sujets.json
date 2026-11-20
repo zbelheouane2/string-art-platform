@@ -49,6 +49,7 @@
    "famille": "creatif",
    "rendu": "gemini",
    "refs": [
+    "produit-devidoir",
     "kit-bobine"
    ],
    "cta": "partage",
@@ -124,6 +125,7 @@
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
+    "produit-devidoir",
     "kit-bobine"
    ],
    "cta": "commande",
@@ -531,6 +533,7 @@
    "famille": "atout",
    "rendu": "gemini",
    "refs": [
+    "produit-devidoir",
     "kit-bobine"
    ],
    "cta": "commande",

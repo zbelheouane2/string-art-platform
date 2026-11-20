@@ -28,6 +28,7 @@ class Settings:
     sujets: list[dict]
     occasions: list[dict]
     config_dir: Path
+    produit: dict | None = None
 
     @classmethod
     def load(cls, config_dir: Path | None = None) -> "Settings":
@@ -35,7 +36,9 @@ class Settings:
         social = _load_json(d / "social.json")
         sujets = _load_json(d / "sujets.json")["sujets"]
         occasions = _load_json(d / "occasions.json")["occasions"]
-        settings = cls(social=social, sujets=sujets, occasions=occasions, config_dir=d)
+        produit_path = d / "produit.json"
+        produit = _load_json(produit_path) if produit_path.exists() else {}
+        settings = cls(social=social, sujets=sujets, occasions=occasions, config_dir=d, produit=produit)
         settings.validate()
         return settings
 
@@ -56,6 +59,14 @@ class Settings:
         for jour, familles_jour in self.semaine_type.items():
             if len(familles_jour) != len(self.creneaux):
                 raise ConfigError(f"semaine_type.{jour} doit avoir {len(self.creneaux)} entrées")
+
+    def fiche_produit(self, refs: list[str]) -> str:
+        """Description exacte des éléments du produit présents dans les références."""
+        fiches = self.produit or {}
+        lignes = [fiches[r] for r in refs if r in fiches]
+        if lignes and fiches.get("planche"):
+            lignes.append(fiches["planche"])
+        return "\n".join(f"- {l}" for l in dict.fromkeys(lignes))
 
     @property
     def creneaux(self) -> dict[str, str]:
