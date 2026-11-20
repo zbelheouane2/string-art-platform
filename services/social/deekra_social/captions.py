@@ -18,8 +18,8 @@ PORTRAIT_RULE = (
 )
 
 PRODUCT_RULE = (
-    "The other reference images only show what our real product looks like (kraft box, stand, wooden unwinder, "
-    "phone stand, board with brass nails). Reproduce the product faithfully, but invent a completely new scene: "
+    "The attached product reference images only show what our real product looks like (kraft box, stand, wooden "
+    "unwinder, phone stand, board with brass nails). Reproduce the product faithfully, but invent a completely new scene: "
     "different setting, people, composition, camera angle and background. Never copy the scene, framing, "
     "person or decor of the reference images."
 )
@@ -41,7 +41,7 @@ def prompt_image(sujet: dict, avec_portrait: bool, angle: str | None = None,
     if angle:
         variation += f"\nCamera: {angle}."
     if ambiance:
-        variation += f"\nSeason: {ambiance}."
+        variation += f"\nLight: {ambiance}."
     return f"{sujet['prompt']}{regle}{variation}\n\nStyle: {STYLE}"
 
 
