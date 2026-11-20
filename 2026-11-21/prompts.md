@@ -9,7 +9,7 @@
 ```
 Create one photorealistic image, vertical 4:5 (1080 x 1350 px).
 
-Minimalist fine-art photograph of the Algerian Sahara dunes at dawn, a white square board with a ring of brass nails standing on the sand, a few black threads crossing it, long shadows, warm pastel sky, vast negative space.
+Minimalist fine-art photograph of the Algerian Sahara dunes at dawn, a white square board with a ring of brass nails standing on the sand, a few black threads crossing it, long shadows, warm pastel sky, vast negative space. Any white board shown is empty or only partly woven with a few abstract black lines: never draw a face or a portrait on it.
 Camera: low angle looking up, cinematic.
 Light: low golden autumn light and warm earthy tones.
 
@@ -30,7 +30,7 @@ Quality: high-end commercial photography, natural skin tones, realistic hands wi
 ```
 Create one photorealistic image, vertical 4:5 (1080 x 1350 px).
 
-Product photograph of a spool of black thread mounted on a light birch wood unwinder like the reference, on a white surface with soft shadow, a few meters of thread flowing neatly, premium studio lighting. The attached product reference images only show what our real product looks like (kraft box, stand, wooden unwinder, phone stand, board with brass nails). Reproduce the product faithfully, but invent a completely new scene: different setting, people, composition, camera angle and background. Never copy the scene, framing, person or decor of the reference images.
+Product photograph of a spool of black thread mounted on a light birch wood unwinder like the reference, on a white surface with soft shadow, a few meters of thread flowing neatly, premium studio lighting. Any white board shown is empty or only partly woven with a few abstract black lines: never draw a face or a portrait on it. The attached product reference images only show what our real product looks like (kraft box, stand, wooden unwinder, phone stand, board with brass nails). Reproduce the product faithfully, but invent a completely new scene: different setting, people, composition, camera angle and background. Never copy the scene, framing, person or decor of the reference images.
 
 PRODUCT — reproduce EXACTLY as in the reference images (shape, proportions, colours, construction); do not simplify, redesign or replace it:
 - A spool of black thread with RED plastic end caps on both ends, sitting on an open-frame unwinder made of light birch plywood: two flat side uprights with rounded tops connected by horizontal rails, standing on small legs, a wooden axle through the spool between the uprights, visible laser-cut plywood edges. Never simplify it into a cradle or another holder; never change the red caps.
