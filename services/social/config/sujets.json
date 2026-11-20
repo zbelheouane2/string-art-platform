@@ -7,7 +7,10 @@
    "rendu": "gemini",
    "cta": "partage",
    "brief": "Gros plan artistique sur le fil et les clous : la matière du produit.",
-   "prompt": "Extreme macro photograph of thin black threads stretched taut between polished brass nails on a matte white wooden board. Shallow depth of field, a few threads crossing in sharp focus, soft warm side light, elegant and minimal."
+   "prompt": "Extreme macro photograph of thin black threads stretched taut between polished brass nails on a matte white wooden board. Shallow depth of field, a few threads crossing in sharp focus, soft warm side light, elegant and minimal.",
+   "refs": [
+    "produit-planche"
+   ]
   },
   {
    "id": "creatif-pres-loin",
@@ -34,7 +37,10 @@
    "rendu": "gemini",
    "cta": "partage",
    "brief": "Le fil comme une ligne d'horizon dans le désert algérien.",
-   "prompt": "Minimalist fine-art photograph of the Algerian Sahara dunes at dawn, a white square board with a ring of brass nails standing on the sand, a few black threads crossing it, long shadows, warm pastel sky, vast negative space."
+   "prompt": "Minimalist fine-art photograph of the Algerian Sahara dunes at dawn, a white square board with a ring of brass nails standing on the sand, a few black threads crossing it, long shadows, warm pastel sky, vast negative space.",
+   "refs": [
+    "produit-planche"
+   ]
   },
   {
    "id": "creatif-zellige",
@@ -42,7 +48,10 @@
    "rendu": "gemini",
    "cta": "partage",
    "brief": "Géométrie du zellige et géométrie du fil : un art de lignes, comme notre patrimoine.",
-   "prompt": "Top-down flat lay: a traditional Algerian green and white zellige tile pattern on the left, a white board with a circle of brass nails and intersecting black thread lines forming geometric patterns on the right, echoing the zellige geometry. Soft daylight, crisp details."
+   "prompt": "Top-down flat lay: a traditional Algerian green and white zellige tile pattern on the left, a white board with a circle of brass nails and intersecting black thread lines forming geometric patterns on the right, echoing the zellige geometry. Soft daylight, crisp details.",
+   "refs": [
+    "produit-planche"
+   ]
   },
   {
    "id": "creatif-bobine-lumiere",
@@ -83,7 +92,10 @@
    "rendu": "gemini",
    "cta": "partage",
    "brief": "Le geste : la main qui tend le fil d'un clou à l'autre.",
-   "prompt": "Close-up of a woman's hand with henna patterns guiding a black thread around a brass nail on a white board, other threads forming a dense web in the background, soft focus, warm natural light."
+   "prompt": "Close-up of a woman's hand with henna patterns guiding a black thread around a brass nail on a white board, other threads forming a dense web in the background, soft focus, warm natural light.",
+   "refs": [
+    "produit-planche"
+   ]
   },
   {
    "id": "pack-deballage",
