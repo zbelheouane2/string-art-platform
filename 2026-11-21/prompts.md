@@ -24,7 +24,6 @@ Quality: high-end commercial photography, natural skin tones, realistic hands wi
 
 **Images à joindre dans Gemini, dans cet ordre :**
 1. `apres_midi-1.jpg` : notre produit (produit-devidoir)
-2. `apres_midi-2.jpg` : notre produit (kit-bobine)
 
 **Prompt à coller :**
 
@@ -35,13 +34,12 @@ Product photograph of a spool of black thread mounted on a light birch wood unwi
 
 PRODUCT — reproduce EXACTLY as in the reference images (shape, proportions, colours, construction); do not simplify, redesign or replace it:
 - A spool of black thread with RED plastic end caps on both ends, sitting on an open-frame unwinder made of light birch plywood: two flat side uprights with rounded tops connected by horizontal rails, standing on small legs, a wooden axle through the spool between the uprights, visible laser-cut plywood edges. Never simplify it into a cradle or another holder; never change the red caps.
-- A spool of black thread with RED plastic end caps on a light birch plywood open-frame unwinder (two side uprights, horizontal rails, small legs, wooden axle).
 - The board is always a WHITE SQUARE board (50 x 50 cm) with brass nails forming a perfect circle; never a raw wooden or round board.
 Light: low golden autumn light and warm earthy tones.
 
 Style: Photorealistic, premium lifestyle photography for the Algerian brand DeeKra (personalised string art kits). Warm natural light, palette of off-white, ink black, emerald green (#0e5443) and brass gold accents. Contemporary Algerian interiors and culture, modest and respectful styling. Clean composition, keep the top-right corner calm and uncluttered for a logo. No text, no letters, no watermark, no logo, no brand names in the image. Vertical 4:5 format.
 
-Attached reference images (image 1: notre produit (produit-devidoir); image 2: notre produit (kit-bobine)).
+Attached reference images (image 1: notre produit (produit-devidoir)).
 
 Quality: high-end commercial photography, natural skin tones, realistic hands with five fingers, accurate perspective, fine details on the black threads and brass nails, no distortion of the product.
 ```
