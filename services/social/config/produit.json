@@ -1,12 +1,11 @@
 {
- "_doc": "Description exacte de chaque élément du produit, ajoutée aux prompts quand sa référence est jointe : Gemini ne doit rien réinventer.",
+ "_doc": "Description exacte de chaque élément du produit, ajoutée aux prompts quand sa référence est jointe : Gemini ne doit rien réinventer. Chaque référence est une image nette du produit seul ou en usage, sans texte ni montage.",
  "produit-devidoir": "A spool of black thread with RED plastic end caps on both ends, sitting on an open-frame unwinder made of light birch plywood: two flat side uprights with rounded tops connected by horizontal rails, standing on small legs, a wooden axle through the spool between the uprights, visible laser-cut plywood edges. Never simplify it into a cradle or another holder; never change the red caps.",
- "kit-bobine": "A spool of black thread with RED plastic end caps on a light birch plywood open-frame unwinder (two side uprights, horizontal rails, small legs, wooden axle).",
- "kit-boite-support": "A flat square kraft cardboard box (about 55 x 55 cm, a few cm thick) with a thin black-line string art pattern and the script word 'Deekra' printed on the lid; the box folds open into an inclined stand that holds the board.",
- "kit-assemblage": "A WHITE SQUARE board (50 x 50 cm) with brass nails forming a perfect circle near the edges, held at an angle by the kraft box stand; a smartphone on a small light-wood stand beside it.",
- "kit-notice": "A small printed instruction booklet in off-white paper with black line illustrations.",
- "support-chevalet": "A light birch plywood easel stand: two tall triangular A-shaped legs with a small ledge at the bottom, clean laser-cut edges.",
- "etape-voix-telephone": "A smartphone on a small light birch phone stand next to a WHITE board with brass nails; the phone shows a white app screen with a circular progress indicator.",
- "etape-ouvrir-boite": "A large flat kraft cardboard box with a thin black-line string art pattern on the lid, containing a WHITE square board with brass nails.",
+ "produit-boite": "A flat square kraft cardboard box with a thin black-line string art pattern and the script word 'Deekra' on the lid; it folds open into an inclined stand that holds the board.",
+ "produit-boite-ouverte": "The large flat kraft cardboard box opened, revealing the WHITE square board with brass nails inside.",
+ "produit-planche": "A WHITE SQUARE board (50 x 50 cm) with brass nails forming a perfect circle near the edges, small sector letters A, B, C, D in the corners.",
+ "produit-planche-montee": "The WHITE SQUARE board with brass nails in a circle, held upright by the kraft box stand, the thread spool with red caps on its birch unwinder mounted on top of the board, a smartphone on a small birch stand beside it.",
+ "produit-chevalet": "A light birch plywood easel: two tall A-shaped triangular legs with a small ledge at the bottom, clean laser-cut edges.",
+ "produit-support-telephone": "A smartphone on a small light birch phone stand next to the WHITE board with brass nails; the phone shows a white app screen with a circular progress indicator.",
  "planche": "The board is always a WHITE SQUARE board (50 x 50 cm) with brass nails forming a perfect circle; never a raw wooden or round board."
 }

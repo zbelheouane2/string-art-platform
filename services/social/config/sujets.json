@@ -49,8 +49,7 @@
    "famille": "creatif",
    "rendu": "gemini",
    "refs": [
-    "produit-devidoir",
-    "kit-bobine"
+    "produit-devidoir"
    ],
    "cta": "partage",
    "brief": "Une bobine, un fil continu, des milliers de passages.",
@@ -91,7 +90,7 @@
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
-    "kit-boite-support"
+    "produit-boite"
    ],
    "cta": "commande",
    "brief": "Le déballage du kit : tout est dans la boîte.",
@@ -102,7 +101,7 @@
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
-    "kit-boite-support"
+    "produit-boite"
    ],
    "cta": "commande",
    "brief": "Le kit prêt à offrir.",
@@ -113,8 +112,8 @@
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
-    "kit-boite-support",
-    "kit-assemblage"
+    "produit-boite",
+    "produit-planche-montee"
    ],
    "cta": "commande",
    "brief": "La boîte se transforme en chevalet pour tisser confortablement.",
@@ -125,8 +124,7 @@
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
-    "produit-devidoir",
-    "kit-bobine"
+    "produit-devidoir"
    ],
    "cta": "commande",
    "brief": "Le dévidoir en bois : le fil se déroule sans s'emmêler.",
@@ -137,18 +135,20 @@
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
-    "kit-notice"
+    "produit-boite",
+    "produit-planche",
+    "produit-devidoir"
    ],
    "cta": "commande",
    "brief": "Ce que contient le kit : planche, clous posés, fil, support, code.",
-   "prompt": "Knolling arrangement on a pale plaster background: a white square board with brass nails in a circle, a spool of black thread on a wooden unwinder, a wooden phone stand, an instruction booklet like the reference, a small card with a code, all neatly aligned with equal spacing, soft even light."
+   "prompt": "Knolling arrangement on a pale plaster background: a white square board with brass nails in a circle, a spool of black thread on a wooden unwinder, a wooden phone stand, a small instruction booklet, a small card with a code, all neatly aligned with equal spacing, soft even light."
   },
   {
    "id": "pack-livreur",
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
-    "kit-boite-support"
+    "produit-boite"
    ],
    "cta": "commande",
    "brief": "Reçu à la maison, payé à la livraison.",
@@ -159,7 +159,7 @@
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
-    "kit-assemblage"
+    "produit-planche-montee"
    ],
    "cta": "commande",
    "brief": "Un moment pour soi : le kit installé sur la table du salon.",
@@ -272,7 +272,7 @@
    "famille": "emotion",
    "rendu": "gemini",
    "refs": [
-    "kit-boite-support"
+    "produit-boite"
    ],
    "cta": "commentaire",
    "brief": "Le moment où l'on ouvre le cadeau.",
@@ -302,7 +302,7 @@
    "famille": "guide",
    "rendu": "gemini",
    "refs": [
-    "kit-assemblage"
+    "produit-planche-montee"
    ],
    "cta": "commande",
    "brief": "La voix annonce chaque clou en arabe, français ou anglais : on suit, c'est tout.",
@@ -361,7 +361,7 @@
    "famille": "offre",
    "rendu": "gemini",
    "refs": [
-    "kit-boite-support"
+    "produit-boite"
    ],
    "cta": "commande",
    "brief": "Commandez votre kit, payez à la livraison.",
@@ -522,7 +522,7 @@
    "famille": "atout",
    "rendu": "gemini",
    "refs": [
-    "kit-assemblage"
+    "produit-planche-montee"
    ],
    "cta": "commande",
    "brief": "Notre atout : la progression est sauvegardée, on reprend exactement où l'on s'était arrêté, même le lendemain.",
@@ -533,8 +533,7 @@
    "famille": "atout",
    "rendu": "gemini",
    "refs": [
-    "produit-devidoir",
-    "kit-bobine"
+    "produit-devidoir"
    ],
    "cta": "commande",
    "brief": "Notre atout : le dévidoir en bois, pour un fil qui se déroule sans s'emmêler du début à la fin.",
@@ -599,7 +598,7 @@
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
-    "etape-voix-telephone"
+    "produit-support-telephone"
    ],
    "cta": "commande",
    "brief": "Le support de téléphone en bois inclus : l'écran reste sous vos yeux, les mains restent libres.",
@@ -610,7 +609,7 @@
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
-    "support-chevalet",
+    "produit-chevalet",
     "portrait"
    ],
    "cta": "commande",
@@ -622,7 +621,7 @@
    "famille": "emotion",
    "rendu": "gemini",
    "refs": [
-    "etape-ouvrir-boite"
+    "produit-boite-ouverte"
    ],
    "cta": "commentaire",
    "brief": "Le moment d'ouvrir la boîte DeeKra à la maison.",
