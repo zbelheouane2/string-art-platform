@@ -1,0 +1,629 @@
+{
+ "_doc": "Banque de sujets. rendu = gemini (image générée) ou carte (gabarit HTML aux couleurs de la marque). refs : images de référence données à Gemini ('portrait' = un vrai rendu du moteur). Les textes posés sur les cartes sont écrits ici, jamais inventés par l'IA. Écrans du générateur : captures réelles du site (apps/web/public/visuels/generateur). Toutes les références visuelles viennent des visuels du site (apps/web/public/visuels), jamais des plans de fabrication.",
+ "sujets": [
+  {
+   "id": "creatif-macro-clous",
+   "famille": "creatif",
+   "rendu": "gemini",
+   "cta": "partage",
+   "brief": "Gros plan artistique sur le fil et les clous : la matière du produit.",
+   "prompt": "Extreme macro photograph of thin black threads stretched taut between polished brass nails on a matte white wooden board. Shallow depth of field, a few threads crossing in sharp focus, soft warm side light, elegant and minimal."
+  },
+  {
+   "id": "creatif-pres-loin",
+   "famille": "creatif",
+   "rendu": "gemini",
+   "refs": [
+    "portrait"
+   ],
+   "cta": "commentaire",
+   "brief": "De près ce ne sont que des lignes, de loin un visage apparaît : la magie du string art.",
+   "prompt": "Split composition: on the left half, an extreme close-up of the black thread lines and brass nails of the reference string art portrait, looking abstract; on the right half, the same circular string art portrait seen from a distance, hanging on a white wall, the face clearly readable. Keep the portrait exactly as in the reference image."
+  },
+  {
+   "id": "creatif-casbah",
+   "famille": "creatif",
+   "rendu": "gemini",
+   "cta": "partage",
+   "brief": "Le fil noir rencontre l'architecture blanche de la Casbah d'Alger.",
+   "prompt": "Artistic photograph of a whitewashed alley in the Casbah of Algiers at golden hour, a single long black thread elegantly stretched across the alley between two old brass nails in the walls, poetic and minimal, soft shadows."
+  },
+  {
+   "id": "creatif-sahara",
+   "famille": "creatif",
+   "rendu": "gemini",
+   "cta": "partage",
+   "brief": "Le fil comme une ligne d'horizon dans le désert algérien.",
+   "prompt": "Minimalist fine-art photograph of the Algerian Sahara dunes at dawn, a white square board with a ring of brass nails standing on the sand, a few black threads crossing it, long shadows, warm pastel sky, vast negative space."
+  },
+  {
+   "id": "creatif-zellige",
+   "famille": "creatif",
+   "rendu": "gemini",
+   "cta": "partage",
+   "brief": "Géométrie du zellige et géométrie du fil : un art de lignes, comme notre patrimoine.",
+   "prompt": "Top-down flat lay: a traditional Algerian green and white zellige tile pattern on the left, a white board with a circle of brass nails and intersecting black thread lines forming geometric patterns on the right, echoing the zellige geometry. Soft daylight, crisp details."
+  },
+  {
+   "id": "creatif-bobine-lumiere",
+   "famille": "creatif",
+   "rendu": "gemini",
+   "refs": [
+    "kit-bobine"
+   ],
+   "cta": "partage",
+   "brief": "Une bobine, un fil continu, des milliers de passages.",
+   "prompt": "Still life of a spool of black thread on a light wooden unwinder, the thread unwinding in a long graceful curve across a white table toward a board with brass nails, dramatic warm window light, dust particles in the light beam."
+  },
+  {
+   "id": "creatif-patrimoine-haik",
+   "famille": "creatif",
+   "rendu": "gemini",
+   "refs": [
+    "portrait:haik"
+   ],
+   "cta": "commentaire",
+   "brief": "Hommage au haïk algérois, portrait en fil réalisé par notre moteur.",
+   "prompt": "The reference circular string art portrait displayed on an easel in a bright traditional Algiers house courtyard with white arches and blue shutters, a folded white haik fabric draped next to it. Keep the portrait exactly as in the reference image."
+  },
+  {
+   "id": "creatif-patrimoine-touareg",
+   "famille": "creatif",
+   "rendu": "gemini",
+   "refs": [
+    "portrait:touareg"
+   ],
+   "cta": "commentaire",
+   "brief": "Le Hoggar et ses gardiens, en fil tendu.",
+   "prompt": "The reference circular string art portrait leaning against a sandstone rock in the Hoggar mountains at sunset, an indigo fabric and a silver Tuareg cross pendant on the rock beside it. Keep the portrait exactly as in the reference image."
+  },
+  {
+   "id": "creatif-mains-fil",
+   "famille": "creatif",
+   "rendu": "gemini",
+   "cta": "partage",
+   "brief": "Le geste : la main qui tend le fil d'un clou à l'autre.",
+   "prompt": "Close-up of a woman's hand with henna patterns guiding a black thread around a brass nail on a white board, other threads forming a dense web in the background, soft focus, warm natural light."
+  },
+  {
+   "id": "pack-deballage",
+   "famille": "pack",
+   "rendu": "gemini",
+   "refs": [
+    "kit-boite-support"
+   ],
+   "cta": "commande",
+   "brief": "Le déballage du kit : tout est dans la boîte.",
+   "prompt": "Top-down flat lay of an opened kraft cardboard gift box like the reference, revealing a white square board with a ring of brass nails, a spool of black thread on a small wooden unwinder, a wooden phone stand and a small message card. Light wooden table, soft morning light, a sprig of jasmine."
+  },
+  {
+   "id": "pack-cadeau-ruban",
+   "famille": "pack",
+   "rendu": "gemini",
+   "refs": [
+    "kit-boite-support"
+   ],
+   "cta": "commande",
+   "brief": "Le kit prêt à offrir.",
+   "prompt": "A kraft cardboard gift box like the reference, wrapped with an emerald green satin ribbon, on a marble table in an elegant Algerian living room, a glass of mint tea and a small bouquet beside it, warm golden light, cosy and premium."
+  },
+  {
+   "id": "pack-chevalet",
+   "famille": "pack",
+   "rendu": "gemini",
+   "refs": [
+    "kit-boite-support",
+    "kit-assemblage"
+   ],
+   "cta": "commande",
+   "brief": "La boîte se transforme en chevalet pour tisser confortablement.",
+   "prompt": "The kraft box from the reference unfolded into a stand holding a white board with a circle of brass nails at an angle on a desk, a smartphone on a small wooden stand next to it, a spool of black thread, bright and tidy workspace."
+  },
+  {
+   "id": "pack-devidoir",
+   "famille": "pack",
+   "rendu": "gemini",
+   "refs": [
+    "kit-bobine"
+   ],
+   "cta": "commande",
+   "brief": "Le dévidoir en bois : le fil se déroule sans s'emmêler.",
+   "prompt": "Product photograph of a spool of black thread mounted on a light birch wood unwinder like the reference, on a white surface with soft shadow, a few meters of thread flowing neatly, premium studio lighting."
+  },
+  {
+   "id": "pack-contenu",
+   "famille": "pack",
+   "rendu": "gemini",
+   "refs": [
+    "kit-notice"
+   ],
+   "cta": "commande",
+   "brief": "Ce que contient le kit : planche, clous posés, fil, support, code.",
+   "prompt": "Knolling arrangement on a pale plaster background: a white square board with brass nails in a circle, a spool of black thread on a wooden unwinder, a wooden phone stand, an instruction booklet like the reference, a small card with a code, all neatly aligned with equal spacing, soft even light."
+  },
+  {
+   "id": "pack-livreur",
+   "famille": "pack",
+   "rendu": "gemini",
+   "refs": [
+    "kit-boite-support"
+   ],
+   "cta": "commande",
+   "brief": "Reçu à la maison, payé à la livraison.",
+   "prompt": "At the door of an Algerian apartment, a smiling young woman receives a kraft cardboard box like the reference from a delivery man (only his arms visible), natural daylight, authentic and warm."
+  },
+  {
+   "id": "pack-bureau",
+   "famille": "pack",
+   "rendu": "gemini",
+   "refs": [
+    "kit-assemblage"
+   ],
+   "cta": "commande",
+   "brief": "Un moment pour soi : le kit installé sur la table du salon.",
+   "prompt": "A white board with brass nails installed on a kraft box stand on a living room table, half-woven black thread portrait visible as abstract lines, a cup of coffee, a phone on a wooden stand, cushions with Algerian embroidery, evening lamp light."
+  },
+  {
+   "id": "resultat-avant-apres",
+   "famille": "resultat",
+   "rendu": "carte",
+   "carte": "avant_apres",
+   "cta": "prive",
+   "brief": "Une photo devient un portrait en fil : avant / après réel du moteur DeeKra.",
+   "texte": {
+    "fr": "De la photo au fil",
+    "ar": "من الصورة إلى الخيط"
+   }
+  },
+  {
+   "id": "resultat-mur-salon",
+   "famille": "resultat",
+   "rendu": "gemini",
+   "refs": [
+    "portrait"
+   ],
+   "cta": "prive",
+   "brief": "Le portrait en fil accroché dans un salon algérien.",
+   "prompt": "The reference circular string art portrait, printed on a white square board with brass nails, hanging on a white wall above a carved wooden console in a modern Algerian living room, a brass lantern and a plant nearby, natural light. Keep the portrait exactly as in the reference image."
+  },
+  {
+   "id": "resultat-chiffres",
+   "famille": "resultat",
+   "rendu": "carte",
+   "carte": "chiffres",
+   "cta": "prive",
+   "brief": "240 clous, un seul fil, environ 3 000 passages : le portrait en chiffres.",
+   "texte": {
+    "fr": "240 clous · 1 fil · 1 visage",
+    "ar": "240 مسمارًا · خيط واحد · وجه واحد"
+   }
+  },
+  {
+   "id": "resultat-galerie",
+   "famille": "resultat",
+   "rendu": "carte",
+   "carte": "galerie",
+   "cta": "prive",
+   "brief": "Quatre portraits générés par notre moteur : chaque photo donne un tableau unique.",
+   "texte": {
+    "fr": "Chaque photo, un tableau unique",
+    "ar": "كل صورة، لوحة فريدة"
+   }
+  },
+  {
+   "id": "resultat-chambre-bebe",
+   "famille": "resultat",
+   "rendu": "gemini",
+   "refs": [
+    "portrait:bebe"
+   ],
+   "cta": "prive",
+   "brief": "Le portrait de bébé dans sa chambre : un souvenir pour toujours.",
+   "prompt": "The reference circular string art portrait on a white square board hanging above a wooden baby crib in a soft beige nursery, a knitted blanket and a small plush toy, gentle morning light. Keep the portrait exactly as in the reference image."
+  },
+  {
+   "id": "resultat-bureau",
+   "famille": "resultat",
+   "rendu": "gemini",
+   "refs": [
+    "portrait"
+   ],
+   "cta": "prive",
+   "brief": "Le portrait en fil comme pièce maîtresse d'un bureau.",
+   "prompt": "The reference circular string art portrait on a white square board leaning on a wooden shelf in a stylish home office with books and a ceramic vase, warm afternoon light. Keep the portrait exactly as in the reference image."
+  },
+  {
+   "id": "emotion-maman",
+   "famille": "emotion",
+   "rendu": "gemini",
+   "refs": [
+    "portrait:femme"
+   ],
+   "cta": "commentaire",
+   "brief": "Offrir à sa mère son propre portrait, fait de ses mains.",
+   "prompt": "An Algerian mother in her fifties, emotional and smiling, holding the reference circular string art portrait on a white board in a warm living room, her adult daughter beside her watching her reaction, soft natural light. Keep the portrait exactly as in the reference image."
+  },
+  {
+   "id": "emotion-couple",
+   "famille": "emotion",
+   "rendu": "gemini",
+   "refs": [
+    "portrait:couple"
+   ],
+   "cta": "commentaire",
+   "brief": "Un cadeau de couple : votre histoire, fil après fil.",
+   "prompt": "A young Algerian couple hanging the reference circular string art portrait together on the wall of their new apartment, laughing, cardboard moving boxes in the background, warm light. Keep the portrait exactly as in the reference image."
+  },
+  {
+   "id": "emotion-grandpere",
+   "famille": "emotion",
+   "rendu": "gemini",
+   "refs": [
+    "portrait:grandpere"
+   ],
+   "cta": "commentaire",
+   "brief": "Le portrait du grand-père, pour garder sa mémoire dans la maison familiale.",
+   "prompt": "A family gathering in a traditional Algerian home, grandchildren looking at the reference circular string art portrait of their grandfather hanging on the wall, a tea tray with a teapot on a low table, warm nostalgic light. Keep the portrait exactly as in the reference image."
+  },
+  {
+   "id": "emotion-surprise",
+   "famille": "emotion",
+   "rendu": "gemini",
+   "refs": [
+    "kit-boite-support"
+   ],
+   "cta": "commentaire",
+   "brief": "Le moment où l'on ouvre le cadeau.",
+   "prompt": "Close-up of a young Algerian woman's surprised happy face as she opens a kraft gift box like the reference with an emerald ribbon, sitting on a sofa with embroidered cushions, warm evening light, the content of the box not visible."
+  },
+  {
+   "id": "emotion-fiancailles",
+   "famille": "emotion",
+   "rendu": "gemini",
+   "refs": [
+    "portrait:caftan"
+   ],
+   "cta": "commentaire",
+   "brief": "Un cadeau de fiançailles qui restera accroché pour toujours.",
+   "prompt": "The reference circular string art portrait on a white board placed on an elegant table at an Algerian engagement party, with a decorated tray of traditional sweets, candles and white flowers, festive warm light. Keep the portrait exactly as in the reference image."
+  },
+  {
+   "id": "emotion-concentration",
+   "famille": "emotion",
+   "rendu": "gemini",
+   "cta": "commentaire",
+   "brief": "Quelques heures de calme : un loisir apaisant.",
+   "prompt": "A young Algerian man in a hoodie calmly weaving black thread on a white board with brass nails at his desk, earbuds in, phone on a wooden stand beside him, lamp light at night, focused and peaceful atmosphere."
+  },
+  {
+   "id": "guide-voix",
+   "famille": "guide",
+   "rendu": "gemini",
+   "refs": [
+    "kit-assemblage"
+   ],
+   "cta": "commande",
+   "brief": "La voix annonce chaque clou en arabe, français ou anglais : on suit, c'est tout.",
+   "prompt": "Over-the-shoulder view of a woman weaving black thread on a white board with brass nails, a smartphone on a wooden stand in front of her showing a simple audio player screen with a large letter-and-number label, cosy room, soft light."
+  },
+  {
+   "id": "guide-etapes",
+   "famille": "guide",
+   "rendu": "carte",
+   "carte": "etapes",
+   "cta": "commande",
+   "brief": "Trois étapes : saisir le code, ajouter la photo, suivre la voix.",
+   "texte": {
+    "fr": "Comment ça marche",
+    "ar": "كيف يعمل"
+   }
+  },
+  {
+   "id": "guide-aucun-talent",
+   "famille": "guide",
+   "rendu": "gemini",
+   "cta": "commande",
+   "brief": "Aucun talent artistique nécessaire : les clous sont déjà posés et numérotés.",
+   "prompt": "Close-up of a white square board with brass nails already set in a perfect circle, small printed sector letters A, B, C, D near the edge, a hand tying the first knot of black thread, clean bright light."
+  },
+  {
+   "id": "guide-pause",
+   "famille": "guide",
+   "rendu": "gemini",
+   "cta": "commande",
+   "brief": "On fait une pause quand on veut et on reprend plus tard.",
+   "prompt": "A half-finished string art on a white board with brass nails resting on a stand on a dining table, a cup of tea and a phone on a wooden stand next to it, an empty chair, evening light, calm atmosphere."
+  },
+  {
+   "id": "guide-photo",
+   "famille": "guide",
+   "rendu": "gemini",
+   "cta": "prive",
+   "brief": "Bien choisir sa photo : visage de face, net, bien éclairé.",
+   "prompt": "Hands holding a smartphone showing a clear, well-lit front-facing portrait photo of a smiling elderly Algerian woman, a white board with brass nails blurred in the background, bright natural light."
+  },
+  {
+   "id": "offre-cod",
+   "famille": "offre",
+   "rendu": "carte",
+   "carte": "offre",
+   "cta": "commande",
+   "brief": "Le kit complet, payé à la livraison, livré partout en Algérie.",
+   "texte": {
+    "fr": "Le cadeau qu'on ne range pas au placard",
+    "ar": "هدية ما تتنساش"
+   }
+  },
+  {
+   "id": "offre-fond-cadeau",
+   "famille": "offre",
+   "rendu": "gemini",
+   "refs": [
+    "kit-boite-support"
+   ],
+   "cta": "commande",
+   "brief": "Commandez votre kit, payez à la livraison.",
+   "prompt": "Elegant still life of a kraft gift box like the reference with an emerald ribbon on a white plaster pedestal, soft shadow, generous empty space in the upper half of the image, premium minimal product shot."
+  },
+  {
+   "id": "offre-contenu-prix",
+   "famille": "offre",
+   "rendu": "carte",
+   "carte": "offre_kit",
+   "cta": "commande",
+   "brief": "Tout ce qui est inclus dans le kit, au prix de lancement.",
+   "texte": {
+    "fr": "Tout est dans la boîte",
+    "ar": "كل شيء في العلبة"
+   }
+  },
+  {
+   "id": "communaute-a-qui",
+   "famille": "communaute",
+   "rendu": "carte",
+   "carte": "question",
+   "cta": "commentaire",
+   "brief": "Question à la communauté : à qui offririez-vous votre premier portrait en fil ?",
+   "texte": {
+    "fr": "À qui offririez-vous votre premier portrait en fil ?",
+    "ar": "لمن ستهدي أول بورتريه بالخيط؟"
+   }
+  },
+  {
+   "id": "communaute-citation-souvenir",
+   "famille": "communaute",
+   "rendu": "carte",
+   "carte": "citation",
+   "cta": "partage",
+   "brief": "Citation sur la mémoire et les souvenirs.",
+   "texte": {
+    "fr": "Certains visages méritent plus qu'un écran.",
+    "ar": "بعض الوجوه تستحق أكثر من شاشة."
+   }
+  },
+  {
+   "id": "communaute-devinez",
+   "famille": "communaute",
+   "rendu": "carte",
+   "carte": "devinette",
+   "cta": "commentaire",
+   "brief": "Jeu : combien de passages de fil pour ce portrait ? Réponse dans les commentaires.",
+   "texte": {
+    "fr": "Combien de passages de fil ?",
+    "ar": "كم مرة يمر الخيط؟"
+   }
+  },
+  {
+   "id": "communaute-choix",
+   "famille": "communaute",
+   "rendu": "carte",
+   "carte": "duel",
+   "cta": "commentaire",
+   "brief": "Sondage : lequel de ces deux portraits préférez-vous ?",
+   "texte": {
+    "fr": "Vous choisissez lequel ?",
+    "ar": "أيهما تختار؟"
+   }
+  },
+  {
+   "id": "communaute-citation-fil",
+   "famille": "communaute",
+   "rendu": "carte",
+   "carte": "citation",
+   "cta": "partage",
+   "brief": "Citation : un fil, un souvenir.",
+   "texte": {
+    "fr": "Un fil, un souvenir.",
+    "ar": "خيط، ذكرى."
+   }
+  },
+  {
+   "id": "atout-guide-vocal",
+   "famille": "atout",
+   "rendu": "carte",
+   "carte": "points",
+   "cta": "commande",
+   "brief": "Notre atout : un guide vocal en arabe, français et anglais, qui annonce chaque clou à votre rythme.",
+   "texte": {
+    "fr": "Une voix qui vous guide, même en arabe",
+    "ar": "صوت يرافقك، حتى بالعربية",
+    "points": [
+     [
+      "Chaque clou annoncé, un par un",
+      "كل مسمار يُذكر واحدًا بواحد"
+     ],
+     [
+      "Vitesse réglable",
+      "سرعة قابلة للتعديل"
+     ],
+     [
+      "Pause et reprise à tout moment",
+      "توقف واستأنف متى شئت"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "atout-reperes",
+   "famille": "atout",
+   "rendu": "carte",
+   "carte": "points",
+   "cta": "commande",
+   "brief": "Notre atout : 240 clous déjà posés et repérés de A1 à D60, faciles à retrouver.",
+   "texte": {
+    "fr": "240 clous déjà posés, repérés de A1 à D60",
+    "ar": "240 مسمارًا جاهزًا ومرقّمًا",
+    "points": [
+     [
+      "4 secteurs de 60 clous : A, B, C, D",
+      "4 أقسام من 60 مسمارًا"
+     ],
+     [
+      "Aucun clou à planter",
+      "لا حاجة لدق أي مسمار"
+     ],
+     [
+      "Chaque repère se trouve d'un coup d'œil",
+      "كل رقم تجده بنظرة"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "atout-sans-risque",
+   "famille": "atout",
+   "rendu": "carte",
+   "carte": "points",
+   "cta": "commande",
+   "brief": "Commander sans risque : paiement à la livraison, livraison partout en Algérie, confirmation par WhatsApp.",
+   "texte": {
+    "fr": "Commandez l'esprit tranquille",
+    "ar": "اطلب وأنت مطمئن",
+    "points": [
+     [
+      "Paiement à la livraison",
+      "الدفع عند الاستلام"
+     ],
+     [
+      "Livraison partout en Algérie",
+      "التوصيل لكل الولايات"
+     ],
+     [
+      "Commande confirmée par WhatsApp",
+      "تأكيد الطلب عبر واتساب"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "atout-progression",
+   "famille": "atout",
+   "rendu": "gemini",
+   "refs": [
+    "kit-assemblage"
+   ],
+   "cta": "commande",
+   "brief": "Notre atout : la progression est sauvegardée, on reprend exactement où l'on s'était arrêté, même le lendemain.",
+   "prompt": "A white board with brass nails on a kraft box stand, about half of a black thread portrait woven as abstract lines, a smartphone on a wooden stand showing a progress bar at roughly half, morning light on a tidy table, a fresh cup of coffee: the work resumes the next day."
+  },
+  {
+   "id": "atout-devidoir",
+   "famille": "atout",
+   "rendu": "gemini",
+   "refs": [
+    "kit-bobine"
+   ],
+   "cta": "commande",
+   "brief": "Notre atout : le dévidoir en bois, pour un fil qui se déroule sans s'emmêler du début à la fin.",
+   "prompt": "Close-up of a spool of black thread turning smoothly on a light birch wood unwinder like the reference, the thread running straight and untangled toward a white board with brass nails, soft studio light."
+  },
+  {
+   "id": "guide-ecran-voix",
+   "famille": "guide",
+   "rendu": "carte",
+   "carte": "ecran",
+   "ecran": "generateur/voice-{lang}.webp",
+   "cta": "commande",
+   "brief": "Le vrai écran du guide : le clou suivant, la progression, la vitesse, la reprise.",
+   "texte": {
+    "fr": "Votre guide, clou après clou",
+    "ar": "دليلك، مسمارًا بعد مسمار",
+    "points": [
+     [
+      "Le prochain clou en grand",
+      "المسمار التالي بخط كبير"
+     ],
+     [
+      "Progression sauvegardée",
+      "التقدّم محفوظ"
+     ],
+     [
+      "Vitesse réglable",
+      "سرعة قابلة للتعديل"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "resultat-ecran-apercu",
+   "famille": "resultat",
+   "rendu": "carte",
+   "carte": "ecran",
+   "ecran": "generateur/preview-{lang}.webp",
+   "cta": "prive",
+   "brief": "Le vrai écran du générateur : votre photo et son aperçu en fil avant de commencer.",
+   "texte": {
+    "fr": "Voyez votre portrait avant de commencer",
+    "ar": "شاهد صورتك بالخيط قبل أن تبدأ",
+    "points": [
+     [
+      "Ajoutez votre photo",
+      "أضف صورتك"
+     ],
+     [
+      "Le logiciel cadre le visage",
+      "البرنامج يضبط الوجه"
+     ],
+     [
+      "Aperçu fidèle du résultat",
+      "معاينة دقيقة للنتيجة"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "pack-support-telephone",
+   "famille": "pack",
+   "rendu": "gemini",
+   "refs": [
+    "etape-voix-telephone"
+   ],
+   "cta": "commande",
+   "brief": "Le support de téléphone en bois inclus : l'écran reste sous vos yeux, les mains restent libres.",
+   "prompt": "Close-up of a light birch wood phone stand holding a smartphone next to a white board with brass nails, a hand with a silver ring guiding black thread around a nail, a balcony with plants and morning sun in the background."
+  },
+  {
+   "id": "pack-chevalet-deco",
+   "famille": "pack",
+   "rendu": "gemini",
+   "refs": [
+    "support-chevalet",
+    "portrait"
+   ],
+   "cta": "commande",
+   "brief": "Le chevalet en bois pour exposer le portrait terminé sur un meuble.",
+   "prompt": "The reference circular string art portrait on its white board displayed on a light wooden easel stand, on a sideboard in an elegant Algerian living room with a brass lantern and a plant, warm afternoon light. Keep the portrait exactly as in the reference image."
+  },
+  {
+   "id": "emotion-ouverture",
+   "famille": "emotion",
+   "rendu": "gemini",
+   "refs": [
+    "etape-ouvrir-boite"
+   ],
+   "cta": "commentaire",
+   "brief": "Le moment d'ouvrir la boîte DeeKra à la maison.",
+   "prompt": "A young Algerian woman on a sofa opening a large flat kraft box like the reference, discovering the white board inside, curious smile, plants and soft daylight in a modern living room."
+  }
+ ]
+}
