@@ -53,7 +53,7 @@
    ],
    "cta": "partage",
    "brief": "Une bobine, un fil continu, des milliers de passages.",
-   "prompt": "Still life of a spool of black thread on a light wooden unwinder, the thread unwinding in a long graceful curve across a white table toward a board with brass nails, dramatic warm window light, dust particles in the light beam."
+   "prompt": "Still life of the birch unwinder with its black spool clipped on top of a white board with brass nails, the thread unwinding in a long graceful curve across a white table toward a board with brass nails, dramatic warm window light, dust particles in the light beam."
   },
   {
    "id": "creatif-patrimoine-haik",
@@ -124,11 +124,12 @@
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
-    "produit-devidoir"
+    "produit-devidoir",
+    "produit-planche-montee"
    ],
    "cta": "commande",
    "brief": "Le dévidoir en bois : le fil se déroule sans s'emmêler.",
-   "prompt": "Product photograph of a spool of black thread mounted on a light birch wood unwinder like the reference, on a white surface with soft shadow, a few meters of thread flowing neatly, premium studio lighting."
+   "prompt": "Product photograph of the white square board with brass nails standing inclined on its kraft box stand, the birch unwinder with the black spool clipped on the top edge of the board, a few black threads running from the spool down to the first nails, neat and untangled, warm light."
   },
   {
    "id": "pack-contenu",
@@ -533,11 +534,12 @@
    "famille": "atout",
    "rendu": "gemini",
    "refs": [
-    "produit-devidoir"
+    "produit-devidoir",
+    "produit-planche-montee"
    ],
    "cta": "commande",
    "brief": "Notre atout : le dévidoir en bois, pour un fil qui se déroule sans s'emmêler du début à la fin.",
-   "prompt": "Close-up of a spool of black thread turning smoothly on a light birch wood unwinder like the reference, the thread running straight and untangled toward a white board with brass nails, soft studio light."
+   "prompt": "Close-up of the birch unwinder clipped on the top edge of the white square board, the spool of black thread with red caps turning smoothly, the thread running straight and untangled down to a brass nail, soft studio light."
   },
   {
    "id": "guide-ecran-voix",
