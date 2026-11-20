@@ -9,17 +9,20 @@ STYLE = (
     "Warm natural light, palette of off-white, ink black, emerald green (#0e5443) and brass gold accents. "
     "Contemporary Algerian interiors and culture, modest and respectful styling. Clean composition, "
     "keep the top-right corner calm and uncluttered for a logo. "
-    "No text, no letters, no watermark, no logo, no brand names in the image. Vertical 4:5 format."
+    "No text, no letters, no watermark, no logo, no brand names in the image (only exception: the small nail numbers and A, B, C, D "
+    "corner letters printed on the board's template sheet during the work). Vertical 4:5 format."
 )
 
 PORTRAIT_RULE = (
     "One of the reference images is a real circular string art portrait made of black thread on a white board "
-    "with brass nails: reproduce it faithfully, do not redraw or change the face, keep it circular and monochrome."
+    "with brass nails: reproduce it faithfully, do not redraw or change the face, keep it circular and monochrome. "
+    "A finished portrait sits on a plain, fully white board: no printed template sheet, numbers or letters."
 )
 
 NO_PORTRAIT_RULE = (
     "Any white board shown is empty or only partly woven with a few abstract black lines: "
-    "never draw a face or a portrait on it."
+    "never draw a face or a portrait on it. While work is in progress the board is covered by its printed template sheet "
+    "(fine ring of nail numbers, corner zones A, B, C, D)."
 )
 
 PRODUCT_RULE = (

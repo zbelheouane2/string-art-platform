@@ -464,3 +464,12 @@ def test_pas_de_portrait_invente_sans_rendu_reel():
     assert "never draw a face" in captions.prompt_image({"prompt": "P"}, False)
     p = captions.prompt_image({"prompt": "P"}, True)
     assert "never draw a face" not in p and "real circular string art portrait" in p
+
+
+def test_feuille_gabarit_pendant_travail_et_planche_blanche_finie():
+    from deekra_social import captions
+    s = {"prompt": "x", "brief": "y"}
+    en_cours = captions.prompt_image(s, avec_portrait=False)
+    fini = captions.prompt_image(s, avec_portrait=True)
+    assert "template sheet" in en_cours and "A, B, C, D" in en_cours
+    assert "fully white board" in fini
