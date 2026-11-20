@@ -17,6 +17,11 @@ PORTRAIT_RULE = (
     "with brass nails: reproduce it faithfully, do not redraw or change the face, keep it circular and monochrome."
 )
 
+NO_PORTRAIT_RULE = (
+    "Any white board shown is empty or only partly woven with a few abstract black lines: "
+    "never draw a face or a portrait on it."
+)
+
 PRODUCT_RULE = (
     "The attached product reference images only show what our real product looks like (kraft box, stand, wooden "
     "unwinder, phone stand, board with brass nails). Reproduce the product faithfully, but invent a completely new scene: "
@@ -34,7 +39,7 @@ CTA = {
 
 def prompt_image(sujet: dict, avec_portrait: bool, angle: str | None = None,
                  ambiance: str | None = None, avec_produit: bool = False, fiche: str = "") -> str:
-    regle = f" {PORTRAIT_RULE}" if avec_portrait else ""
+    regle = f" {PORTRAIT_RULE}" if avec_portrait else f" {NO_PORTRAIT_RULE}"
     if avec_produit:
         regle += f" {PRODUCT_RULE}"
     if fiche:

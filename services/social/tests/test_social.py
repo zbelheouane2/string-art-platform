@@ -458,3 +458,9 @@ def test_fiche_produit_dans_le_prompt(settings):
 def test_toutes_les_refs_ont_une_fiche(settings):
     refs = {r for s in settings.sujets for r in s.get("refs", []) if not r.startswith("portrait")}
     assert refs <= set(settings.produit), refs - set(settings.produit)
+
+
+def test_pas_de_portrait_invente_sans_rendu_reel():
+    assert "never draw a face" in captions.prompt_image({"prompt": "P"}, False)
+    p = captions.prompt_image({"prompt": "P"}, True)
+    assert "never draw a face" not in p and "real circular string art portrait" in p
