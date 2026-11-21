@@ -1,4 +1,7 @@
+# Caddy obtient et renouvelle seul le certificat HTTPS (Let's Encrypt) et redirige http:// vers https://.
 {$DOMAIN}, www.{$DOMAIN} {
 	encode zstd gzip
+	# HSTS : le navigateur n'utilise plus que https pour ce site pendant 1 an.
+	header Strict-Transport-Security "max-age=31536000"
 	reverse_proxy web:3000
 }
