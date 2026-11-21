@@ -1,5 +1,8 @@
 # Historique
 
+## 2026-11-21
+- **Hébergement sur VPS (Octenium VPS Starter)** : script d'installation en une commande (`deploy/vps/installer.sh`) pour Ubuntu 24.04 : mises à jour de sécurité automatiques, swap 4 Go, pare-feu ufw (22/80/443), fail2ban, Docker, base PostgreSQL 17, site et moteur, HTTPS Let's Encrypt par Caddy avec redirection http → https et HSTS, démarrage automatique, sauvegarde de la base chaque nuit (14 jours). Scripts `migrer-donnees.sh` (copie de l'ancienne base Supabase/Render, relançable), `mettre-a-jour.sh`, `sauvegarder.sh`, `restaurer.sh`. `docker-compose.prod.yml` transmet maintenant `NEXT_PUBLIC_SITE_URL` (déduite du domaine) et les identifiants GA4/Meta/TikTok. Guide : `docs/hebergement-vps-octenium.md`.
+
 ## 2026-11-20
 - **Réseaux sociaux** (`services/social/`) : 3 visuels par jour (Gemini + cartes de marque), légendes AR/FR, contrôle qualité, calendrier algérien, anti-répétition, publication Facebook/Instagram (Meta Graph) via GitHub Actions, mode validation par défaut. 40 tests.
 
