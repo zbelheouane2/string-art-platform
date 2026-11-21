@@ -1,0 +1,377 @@
+{
+ "_doc": "Calendrier algérien des occasions. Une occasion prend le créneau du soir de (date - jours_avant) jusqu'à fin (ou date). Plusieurs variantes de visuel par occasion pour éviter les répétitions. commercial=false : ton commémoratif, ni prix ni appel à l'achat. Dates religieuses approximatives (calendrier lunaire, annonce officielle) : à vérifier chaque année. priorite : l'occasion la plus prioritaire gagne en cas de chevauchement (puis la plus proche). jours_par_semaine : pour les longues saisons, nombre de soirs par semaine (sinon tous les soirs).",
+ "_exclues": "Fêtes étrangères volontairement absentes : Saint-Valentin, Noël, Halloween, Black Friday. La fin d'année est traitée comme un bilan et des vœux, sans sapin ni Père Noël.",
+ "occasions": [
+  {
+   "id": "hiver-2026",
+   "nom": "Soirées d'hiver",
+   "date": "2026-12-01",
+   "fin": "2026-12-14",
+   "jours_avant": 0,
+   "commercial": true,
+   "brief": "Les longues soirées d'hiver : un loisir calme au chaud, en famille.",
+   "variantes": [
+    {
+     "prompt": "A cosy Algerian living room on a rainy winter evening, a woman wrapped in a wool blanket weaving black thread on a white board with brass nails, a steaming glass of tea, rain on the window, warm lamp light.",
+     "refs": []
+    },
+    {
+     "prompt": "A mother and her teenage daughter sitting on floor cushions near a gas heater, weaving black thread together on a white board with brass nails, bowls of roasted chestnuts, warm winter evening light.",
+     "refs": []
+    }
+   ],
+   "priorite": 1,
+   "jours_par_semaine": 4
+  },
+  {
+   "id": "fin-annee-2026",
+   "nom": "Fin d'année",
+   "date": "2026-12-31",
+   "jours_avant": 16,
+   "commercial": true,
+   "brief": "Clôturer l'année avec un souvenir : le visage des personnes qui ont compté cette année, en fil.",
+   "variantes": [
+    {
+     "prompt": "A warm Algerian living room at night, a family looking at photos on a phone together, on the wall the reference circular string art portrait on a white board, a tray of tea and traditional cakes, golden festive light, no Christmas decorations. Keep the portrait exactly as in the reference image.",
+     "refs": [
+      "portrait:couple-femme"
+     ]
+    },
+    {
+     "prompt": "Flat lay on a wooden table: a notebook with an empty page, a fountain pen, a few printed family photos, a white board with brass nails and black thread, a kraft gift box like the reference with an emerald ribbon, warm evening light, no Christmas decorations.",
+     "refs": [
+      "produit-boite"
+     ]
+    },
+    {
+     "prompt": "Close-up of hands tying the last knot of black thread on a finished circular string art portrait on a white board with brass nails, a small candle and a cup of coffee nearby, a sense of accomplishment, warm night light.",
+     "refs": []
+    }
+   ],
+   "priorite": 2
+  },
+  {
+   "id": "yennayer-2027",
+   "nom": "Yennayer",
+   "date": "2027-01-12",
+   "jours_avant": 7,
+   "commercial": true,
+   "brief": "Yennayer, nouvel an amazigh : célébrer nos racines avec un portrait en fil.",
+   "variantes": [
+    {
+     "prompt": "The reference circular string art portrait on a white board placed on a table set for Yennayer in an Algerian home, traditional Kabyle pottery, a colourful Amazigh woven fabric, a dish of dried fruits and nuts, warm festive light. Keep the portrait exactly as in the reference image.",
+     "refs": [
+      "portrait:grandpere"
+     ]
+    },
+    {
+     "prompt": "A Kabyle grandmother in a traditional colourful dress smiling while holding a kraft gift box like the reference, in a stone village house decorated with Amazigh motifs, festive warm light.",
+     "refs": [
+      "produit-boite"
+     ]
+    }
+   ],
+   "priorite": 2
+  },
+  {
+   "id": "femme-2027",
+   "nom": "Journée de la femme (8 mars)",
+   "date": "2027-03-08",
+   "jours_avant": 5,
+   "commercial": true,
+   "brief": "8 mars : rendre hommage aux femmes de notre vie, mère, sœur, épouse.",
+   "variantes": [
+    {
+     "prompt": "The reference circular string art portrait of a woman on a white board, displayed on a shelf with a small bouquet of mimosa flowers, bright spring light. Keep the portrait exactly as in the reference image.",
+     "refs": [
+      "portrait:femme"
+     ]
+    }
+   ],
+   "priorite": 2
+  },
+  {
+   "id": "ramadan-2027",
+   "nom": "Ramadan",
+   "date": "2027-02-08",
+   "fin": "2027-03-07",
+   "jours_avant": 7,
+   "commercial": true,
+   "brief": "Ramadan : des soirées calmes en famille, le moment de préparer un souvenir pour l'Aïd.",
+   "variantes": [
+    {
+     "prompt": "An Algerian family in the living room after iftar, a teenager weaving black thread on a white board with brass nails while the parents watch, a glowing brass lantern, dates and tea on the table, warm night light.",
+     "refs": []
+    },
+    {
+     "prompt": "A table after iftar with a brass lantern, a plate of qalb el louz and a glass of mint tea, next to it a white board with brass nails and a half-woven black thread pattern, warm night light.",
+     "refs": []
+    },
+    {
+     "prompt": "A crescent moon visible through an arched window, inside a calm room a man weaving black thread on a white board with brass nails, a phone on a wooden stand, serene night atmosphere.",
+     "refs": []
+    }
+   ],
+   "priorite": 2,
+   "jours_par_semaine": 5
+  },
+  {
+   "id": "aid-el-fitr-2027",
+   "nom": "Aïd el-Fitr",
+   "date": "2027-03-10",
+   "jours_avant": 10,
+   "commercial": true,
+   "brief": "Aïd moubarak : offrez un souvenir qui reste.",
+   "variantes": [
+    {
+     "prompt": "A kraft gift box like the reference with an emerald ribbon on a table decorated for Eid in an Algerian home, traditional cakes (makrout, griwech) on a silver tray, a brass lantern, festive warm light.",
+     "refs": [
+      "produit-boite"
+     ]
+    },
+    {
+     "prompt": "Children in new Eid clothes giving a kraft gift box like the reference to their grandmother in a bright Algerian living room, joyful and warm.",
+     "refs": [
+      "produit-boite"
+     ]
+    }
+   ],
+   "priorite": 3
+  },
+  {
+   "id": "aid-el-adha-2027",
+   "nom": "Aïd el-Adha",
+   "date": "2027-05-16",
+   "jours_avant": 10,
+   "commercial": true,
+   "brief": "L'Aïd réunit la famille : le bon moment pour un portrait de famille en fil.",
+   "variantes": [
+    {
+     "prompt": "The reference circular string art portrait on a white board hanging in a bright Algerian family living room prepared for Eid, family members chatting in soft focus in the background, warm light. Keep the portrait exactly as in the reference image.",
+     "refs": [
+      "portrait:couple-femme"
+     ]
+    }
+   ],
+   "priorite": 3
+  },
+  {
+   "id": "fete-des-meres-2027",
+   "nom": "Fête des mères",
+   "date": "2027-05-30",
+   "jours_avant": 10,
+   "commercial": true,
+   "brief": "Fête des mères : son portrait, fait de vos mains.",
+   "variantes": [
+    {
+     "prompt": "An Algerian mother receiving the reference circular string art portrait from her son, both smiling, in a warm living room with flowers on the table. Keep the portrait exactly as in the reference image.",
+     "refs": [
+      "portrait:femme"
+     ]
+    },
+    {
+     "prompt": "A young woman secretly weaving black thread on a white board with brass nails at night in her bedroom, a photo of her mother on her phone on a wooden stand, warm lamp light.",
+     "refs": []
+    }
+   ],
+   "priorite": 3
+  },
+  {
+   "id": "mariages-2027",
+   "nom": "Saison des mariages",
+   "date": "2027-06-15",
+   "fin": "2027-09-15",
+   "jours_avant": 10,
+   "commercial": true,
+   "brief": "Saison des mariages : le cadeau qui raconte l'histoire du couple.",
+   "variantes": [
+    {
+     "prompt": "The reference circular string art portrait on a white board on an easel at the entrance of an elegant Algerian wedding hall, white flowers and candles, festive golden light. Keep the portrait exactly as in the reference image.",
+     "refs": [
+      "portrait:couple"
+     ]
+    },
+    {
+     "prompt": "A bride's trousseau (tedeira) display in an Algerian home with folded caftans, a silver jewellery box and a kraft gift box like the reference with an emerald ribbon, elegant warm light.",
+     "refs": [
+      "produit-boite"
+     ]
+    },
+    {
+     "prompt": "The reference circular string art portrait wrapped as a gift on a table with a decorated henna tray and candles for a henna night, warm festive light. Keep the portrait exactly as in the reference image.",
+     "refs": [
+      "portrait:caftan"
+     ]
+    }
+   ],
+   "priorite": 1,
+   "jours_par_semaine": 3
+  },
+  {
+   "id": "awal-mouharram-2027",
+   "nom": "Awal Mouharram",
+   "date": "2027-06-06",
+   "jours_avant": 3,
+   "commercial": false,
+   "brief": "Nouvel an de l'Hégire : vœux de paix et de sérénité pour toutes les familles.",
+   "variantes": [
+    {
+     "prompt": "A serene still life: a white board with brass nails and a few black threads forming a crescent shape, an olive branch, soft morning light, minimal and peaceful.",
+     "refs": []
+    }
+   ],
+   "priorite": 2
+  },
+  {
+   "id": "independance-2027",
+   "nom": "Fête de l'Indépendance (5 juillet)",
+   "date": "2027-07-05",
+   "jours_avant": 3,
+   "commercial": false,
+   "brief": "5 juillet : fierté et mémoire, nous tissons notre histoire.",
+   "variantes": [
+    {
+     "prompt": "Fine-art photograph of the Maqam Echahid monument in Algiers at golden hour seen through a few taut black threads stretched across the foreground between brass nails, respectful and proud atmosphere.",
+     "refs": []
+    }
+   ],
+   "priorite": 3
+  },
+  {
+   "id": "bac-2027",
+   "nom": "Résultats du bac",
+   "date": "2027-07-12",
+   "jours_avant": 2,
+   "fin": "2027-07-20",
+   "commercial": true,
+   "brief": "Résultats du bac : un cadeau de réussite qui garde le souvenir du grand jour.",
+   "variantes": [
+    {
+     "prompt": "A proud young Algerian graduate hugging her parents in a living room, a kraft gift box like the reference with an emerald ribbon on the table, joyful warm light.",
+     "refs": [
+      "produit-boite"
+     ]
+    }
+   ],
+   "priorite": 2
+  },
+  {
+   "id": "ete-diaspora-2027",
+   "nom": "Été et retour de la diaspora",
+   "date": "2027-07-15",
+   "fin": "2027-08-25",
+   "jours_avant": 0,
+   "commercial": true,
+   "brief": "L'été des retrouvailles : offrez à la famille un portrait qui reste après les vacances.",
+   "variantes": [
+    {
+     "prompt": "A summer terrace overlooking the Mediterranean sea in an Algerian coastal town, the reference circular string art portrait on a white board leaning on a whitewashed wall, bougainvillea, bright summer light. Keep the portrait exactly as in the reference image.",
+     "refs": [
+      "portrait:grandpere"
+     ]
+    },
+    {
+     "prompt": "A family reunion at an Algerian home entrance with suitcases, a young woman back from abroad offering a kraft gift box like the reference to her grandmother, emotional warm light.",
+     "refs": [
+      "produit-boite"
+     ]
+    }
+   ],
+   "priorite": 1,
+   "jours_par_semaine": 3
+  },
+  {
+   "id": "mawlid-2027",
+   "nom": "Mawlid Ennabaoui",
+   "date": "2027-08-15",
+   "jours_avant": 3,
+   "commercial": false,
+   "brief": "Mawlid : une soirée de lumière et de partage en famille.",
+   "variantes": [
+    {
+     "prompt": "A traditional Algerian family table for Mawlid with candles, a brass lantern, a dish of tamina and a bowl of chakhchoukha, warm candle light, no people, peaceful atmosphere.",
+     "refs": []
+    }
+   ],
+   "priorite": 2
+  },
+  {
+   "id": "rentree-2027",
+   "nom": "Rentrée",
+   "date": "2027-09-20",
+   "jours_avant": 5,
+   "commercial": true,
+   "brief": "Rentrée : un loisir calme pour décompresser après la journée.",
+   "variantes": [
+    {
+     "prompt": "A young Algerian woman relaxing in the evening after work, weaving black thread on a white board with brass nails at her desk, a laptop closed beside her, soft lamp light.",
+     "refs": []
+    }
+   ],
+   "priorite": 1
+  },
+  {
+   "id": "revolution-2027",
+   "nom": "1er Novembre",
+   "date": "2027-11-01",
+   "jours_avant": 2,
+   "commercial": false,
+   "brief": "1er Novembre : mémoire et reconnaissance, avec respect.",
+   "variantes": [
+    {
+     "prompt": "Minimal respectful still life: an Algerian flag folded on a wooden table next to a white board with brass nails and a few black threads, soft morning light, solemn atmosphere.",
+     "refs": []
+    }
+   ],
+   "priorite": 3
+  },
+  {
+   "id": "hiver-2027",
+   "nom": "Soirées d'hiver",
+   "date": "2027-12-01",
+   "fin": "2027-12-14",
+   "jours_avant": 0,
+   "commercial": true,
+   "brief": "Les longues soirées d'hiver : un loisir calme au chaud, en famille.",
+   "variantes": [
+    {
+     "prompt": "A cosy Algerian living room on a rainy winter evening, a woman wrapped in a wool blanket weaving black thread on a white board with brass nails, a steaming glass of tea, rain on the window, warm lamp light.",
+     "refs": []
+    },
+    {
+     "prompt": "A mother and her teenage daughter sitting on floor cushions near a gas heater, weaving black thread together on a white board with brass nails, bowls of roasted chestnuts, warm winter evening light.",
+     "refs": []
+    }
+   ],
+   "priorite": 1,
+   "jours_par_semaine": 4
+  },
+  {
+   "id": "fin-annee-2027",
+   "nom": "Fin d'année",
+   "date": "2027-12-31",
+   "jours_avant": 16,
+   "commercial": true,
+   "brief": "Clôturer l'année avec un souvenir : le visage des personnes qui ont compté cette année, en fil.",
+   "variantes": [
+    {
+     "prompt": "A warm Algerian living room at night, a family looking at photos on a phone together, on the wall the reference circular string art portrait on a white board, a tray of tea and traditional cakes, golden festive light, no Christmas decorations. Keep the portrait exactly as in the reference image.",
+     "refs": [
+      "portrait:couple-femme"
+     ]
+    },
+    {
+     "prompt": "Flat lay on a wooden table: a notebook with an empty page, a fountain pen, a few printed family photos, a white board with brass nails and black thread, a kraft gift box like the reference with an emerald ribbon, warm evening light, no Christmas decorations.",
+     "refs": [
+      "produit-boite"
+     ]
+    },
+    {
+     "prompt": "Close-up of hands tying the last knot of black thread on a finished circular string art portrait on a white board with brass nails, a small candle and a cup of coffee nearby, a sense of accomplishment, warm night light.",
+     "refs": []
+    }
+   ],
+   "priorite": 2
+  }
+ ]
+}

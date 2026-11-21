@@ -1,5 +1,8 @@
 # Historique
 
+## 2026-11-20
+- **Réseaux sociaux** (`services/social/`) : 3 visuels par jour (Gemini + cartes de marque), légendes AR/FR, contrôle qualité, calendrier algérien, anti-répétition, publication Facebook/Instagram (Meta Graph) via GitHub Actions, mode validation par défaut. 40 tests.
+
 ## 2026-11-19
 - **Pixel Meta vérifié de bout en bout** : nouveau test navigateur (`consent.spec.ts`) qui suit un achat complet après « Accepter » et contrôle les événements standards envoyés au pixel : PageView, ViewContent (fiche du kit, prix en DZD), AddToCart, InitiateCheckout, Purchase (total de la commande en DZD, numéro de commande comme identifiant d'événement, compté une seule fois même après rechargement), sans nom ni téléphone. Aucun changement de code : les cinq événements étaient déjà envoyés.
 - **Confirmation manuelle des commandes par WhatsApp** (demande du propriétaire, avant l'API WhatsApp Business) : dans l'admin, chaque commande « À confirmer » affiche son état et un bouton « Confirmer sur WhatsApp » qui ouvre wa.me vers le numéro du client (converti au format international 213…), avec un message prérempli dans la langue de la commande (français, arabe ; anglais pour une commande passée en anglais) : prénom, kit, total (« + livraison » si les frais ne sont pas encore connus), wilaya, numéro de commande et demande de confirmation. Pour un cadeau, le message va à l'acheteur et cite le destinataire. Le bouton « Marquer confirmée » passe la commande en « Confirmée » d'un clic (le menu des états reste disponible). Aucun envoi automatique ; aucun changement de base (les états « À confirmer » et « Confirmée » existaient déjà). Code : `src/lib/admin/orderConfirmation.ts`.

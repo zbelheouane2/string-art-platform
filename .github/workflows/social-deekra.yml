@@ -1,0 +1,128 @@
+# Réseaux sociaux DeeKra : 3 visuels par jour (Gemini) publiés sur Facebook et Instagram.
+#
+# Secrets du dépôt : GEMINI_API_KEY, META_PAGE_ID, META_PAGE_TOKEN, META_IG_USER_ID
+# Variable du dépôt  : SOCIAL_AUTOPUBLISH = true pour activer la publication automatique.
+#
+# À chaque créneau, la tâche publie le visuel VALIDÉ du jour s'il existe sur la branche social-lots
+# (mode semi-automatique : visuels créés dans l'application Gemini, légendes rédigées, validés).
+# Si aucun visuel n'est validé et que SOCIAL_AUTOPUBLISH = true, elle génère et publie seule (clé API).
+# Sinon elle ne fait rien. Chaque visuel est archivé sur social-lots (image, légende, journal).
+name: Réseaux sociaux DeeKra
+
+on:
+  schedule:
+    # Heures UTC, Alger = UTC+1 toute l'année. Lancement ~20 min avant le créneau
+    # (GitHub peut retarder un lancement planifié de quelques minutes).
+    - cron: "10 11 * * *"   # midi        12:30 Alger (horaire normal)
+    - cron: "10 16 * * *"   # apres_midi  17:30
+    - cron: "40 19 * * *"   # soir        21:00
+    - cron: "40 13 * * *"   # midi        15:00 (Ramadan)
+    - cron: "10 17 * * *"   # apres_midi  18:30 (Ramadan)
+    - cron: "40 20 * * *"   # soir        22:00 (Ramadan)
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "lot (générer avec la clé API), publier (un visuel précis), auto (créneau du moment)"
+        required: true
+        default: lot
+        type: choice
+        options: [lot, publier, auto]
+      date:
+        description: "Date du lot (AAAA-MM-JJ), vide = aujourd'hui"
+        required: false
+      creneau:
+        description: "midi, apres_midi ou soir (vide = les trois pour un lot)"
+        required: false
+      fichier:
+        description: "Mode publier : chemin du visuel dans social-lots, ex. 2026-11-21/2026-11-21-midi.jpg"
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: social-deekra
+  cancel-in-progress: false
+
+jobs:
+  social:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      META_PAGE_ID: ${{ secrets.META_PAGE_ID }}
+      META_PAGE_TOKEN: ${{ secrets.META_PAGE_TOKEN }}
+      META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
+      SOCIAL_AUTOPUBLISH: ${{ vars.SOCIAL_AUTOPUBLISH }}
+    steps:
+      - name: Choisir le créneau
+        id: slot
+        run: |
+          case "${{ github.event.schedule }}" in
+            "10 11 * * *") echo "creneau=midi" >> "$GITHUB_OUTPUT"; echo "horaire=normal" >> "$GITHUB_OUTPUT" ;;
+            "10 16 * * *") echo "creneau=apres_midi" >> "$GITHUB_OUTPUT"; echo "horaire=normal" >> "$GITHUB_OUTPUT" ;;
+            "40 19 * * *") echo "creneau=soir" >> "$GITHUB_OUTPUT"; echo "horaire=normal" >> "$GITHUB_OUTPUT" ;;
+            "40 13 * * *") echo "creneau=midi" >> "$GITHUB_OUTPUT"; echo "horaire=Ramadan" >> "$GITHUB_OUTPUT" ;;
+            "10 17 * * *") echo "creneau=apres_midi" >> "$GITHUB_OUTPUT"; echo "horaire=Ramadan" >> "$GITHUB_OUTPUT" ;;
+            "40 20 * * *") echo "creneau=soir" >> "$GITHUB_OUTPUT"; echo "horaire=Ramadan" >> "$GITHUB_OUTPUT" ;;
+            *) echo "creneau=${{ inputs.creneau }}" >> "$GITHUB_OUTPUT"; echo "horaire=" >> "$GITHUB_OUTPUT" ;;
+          esac
+          echo "actif=true" >> "$GITHUB_OUTPUT"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.mode }}" = "lot" ] || [ "$SOCIAL_AUTOPUBLISH" = "true" ]; then
+            echo "navigateur=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.slot.outputs.actif == 'true'
+
+      - uses: actions/setup-python@v5
+        if: steps.slot.outputs.actif == 'true'
+        with:
+          python-version: "3.12"
+
+      - name: Installer
+        if: steps.slot.outputs.actif == 'true'
+        run: |
+          pip install -e ./services/social
+          if [ "${{ steps.slot.outputs.navigateur }}" = "true" ]; then python -m playwright install --with-deps chromium; fi
+
+      - name: Récupérer l'archive des lots
+        if: steps.slot.outputs.actif == 'true'
+        run: |
+          git config user.name "deekra-social-bot"
+          git config user.email "deekra-social-bot@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin social-lots >/dev/null; then
+            git worktree add lots origin/social-lots
+            git -C lots checkout -B social-lots origin/social-lots
+          else
+            git worktree add --orphan -b social-lots lots
+          fi
+
+      - name: Générer et publier
+        if: steps.slot.outputs.actif == 'true'
+        working-directory: services/social
+        run: |
+          LOTS="$GITHUB_WORKSPACE/lots"
+          case "${{ github.event_name }}:${{ inputs.mode }}" in
+            schedule:*|workflow_dispatch:auto)
+              args="--creneau ${{ steps.slot.outputs.creneau }} --sortie $LOTS"
+              [ -n "${{ steps.slot.outputs.horaire }}" ] && args="$args --horaire ${{ steps.slot.outputs.horaire }}"
+              python -m deekra_social programme $args ;;
+            workflow_dispatch:lot)
+              args="--sortie $LOTS"
+              [ -n "${{ inputs.date }}" ] && args="$args --date ${{ inputs.date }}"
+              [ -n "${{ inputs.creneau }}" ] && args="$args --creneau ${{ inputs.creneau }}"
+              python -m deekra_social lot $args ;;
+            workflow_dispatch:publier)
+              python -m deekra_social publier "$LOTS/${{ inputs.fichier }}" --oui ;;
+          esac
+
+      - name: Archiver
+        if: always() && steps.slot.outputs.actif == 'true'
+        run: |
+          cd lots
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Lots réseaux sociaux : ${{ github.event_name }} ${{ inputs.mode }} $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push origin social-lots
+          fi

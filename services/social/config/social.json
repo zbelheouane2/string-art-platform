@@ -1,0 +1,169 @@
+{
+  "_doc": "Configuration du pipeline réseaux sociaux DeeKra. Aucun secret ici : les clés passent par les variables d'environnement (voir README).",
+  "marque": "DeeKra",
+  "fuseau": "Africa/Algiers",
+  "creneaux": {
+    "midi": "12:30",
+    "apres_midi": "17:30",
+    "soir": "21:00"
+  },
+  "semaine_type": {
+    "_doc": "Famille de visuel par jour et par créneau (ordre : midi, apres_midi, soir).",
+    "samedi": [
+      "creatif",
+      "pack",
+      "resultat"
+    ],
+    "dimanche": [
+      "communaute",
+      "atout",
+      "offre"
+    ],
+    "lundi": [
+      "creatif",
+      "pack",
+      "emotion"
+    ],
+    "mardi": [
+      "resultat",
+      "guide",
+      "offre"
+    ],
+    "mercredi": [
+      "creatif",
+      "pack",
+      "resultat"
+    ],
+    "jeudi": [
+      "emotion",
+      "atout",
+      "offre"
+    ],
+    "vendredi": [
+      "communaute",
+      "resultat",
+      "emotion"
+    ]
+  },
+  "occasion": {
+    "_doc": "Créneau pris par les occasions ; jours_avant par défaut si l'occasion n'en donne pas.",
+    "jours_avant": 10,
+    "creneau": "soir"
+  },
+  "offre": {
+    "afficher_prix": true,
+    "prix": "4 900 DA",
+    "paiement": "Paiement à la livraison",
+    "paiement_ar": "الدفع عند الاستلام",
+    "livraison": "Livraison partout en Algérie",
+    "livraison_ar": "التوصيل لكل ولايات الجزائر",
+    "site": "",
+    "whatsapp": ""
+  },
+  "hashtags_fixes": [
+    "#DeeKra",
+    "#ذكرى"
+  ],
+  "hashtags_max": 10,
+  "legende_max_caracteres": 2000,
+  "mots_interdits": [
+    "avis client",
+    "témoignage",
+    "dernière chance",
+    "stock limité",
+    "100% garanti",
+    "gratuit",
+    "meilleur prix",
+    "promo",
+    "-50%",
+    "il ne reste que",
+    "dernières pièces"
+  ],
+  "rendus": {
+    "_doc": "Vrais rendus du moteur (dossier apps/web/public/visuels). Les portraits de chouhada sont exclus de la publication automatique.",
+    "dossier": "apps/web/public/visuels",
+    "portraits": [
+      "caftan",
+      "grandpere",
+      "haik",
+      "touareg",
+      "couple",
+      "couple-femme",
+      "femme",
+      "fillette",
+      "bebe",
+      "jeune",
+      "photographe",
+      "boucles",
+      "chat"
+    ]
+  },
+  "gemini": {
+    "modele_image": "gemini-2.5-flash-image",
+    "modele_texte": "gemini-2.5-flash",
+    "ratio": "4:5",
+    "essais_max": 2
+  },
+  "meta": {
+    "version_graph": "v24.0"
+  },
+  "sortie": {
+    "largeur": 1080,
+    "hauteur": 1350,
+    "qualite_jpeg": 90
+  },
+  "horaires_speciaux": [
+    {
+      "nom": "Ramadan",
+      "debut": "2027-02-08",
+      "fin": "2027-03-09",
+      "creneaux": {
+        "midi": "15:00",
+        "apres_midi": "18:30",
+        "soir": "22:00"
+      }
+    }
+  ],
+  "variations": {
+    "_doc": "Variété : angle de vue (si le prompt n'impose pas de cadrage), ambiance de saison, registre de la légende. Chaque sujet change d'angle et de registre à chaque passage.",
+    "angles": [
+      "eye-level medium shot",
+      "slightly high angle three-quarter view",
+      "low angle looking up, cinematic",
+      "wide shot showing the whole room",
+      "over-the-shoulder point of view",
+      "close-up with shallow depth of field, background softly blurred",
+      "symmetrical frontal composition",
+      "seen through a doorway, natural framing"
+    ],
+    "ambiances_saison": {
+      "hiver": "soft winter light: gentle grey-blue daylight balanced by warm lamp tones",
+      "printemps": "fresh bright spring light, a touch of blossoms only if the setting allows",
+      "ete": "strong warm summer sunlight with crisp shadows",
+      "automne": "low golden autumn light and warm earthy tones"
+    },
+    "registres_legende": [
+      "question ouverte au lecteur",
+      "petite histoire du quotidien (sans prétendre qu'elle est vraie ni qu'il s'agit d'un client)",
+      "chiffre ou détail technique du kit",
+      "émotion et souvenir",
+      "conseil pratique",
+      "fierté du patrimoine algérien",
+      "phrase courte et poétique"
+    ],
+    "historique_jours": 30
+  },
+  "atouts": {
+    "_doc": "Points forts vérifiés, issus de l'étude concurrentielle : la légende s'appuie dessus, sans jamais citer de concurrent.",
+    "liste": [
+      "guide vocal en arabe, français et anglais (les marques étrangères n'ont pas l'arabe)",
+      "240 clous déjà posés et repérés de A1 à D60",
+      "dévidoir en bois : le fil ne s'emmêle pas",
+      "vitesse réglable, pause et reprise, progression sauvegardée",
+      "paiement à la livraison et livraison partout en Algérie, commande confirmée par WhatsApp",
+      "logiciel qui cadre automatiquement le visage pour un portrait ressemblant",
+      "aucun talent artistique nécessaire, 4 à 6 heures de réalisation",
+      "carte-message offerte, cadeau prêt à offrir"
+    ]
+  }
+}
