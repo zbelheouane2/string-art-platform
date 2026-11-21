@@ -15,6 +15,14 @@ Stratégie de référence : document « Stratégie marketing DeeKra — Réseaux
 5. **Légende** : Gemini décrit l'image, puis rédige selon le ton DeeKra, le registre du jour et un point fort vérifié. Il reçoit les accroches des 30 derniers jours pour éviter de les répéter. La légende est ensuite vérifiée (mots interdits, longueur, hashtags).
 6. **Publication** : photo sur la page Facebook, puis Instagram à partir de l'URL de cette photo. Aucun hébergement supplémentaire n'est nécessaire.
 
+## Mode semi-automatique (gratuit, sans clé API)
+
+1. `preparer --date J` rend les cartes de marque du jour et écrit `prompts.md`, avec les prompts détaillés et les images de référence du produit à joindre dans l'application Gemini.
+2. Le propriétaire génère les visuels dans l'application et les transmet.
+3. `importer` recadre l'image en 1080 × 1350, pose le logo et enregistre la légende, qui est vérifiée. Le visuel passe au statut « à valider ».
+4. `valider` intervient après l'accord du propriétaire. Les lots sont poussés sur la branche `social-lots`.
+5. À chaque créneau, la tâche planifiée (`programme`) publie le visuel validé du jour. Seuls les secrets Meta sont nécessaires.
+
 ## Configuration (`config/`)
 
 | Fichier | Contenu |

@@ -9,17 +9,25 @@ STYLE = (
     "Warm natural light, palette of off-white, ink black, emerald green (#0e5443) and brass gold accents. "
     "Contemporary Algerian interiors and culture, modest and respectful styling. Clean composition, "
     "keep the top-right corner calm and uncluttered for a logo. "
-    "No text, no letters, no watermark, no logo, no brand names in the image. Vertical 4:5 format."
+    "No text, no letters, no watermark, no logo, no brand names in the image (only exception: the small nail numbers and A, B, C, D "
+    "corner letters printed on the board's template sheet during the work). Vertical 4:5 format."
 )
 
 PORTRAIT_RULE = (
     "One of the reference images is a real circular string art portrait made of black thread on a white board "
-    "with brass nails: reproduce it faithfully, do not redraw or change the face, keep it circular and monochrome."
+    "with brass nails: reproduce it faithfully, do not redraw or change the face, keep it circular and monochrome. "
+    "A finished portrait sits on a plain, fully white board: no printed template sheet, numbers or letters."
+)
+
+NO_PORTRAIT_RULE = (
+    "Any white board shown is empty or only partly woven with a few abstract black lines: "
+    "never draw a face or a portrait on it. While work is in progress the board is covered by its printed template sheet "
+    "(fine ring of nail numbers, corner zones A, B, C, D)."
 )
 
 PRODUCT_RULE = (
-    "The other reference images only show what our real product looks like (kraft box, stand, wooden unwinder, "
-    "phone stand, board with brass nails). Reproduce the product faithfully, but invent a completely new scene: "
+    "The attached product reference images only show what our real product looks like (kraft box, stand, wooden "
+    "unwinder, phone stand, board with brass nails). Reproduce the product faithfully, but invent a completely new scene: "
     "different setting, people, composition, camera angle and background. Never copy the scene, framing, "
     "person or decor of the reference images."
 )
@@ -33,15 +41,18 @@ CTA = {
 
 
 def prompt_image(sujet: dict, avec_portrait: bool, angle: str | None = None,
-                 ambiance: str | None = None, avec_produit: bool = False) -> str:
-    regle = f" {PORTRAIT_RULE}" if avec_portrait else ""
+                 ambiance: str | None = None, avec_produit: bool = False, fiche: str = "") -> str:
+    regle = f" {PORTRAIT_RULE}" if avec_portrait else f" {NO_PORTRAIT_RULE}"
     if avec_produit:
         regle += f" {PRODUCT_RULE}"
+    if fiche:
+        regle += ("\n\nPRODUCT — reproduce EXACTLY as in the reference images (shape, proportions, colours, construction); "
+                  "do not simplify, redesign or replace it:\n" + fiche)
     variation = ""
     if angle:
         variation += f"\nCamera: {angle}."
     if ambiance:
-        variation += f"\nSeason: {ambiance}."
+        variation += f"\nLight: {ambiance}."
     return f"{sujet['prompt']}{regle}{variation}\n\nStyle: {STYLE}"
 
 

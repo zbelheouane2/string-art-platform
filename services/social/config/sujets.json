@@ -7,7 +7,10 @@
    "rendu": "gemini",
    "cta": "partage",
    "brief": "Gros plan artistique sur le fil et les clous : la matière du produit.",
-   "prompt": "Extreme macro photograph of thin black threads stretched taut between polished brass nails on a matte white wooden board. Shallow depth of field, a few threads crossing in sharp focus, soft warm side light, elegant and minimal."
+   "prompt": "Extreme macro photograph of thin black threads stretched taut between polished brass nails on a matte white wooden board. Shallow depth of field, a few threads crossing in sharp focus, soft warm side light, elegant and minimal.",
+   "refs": [
+    "produit-planche"
+   ]
   },
   {
    "id": "creatif-pres-loin",
@@ -34,7 +37,10 @@
    "rendu": "gemini",
    "cta": "partage",
    "brief": "Le fil comme une ligne d'horizon dans le désert algérien.",
-   "prompt": "Minimalist fine-art photograph of the Algerian Sahara dunes at dawn, a white square board with a ring of brass nails standing on the sand, a few black threads crossing it, long shadows, warm pastel sky, vast negative space."
+   "prompt": "Minimalist fine-art photograph of the Algerian Sahara dunes at dawn, a white square board with a ring of brass nails standing on the sand, a few black threads crossing it, long shadows, warm pastel sky, vast negative space.",
+   "refs": [
+    "produit-planche"
+   ]
   },
   {
    "id": "creatif-zellige",
@@ -42,18 +48,21 @@
    "rendu": "gemini",
    "cta": "partage",
    "brief": "Géométrie du zellige et géométrie du fil : un art de lignes, comme notre patrimoine.",
-   "prompt": "Top-down flat lay: a traditional Algerian green and white zellige tile pattern on the left, a white board with a circle of brass nails and intersecting black thread lines forming geometric patterns on the right, echoing the zellige geometry. Soft daylight, crisp details."
+   "prompt": "Top-down flat lay: a traditional Algerian green and white zellige tile pattern on the left, a white board with a circle of brass nails and intersecting black thread lines forming geometric patterns on the right, echoing the zellige geometry. Soft daylight, crisp details.",
+   "refs": [
+    "produit-planche"
+   ]
   },
   {
    "id": "creatif-bobine-lumiere",
    "famille": "creatif",
    "rendu": "gemini",
    "refs": [
-    "kit-bobine"
+    "produit-devidoir"
    ],
    "cta": "partage",
    "brief": "Une bobine, un fil continu, des milliers de passages.",
-   "prompt": "Still life of a spool of black thread on a light wooden unwinder, the thread unwinding in a long graceful curve across a white table toward a board with brass nails, dramatic warm window light, dust particles in the light beam."
+   "prompt": "Still life of the birch unwinder with its black spool clipped on top of a white board with brass nails, the thread unwinding in a long graceful curve across a white table toward a board with brass nails, dramatic warm window light, dust particles in the light beam."
   },
   {
    "id": "creatif-patrimoine-haik",
@@ -83,14 +92,17 @@
    "rendu": "gemini",
    "cta": "partage",
    "brief": "Le geste : la main qui tend le fil d'un clou à l'autre.",
-   "prompt": "Close-up of a woman's hand with henna patterns guiding a black thread around a brass nail on a white board, other threads forming a dense web in the background, soft focus, warm natural light."
+   "prompt": "Close-up of a woman's hand with henna patterns guiding a black thread around a brass nail on a white board, other threads forming a dense web in the background, soft focus, warm natural light.",
+   "refs": [
+    "produit-planche"
+   ]
   },
   {
    "id": "pack-deballage",
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
-    "kit-boite-support"
+    "produit-boite"
    ],
    "cta": "commande",
    "brief": "Le déballage du kit : tout est dans la boîte.",
@@ -101,7 +113,7 @@
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
-    "kit-boite-support"
+    "produit-boite"
    ],
    "cta": "commande",
    "brief": "Le kit prêt à offrir.",
@@ -112,8 +124,8 @@
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
-    "kit-boite-support",
-    "kit-assemblage"
+    "produit-boite",
+    "produit-planche-montee"
    ],
    "cta": "commande",
    "brief": "La boîte se transforme en chevalet pour tisser confortablement.",
@@ -124,29 +136,32 @@
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
-    "kit-bobine"
+    "produit-devidoir",
+    "produit-planche-montee"
    ],
    "cta": "commande",
    "brief": "Le dévidoir en bois : le fil se déroule sans s'emmêler.",
-   "prompt": "Product photograph of a spool of black thread mounted on a light birch wood unwinder like the reference, on a white surface with soft shadow, a few meters of thread flowing neatly, premium studio lighting."
+   "prompt": "Product photograph of the white square board with brass nails standing inclined on its kraft box stand, the birch unwinder with the black spool clipped on the top edge of the board, a few black threads running from the spool down to the first nails, neat and untangled, warm light."
   },
   {
    "id": "pack-contenu",
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
-    "kit-notice"
+    "produit-boite",
+    "produit-planche",
+    "produit-devidoir"
    ],
    "cta": "commande",
    "brief": "Ce que contient le kit : planche, clous posés, fil, support, code.",
-   "prompt": "Knolling arrangement on a pale plaster background: a white square board with brass nails in a circle, a spool of black thread on a wooden unwinder, a wooden phone stand, an instruction booklet like the reference, a small card with a code, all neatly aligned with equal spacing, soft even light."
+   "prompt": "Knolling arrangement on a pale plaster background: a white square board with brass nails in a circle, a spool of black thread on a wooden unwinder, a wooden phone stand, a small instruction booklet, a small card with a code, all neatly aligned with equal spacing, soft even light."
   },
   {
    "id": "pack-livreur",
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
-    "kit-boite-support"
+    "produit-boite"
    ],
    "cta": "commande",
    "brief": "Reçu à la maison, payé à la livraison.",
@@ -157,7 +172,7 @@
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
-    "kit-assemblage"
+    "produit-planche-montee"
    ],
    "cta": "commande",
    "brief": "Un moment pour soi : le kit installé sur la table du salon.",
@@ -270,7 +285,7 @@
    "famille": "emotion",
    "rendu": "gemini",
    "refs": [
-    "kit-boite-support"
+    "produit-boite"
    ],
    "cta": "commentaire",
    "brief": "Le moment où l'on ouvre le cadeau.",
@@ -300,7 +315,7 @@
    "famille": "guide",
    "rendu": "gemini",
    "refs": [
-    "kit-assemblage"
+    "produit-planche-montee"
    ],
    "cta": "commande",
    "brief": "La voix annonce chaque clou en arabe, français ou anglais : on suit, c'est tout.",
@@ -359,7 +374,7 @@
    "famille": "offre",
    "rendu": "gemini",
    "refs": [
-    "kit-boite-support"
+    "produit-boite"
    ],
    "cta": "commande",
    "brief": "Commandez votre kit, payez à la livraison.",
@@ -520,7 +535,7 @@
    "famille": "atout",
    "rendu": "gemini",
    "refs": [
-    "kit-assemblage"
+    "produit-planche-montee"
    ],
    "cta": "commande",
    "brief": "Notre atout : la progression est sauvegardée, on reprend exactement où l'on s'était arrêté, même le lendemain.",
@@ -531,11 +546,12 @@
    "famille": "atout",
    "rendu": "gemini",
    "refs": [
-    "kit-bobine"
+    "produit-devidoir",
+    "produit-planche-montee"
    ],
    "cta": "commande",
    "brief": "Notre atout : le dévidoir en bois, pour un fil qui se déroule sans s'emmêler du début à la fin.",
-   "prompt": "Close-up of a spool of black thread turning smoothly on a light birch wood unwinder like the reference, the thread running straight and untangled toward a white board with brass nails, soft studio light."
+   "prompt": "Close-up of the birch unwinder clipped on the top edge of the white square board, the spool of black thread with red caps turning smoothly, the thread running straight and untangled down to a brass nail, soft studio light."
   },
   {
    "id": "guide-ecran-voix",
@@ -596,7 +612,7 @@
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
-    "etape-voix-telephone"
+    "produit-support-telephone"
    ],
    "cta": "commande",
    "brief": "Le support de téléphone en bois inclus : l'écran reste sous vos yeux, les mains restent libres.",
@@ -607,7 +623,7 @@
    "famille": "pack",
    "rendu": "gemini",
    "refs": [
-    "support-chevalet",
+    "produit-chevalet",
     "portrait"
    ],
    "cta": "commande",
@@ -619,7 +635,7 @@
    "famille": "emotion",
    "rendu": "gemini",
    "refs": [
-    "etape-ouvrir-boite"
+    "produit-boite-ouverte"
    ],
    "cta": "commentaire",
    "brief": "Le moment d'ouvrir la boîte DeeKra à la maison.",

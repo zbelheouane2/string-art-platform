@@ -3,9 +3,10 @@
 # Secrets du dépôt : GEMINI_API_KEY, META_PAGE_ID, META_PAGE_TOKEN, META_IG_USER_ID
 # Variable du dépôt  : SOCIAL_AUTOPUBLISH = true pour activer la publication automatique.
 #
-# Tant que SOCIAL_AUTOPUBLISH n'est pas à true, les lancements planifiés ne font rien :
-# les lots sont générés à la main (mode « lot ») et validés avant publication (mode « publier »).
-# Chaque visuel produit est archivé sur la branche social-lots (image, légende, journal).
+# À chaque créneau, la tâche publie le visuel VALIDÉ du jour s'il existe sur la branche social-lots
+# (mode semi-automatique : visuels créés dans l'application Gemini, légendes rédigées, validés).
+# Si aucun visuel n'est validé et que SOCIAL_AUTOPUBLISH = true, elle génère et publie seule (clé API).
+# Sinon elle ne fait rien. Chaque visuel est archivé sur social-lots (image, légende, journal).
 name: Réseaux sociaux DeeKra
 
 on:
@@ -21,7 +22,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "lot (générer pour validation), publier (un visuel validé), auto (créneau du moment)"
+        description: "lot (générer avec la clé API), publier (un visuel précis), auto (créneau du moment)"
         required: true
         default: lot
         type: choice
@@ -66,11 +67,9 @@ jobs:
             "40 20 * * *") echo "creneau=soir" >> "$GITHUB_OUTPUT"; echo "horaire=Ramadan" >> "$GITHUB_OUTPUT" ;;
             *) echo "creneau=${{ inputs.creneau }}" >> "$GITHUB_OUTPUT"; echo "horaire=" >> "$GITHUB_OUTPUT" ;;
           esac
-          if [ "${{ github.event_name }}" = "schedule" ] && [ "$SOCIAL_AUTOPUBLISH" != "true" ]; then
-            echo "actif=false" >> "$GITHUB_OUTPUT"
-            echo "Publication automatique désactivée (variable SOCIAL_AUTOPUBLISH) : rien à faire."
-          else
-            echo "actif=true" >> "$GITHUB_OUTPUT"
+          echo "actif=true" >> "$GITHUB_OUTPUT"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.mode }}" = "lot" ] || [ "$SOCIAL_AUTOPUBLISH" = "true" ]; then
+            echo "navigateur=true" >> "$GITHUB_OUTPUT"
           fi
 
       - uses: actions/checkout@v4
@@ -85,7 +84,7 @@ jobs:
         if: steps.slot.outputs.actif == 'true'
         run: |
           pip install -e ./services/social
-          python -m playwright install --with-deps chromium
+          if [ "${{ steps.slot.outputs.navigateur }}" = "true" ]; then python -m playwright install --with-deps chromium; fi
 
       - name: Récupérer l'archive des lots
         if: steps.slot.outputs.actif == 'true'
@@ -108,7 +107,7 @@ jobs:
             schedule:*|workflow_dispatch:auto)
               args="--creneau ${{ steps.slot.outputs.creneau }} --sortie $LOTS"
               [ -n "${{ steps.slot.outputs.horaire }}" ] && args="$args --horaire ${{ steps.slot.outputs.horaire }}"
-              python -m deekra_social auto $args ;;
+              python -m deekra_social programme $args ;;
             workflow_dispatch:lot)
               args="--sortie $LOTS"
               [ -n "${{ inputs.date }}" ] && args="$args --date ${{ inputs.date }}"

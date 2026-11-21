@@ -137,10 +137,10 @@
       "seen through a doorway, natural framing"
     ],
     "ambiances_saison": {
-      "hiver": "winter atmosphere: soft grey daylight or warm lamp light, a wool blanket, rain or cold outside the window",
-      "printemps": "spring atmosphere: bright fresh light, orange blossoms or almond flowers in a vase",
-      "ete": "summer atmosphere: strong warm sunlight, open window, light linen fabrics, a glimpse of blue sky",
-      "automne": "autumn atmosphere: low golden light, warm earthy tones, pomegranates or dates on the table"
+      "hiver": "soft winter light: gentle grey-blue daylight balanced by warm lamp tones",
+      "printemps": "fresh bright spring light, a touch of blossoms only if the setting allows",
+      "ete": "strong warm summer sunlight with crisp shadows",
+      "automne": "low golden autumn light and warm earthy tones"
     },
     "registres_legende": [
       "question ouverte au lecteur",

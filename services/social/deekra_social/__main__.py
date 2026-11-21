@@ -5,6 +5,12 @@
   python -m deekra_social apercu  --sujet ID [--portrait NOM] --sortie DOSSIER   (cartes seulement, sans API)
   python -m deekra_social publier FICHIER.jpg --oui
   python -m deekra_social auto    --creneau midi --sortie DOSSIER
+
+Mode semi-automatique (sans clé Gemini) :
+  python -m deekra_social preparer  --date AAAA-MM-JJ --sortie DOSSIER
+  python -m deekra_social importer  --date AAAA-MM-JJ --creneau midi --legende FICHIER.txt [--image IMAGE] --sortie DOSSIER
+  python -m deekra_social valider   --date AAAA-MM-JJ [--creneau midi ...] --sortie DOSSIER
+  python -m deekra_social programme --creneau midi --sortie DOSSIER   (tâche planifiée)
 """
 
 from __future__ import annotations
@@ -106,6 +112,46 @@ def cmd_auto(settings: Settings, args) -> int:
     return 0
 
 
+def cmd_preparer(settings: Settings, args) -> int:
+    from . import manuel
+    print(manuel.preparer(settings, args.date or _aujourdhui(settings) + dt.timedelta(days=1), Path(args.sortie)))
+    return 0
+
+
+def cmd_importer(settings: Settings, args) -> int:
+    from . import manuel
+    legende = Path(args.legende).read_text(encoding="utf-8")
+    print(manuel.importer(settings, args.date, args.creneau, Path(args.sortie), args.image, legende))
+    return 0
+
+
+def cmd_valider(settings: Settings, args) -> int:
+    from . import manuel
+    creneaux = args.creneau or list(settings.creneaux)
+    for f in manuel.valider(Path(args.sortie), args.date, creneaux):
+        print("validé :", f)
+    return 0
+
+
+def cmd_programme(settings: Settings, args) -> int:
+    """Tâche planifiée : publie le visuel validé du créneau ; sinon, génère et publie si l'automatique est activé."""
+    from . import manuel
+    date = _aujourdhui(settings)
+    p = plan_creneau(settings, date, args.creneau)
+    if args.horaire and args.horaire != p.horaire:
+        log.info("Horaire %s inactif aujourd'hui (%s) : rien à faire", args.horaire, p.horaire)
+        return 0
+    chemin = manuel.a_publier(Path(args.sortie), date, args.creneau)
+    if chemin:
+        info = pipeline.publier_fichier(_meta(settings), chemin)
+        log.info("Publié : Facebook %s, Instagram %s", info.get("facebook_post_id"), info.get("instagram_media_id"))
+        return 0
+    if autopublish_enabled():
+        return cmd_auto(settings, args)
+    log.info("Aucun visuel validé pour %s %s : rien à publier", date, args.creneau)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     parser = argparse.ArgumentParser(prog="deekra_social")
@@ -120,11 +166,18 @@ def main(argv: list[str] | None = None) -> int:
     sx = sub.add_parser("auto"); sx.add_argument("--creneau", required=True); sx.add_argument("--sortie", required=True)
     sx.add_argument("--horaire", help="normal ou nom d'un horaire spécial (Ramadan) : le lancement ne fait rien si cet horaire n'est pas actif")
 
+    sr = sub.add_parser("preparer"); sr.add_argument("--date", type=date); sr.add_argument("--sortie", required=True)
+    si = sub.add_parser("importer"); si.add_argument("--date", type=date, required=True); si.add_argument("--creneau", required=True)
+    si.add_argument("--image", type=Path); si.add_argument("--legende", required=True); si.add_argument("--sortie", required=True)
+    sv = sub.add_parser("valider"); sv.add_argument("--date", type=date, required=True); sv.add_argument("--creneau", action="append"); sv.add_argument("--sortie", required=True)
+    sg = sub.add_parser("programme"); sg.add_argument("--creneau", required=True); sg.add_argument("--sortie", required=True); sg.add_argument("--horaire")
+
     args = parser.parse_args(argv)
     try:
         settings = Settings.load(args.config)
         return {"plan": cmd_plan, "lot": cmd_lot, "apercu": cmd_apercu,
-                "publier": cmd_publier, "auto": cmd_auto}[args.cmd](settings, args)
+                "publier": cmd_publier, "auto": cmd_auto, "preparer": cmd_preparer,
+                "importer": cmd_importer, "valider": cmd_valider, "programme": cmd_programme}[args.cmd](settings, args)
     except ConfigError as exc:
         log.error("%s", exc)
         return 2

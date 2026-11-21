@@ -344,7 +344,7 @@ def test_registres_varies_sur_une_journee(settings):
 
 def test_prompt_image_avec_variations():
     p = captions.prompt_image({"prompt": "P"}, False, angle="low angle", ambiance="winter")
-    assert "Camera: low angle." in p and "Season: winter." in p
+    assert "Camera: low angle." in p and "Light: winter." in p
 
 
 def test_accroches_recentes(tmp_path):
@@ -374,3 +374,102 @@ def test_regle_produit_sans_copie():
     p = captions.prompt_image({"prompt": "P"}, False, avec_produit=True)
     assert "Never copy the scene" in p
     assert "Never copy" not in captions.prompt_image({"prompt": "P"}, False)
+
+
+# ---------- mode semi-automatique ----------
+
+def test_semi_auto_bout_en_bout(settings, tmp_path, monkeypatch):
+    from deekra_social import manuel
+    monkeypatch.setattr(pipeline, "_carte", lambda st, p: compose.finaliser(_jpeg()))
+    d = dt.date(2026, 11, 21)
+    fiche = manuel.preparer(settings, d, tmp_path)
+    texte = fiche.read_text(encoding="utf-8")
+    assert "Prompt à coller" in texte and "Never copy the scene" in texte
+    plans = plan_jour(settings, d)
+    for p in plans:
+        info = json.loads((tmp_path / d.isoformat() / f"{p.slug}.json").read_text())
+        assert info["statut"] == ("a_valider" if p.sujet["rendu"] == "carte" else "a_generer")
+
+    gemini_slot = next(p for p in plans if p.sujet["rendu"] == "gemini")
+    with pytest.raises(FileNotFoundError):
+        manuel.importer(settings, d, gemini_slot.creneau, tmp_path, None, "#DeeKra #ذكرى")  # image pas encore fournie
+    img = tmp_path / "gemini.png"
+    Image.new("RGB", (1024, 1024), (200, 190, 180)).save(img)
+    with pytest.raises(captions.LegendeInvalide):
+        manuel.importer(settings, d, gemini_slot.creneau, tmp_path, img, "Sans hashtag de marque")
+    out = manuel.importer(settings, d, gemini_slot.creneau, tmp_path, img, "Accroche\n\n#DeeKra #ذكرى")
+    assert Image.open(out).size == (1080, 1350)
+    assert manuel.a_publier(tmp_path, d, gemini_slot.creneau) is None  # pas encore validé
+    manuel.valider(tmp_path, d, [gemini_slot.creneau])
+    assert manuel.a_publier(tmp_path, d, gemini_slot.creneau) == out
+    manuel.preparer(settings, d, tmp_path)  # relancer ne doit pas écraser un visuel validé
+    assert manuel.a_publier(tmp_path, d, gemini_slot.creneau) == out
+
+    carte = next((p for p in plans if p.sujet["rendu"] == "carte"), None)
+    if carte:
+        with pytest.raises(RuntimeError):
+            manuel.valider(tmp_path, d, [carte.creneau])  # légende pas encore écrite
+
+
+def test_importer_refuse_mots_interdits(settings, tmp_path, monkeypatch):
+    from deekra_social import manuel
+    monkeypatch.setattr(pipeline, "_carte", lambda st, p: compose.finaliser(_jpeg()))
+    d = dt.date(2026, 11, 21)
+    manuel.preparer(settings, d, tmp_path)
+    with pytest.raises(captions.LegendeInvalide):
+        manuel.importer(settings, d, "midi", tmp_path, _png(tmp_path), "Stock limité ! #DeeKra #ذكرى")
+
+
+def _png(tmp_path):
+    p = tmp_path / "x.png"
+    Image.new("RGB", (800, 1000)).save(p)
+    return p
+
+
+def test_programme_publie_le_valide(settings, tmp_path, monkeypatch):
+    from deekra_social import __main__ as cli, manuel
+    d = dt.date(2026, 11, 21)
+    monkeypatch.setattr(cli, "_aujourdhui", lambda st: d)
+    monkeypatch.setattr(manuel, "a_publier", lambda lots, date, c: tmp_path / "x.jpg")
+    appels = []
+    monkeypatch.setattr(cli.pipeline, "publier_fichier", lambda meta, chemin: appels.append(chemin) or {})
+    monkeypatch.setattr(cli, "_meta", lambda st: None)
+    assert cli.main(["programme", "--creneau", "midi", "--sortie", str(tmp_path)]) == 0
+    assert appels == [tmp_path / "x.jpg"]
+
+
+def test_programme_ne_fait_rien_sans_visuel(settings, tmp_path, monkeypatch):
+    from deekra_social import __main__ as cli
+    monkeypatch.delenv("SOCIAL_AUTOPUBLISH", raising=False)
+    monkeypatch.setattr(cli, "_meta", lambda st: (_ for _ in ()).throw(AssertionError("ne doit pas publier")))
+    assert cli.main(["programme", "--creneau", "midi", "--sortie", str(tmp_path)]) == 0
+
+
+def test_fiche_produit_dans_le_prompt(settings):
+    from deekra_social import manuel
+    sujet = next(s for s in settings.sujets if s["id"] == "pack-devidoir")
+    assert sujet["refs"][0] == "produit-devidoir"
+    plan = next(p for i in range(60) for p in plan_jour(settings, dt.date(2026, 11, 21) + dt.timedelta(days=i))
+                if p.sujet["id"] == "pack-devidoir")
+    prompt = manuel.prompt_detaille(settings, plan)
+    assert "RED plastic end caps" in prompt and "WHITE SQUARE board" in prompt and "EXACTLY" in prompt
+
+
+def test_toutes_les_refs_ont_une_fiche(settings):
+    refs = {r for s in settings.sujets for r in s.get("refs", []) if not r.startswith("portrait")}
+    assert refs <= set(settings.produit), refs - set(settings.produit)
+
+
+def test_pas_de_portrait_invente_sans_rendu_reel():
+    assert "never draw a face" in captions.prompt_image({"prompt": "P"}, False)
+    p = captions.prompt_image({"prompt": "P"}, True)
+    assert "never draw a face" not in p and "real circular string art portrait" in p
+
+
+def test_feuille_gabarit_pendant_travail_et_planche_blanche_finie():
+    from deekra_social import captions
+    s = {"prompt": "x", "brief": "y"}
+    en_cours = captions.prompt_image(s, avec_portrait=False)
+    fini = captions.prompt_image(s, avec_portrait=True)
+    assert "template sheet" in en_cours and "A, B, C, D" in en_cours
+    assert "fully white board" in fini
