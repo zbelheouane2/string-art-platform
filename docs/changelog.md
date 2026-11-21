@@ -1,5 +1,9 @@
 # Historique
 
+## 2026-11-21
+- **Les pages s'ouvrent en haut** (retour du propriétaire : « Mon code » ouvrait la page en bas, sur les informations ; même chose pour le générateur) : le site défile en douceur pour les liens internes (`scroll-behavior: smooth`), et Next appliquait aussi ce défilement doux au changement de page. La nouvelle page s'affichait donc au niveau de la précédente puis remontait lentement, et sur téléphone la remontée s'arrêtait souvent en route. `data-scroll-behavior="smooth"` sur `<html>` coupe le défilement doux pendant les changements de page : la page du code et le générateur s'ouvrent directement en haut, sur le champ de saisie ou la zone photo. Les ancres (#faq, #acheter…) gardent le défilement doux.
+- Test : le test « J'ai un code » vérifie que la page s'ouvre en haut avec le champ visible (il échouait avant la correction : page ouverte à 1 176 px).
+
 ## 2026-11-20
 - **Réseaux sociaux** (`services/social/`) : 3 visuels par jour (Gemini + cartes de marque), légendes AR/FR, contrôle qualité, calendrier algérien, anti-répétition, publication Facebook/Instagram (Meta Graph) via GitHub Actions, mode validation par défaut. 40 tests.
 
