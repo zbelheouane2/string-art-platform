@@ -1,6 +1,10 @@
 # Historique
 
 ## 2026-11-21
+- **Anti-spam des commandes, sans captcha** : champ piège invisible (hors écran, ignoré au clavier et par les lecteurs d'écran) ; s'il est rempli, la commande est refusée. Au plus 5 commandes par appareil et par heure (empreinte salée de l'adresse IP, jamais l'adresse elle-même ; réglable par `ORDER_LIMIT_PER_HOUR`), au-delà : message « Trop de commandes depuis cet appareil… » en FR/EN/AR. Déjà en place : numéro algérien vérifié côté serveur, codes limités à 8 essais ratés par appareil en 15 min, suivi de commande limité à 10 essais ratés ; le formulaire de contact n'envoie rien au site (il ouvre WhatsApp).
+- **HTTPS imposé** : en-tête `Strict-Transport-Security` (2 ans) ; Render redirige déjà http → https.
+- **Icône d'onglet lisible** : `favicon.ico` (16/32/48 px) et `icon.png` (512 px) remplacés par un « D » DM Serif blanc sur le rouge de la marque (l'ancien visage en fils fins devenait une tache claire en 16/32 px). L'icône d'écran d'accueil iPhone (`apple-icon.png`, 180 px) garde le visage en fils, lisible à cette taille.
+- **Aperçu des liens** : l'adresse du site se replie sur `RENDER_EXTERNAL_URL` si `NEXT_PUBLIC_SITE_URL` n'est pas réglée, pour que l'image d'aperçu ne pointe jamais vers localhost.
 - **Les pages s'ouvrent en haut** (retour du propriétaire : « Mon code » ouvrait la page en bas, sur les informations ; même chose pour le générateur) : le site défile en douceur pour les liens internes (`scroll-behavior: smooth`), et Next appliquait aussi ce défilement doux au changement de page. La nouvelle page s'affichait donc au niveau de la précédente puis remontait lentement, et sur téléphone la remontée s'arrêtait souvent en route. `data-scroll-behavior="smooth"` sur `<html>` coupe le défilement doux pendant les changements de page : la page du code et le générateur s'ouvrent directement en haut, sur le champ de saisie ou la zone photo. Les ancres (#faq, #acheter…) gardent le défilement doux.
 - Test : le test « J'ai un code » vérifie que la page s'ouvre en haut avec le champ visible (il échouait avant la correction : page ouverte à 1 176 px).
 
