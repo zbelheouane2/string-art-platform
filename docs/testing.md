@@ -20,6 +20,8 @@
 - `seo.spec.ts` (navigateur) : balises Open Graph et hreflang, image d'aperçu de moins de 300 Ko, fiche produit avec le prix, pages personnelles en `noindex`, `robots.txt` et `sitemap.xml`.
 - `consent.spec.ts` (navigateur, avec un site construit avec des identifiants de test et `ANALYTICS_E2E=1`) : rien n'est chargé avant l'accord, refus mémorisé, accord qui charge les 3 outils (interceptés), lien « Cookies » du pied de page, bandeau en arabe et accessibilité.
 
+- Anti-spam : le serveur de test se lance avec `ORDER_LIMIT_PER_HOUR=1000` (les tests passent beaucoup de commandes depuis la même machine), et la commande `npx playwright test` aussi (le test de la limite lit la même valeur). `parcours.spec.ts` vérifie le champ piège, la limite par appareil et l'en-tête HSTS.
+
 ## Essais visuels
 Photo libre de droits (scikit-image « astronaut », recadrée sur le visage) : portrait reconnaissable, 1 800–2 300 fils, ~0,7–0,9 km de fil, ~1 s de calcul + ~2 s de rendu.
 
