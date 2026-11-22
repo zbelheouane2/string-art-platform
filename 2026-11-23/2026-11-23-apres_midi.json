@@ -1,0 +1,18 @@
+{
+  "date": "2026-11-23",
+  "creneau": "apres_midi",
+  "heure": "17:30",
+  "famille": "pack",
+  "sujet": "pack-contenu",
+  "brief": "Ce que contient le kit : planche, clous posés, fil, support, code.",
+  "rendu": "gemini",
+  "portrait": null,
+  "angle": null,
+  "ambiance": "low golden autumn light and warm earthy tones",
+  "registre": "conseil pratique",
+  "horaire": "normal",
+  "occasion": null,
+  "commercial": true,
+  "cta": "commande",
+  "statut": "a_generer"
+}
