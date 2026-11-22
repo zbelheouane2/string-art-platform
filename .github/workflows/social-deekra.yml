@@ -92,8 +92,9 @@ jobs:
           git config user.name "deekra-social-bot"
           git config user.email "deekra-social-bot@users.noreply.github.com"
           if git ls-remote --exit-code --heads origin social-lots >/dev/null; then
-            git worktree add lots origin/social-lots
-            git -C lots checkout -B social-lots origin/social-lots
+            # actions/checkout ne récupère que la branche du workflow : aller chercher l'archive explicitement
+            git fetch --no-tags --depth=50 origin +refs/heads/social-lots:refs/remotes/origin/social-lots
+            git worktree add -B social-lots lots origin/social-lots
           else
             git worktree add --orphan -b social-lots lots
           fi
