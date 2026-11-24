@@ -31,8 +31,8 @@ export function kitProductJsonLd(catalog: ShopCatalog, locale: string, descripti
 }
 
 /** Identité du site (accueil) : nom, logo, contact et réseaux renseignés. */
-export function organizationJsonLd(locale: string): object {
-  const sameAs = Object.values(brand.social).filter(Boolean);
+export function organizationJsonLd(locale: string, contacts: { supportEmail: string; instagram: string; facebook: string; tiktok: string } = { supportEmail: brand.supportEmail, ...brand.social }): object {
+  const sameAs = [contacts.instagram, contacts.facebook, contacts.tiktok].filter(Boolean);
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -41,7 +41,7 @@ export function organizationJsonLd(locale: string): object {
         name: brand.name,
         url: abs(`/${locale}`),
         logo: abs(brand.logo.light),
-        ...(brand.supportEmail ? { email: brand.supportEmail } : {}),
+        ...(contacts.supportEmail ? { email: contacts.supportEmail } : {}),
         ...(sameAs.length ? { sameAs } : {}),
       },
       { "@type": "WebSite", name: brand.name, url: abs(`/${locale}`), inLanguage: locale },

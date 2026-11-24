@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { whatsappUrl } from "@/lib/contact";
 
 /** Prépare le message et l'ouvre dans WhatsApp (rien n'est envoyé au site). */
-export function ContactForm() {
+export function ContactForm({ whatsapp }: { whatsapp: string }) {
   const t = useTranslations("contact");
   const [error, setError] = useState<string | null>(null);
   return (
@@ -21,7 +21,7 @@ export function ContactForm() {
         if (message.length < 5) return setError(t("errorMessage"));
         setError(null);
         const text = [name && `${t("fields.name")} : ${name}`, order && `${t("fields.order")} : ${order}`, message].filter(Boolean).join("\n");
-        const url = whatsappUrl(undefined, text);
+        const url = whatsappUrl(whatsapp, text);
         if (url) window.open(url, "_blank", "noopener,noreferrer");
       }}
     >

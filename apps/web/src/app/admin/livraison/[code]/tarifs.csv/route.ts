@@ -5,7 +5,7 @@ import { WILAYAS } from "@/config/wilayas";
 
 /** Tarifs actuels d'une société, au format du fichier d'import (modèle à remplir). */
 export async function GET(_: Request, { params }: { params: Promise<{ code: string }> }) {
-  if (!(await isAdmin())) return new Response("Non autorisé", { status: 401 });
+  if (!(await isAdmin("delivery"))) return new Response("Non autorisé", { status: 401 });
   const { code } = await params;
   if (!(await db().carrier.findUnique({ where: { code } }))) return new Response("Introuvable", { status: 404 });
   const rates = await currentRates(db(), code);

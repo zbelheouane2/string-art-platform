@@ -1,5 +1,15 @@
 # Historique
 
+## 2026-11-24
+- **Espace admin étendu** (demande du propriétaire : tout modifier lui-même, sans passer à WordPress). Menu en colonne groupé par rubrique (Ventes, Catalogue, Contenu du site, Réglages), onglets qui défilent sur téléphone.
+- **Comptes et rôles** : comptes nominatifs (identifiant + mot de passe, scrypt) avec rôle Administrateur ou Employé ; le propriétaire garde l'accès par `ADMIN_PASSWORD` (identifiant « admin » ou vide). L'employé traite les commandes, le stock, les avis, l'annonce et la FAQ ; le reste est réservé à l'administrateur (table unique `src/lib/admin/permissions.ts`, appliquée au menu, aux pages, aux actions et aux exports). Désactiver un compte ou changer son mot de passe coupe ses sessions ouvertes. Chaque opération est notée au nom de la personne dans le **Journal**.
+- **Google Sheets** réglé dans l'admin (plus besoin de variables) : guide en 5 étapes, script v2 à copier avec le mot secret inclus, test de la liaison, mise à jour de la colonne « Statut », renvoi des commandes manquantes (`Order.sheetSentAt`). `ORDER_SHEET_URL` / `ORDER_SHEET_SECRET` restent la valeur par défaut.
+- **Contenu** : tous les textes du site modifiables en FR, AR (de droite à gauche) et EN, par rubrique (table `ContentOverride`, variables `{…}` vérifiées, champ vidé = texte d'origine) ; **annonce** permanente et messages programmés par dates (offres d'occasion) ; **FAQ** (modifier, masquer, ajouter, ordonner) ; **photos** du site remplaçables et exemples avant/après de la fiche du kit (ajouter, légender, ordonner, masquer), images vérifiées (JPEG/PNG/WebP, 3 Mo) servies par `/media/<id>` ; **contacts et réseaux** ; **référencement Google** (titre et description par page et par langue).
+- **Catalogue** : stock suivi et ruptures (kit en rupture = commandes fermées ; option en rupture = non proposée ; une commande confirmée retire ses articles, une annulation après confirmation les remet), noms des articles en 3 langues. Formats de kit et couleurs de fil non ajoutés : le moteur ne gère qu'un format monochrome (extension future, CLAUDE.md §5).
+- **Ventes** : recherche des commandes (numéro, nom, téléphone), export Excel des commandes et des clients (administrateur, tracé), liste des clients regroupés par téléphone, statistiques (commandes, chiffre d'affaires, panier moyen, kits, taux de confirmation, jours, wilayas, articles, codes promo), tableau de bord adapté au rôle.
+- **Avis clients** : formulaire sur « Suivre ma commande » une fois la commande livrée (numéro + téléphone revérifiés, un avis par commande, prénom + initiale seulement), publiés sur l'accueil après validation ; ajout d'un avis reçu par message.
+- Migration `admin_roles_content` (comptes, réglages, textes, médiathèque, exemples, avis, stock). Tests : 14 tests unitaires (`adminExtended.test.ts`), 6 tests navigateur (`admin-etendu.spec.ts`).
+
 ## 2026-11-20
 - **Réseaux sociaux** (`services/social/`) : 3 visuels par jour (Gemini + cartes de marque), légendes AR/FR, contrôle qualité, calendrier algérien, anti-répétition, publication Facebook/Instagram (Meta Graph) via GitHub Actions, mode validation par défaut. 40 tests.
 

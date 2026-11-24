@@ -1,9 +1,13 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { Metadata } from "next";
+import { AnnouncementBar } from "@/components/AnnouncementBar";
+import { FaqList } from "@/components/FaqList";
+import { getContacts, getSetting } from "@/lib/settings";
+import { slotFallback } from "@/config/imageSlots";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BeforeAfter } from "@/components/BeforeAfter";
-import { GiftIcon, HeartThreadIcon, PlusIcon } from "@/components/Icons";
+import { GiftIcon, HeartThreadIcon } from "@/components/Icons";
 import { NailRing } from "@/components/NailRing";
 import { ProductSection } from "@/components/ProductSection";
 import { Reveal } from "@/components/Reveal";
@@ -20,14 +24,14 @@ import { shopCatalog } from "@/lib/shop";
 import { howSteps } from "@/config/howSteps";
 import { Link } from "@/i18n/navigation";
 import type { DemoPortrait } from "@/lib/board";
-import { pageMetadata } from "@/lib/seo";
+import { seoMetadata } from "@/lib/seoServer";
 import { JsonLd } from "@/components/JsonLd";
 import { kitProductJsonLd, organizationJsonLd } from "@/lib/structuredData";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta" });
-  return pageMetadata({ locale, path: "", title: t("title", { brand: brand.name }), description: t("description") });
+  return seoMetadata({ locale, path: "", title: t("title", { brand: brand.name }), description: t("description") });
 }
 
 const TRUST = ["cod", "delivery", "voice", "nails"] as const;
@@ -42,7 +46,6 @@ const GIFTS = [
   { key: "occasion", name: "bebe", occasions: ["birth", "birthday", "wedding", "memory", "other"] },
 ] as const;
 const INTRO = ["gift", "hobby"] as const;
-const FAQ = ["who", "skills", "photo", "time", "privacy", "payment"] as const;
 
 async function loadDemo(): Promise<DemoPortrait> {
   const file = path.join(process.cwd(), "public", "demo", "portrait-demo.json");
@@ -56,6 +59,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const demo = await loadDemo();
   // Prix lus en base (modifiables dans l'admin), repli sur la configuration.
   const catalog = await shopCatalog();
+  // Photos remplacées dans l'admin (rubrique Photos), sinon celles d'origine.
+  const images = await getSetting("images");
+  const im = (slot: string) => images[slot] || slotFallback(slot);
   const price = catalog ? formatPrice(catalog.kit.price, locale) : null;
   const extras = catalog?.accessories.map((a) => ({ slug: a.slug, icon: a.icon!, names: a.names, price: a.price })) ?? [];
 
@@ -64,10 +70,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <a className="skip" href="#main">
         {t("a11y.skip")}
       </a>
-      <p className="announcement">{t("announcement")}</p>
+      <AnnouncementBar locale={locale} />
       <SiteHeader />
       <main id="main">
-        <JsonLd data={organizationJsonLd(locale)} />
+        <JsonLd data={organizationJsonLd(locale, await getContacts())} />
         {catalog && <JsonLd data={kitProductJsonLd(catalog, locale, t("meta.description"))} />}
         {/* Héros : carte visuelle (pastille + médaillon) et texte avec ligne de preuves. */}
         <section className="hero" aria-labelledby="hero-title">
@@ -82,7 +88,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               </span>
               <WeavingBoard demo={demo} />
               <figure className="medallion">
-                <img src="/visuels/caftan-photo.webp" alt={t("hero.medallion")} width={300} height={300} />
+                <img src={im("home.medallion")} alt={t("hero.medallion")} width={300} height={300} />
               </figure>
             </div>
             <div className="hero-copy">
@@ -146,7 +152,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                   </div>
                 ))}
               </div>
-              <img className="intro-img" src="/visuels/etapes/accrocher.webp" alt={t("home.intro.imgAlt")} width={1000} height={1000} loading="lazy" />
+              <img className="intro-img" src={im("home.intro")} alt={t("home.intro.imgAlt")} width={1000} height={1000} loading="lazy" />
             </div>
           </div>
         </section>
@@ -176,7 +182,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 </a>
               </div>
               <div className="transform-media">
-                <BeforeAfter photo="/visuels/couple-femme-photo.webp" thread="/visuels/couple-femme-fil.webp" round hint />
+                <BeforeAfter photo={im("home.transform.photo")} thread={im("home.transform.thread")} round hint />
                 <p className="ba-hint-below">{t("what.slider.hint")}</p>
               </div>
             </div>
@@ -187,7 +193,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <section className="section bg-cream" aria-labelledby="kitcard-title">
           <div className="wrap">
             <Link href="/kit" className="kit-card" data-reveal>
-              <img src="/visuels/etapes/accrocher-mur.webp" alt={t("home.kitCard.alt")} width={1000} height={1000} loading="lazy" />
+              <img src={im("home.kitCard")} alt={t("home.kitCard.alt")} width={1000} height={1000} loading="lazy" />
               <span className="kit-card-body">
                 <span className="kit-card-eyebrow">{t("home.kitCard.eyebrow")}</span>
                 <span className="kit-card-title" id="kitcard-title" role="heading" aria-level={2}>
@@ -203,7 +209,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </div>
         </section>
 
-        <ProductSection accessories={extras} price={price} provisional={kitOffer.provisional} orderingOpen={kitOffer.orderingOpen} />
+        <ProductSection accessories={extras} price={price} provisional={kitOffer.provisional} orderingOpen={catalog?.orderingOpen ?? false} />
 
         {/* Idées cadeaux : en-tête scindé, cartes-liens avec petite œuvre superposée. */}
         <section className="section bg-cream" id="cadeaux" aria-labelledby="gifts-title">
@@ -219,11 +225,11 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 <li key={g.key} data-reveal style={{ ["--i" as string]: i % 3 }} className={"occasions" in g ? "gift-wide" : undefined}>
                   <a className="gift-card" href="#acheter">
                     <div className="gift-img">
-                      {g.name ? <img src={`/visuels/${g.name}-photo.webp`} alt="" width={600} height={600} loading="lazy" /> : <NailRing />}
+                      {g.name ? <img src={im(`gifts.${g.key}.photo`)} alt="" width={600} height={600} loading="lazy" /> : <NailRing />}
                       <span className="gift-placeholder">{t("gifts.placeholder")}</span>
                       {g.name && (
                         <span className="gift-art" aria-hidden="true">
-                          <img src={`/visuels/${g.name}-fil.webp`} alt="" width={240} height={240} loading="lazy" />
+                          <img src={im(`gifts.${g.key}.thread`)} alt="" width={240} height={240} loading="lazy" />
                         </span>
                       )}
                     </div>
@@ -257,15 +263,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               </Link>
             </header>
             <div className="faq-list" data-reveal style={{ ["--i" as string]: 1 }}>
-              {FAQ.map((q) => (
-                <details key={q}>
-                  <summary>
-                    {t(`faq.items.${q}.q`)}
-                    <PlusIcon />
-                  </summary>
-                  <p>{t(`faq.items.${q}.a`)}</p>
-                </details>
-              ))}
+              <FaqList locale={locale} />
             </div>
           </div>
         </section>
@@ -273,7 +271,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         {/* Appel final : œuvre ronde + titre, prix, bouton. */}
         <section className="section bg-cream final" aria-labelledby="final-title">
           <div className="wrap final-inner" data-reveal>
-            <img src="/visuels/dame-fil.webp" alt="" width={240} height={240} loading="lazy" className="final-img" />
+            <img src={im("home.final")} alt="" width={240} height={240} loading="lazy" className="final-img" />
             <div className="final-content">
               <h2 id="final-title">{t("final.title")}</h2>
               <p>
@@ -288,7 +286,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </section>
       </main>
       <SiteFooter />
-      <StickyBar watchId="hero-actions" price={price} orderingOpen={kitOffer.orderingOpen} />
+      <StickyBar watchId="hero-actions" price={price} orderingOpen={catalog?.orderingOpen ?? false} />
       <Reveal />
     </>
   );

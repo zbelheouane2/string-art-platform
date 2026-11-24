@@ -3,14 +3,15 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { WhatsAppIcon } from "@/components/ContactIcons";
 import { PageShell } from "@/components/PageShell";
 import { brand } from "@/config/brand";
-import { pageMetadata } from "@/lib/seo";
+import { getContacts } from "@/lib/settings";
+import { seoMetadata } from "@/lib/seoServer";
 import { displayPhone, ltr, whatsappUrl } from "@/lib/contact";
 import { ContactForm } from "./ContactForm";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "contact" });
-  return pageMetadata({ locale, path: "/contact", title: `${t("title")} — ${brand.name}`, description: t("lead") });
+  return seoMetadata({ locale, path: "/contact", title: `${t("title")} — ${brand.name}`, description: t("lead") });
 }
 
 /**
@@ -21,7 +22,8 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("contact");
-  const wa = whatsappUrl();
+  const c = await getContacts();
+  const wa = whatsappUrl(c.whatsapp);
   return (
     <PageShell>
       <div className="contact-grid">
@@ -32,18 +34,18 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
             <a className="contact-wa" href={wa} target="_blank" rel="noopener noreferrer">
               <WhatsAppIcon />
               <span>
-                {t("whatsapp")} <strong dir="ltr">{ltr(displayPhone())}</strong>
+                {t("whatsapp")} <strong dir="ltr">{ltr(displayPhone(c.whatsapp))}</strong>
               </span>
             </a>
           )}
-          {brand.supportEmail && (
+          {c.supportEmail && (
             <p>
-              <a href={`mailto:${brand.supportEmail}`}>{brand.supportEmail}</a>
+              <a href={`mailto:${c.supportEmail}`}>{c.supportEmail}</a>
             </p>
           )}
           <p className="field-help">{t("hours")}</p>
         </header>
-        {wa ? <ContactForm /> : <p className="form-card">{t("unavailable")}</p>}
+        {wa ? <ContactForm whatsapp={c.whatsapp} /> : <p className="form-card">{t("unavailable")}</p>}
       </div>
     </PageShell>
   );
