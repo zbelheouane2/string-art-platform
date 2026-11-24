@@ -8,6 +8,9 @@ const securityHeaders = [
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+  // HTTPS imposé : Render redirige déjà http → https ; HSTS dit au navigateur de ne plus jamais essayer http
+  // (2 ans). Ignoré par les navigateurs sur http://localhost.
+  { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
 ];
 
 const nextConfig: NextConfig = {

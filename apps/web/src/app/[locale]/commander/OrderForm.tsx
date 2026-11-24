@@ -20,6 +20,7 @@ import {
   promoMinimumMet,
   type PromoRule,
 } from "@/lib/promoRules";
+import { HONEYPOT } from "@/lib/orderSchema";
 import { encodeLines } from "@/lib/shopTypes";
 import { orderAction, type OrderState } from "./actions";
 import { checkPromoAction } from "./promoAction";
@@ -208,6 +209,11 @@ export function OrderForm({
         <input type="hidden" name="quantity" value={quantity} />
         <input type="hidden" name="options" value={encodeLines(optionLines)} />
         <input type="hidden" name="promo" value={promo?.code ?? ""} />
+        {/* Champ piège anti-spam : hors écran, ignoré au clavier et par les lecteurs d'écran ; seuls les robots le remplissent. */}
+        <div className="visually-hidden" aria-hidden="true">
+          <label htmlFor="order-website">Website</label>
+          <input id="order-website" type="text" name={HONEYPOT} tabIndex={-1} autoComplete="off" defaultValue="" />
+        </div>
 
         <label className="choice gift-toggle">
           <input

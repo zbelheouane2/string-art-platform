@@ -250,9 +250,14 @@ test("« J'ai un code » toujours visible en haut sur téléphone, dans le menu 
   if (isMobile) {
     await expect(code).toBeVisible();
     await expect(code).toBeInViewport();
-    await page.evaluate(() => window.scrollTo(0, 3000));
+    await page.evaluate(() => window.scrollTo({ top: 3000, behavior: "instant" }));
     await code.click();
     await expect(page).toHaveURL(/\/fr\/activer$/);
+    // La page du code s'ouvre en haut, sur le champ de saisie, sans remontée lente
+    // (avant : elle s'ouvrait en bas de page et remontait, en s'arrêtant parfois en route).
+    await expect(page.getByRole("heading", { level: 1, name: "Entrez votre code" })).toBeVisible();
+    expect(await page.evaluate(() => window.scrollY)).toBe(0);
+    await expect(page.locator("#code")).toBeInViewport();
   } else {
     await expect(code).toBeHidden();
     await expect(page.getByRole("navigation", { name: "Navigation principale" }).getByRole("link", { name: "J'ai un code" })).toBeVisible();

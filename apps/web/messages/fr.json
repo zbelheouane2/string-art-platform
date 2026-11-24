@@ -1084,7 +1084,8 @@
       "promoUnavailable": "Vérification impossible pour le moment, réessayez.",
       "promoMinimum": "Le montant minimal pour ce code promo n'est pas atteint.",
       "promoPerPhone": "Ce code promo a déjà été utilisé avec ce numéro.",
-      "deliveryArea": "Livraison pas encore disponible dans cette wilaya avec ce mode."
+      "deliveryArea": "Livraison pas encore disponible dans cette wilaya avec ce mode.",
+      "tooMany": "Trop de commandes depuis cet appareil. Réessayez dans une heure ou écrivez-nous sur WhatsApp."
     },
     "feePickWilaya": "Choisissez votre wilaya pour voir les frais de livraison.",
     "feeKnown": "Frais de livraison : {fee}.",

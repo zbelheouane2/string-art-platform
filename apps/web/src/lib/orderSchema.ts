@@ -22,6 +22,9 @@ export function normalizeIntlPhone(input: string): string | null {
   return /^\+[1-9]\d{7,14}$/.test(digits) ? digits : null;
 }
 
+/** Champ piège anti-spam : invisible pour le client, rempli par les robots. */
+export const HONEYPOT = "website";
+
 const optionalText = (max: number, message: string) => z.string().trim().max(max, message).optional().default("");
 
 /**
