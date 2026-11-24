@@ -1,10 +1,14 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { Metadata } from "next";
+import { AnnouncementBar } from "@/components/AnnouncementBar";
+import { FaqList } from "@/components/FaqList";
+import { getSetting } from "@/lib/settings";
+import { slotFallback } from "@/config/imageSlots";
+import { showcaseExamples } from "@/lib/showcase";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BeforeAfter } from "@/components/BeforeAfter";
 import { EngineCarousel } from "@/components/EngineCarousel";
-import { PlusIcon } from "@/components/Icons";
 import { NailRing } from "@/components/NailRing";
 import { ProductSection } from "@/components/ProductSection";
 import { Reveal } from "@/components/Reveal";
@@ -20,28 +24,22 @@ import { shopCatalog } from "@/lib/shop";
 import { howSteps } from "@/config/howSteps";
 import { Link } from "@/i18n/navigation";
 import type { DemoPortrait } from "@/lib/board";
-import { pageMetadata } from "@/lib/seo";
+import { seoMetadata } from "@/lib/seoServer";
 import { JsonLd } from "@/components/JsonLd";
 import { kitProductJsonLd } from "@/lib/structuredData";
 import { TrackOnView } from "@/components/Analytics";
 
 const WHAT = ["kit", "model", "voice"] as const;
 const ENGINE = ["site", "code", "photo", "preview", "voice"] as const;
-const EXAMPLES = [
-  { key: "portrait", name: "boucles" },
-  { key: "pet", name: "chat" },
-  { key: "group", name: "jeune" },
-] as const;
 const APP_CHIPS = ["voice", "speed", "pause", "progress"] as const;
 const GIFT_CHIPS = ["code", "cod", "langs"] as const;
 const WHY = ["engine", "face", "nails", "voice", "cod", "privacy"] as const;
 const STATS = ["nails", "size", "langs", "labels"] as const;
-const FAQ = ["who", "skills", "photo", "time", "privacy", "payment"] as const;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "kit.meta" });
-  return pageMetadata({ locale, path: "/kit", title: t("title", { brand: brand.name }), description: t("description") });
+  return seoMetadata({ locale, path: "/kit", title: t("title", { brand: brand.name }), description: t("description") });
 }
 
 async function loadDemo(): Promise<DemoPortrait> {
@@ -58,19 +56,22 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
   const catalog = await shopCatalog();
   const price = catalog ? formatPrice(catalog.kit.price, locale) : null;
   const extras = catalog?.accessories.map((a) => ({ slug: a.slug, icon: a.icon!, names: a.names, price: a.price })) ?? [];
+  // Photos et exemples avant/après modifiables dans l'admin (rubrique Photos).
+  const images = await getSetting("images");
+  const examples = await showcaseExamples(locale);
 
   return (
     <>
       <a className="skip" href="#main">
         {t("a11y.skip")}
       </a>
-      <p className="announcement">{t("announcement")}</p>
+      <AnnouncementBar locale={locale} />
       <SiteHeader />
       <main id="main">
         {catalog && <JsonLd data={kitProductJsonLd(catalog, locale, t("kit.meta.description"))} />}
         {catalog && <TrackOnView event="view_item" value={catalog.kit.price.amountMinor} currency={catalog.kit.price.currency} item={catalog.kit.slug} />}
         <div id="hero-actions" />
-        <ProductSection accessories={extras} price={price} provisional={kitOffer.provisional} orderingOpen={kitOffer.orderingOpen} headingLevel={1} />
+        <ProductSection accessories={extras} price={price} provisional={kitOffer.provisional} orderingOpen={catalog?.orderingOpen ?? false} headingLevel={1} />
 
         {/* Qu'est-ce que c'est : la planche animée tient le rôle de la vidéo. */}
         <section className="section bg-sand" aria-labelledby="kit-what-title">
@@ -99,7 +100,7 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
         <section className="section bg-cream" aria-labelledby="kit-check-title">
           <div className="wrap split">
             <div data-reveal>
-              <BeforeAfter photo="/visuels/boucles-photo.webp" thread="/visuels/boucles-fil.webp" />
+              <BeforeAfter photo={images["kit.check.photo"] || slotFallback("kit.check.photo")} thread={images["kit.check.thread"] || slotFallback("kit.check.thread")} />
               <p className="ba-hint-below">{t("what.slider.hint")}</p>
             </div>
             <div>
@@ -108,15 +109,10 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
                 <p>{t("kit.check.lead")}</p>
               </header>
               <ul className="mini-examples">
-                {EXAMPLES.map((e, i) => (
-                  <li key={e.key} data-reveal style={{ ["--i" as string]: i }}>
-                    <BeforeAfter
-                      compact
-                      photo={`/visuels/${e.name}-photo.webp`}
-                      thread={`/visuels/${e.name}-fil.webp`}
-                      label={`${t("what.slider.label")} : ${t(`kit.check.examples.${e.key}`)}`}
-                    />
-                    <b>{t(`kit.check.examples.${e.key}`)}</b>
+                {examples.map((e, i) => (
+                  <li key={e.id} data-reveal style={{ ["--i" as string]: i }}>
+                    <BeforeAfter compact photo={e.photo} thread={e.thread} label={`${t("what.slider.label")} : ${e.label}`} />
+                    <b>{e.label}</b>
                   </li>
                 ))}
               </ul>
@@ -235,21 +231,13 @@ export default async function KitPage({ params }: { params: Promise<{ locale: st
               <p>{t("faq.lead")}</p>
             </header>
             <div className="faq-list" data-reveal style={{ ["--i" as string]: 1 }}>
-              {FAQ.map((q) => (
-                <details key={q}>
-                  <summary>
-                    {t(`faq.items.${q}.q`)}
-                    <PlusIcon />
-                  </summary>
-                  <p>{t(`faq.items.${q}.a`)}</p>
-                </details>
-              ))}
+              <FaqList locale={locale} />
             </div>
           </div>
         </section>
       </main>
       <SiteFooter />
-      <StickyBar watchId="hero-actions" price={price} orderingOpen={kitOffer.orderingOpen} />
+      <StickyBar watchId="hero-actions" price={price} orderingOpen={catalog?.orderingOpen ?? false} />
       <Reveal />
     </>
   );

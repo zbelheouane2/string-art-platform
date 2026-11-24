@@ -1,13 +1,15 @@
 import { requireAdmin } from "@/lib/admin/auth";
 import { db } from "@/lib/db";
 import { savePricesAction } from "../actions";
+import { saveNamesAction } from "../_actions/catalog";
+import { Texts3 } from "../_ui/Texts3";
 import { AdminShell, Flash } from "../AdminShell";
 
 export const dynamic = "force-dynamic";
 
 /** Prix du kit et des options (en dinars), options affichées ou non. */
 export default async function PricesPage({ searchParams }: { searchParams: Promise<{ ok?: string; erreur?: string }> }) {
-  await requireAdmin();
+  await requireAdmin("prices");
   const q = await searchParams;
   const market = await db().market.findUniqueOrThrow({ where: { code: "DZ" } });
   const products = await db().product.findMany({
@@ -58,6 +60,21 @@ export default async function PricesPage({ searchParams }: { searchParams: Promi
         <button type="submit" className="a-btn">
           Enregistrer les prix
         </button>
+      </form>
+      <form action={saveNamesAction} className="a-card a-stack">
+        <h2>Noms des articles</h2>
+        <p className="a-muted">Affichés dans le panier, la commande et le message WhatsApp de confirmation.</p>
+        {products.map((p) => (
+          <fieldset key={p.id} className="a-faq-item">
+            <legend>{(p.names as { fr: string }).fr}</legend>
+            <Texts3 prefix={`name_${p.slug}`} values={p.names as Record<string, string>} max={80} />
+          </fieldset>
+        ))}
+        <div>
+          <button type="submit" className="a-btn">
+            Enregistrer les noms
+          </button>
+        </div>
       </form>
     </AdminShell>
   );

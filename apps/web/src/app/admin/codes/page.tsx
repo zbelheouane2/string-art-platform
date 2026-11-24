@@ -7,7 +7,7 @@ import { AdminShell, Flash } from "../AdminShell";
 export const dynamic = "force-dynamic";
 
 export default async function CodesPage({ searchParams }: { searchParams: Promise<{ ok?: string; erreur?: string }> }) {
-  await requireAdmin();
+  await requireAdmin("codes");
   const q = await searchParams;
   const groups = await db().activationCode.groupBy({ by: ["batch", "status"], _count: { _all: true }, _min: { createdAt: true } });
   const batches = new Map<string, { total: number; used: number; disabled: number; since: Date }>();

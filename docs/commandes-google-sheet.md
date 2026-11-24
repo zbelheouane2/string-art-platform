@@ -3,54 +3,35 @@
 Chaque commande validée sur le site est enregistrée en base **et** ajoutée comme
 une ligne dans votre Google Sheet. Aucun compte développeur Google n'est nécessaire.
 
-## Mise en place (10 minutes, une seule fois)
+## Mise en place (depuis l'admin, 10 minutes, une seule fois)
+
+Tout se fait dans **Admin → Réglages → Google Sheets** : la page affiche le
+script à copier (avec le mot secret déjà inclus), les étapes, le bouton
+« Tester la liaison » et l'état des envois.
 
 1. Créez une Google Sheet (par exemple « Commandes DeeKra »).
-2. Menu **Extensions → Apps Script**. Effacez le contenu et collez le script ci-dessous.
-3. Remplacez `CHANGEZ-MOI` par un mot secret long (le même que `ORDER_SHEET_SECRET` côté site).
+2. Menu **Extensions → Apps Script**. Effacez le contenu et collez le script copié depuis l'admin.
+3. Enregistrez le script.
 4. **Déployer → Nouveau déploiement → Application Web**.
    Exécuter en tant que : *Moi*. Qui a accès : *Tout le monde*. Autorisez l'accès demandé.
-5. Copiez l'URL de l'application Web (`https://script.google.com/macros/s/…/exec`) :
-   c'est `ORDER_SHEET_URL` côté site.
+5. Copiez l'URL de l'application Web (`https://script.google.com/macros/s/…/exec`), collez-la dans l'admin,
+   cochez « Envoyer chaque nouvelle commande », enregistrez, puis « Tester la liaison ».
 
-La colonne « Options » liste les options ajoutées au kit (support, bougie…) ;
-leur prix est déjà compris dans le total. Si vous aviez installé une version
-précédente du script, recollez celui-ci et redéployez (Gérer les déploiements →
-Modifier → Nouvelle version), puis insérez une colonne « Options » après « Quantité ».
+Le script (version 2, `src/lib/notify/sheetScript.ts`) reçoit trois messages, tous protégés par le mot secret :
+`order` (nouvelle ligne), `status` (met à jour la colonne « Statut » si l'option est cochée) et `test`
+(vérifie la liaison sans rien écrire). Colonnes : Commande, Date, Nom, Téléphone, Wilaya, Commune, Livraison,
+Paiement, Quantité, Options, Code promo, Remise, Frais de livraison, Total, Devise, Remarque, Langue, Cadeau,
+Acheteur, Tél. acheteur, E-mail acheteur, Message cadeau, Statut. Une ancienne feuille (script version 1) doit
+recevoir les colonnes « Code promo » et « Remise » après « Options », puis le nouveau script.
 
-Le mot secret empêche quelqu'un qui connaîtrait l'URL d'ajouter de fausses lignes.
+Si l'envoi échoue (Google indisponible), la commande reste enregistrée en base, l'échec est noté dans le
+journal (`order.created`, `sheet: "failed"`) et le bouton « Envoyer les commandes manquantes » la renverra.
 
-```javascript
-const SECRET = "CHANGEZ-MOI";
-const COLUMNS = ["number", "createdAt", "fullName", "phone", "wilaya", "commune",
-  "delivery", "payment", "quantity", "options", "deliveryFee", "total", "currency", "note", "locale",
-  "gift", "buyerName", "buyerPhone", "buyerEmail", "giftMessage"];
-const HEADERS = ["Commande", "Date", "Nom", "Téléphone", "Wilaya", "Commune",
-  "Livraison", "Paiement", "Quantité", "Options", "Frais de livraison", "Total", "Devise", "Remarque", "Langue",
-  "Cadeau", "Acheteur", "Tél. acheteur", "E-mail acheteur", "Message cadeau", "Statut"];
+## Ancien réglage par variables
 
-function doPost(e) {
-  const data = JSON.parse(e.postData.contents);
-  if (data.secret !== SECRET) return json({ ok: false, error: "secret" });
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
-  if (sheet.getLastRow() === 0) sheet.appendRow(HEADERS);
-  const o = data.order;
-  // Téléphone en texte pour garder le 0 initial ; frais vides = à confirmer par téléphone.
-  sheet.appendRow(COLUMNS.map((k) => (k === "phone" || k === "buyerPhone" ? "'" + o[k] : o[k] ?? "")).concat(["À confirmer"]));
-  return json({ ok: true });
-}
-
-function json(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
-}
-```
-
-## Côté site
+Sans réglage dans l'admin, le site utilise encore :
 
 ```
 ORDER_SHEET_URL=https://script.google.com/macros/s/…/exec
 ORDER_SHEET_SECRET=le-même-mot-secret
 ```
-
-Si l'envoi échoue (Google indisponible), la commande reste enregistrée en base
-et l'échec est noté dans le journal (`order.created`, `sheet: "failed"`).

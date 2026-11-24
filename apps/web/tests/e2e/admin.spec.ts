@@ -199,13 +199,13 @@ test.describe("espace admin sur téléphone", () => {
     for (const url of ["/admin", "/admin/commandes", "/admin/promos", "/admin/livraison"]) {
       await page.goto(url);
       const header = page.locator(".admin-top");
-      // L'en-tête tient en deux lignes (logo + déconnexion, puis onglets).
+      // L'en-tête tient en deux lignes (logo + déconnexion, puis qui est connecté).
       expect((await header.boundingBox())!.height).toBeLessThan(130);
       // Les onglets restent sur une seule ligne, l'onglet ouvert est visible.
-      const tabs = page.locator(".admin-top nav a");
+      const tabs = page.locator(".admin-nav a");
       const tops = await tabs.evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top)));
       expect(new Set(tops).size).toBe(1);
-      await expect(page.locator('.admin-top nav a[aria-current="page"]')).toBeInViewport();
+      await expect(page.locator('.admin-nav a[aria-current="page"]')).toBeInViewport();
       // En défilant, l'en-tête part avec la page : il ne recouvre pas le contenu.
       await page.evaluate(() => window.scrollTo(0, 400));
       expect(await header.evaluate((h) => getComputedStyle(h).position)).toBe("static");

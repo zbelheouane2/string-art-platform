@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 
 /** Codes d'un lot, au format CSV pour l'imprimeur. */
 export async function GET(_: Request, { params }: { params: Promise<{ batch: string }> }) {
-  if (!(await isAdmin())) return new Response("Non autorisé", { status: 401 });
+  if (!(await isAdmin("codes"))) return new Response("Non autorisé", { status: 401 });
   const { batch } = await params;
   if (!BATCH_RE.test(batch)) return new Response("Introuvable", { status: 404 });
   const csv = await codeBatchCsv(db(), batch);

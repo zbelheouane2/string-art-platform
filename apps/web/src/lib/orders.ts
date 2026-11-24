@@ -24,6 +24,8 @@ export interface CheckoutOptions {
   accessories: CheckoutAccessory[];
   /** Sociétés de livraison actives et leurs modes (code du mode à domicile / au bureau). */
   carriers: CheckoutCarrier[];
+  /** Kit en rupture de stock (admin) : affiché, mais plus commandable. */
+  soldOut: boolean;
 }
 
 export interface CheckoutCarrier {
@@ -102,7 +104,8 @@ export async function checkoutOptions(
     .filter((c) => c.home || c.desk);
   if (payment.length === 0 || methods.length === 0) return null;
   const extras = await db().product.findMany({
-    where: { kind: "ACCESSORY", active: true },
+    // Une option en rupture de stock (admin) n'est plus proposée.
+    where: { kind: "ACCESSORY", active: true, soldOut: false },
     include: {
       prices: { where: { marketId: market.id, currency: price.currency } },
     },
@@ -151,6 +154,7 @@ export async function checkoutOptions(
     ),
     accessories,
     carriers,
+    soldOut: product.soldOut,
   };
 }
 
@@ -188,7 +192,7 @@ export async function createOrder(
   baseUrl: string,
 ): Promise<CreateOrderResult> {
   const options = await checkoutOptions();
-  if (!options) return { ok: false, error: "closed" };
+  if (!options || options.soldOut) return { ok: false, error: "closed" };
   if (!options.delivery.includes(input.delivery))
     return { ok: false, error: "delivery" };
   if (!options.payment.includes(input.payment))

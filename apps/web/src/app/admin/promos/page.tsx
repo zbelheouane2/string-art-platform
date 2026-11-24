@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/auth";
 import { db } from "@/lib/db";
 import { createPromoAction, togglePromoAction } from "../actions";
@@ -8,12 +9,21 @@ export const dynamic = "force-dynamic";
 const SCOPE = { KIT: "le kit seul", ORDER: "tous les articles", SHIPPING: "la livraison" } as const;
 
 export default async function PromosPage({ searchParams }: { searchParams: Promise<{ ok?: string; erreur?: string }> }) {
-  await requireAdmin();
+  await requireAdmin("promos");
   const q = await searchParams;
   const promos = await db().promoCode.findMany({ orderBy: { createdAt: "desc" } });
   const now = new Date();
   return (
-    <AdminShell title="Codes promo" current="/admin/promos">
+    <AdminShell
+      title="Codes promo et offres"
+      current="/admin/promos"
+      lead={
+        <>
+          Offre d&apos;occasion (Aïd, Fête des mères, Yennayer…) : créez un code avec des dates de début et de fin, puis annoncez-le pendant les mêmes dates dans{" "}
+          <Link href="/admin/annonce">Annonce → Programmer un message</Link>.
+        </>
+      }
+    >
       <Flash ok={q.ok} error={q.erreur} />
       <details className="a-card" open={promos.length === 0}>
         <summary className="a-summary">Créer un code</summary>

@@ -13,8 +13,8 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   output: "standalone",
   poweredByHeader: false,
-  // Import des fichiers de tarifs dans l'admin (2 Mo au plus, vérifié dans l'action).
-  experimental: { serverActions: { bodySizeLimit: "3mb" } },
+  // Admin : fichiers de tarifs (2 Mo) et images (3 Mo chacune, deux par exemple avant/après), vérifiés dans les actions.
+  experimental: { serverActions: { bodySizeLimit: "7mb" } },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

@@ -37,6 +37,10 @@ model Product {
   slug      String      @unique
   kind      ProductKind
   active    Boolean     @default(true)
+  /// Rupture de stock : l'article reste affiché mais ne peut plus être commandé.
+  soldOut   Boolean     @default(false)
+  /// Quantité en stock (null : stock non suivi). À 0, l'article passe en rupture.
+  stockQuantity Int?
   /// Libellés par langue : { "fr": "...", "en": "...", "ar": "..." }
   names     Json
   prices    Price[]
@@ -145,6 +149,8 @@ model Order {
   discountMinor    Int             @default(0)
   /// Adresse figée au moment de la commande.
   shippingAddress  Json
+  /// Envoi réussi de la ligne vers la Google Sheet (null : pas encore envoyée).
+  sheetSentAt      DateTime?
   customer         Customer        @relation(fields: [customerId], references: [id])
   market           Market          @relation(fields: [marketId], references: [id])
   deliveryMethod   DeliveryMethod? @relation(fields: [deliveryMethodId], references: [id])
@@ -316,4 +322,108 @@ model Carrier {
   ratesUpdatedAt DateTime?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+}
+
+/* ---------------- Espace admin étendu ---------------- */
+
+/** Rôle d'un compte de l'espace admin : accès total, ou employé (commandes, stock, avis, annonce, FAQ). */
+enum AdminRole {
+  ADMIN
+  EMPLOYEE
+}
+
+/**
+ * Compte nominatif de l'espace admin. Le propriétaire garde en plus l'accès par
+ * ADMIN_PASSWORD (variable d'environnement), qui ne peut pas être supprimé d'ici.
+ */
+model AdminUser {
+  id             String    @id @default(cuid())
+  /// Identifiant de connexion, en minuscules (« karim », « sara.dz »).
+  login          String    @unique
+  name           String
+  role           AdminRole @default(EMPLOYEE)
+  /// Empreinte scrypt « sel:empreinte » (jamais le mot de passe en clair).
+  passwordHash   String
+  active         Boolean   @default(true)
+  /// Incrémenté au changement de mot de passe ou à la désactivation : déconnecte les sessions ouvertes.
+  sessionVersion Int       @default(0)
+  lastLoginAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+/** Réglage modifiable depuis l'admin (annonce, contacts, Google Sheet, photos…), en JSON. */
+model Setting {
+  key       String   @id
+  value     Json
+  updatedBy String?
+  updatedAt DateTime @updatedAt
+}
+
+/** Texte du site modifié dans l'admin : remplace la valeur du fichier messages/<langue>.json. */
+model ContentOverride {
+  locale    String
+  /// Clé de traduction (« hero.titleStart », « faq.items.who.q »).
+  key       String
+  value     String
+  updatedBy String?
+  updatedAt DateTime @updatedAt
+
+  @@id([locale, key])
+}
+
+/** Image téléversée depuis l'admin (photos du site, avant/après, avis). Servie par /media/<id>. */
+model MediaAsset {
+  id        String   @id @default(cuid())
+  mime      String
+  bytes     Bytes
+  size      Int
+  sha256    String   @db.Char(64)
+  /// Nom d'origine, pour s'y retrouver dans la médiathèque.
+  name      String
+  createdBy String?
+  createdAt DateTime @default(now())
+}
+
+/** Exemple avant/après de la fiche du kit (photo ↔ portrait en fil), ordonné. */
+model ShowcaseExample {
+  id        String   @id @default(cuid())
+  photoUrl  String
+  threadUrl String
+  /// Légende par langue : { "fr": "...", "en": "...", "ar": "..." }
+  labels    Json
+  position  Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([position])
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+/** Avis client : publié sur l'accueil seulement après validation dans l'admin. */
+model CustomerReview {
+  id          String       @id @default(cuid())
+  /// Commande livrée qui justifie l'avis (avis laissés depuis le site).
+  orderNumber String?
+  /// Prénom tel que le client accepte de l'afficher.
+  name        String
+  place       String?
+  rating      Int
+  text        String
+  locale      String       @default("fr")
+  photoUrl    String?
+  status      ReviewStatus @default(PENDING)
+  /// « site » (laissé par le client) ou « admin » (saisi à partir d'un message reçu).
+  source      String       @default("site")
+  moderatedBy String?
+  moderatedAt DateTime?
+  createdAt   DateTime     @default(now())
+
+  @@index([status, createdAt])
 }

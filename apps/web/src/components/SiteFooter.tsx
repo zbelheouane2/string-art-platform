@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { brand } from "@/config/brand";
+import { getContacts } from "@/lib/settings";
 import { INFO_PAGES, type InfoPageKey } from "@/config/infoPages";
 import { Link } from "@/i18n/navigation";
 import { displayPhone, ltr, socialLinks, whatsappUrl } from "@/lib/contact";
@@ -17,8 +18,9 @@ const LINKS = [
 
 export async function SiteFooter() {
   const t = await getTranslations("footer");
-  const wa = whatsappUrl();
-  const social = socialLinks();
+  const c = await getContacts();
+  const wa = whatsappUrl(c.whatsapp);
+  const social = socialLinks({ instagram: c.instagram, facebook: c.facebook, tiktok: c.tiktok });
   return (
     <footer className="site-footer">
       <div className="wrap footer-grid">
@@ -69,15 +71,15 @@ export async function SiteFooter() {
               <li>
                 <a href={wa} target="_blank" rel="noopener noreferrer">
                   <WhatsAppIcon />
-                  {t("whatsapp", { phone: ltr(displayPhone()) })}
+                  {t("whatsapp", { phone: ltr(displayPhone(c.whatsapp)) })}
                 </a>
               </li>
             )}
-            {brand.supportEmail && (
+            {c.supportEmail && (
               <li>
-                <a href={`mailto:${brand.supportEmail}`}>
+                <a href={`mailto:${c.supportEmail}`}>
                   <MailIcon />
-                  {brand.supportEmail}
+                  {c.supportEmail}
                 </a>
               </li>
             )}

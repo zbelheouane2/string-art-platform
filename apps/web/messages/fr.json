@@ -1223,7 +1223,24 @@
   "reviews": {
     "title": "Ils ont tendu leur portrait",
     "rating": "Note : {n} sur 5",
-    "photoAlt": "Portrait réalisé par {name}"
+    "photoAlt": "Portrait réalisé par {name}",
+    "form": {
+      "formTitle": "Votre avis sur le portrait",
+      "formLead": "Votre commande est livrée : dites-nous ce que vous en pensez. Votre avis sera publié après relecture, avec votre prénom seulement.",
+      "name": "Prénom affiché",
+      "place": "Wilaya ou ville (facultatif)",
+      "ratingLabel": "Votre note",
+      "star": "{n} sur 5",
+      "text": "Votre avis",
+      "submit": "Envoyer mon avis",
+      "sending": "Envoi…",
+      "thanks": "Merci ! Votre avis sera publié après relecture.",
+      "errors": {
+        "invalid": "Indiquez votre prénom, une note et un avis de 10 caractères au moins.",
+        "notAllowed": "Un avis ne peut être laissé que pour une commande livrée.",
+        "already": "Un avis a déjà été envoyé pour cette commande. Merci !"
+      }
+    }
   },
   "cart": {
     "title": "Panier",

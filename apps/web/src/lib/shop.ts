@@ -22,7 +22,7 @@ async function loadShopCatalog(): Promise<ShopCatalog | null> {
     const o = await checkoutOptions();
     if (o) {
       const kit: ShopItem = { slug: o.product.slug, kind: "kit", names: { ...KIT_NAMES, ...(o.product.names as Partial<ShopItem["names"]>) }, price: o.price, thumb: KIT_THUMB };
-      return { ...base, kit, accessories: o.accessories.map((a) => ({ slug: a.slug, kind: "accessory", names: a.names, price: a.price, thumb: optionThumb(a.icon), icon: a.icon })) };
+      return { ...base, orderingOpen: base.orderingOpen && !o.soldOut, kit, accessories: o.accessories.map((a) => ({ slug: a.slug, kind: "accessory", names: a.names, price: a.price, thumb: optionThumb(a.icon), icon: a.icon })) };
     }
   } catch {
     // Base indisponible : repli sur la configuration.

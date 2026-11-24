@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { formatPrice } from "@/lib/price";
 import { trackAction, type TrackState } from "./actions";
+import { ReviewForm } from "./ReviewForm";
 
 const STEPS = ["PENDING", "CONFIRMED", "SHIPPED", "DELIVERED"] as const;
 
@@ -68,6 +69,7 @@ export function TrackForm() {
           </p>
         </section>
       )}
+      {r?.ok && r.status === "DELIVERED" && <ReviewForm number={r.number} phone={state.values.phone} />}
     </div>
   );
 }
