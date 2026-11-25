@@ -10,15 +10,17 @@
 name: Réseaux sociaux DeeKra
 
 on:
-  schedule:
-    # Heures UTC, Alger = UTC+1 toute l'année. Lancement ~20 min avant le créneau
-    # (GitHub peut retarder un lancement planifié de quelques minutes).
-    - cron: "10 11 * * *"   # midi        12:30 Alger (horaire normal)
-    - cron: "10 16 * * *"   # apres_midi  17:30
-    - cron: "40 19 * * *"   # soir        21:00
-    - cron: "40 13 * * *"   # midi        15:00 (Ramadan)
-    - cron: "10 17 * * *"   # apres_midi  18:30 (Ramadan)
-    - cron: "40 20 * * *"   # soir        22:00 (Ramadan)
+  # Publication automatique DÉSACTIVÉE à la demande du propriétaire (25/11/2026) : il publie lui-même,
+  # 2 posts par jour. Pour la réactiver, remettre le bloc ci-dessous (sans les « # ») :
+  # schedule:
+  #   # Heures UTC, Alger = UTC+1 toute l'année. Lancement ~20 min avant le créneau
+  #   # (GitHub peut retarder un lancement planifié de quelques minutes).
+  #   - cron: "10 11 * * *"   # midi        12:30 Alger (horaire normal)
+  #   - cron: "10 16 * * *"   # apres_midi  17:30
+  #   - cron: "40 19 * * *"   # soir        21:00
+  #   - cron: "40 13 * * *"   # midi        15:00 (Ramadan)
+  #   - cron: "10 17 * * *"   # apres_midi  18:30 (Ramadan)
+  #   - cron: "40 20 * * *"   # soir        22:00 (Ramadan)
   workflow_dispatch:
     inputs:
       mode:
@@ -92,8 +94,9 @@ jobs:
           git config user.name "deekra-social-bot"
           git config user.email "deekra-social-bot@users.noreply.github.com"
           if git ls-remote --exit-code --heads origin social-lots >/dev/null; then
-            git worktree add lots origin/social-lots
-            git -C lots checkout -B social-lots origin/social-lots
+            # actions/checkout ne récupère que la branche du workflow : aller chercher l'archive explicitement
+            git fetch --no-tags --depth=50 origin +refs/heads/social-lots:refs/remotes/origin/social-lots
+            git worktree add -B social-lots lots origin/social-lots
           else
             git worktree add --orphan -b social-lots lots
           fi
