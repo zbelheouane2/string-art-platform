@@ -1,6 +1,7 @@
 import "server-only";
 import { createHash } from "node:crypto";
 import { commerce } from "@/config/commerce";
+import { sniffImage } from "./admin/imageFile";
 import { db } from "./db";
 import { clampStep, stepCount } from "./guide";
 import { EngineError, frame, generate } from "./engine";
@@ -41,6 +42,8 @@ async function checkUpload(codeId: string, photo: File): Promise<PortraitError |
   if (state.chosenId) return "used";
   if (!(commerce.acceptedPhotoTypes as readonly string[]).includes(photo.type)) return "fileType";
   if (photo.size > commerce.maxPhotoBytes) return "fileSize";
+  // Vrai format lu dans les premiers octets (le type annoncé par le navigateur peut mentir).
+  if (!sniffImage(new Uint8Array(await photo.slice(0, 16).arrayBuffer()))) return "fileType";
   return null;
 }
 

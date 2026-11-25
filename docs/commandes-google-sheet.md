@@ -17,12 +17,14 @@ script à copier (avec le mot secret déjà inclus), les étapes, le bouton
 5. Copiez l'URL de l'application Web (`https://script.google.com/macros/s/…/exec`), collez-la dans l'admin,
    cochez « Envoyer chaque nouvelle commande », enregistrez, puis « Tester la liaison ».
 
-Le script (version 2, `src/lib/notify/sheetScript.ts`) reçoit trois messages, tous protégés par le mot secret :
+Le script (version 3, `src/lib/notify/sheetScript.ts`) reçoit trois messages, tous protégés par le mot secret :
 `order` (nouvelle ligne), `status` (met à jour la colonne « Statut » si l'option est cochée) et `test`
 (vérifie la liaison sans rien écrire). Colonnes : Commande, Date, Nom, Téléphone, Wilaya, Commune, Livraison,
 Paiement, Quantité, Options, Code promo, Remise, Frais de livraison, Total, Devise, Remarque, Langue, Cadeau,
 Acheteur, Tél. acheteur, E-mail acheteur, Message cadeau, Statut. Une ancienne feuille (script version 1) doit
 recevoir les colonnes « Code promo » et « Remise » après « Options », puis le nouveau script.
+La version 3 écrit comme du texte tout ce qui commence par = + - @ (un client ne peut pas glisser une formule) ;
+le site neutralise déjà ces textes avant l'envoi, la mise à jour du script ajoute une seconde protection.
 
 Si l'envoi échoue (Google indisponible), la commande reste enregistrée en base, l'échec est noté dans le
 journal (`order.created`, `sheet: "failed"`) et le bouton « Envoyer les commandes manquantes » la renverra.

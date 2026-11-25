@@ -2,6 +2,7 @@ import "server-only";
 import { wilayaName } from "@/config/wilayas";
 import { db } from "@/lib/db";
 import { getSetting, type GoogleSheetSettings } from "@/lib/settings";
+import { sheetSafe } from "./sheetScript";
 
 /**
  * Envoi des commandes vers la Google Sheet du propriétaire, via un script
@@ -43,7 +44,11 @@ export type SheetResult = "sent" | "disabled" | "failed";
 
 export function orderRow(input: Omit<OrderRow, "wilaya"> & { wilayaCode: string }): OrderRow {
   const { wilayaCode, ...rest } = input;
-  return { ...rest, wilaya: `${wilayaCode} - ${wilayaName(wilayaCode, "fr") ?? ""}` };
+  // Textes saisis par le client neutralisés ici aussi : protège même une feuille dont le script n'est pas à jour.
+  const safe = Object.fromEntries(
+    Object.entries(rest).map(([k, v]) => [k, typeof v === "string" && k !== "phone" && k !== "buyerPhone" ? sheetSafe(v) : v]),
+  ) as typeof rest;
+  return { ...safe, wilaya: `${wilayaCode} - ${wilayaName(wilayaCode, "fr") ?? ""}` };
 }
 
 /** Envoie un message au script ; renvoie la réponse JSON du script, ou null. */

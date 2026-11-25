@@ -35,7 +35,8 @@ export async function orderAction(_prev: OrderState, form: FormData): Promise<Or
   if (recent >= commerce.orderLimit.max) return { fieldErrors: {}, formError: "tooMany", values };
   const h = await headers();
   const proto = h.get("x-forwarded-proto") ?? "http";
-  const base = process.env.PUBLIC_BASE_URL ?? `${proto}://${h.get("host")}`;
+  // Adresse du site fixée sur le serveur ; l'en-tête Host (écrit par le navigateur) seulement en dernier recours (développement).
+  const base = process.env.PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_SITE_URL || `${proto}://${h.get("host")}`;
   const result = await createOrder(parsed.data, base);
   if (!result.ok) return { fieldErrors: {}, formError: result.error, values };
   await db().auditLog.create({ data: { actor: "system", action: "order.device", target: fingerprint } });

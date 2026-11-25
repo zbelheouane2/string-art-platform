@@ -10,10 +10,10 @@ import {
   ADMIN_COOKIE,
   OWNER_UID,
   adminEnabled,
-  clearLoginFailures,
   loginBlocked,
   newSessionToken,
   ownerPasswordMatches,
+  ownerSessionVersion,
   recordLoginFailure,
   requireAdmin,
 } from "@/lib/admin/auth";
@@ -36,14 +36,14 @@ const refreshSite = () => revalidatePath("/", "layout");
 
 export async function loginAction(_: string | null, form: FormData): Promise<string | null> {
   const fp = await clientFingerprint();
-  if (loginBlocked(fp)) return "Trop d'essais. Réessayez dans 15 minutes.";
-  const login = normalizeLogin(String(form.get("login") ?? ""));
-  const password = String(form.get("password") ?? "");
+  const login = normalizeLogin(String(form.get("login") ?? "")).slice(0, 60);
+  const password = String(form.get("password") ?? "").slice(0, 200);
+  if (await loginBlocked(fp, login || "admin")) return "Trop d'essais. Réessayez dans 15 minutes.";
   let token: string | null = null;
   let actor = "admin";
   if (login === "" || login === "admin") {
     if (!adminEnabled()) return "L'accès du propriétaire n'est pas activé (mot de passe non configuré sur le serveur).";
-    if (ownerPasswordMatches(password)) token = newSessionToken(OWNER_UID, "ADMIN", 0);
+    if (ownerPasswordMatches(password)) token = newSessionToken(OWNER_UID, "ADMIN", ownerSessionVersion());
   } else {
     const u = await db().adminUser.findUnique({ where: { login } });
     // Même temps de calcul que le compte existe ou non.
@@ -56,11 +56,9 @@ export async function loginAction(_: string | null, form: FormData): Promise<str
     }
   }
   if (!token) {
-    recordLoginFailure(fp);
-    await audit("system", "admin.login_failed", login || "admin");
+    await recordLoginFailure(fp, login || "admin");
     return login ? "Identifiant ou mot de passe incorrect." : "Mot de passe incorrect.";
   }
-  clearLoginFailures(fp);
   (await cookies()).set(ADMIN_COOKIE, token, {
     httpOnly: true,
     sameSite: "strict",

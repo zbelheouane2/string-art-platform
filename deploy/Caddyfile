@@ -1,4 +1,9 @@
 {$DOMAIN}, www.{$DOMAIN} {
 	encode zstd gzip
-	reverse_proxy web:3000
+	reverse_proxy web:3000 {
+		# Adresse du visiteur : seul Caddy la donne. On retire les en-têtes qu'un
+		# visiteur pourrait inventer pour contourner les limites d'essais.
+		header_up -Cf-Connecting-Ip
+		header_up -True-Client-Ip
+	}
 }
