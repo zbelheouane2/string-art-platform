@@ -55,4 +55,6 @@ pytest
 
 ## Tâche planifiée
 
+> **Désactivée depuis le 25/11/2026** : le propriétaire publie lui-même deux posts par jour. Le bloc `schedule` du workflow est mis en commentaire ; le lancement manuel (`workflow_dispatch`) reste disponible.
+
 `.github/workflows/social-deekra.yml` s'exécute aux trois créneaux, plus trois horaires de Ramadan qui ne s'activent que pendant cette période. Tant que `SOCIAL_AUTOPUBLISH` n'est pas à `true`, les lancements planifiés ne font rien. Les lots se génèrent alors à la main (mode `lot`), puis chaque visuel validé est publié (mode `publier`). Tout est archivé sur la branche `social-lots`.
