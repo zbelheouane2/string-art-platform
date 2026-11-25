@@ -65,7 +65,10 @@ export default async function LocaleLayout({
   const catalog = await shopCatalog();
   const fonts = [dmSerif, dmSans, naskh, alexandria].map((f) => f.variable).join(" ");
   return (
-    <html lang={locale} dir={direction(locale)} className={fonts} suppressHydrationWarning>
+    // data-scroll-behavior : Next coupe le défilement doux pendant un changement de page.
+    // Sans lui, la nouvelle page s'ouvrait au niveau de défilement de la précédente puis
+    // remontait lentement ; sur téléphone, la remontée s'arrêtait en route (bas de page).
+    <html lang={locale} dir={direction(locale)} className={fonts} data-scroll-behavior="smooth" suppressHydrationWarning>
       <body>
         {/* Active les animations d'apparition seulement si JavaScript tourne (évite le contenu invisible). */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js');" + TEXT_SIZE_BOOT }} />
