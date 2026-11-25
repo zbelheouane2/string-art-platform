@@ -105,12 +105,12 @@ def test_occasion_prend_le_soir(settings):
     p = plan_creneau(settings, dt.date(2027, 5, 25), "soir")
     assert p.occasion and p.occasion["nom"] == "Fête des mères"
     assert plan_creneau(settings, dt.date(2027, 5, 15), "soir").occasion["nom"] == "Aïd el-Adha"
-    assert plan_creneau(settings, dt.date(2027, 5, 25), "midi").occasion is None
+    assert plan_creneau(settings, dt.date(2027, 5, 25), "apres_midi").occasion is None
 
 
 def test_date_trop_ancienne(settings):
     with pytest.raises(ValueError):
-        plan_creneau(settings, EPOQUE - dt.timedelta(days=1), "midi")
+        plan_creneau(settings, EPOQUE - dt.timedelta(days=1), "apres_midi")
 
 
 def test_config_invalide(tmp_path, settings):
@@ -216,7 +216,7 @@ def test_gemini_reponse_bloquee():
 # ---------- pipeline complet (Gemini simulé) ----------
 
 def test_generer_reessaie_si_non_conforme(settings):
-    plan = plan_creneau(settings, dt.date(2026, 11, 21), "midi")  # creatif, rendu gemini
+    plan = plan_creneau(settings, dt.date(2026, 11, 21), "apres_midi")  # creatif, rendu gemini
     assert plan.sujet["rendu"] == "gemini"
     s = FakeSession([
         _gemini_image_resp(_jpeg()), _gemini_json_resp({"conforme": False, "problemes": ["texte"]}),
@@ -230,7 +230,7 @@ def test_generer_reessaie_si_non_conforme(settings):
 
 
 def test_generer_echoue_proprement(settings):
-    plan = plan_creneau(settings, dt.date(2026, 11, 21), "midi")
+    plan = plan_creneau(settings, dt.date(2026, 11, 21), "apres_midi")
     n = settings.social["gemini"]["essais_max"] + 1
     s = FakeSession([r for _ in range(n) for r in (_gemini_image_resp(_jpeg()), _gemini_json_resp({"conforme": False}))])
     with pytest.raises(pipeline.GenerationEchouee):
@@ -238,7 +238,7 @@ def test_generer_echoue_proprement(settings):
 
 
 def test_enregistrer_puis_publier(settings, tmp_path):
-    plan = plan_creneau(settings, dt.date(2026, 11, 21), "midi")
+    plan = plan_creneau(settings, dt.date(2026, 11, 21), "apres_midi")
     v = pipeline.Visuel(plan, compose.finaliser(_jpeg()), "Légende", "desc")
     chemin = pipeline.enregistrer(v, tmp_path)
     assert json.loads(chemin.with_suffix(".json").read_text())["statut"] == "a_valider"
@@ -269,11 +269,11 @@ def test_meta_erreur():
 def test_auto_ne_publie_pas_sans_interrupteur(settings, tmp_path, monkeypatch):
     from deekra_social import __main__ as cli
     monkeypatch.delenv("SOCIAL_AUTOPUBLISH", raising=False)
-    plan = plan_creneau(settings, dt.date(2026, 11, 21), "midi")
+    plan = plan_creneau(settings, dt.date(2026, 11, 21), "apres_midi")
     monkeypatch.setattr(cli, "_gemini", lambda st: None)
     monkeypatch.setattr(cli.pipeline, "generer", lambda st, p, g, historique=None: pipeline.Visuel(p, compose.finaliser(_jpeg()), "L", "d"))
     monkeypatch.setattr(cli, "_meta", lambda st: (_ for _ in ()).throw(AssertionError("ne doit pas publier")))
-    assert cli.main(["auto", "--creneau", "midi", "--sortie", str(tmp_path)]) == 0
+    assert cli.main(["auto", "--creneau", "apres_midi", "--sortie", str(tmp_path)]) == 0
     assert list(tmp_path.rglob("*.jpg"))
 
 
@@ -333,13 +333,13 @@ def test_un_sujet_change_d_angle_a_chaque_passage(settings):
 
 def test_registre_tourne_d_une_semaine_a_l_autre(settings):
     d = dt.date(2026, 11, 21)
-    regs = [plan_creneau(settings, d + dt.timedelta(weeks=w), "midi").registre for w in range(3)]
+    regs = [plan_creneau(settings, d + dt.timedelta(weeks=w), "apres_midi").registre for w in range(3)]
     assert len(set(regs)) == 3
 
 
 def test_registres_varies_sur_une_journee(settings):
     regs = [p.registre for p in plan_jour(settings, dt.date(2026, 11, 21))]
-    assert len(set(regs)) == 3
+    assert len(set(regs)) == len(settings.creneaux)
 
 
 def test_prompt_image_avec_variations():
@@ -349,9 +349,9 @@ def test_prompt_image_avec_variations():
 
 def test_accroches_recentes(tmp_path):
     (tmp_path / "2026-11-20").mkdir()
-    (tmp_path / "2026-11-20" / "2026-11-20-midi.json").write_text(json.dumps({"legende": "A1\nB1\n\ncorps"}), encoding="utf-8")
+    (tmp_path / "2026-11-20" / "2026-11-20-apres_midi.json").write_text(json.dumps({"legende": "A1\nB1\n\ncorps"}), encoding="utf-8")
     (tmp_path / "2026-11-20" / "2026-11-20-soir.json").write_text(json.dumps({"legende": "FUTUR\nX"}), encoding="utf-8")
-    assert pipeline.accroches_recentes(tmp_path, dt.date(2026, 11, 20), {"midi"}) == ["A1", "B1"]
+    assert pipeline.accroches_recentes(tmp_path, dt.date(2026, 11, 20), {"apres_midi"}) == ["A1", "B1"]
     prompt = captions.prompt_legende({"brief": "b"}, {"prix": "1", "paiement": "p", "livraison": "l"}, "d", None,
                                      recentes=["A1"], atouts=["fort"])
     assert "A1" in prompt and "fort" in prompt and "concurrent" in prompt
@@ -417,7 +417,7 @@ def test_importer_refuse_mots_interdits(settings, tmp_path, monkeypatch):
     d = dt.date(2026, 11, 21)
     manuel.preparer(settings, d, tmp_path)
     with pytest.raises(captions.LegendeInvalide):
-        manuel.importer(settings, d, "midi", tmp_path, _png(tmp_path), "Stock limité ! #DeeKra #ذكرى")
+        manuel.importer(settings, d, "apres_midi", tmp_path, _png(tmp_path), "Stock limité ! #DeeKra #ذكرى")
 
 
 def _png(tmp_path):
@@ -434,7 +434,7 @@ def test_programme_publie_le_valide(settings, tmp_path, monkeypatch):
     appels = []
     monkeypatch.setattr(cli.pipeline, "publier_fichier", lambda meta, chemin: appels.append(chemin) or {})
     monkeypatch.setattr(cli, "_meta", lambda st: None)
-    assert cli.main(["programme", "--creneau", "midi", "--sortie", str(tmp_path)]) == 0
+    assert cli.main(["programme", "--creneau", "apres_midi", "--sortie", str(tmp_path)]) == 0
     assert appels == [tmp_path / "x.jpg"]
 
 
@@ -442,7 +442,7 @@ def test_programme_ne_fait_rien_sans_visuel(settings, tmp_path, monkeypatch):
     from deekra_social import __main__ as cli
     monkeypatch.delenv("SOCIAL_AUTOPUBLISH", raising=False)
     monkeypatch.setattr(cli, "_meta", lambda st: (_ for _ in ()).throw(AssertionError("ne doit pas publier")))
-    assert cli.main(["programme", "--creneau", "midi", "--sortie", str(tmp_path)]) == 0
+    assert cli.main(["programme", "--creneau", "apres_midi", "--sortie", str(tmp_path)]) == 0
 
 
 def test_fiche_produit_dans_le_prompt(settings):

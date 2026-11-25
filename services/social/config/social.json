@@ -3,46 +3,38 @@
   "marque": "DeeKra",
   "fuseau": "Africa/Algiers",
   "creneaux": {
-    "midi": "12:30",
     "apres_midi": "17:30",
-    "soir": "21:00"
+    "soir": "21:30"
   },
   "semaine_type": {
-    "_doc": "Famille de visuel par jour et par créneau (ordre : midi, apres_midi, soir).",
+    "_doc": "Famille de visuel par jour et par créneau (ordre : apres_midi 17 h 30, soir 21 h 30). Deux posts par jour, publiés à la main par le propriétaire.",
     "samedi": [
-      "creatif",
       "pack",
       "resultat"
     ],
     "dimanche": [
-      "communaute",
       "atout",
-      "offre"
+      "communaute"
     ],
     "lundi": [
       "creatif",
-      "pack",
       "emotion"
     ],
     "mardi": [
-      "resultat",
       "guide",
       "offre"
     ],
     "mercredi": [
-      "creatif",
       "pack",
       "resultat"
     ],
     "jeudi": [
-      "emotion",
       "atout",
-      "offre"
+      "emotion"
     ],
     "vendredi": [
-      "communaute",
-      "resultat",
-      "emotion"
+      "creatif",
+      "offre"
     ]
   },
   "occasion": {
@@ -118,7 +110,6 @@
       "debut": "2027-02-08",
       "fin": "2027-03-09",
       "creneaux": {
-        "midi": "15:00",
         "apres_midi": "18:30",
         "soir": "22:00"
       }
