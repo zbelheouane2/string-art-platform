@@ -1,5 +1,13 @@
 # Historique
 
+## 2026-11-25
+- **Sécurité (audit de l'API)**. Adresse du visiteur non falsifiable pour toutes les limites d'essais : en-tête `cf-connecting-ip` posé par Cloudflare devant Render (réglable par `CLIENT_IP_HEADER`, « none » pour le couper), sinon la dernière adresse de `X-Forwarded-For` ; Caddy (VPS) retire ces en-têtes à l'entrée. Avant, la première adresse de `X-Forwarded-For`, écrite par le visiteur, permettait de contourner toutes les limites.
+- **Connexion admin** : essais ratés comptés en base (survivent aux mises en veille de Render) : 5 par appareil et 20 par identifiant en 15 min. Changer `ADMIN_PASSWORD` déconnecte toutes les sessions du propriétaire (une reconnexion demandée après la mise en ligne).
+- **Google Sheets** : un texte de client qui commence par = + - @ est écrit comme du texte, jamais comme une formule (côté site et dans le script v3, à recopier dans Google).
+- **Politique de sécurité du contenu (CSP)** : scripts limités au site et aux outils Google, Meta et TikTok ; formulaires, `<base>`, objets et intégration dans un autre site refusés.
+- **Photos des clients** : vrai format vérifié dans les octets (JPEG/PNG/WebP), comme dans l'admin. **Codes promo** : 10 codes faux au plus par appareil en 15 min (message en FR/EN/AR). Adresse du site pour les retours de paiement prise dans la configuration, plus dans l'en-tête Host.
+- Tests : `security.test.ts` (adresse IP, formules, format des photos).
+
 ## 2026-11-24
 - **Espace admin étendu** (demande du propriétaire : tout modifier lui-même, sans passer à WordPress). Menu en colonne groupé par rubrique (Ventes, Catalogue, Contenu du site, Réglages), onglets qui défilent sur téléphone.
 - **Comptes et rôles** : comptes nominatifs (identifiant + mot de passe, scrypt) avec rôle Administrateur ou Employé ; le propriétaire garde l'accès par `ADMIN_PASSWORD` (identifiant « admin » ou vide). L'employé traite les commandes, le stock, les avis, l'annonce et la FAQ ; le reste est réservé à l'administrateur (table unique `src/lib/admin/permissions.ts`, appliquée au menu, aux pages, aux actions et aux exports). Désactiver un compte ou changer son mot de passe coupe ses sessions ouvertes. Chaque opération est notée au nom de la personne dans le **Journal**.

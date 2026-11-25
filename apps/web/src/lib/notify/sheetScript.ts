@@ -3,8 +3,21 @@
  * (version 2). Il reçoit trois sortes de messages du site, tous protégés par
  * le mot secret : « order » (nouvelle ligne), « status » (mise à jour de la
  * colonne Statut) et « test » (vérifie la liaison sans rien écrire).
+ * Version 3 : tout texte qui commence par = + - @ est écrit comme du texte,
+ * jamais comme une formule (un client ne peut pas piéger la feuille).
  */
-export const SHEET_SCRIPT_VERSION = 2;
+export const SHEET_SCRIPT_VERSION = 3;
+
+/** Caractères qui feraient lire une cellule comme une formule par Google Sheets ou Excel. */
+const FORMULA_START = /^[=+\-@\t\r]/;
+
+/**
+ * Texte saisi par un client → valeur sûre pour une cellule : une apostrophe
+ * devant (invisible dans la feuille) empêche toute formule.
+ */
+export function sheetSafe(value: string): string {
+  return FORMULA_START.test(value) ? `'${value}` : value;
+}
 
 export const SHEET_COLUMNS = [
   ["number", "Commande"],
@@ -60,10 +73,19 @@ function doPost(e) {
     return json({ ok: false, error: "introuvable" });
   }
   const o = data.order;
-  // Téléphones en texte pour garder le 0 initial ; frais vides = à confirmer par téléphone.
-  const row = COLUMNS.map((k) => (TEXT_COLUMNS.indexOf(k) >= 0 && o[k] ? "'" + o[k] : o[k] === null || o[k] === undefined ? "" : o[k]));
+  // Frais vides = à confirmer par téléphone.
+  const row = COLUMNS.map((k) => cell(k, o[k]));
   sheet.appendRow(row.concat([data.status || "À confirmer"]));
   return json({ ok: true, version: ${SHEET_SCRIPT_VERSION} });
+}
+
+// Téléphones en texte (garde le 0 initial) ; texte commençant par = + - @ jamais lu comme une formule.
+function cell(k, v) {
+  if (v === null || v === undefined) return "";
+  if (typeof v !== "string") return v;
+  if (v.charAt(0) === "'") return v;
+  if (TEXT_COLUMNS.indexOf(k) >= 0 && v) return "'" + v;
+  return /^[=+@\\t\\r-]/.test(v) ? "'" + v : v;
 }
 
 function json(obj) {

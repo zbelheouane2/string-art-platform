@@ -1082,6 +1082,7 @@
       "promoInvalid": "Ce code promo n'existe pas.",
       "promoExpired": "Ce code promo n'est plus valable.",
       "promoUnavailable": "Vérification impossible pour le moment, réessayez.",
+      "promoTooMany": "Trop de codes essayés. Réessayez dans un quart d'heure.",
       "promoMinimum": "Le montant minimal pour ce code promo n'est pas atteint.",
       "promoPerPhone": "Ce code promo a déjà été utilisé avec ce numéro.",
       "deliveryArea": "Livraison pas encore disponible dans cette wilaya avec ce mode.",

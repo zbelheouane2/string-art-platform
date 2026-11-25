@@ -60,7 +60,7 @@ export default async function JournalPage({ searchParams }: { searchParams: Prom
   const qui = (await searchParams).qui;
   const [entries, actors] = await Promise.all([
     db().auditLog.findMany({
-      where: { action: { notIn: ["order.track.miss", "code.failed", "code.opened"] }, ...(qui ? { actor: qui } : {}) },
+      where: { action: { notIn: ["order.track.miss", "code.failed", "code.opened", "admin.login_device", "promo.check.miss"] }, ...(qui ? { actor: qui } : {}) },
       orderBy: { createdAt: "desc" },
       take: 200,
     }),
