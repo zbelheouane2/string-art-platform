@@ -267,3 +267,35 @@ def test_document_records_crop_and_face(astronaut):
     doc = out.document
     assert len(doc["crop_box"]) == 3 and doc["face"] is not None
     assert all(0 <= v <= 1 for v in doc["face"]["box_rel"][2:])
+
+
+def test_soften_compresses_tones():
+    params = imaging.PreprocessParams(resolution=120, auto_crop=False, background="keep")
+    base = imaging.prepare_pil(_portrait(), params)
+    soft = imaging.prepare_pil(_portrait(), imaging.PreprocessParams(resolution=120, auto_crop=False, background="keep", soften=0.2))
+    m = base.mask
+    assert soft.target[m].min() >= 0.2 - 1e-6
+    assert soft.target[m].max() <= 0.8 + 1e-6
+    assert soft.target[m].std() < base.target[m].std()
+    np.testing.assert_allclose(soft.target[m], 0.2 + 0.6 * base.target[m], atol=1e-5)
+
+
+def test_variants_v03_settings():
+    assert set(pipeline.VARIANTS) == {"doux", "standard", "contraste"} == set(pipeline.VARIANT_LIGHT_PENALTY)
+    assert pipeline.VARIANTS["doux"].soften > pipeline.VARIANTS["standard"].soften > pipeline.VARIANTS["contraste"].soften == 0
+    base = SolverParams(max_lines=1234)
+    for name, pen in pipeline.VARIANT_LIGHT_PENALTY.items():
+        s = pipeline.solver_for(name, base)
+        assert s.light_penalty == pen and s.max_lines == 1234
+        assert s.min_lines == pipeline.MIN_LINES
+        assert pipeline.VARIANTS[name].face_weight == 0.0
+
+
+def test_min_lines_continues_past_auto_stop():
+    geo = BoardGeometry.load()
+    cache = LineCache(geo, 120)
+    target = np.zeros((120, 120), dtype=np.float32)  # image blanche : aucun fil n'améliore
+    imp = np.ones_like(target)
+    assert len(solve(target, imp, cache, SolverParams(max_lines=50)).sequence) == 1
+    res = solve(target, imp, cache, SolverParams(max_lines=50, min_lines=30))
+    assert len(res.sequence) == 31 and res.stopped_early

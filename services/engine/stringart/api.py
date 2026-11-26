@@ -23,7 +23,6 @@ import numpy as np
 
 from . import faces, imaging, pipeline
 from .instructions import ENGINE_VERSION
-from .solver import SolverParams
 
 log = logging.getLogger("stringart.api")
 app = FastAPI(title="Moteur String Art", version=ENGINE_VERSION, docs_url=None, redoc_url=None)
@@ -104,7 +103,7 @@ def create_generation(
         img,
         image_sha256=sha,
         preprocess=pre,
-        solver_params=SolverParams(),
+        solver_params=pipeline.solver_for(variant),
         crop=_parse_crop(crop),
         render_resolution=preview_size,
     )
