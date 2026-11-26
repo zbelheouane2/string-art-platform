@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import time
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 
 from PIL import Image
@@ -15,11 +15,21 @@ from .lines import LineCache
 from .solver import SolverParams, solve
 
 # Variantes proposées au client (réglages compréhensibles, pas de curseurs techniques).
+# v0.3.0 : réglées par un banc de 432 combinaisons à 2 000 fils (voir docs/algorithm.md).
+# « soften » compresse les tons : fils mieux répartis, peau plus régulière, moins de traînées.
 VARIANTS: dict[str, imaging.PreprocessParams] = {
-    "doux": imaging.PreprocessParams(clahe_clip=1.0, gamma=0.9, face_weight=1.0),
-    "standard": imaging.PreprocessParams(clahe_clip=2.0, gamma=1.0, face_weight=1.0),
-    "contraste": imaging.PreprocessParams(clahe_clip=3.0, gamma=1.3, face_weight=1.0),
+    "doux": imaging.PreprocessParams(clahe_clip=1.0, gamma=1.0, sharpen=0.0, soften=0.2, face_weight=1.0),
+    "standard": imaging.PreprocessParams(clahe_clip=0.0, gamma=1.0, sharpen=0.5, soften=0.1, face_weight=1.0),
+    "contraste": imaging.PreprocessParams(clahe_clip=0.0, gamma=1.0, sharpen=0.5, soften=0.0, face_weight=1.0),
 }
+
+# Pénalité des zones claires propre à chaque variante (paramètre du solveur).
+VARIANT_LIGHT_PENALTY: dict[str, float] = {"doux": 0.1, "standard": 0.0, "contraste": 0.1}
+
+
+def solver_for(variant: str, base: SolverParams = SolverParams()) -> SolverParams:
+    """Paramètres du solveur adaptés à la variante choisie."""
+    return replace(base, light_penalty=VARIANT_LIGHT_PENALTY[variant])
 
 _CACHES: dict[tuple[str, int], LineCache] = {}
 

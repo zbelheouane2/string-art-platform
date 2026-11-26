@@ -42,7 +42,7 @@ def main(argv: list[str] | None = None) -> None:
             auto_crop=not args.no_auto_crop,
             background=args.background,
         )
-        out = pipeline.generate(img, image_sha256=sha, preprocess=pre, solver_params=solver, crop=crop)
+        out = pipeline.generate(img, image_sha256=sha, preprocess=pre, solver_params=pipeline.solver_for(name, solver), crop=crop)
         stem = f"{args.image.stem}-{name}"
         pipeline.save(out, args.out, stem)
         s, m = out.document["summary"], out.document["metrics"]

@@ -1,6 +1,6 @@
 # Moteur String Art — décisions et état
 
-_Mis à jour : 2026-11-12 — version moteur 0.1.0 (prototype phase 1a). Étude complète : `docs/reverse-engineering/04-algorithm-study.md`._
+_Mis à jour : 2026-11-26 — version moteur 0.3.0. Étude complète : `docs/reverse-engineering/04-algorithm-study.md`._
 
 ## Géométrie (validée)
 - Planche 500 × 500 mm, cercle de clous Ø 470 mm (**à confirmer par le prototype physique**), 240 clous, pas ≈ 6,15 mm.
@@ -31,6 +31,17 @@ Mesuré avec `services/engine/bench/bench.py` : ressemblance (SSIM après flou �
 Résultat (variante standard, cadrage auto) : Beckham 0,52 → 0,61 ; camera 0,65 → 0,69 ; chelsea (sans visage) 0,63 → 0,64 ; astronaut 0,63 → 0,62 mais visage cadré et lisible (le score compare des recadrages différents). Planche : `/mnt/project-files/prototype-moteur/avant-apres-v0.2.png`.
 
 Détecteur de visage : YuNet (OpenCV `FaceDetectorYN`, modèle ONNX 230 Ko, licence MIT, fourni dans `stringart/models/`), repli cascade de Haar. Tout est local, aucune photo ne quitte le serveur.
+
+## Améliorations v0.3.0 (étude alinedeco)
+Étude complète : `/mnt/project-files/comparaison-alinedeco/algorithme-alinedeco.md`. Le générateur alinedeco (méthode A) utilise le même cœur que nous : glouton sur la noirceur moyenne, effet d'un fil ≈ 0,12 à 0,14, écart 15. Sa différence tient à la préparation de l'image : il **compresse les tons** au lieu de durcir le contraste. Nous avons ajouté notre propre réglage `soften` (`noirceur' = s + noirceur × (1 − 2s)`) et réglé les variantes par un banc de 432 combinaisons à 2 000 fils.
+
+| Variante | soften | CLAHE | contours | pénalité zones claires |
+|---|---|---|---|---|
+| doux | 0,2 | 1,0 | 0 | 0,1 |
+| standard (Équilibré) | 0,1 | 0 | 0,5 | 0 |
+| contraste | 0 | 0 | 0,5 | 0,1 |
+
+Écart minimal de 15 clous : aucun gain mesuré, on garde 20.
 
 ## Constat important du prototype
 Avec un modèle physique cohérent (le poids du fil dans l'algorithme = sa couverture réelle d'un pixel), **l'algorithme s'arrête de lui-même entre 1 700 et 2 300 fils** pour un fil de 0,12 mm : au-delà, il assombrirait l'image. Les 3 500 fils de la référence impliquent un fil plus fin ou un rendu plus sombre. **Le nombre de fils doit être calibré avec l'épaisseur réelle du fil choisi**, sur la planche physique (phase 1c).

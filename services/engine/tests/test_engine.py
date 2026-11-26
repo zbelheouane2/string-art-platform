@@ -278,3 +278,12 @@ def test_soften_compresses_tones():
     assert soft.target[m].max() <= 0.8 + 1e-6
     assert soft.target[m].std() < base.target[m].std()
     np.testing.assert_allclose(soft.target[m], 0.2 + 0.6 * base.target[m], atol=1e-5)
+
+
+def test_variants_v03_settings():
+    assert set(pipeline.VARIANTS) == {"doux", "standard", "contraste"} == set(pipeline.VARIANT_LIGHT_PENALTY)
+    assert pipeline.VARIANTS["doux"].soften > pipeline.VARIANTS["standard"].soften > pipeline.VARIANTS["contraste"].soften == 0
+    base = SolverParams(max_lines=1234)
+    for name, pen in pipeline.VARIANT_LIGHT_PENALTY.items():
+        s = pipeline.solver_for(name, base)
+        assert s.light_penalty == pen and s.max_lines == 1234
