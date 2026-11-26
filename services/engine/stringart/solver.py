@@ -22,6 +22,7 @@ class SolverParams:
     tabu: int = 3                  # nombre de derniers clous interdits
     start_nail: int = 0            # A1
     min_score: float = 0.0         # arrêt si plus aucune amélioration
+    min_lines: int = 0             # nombre de fils posés au minimum, même sans amélioration mesurée
     light_penalty: float = 0.2     # coût d'un fil sur une zone claire (réduit le « voile »)
 
     def to_dict(self) -> dict:
@@ -62,7 +63,7 @@ def solve(target: np.ndarray, importance: np.ndarray, cache: LineCache, params: 
         score = np.where(allowed, score, -np.inf)
         k = int(np.argmax(score))
         best = float(score[k])
-        if not np.isfinite(best) or best <= params.min_score:
+        if not np.isfinite(best) or (best <= params.min_score and len(scores) >= params.min_lines):
             stopped_early = True
             break
         nxt = int(fan.others[k])

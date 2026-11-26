@@ -18,10 +18,15 @@ from .solver import SolverParams, solve
 # v0.3.0 : réglées par un banc de 432 combinaisons à 2 000 fils (voir docs/algorithm.md).
 # « soften » compresse les tons : fils mieux répartis, peau plus régulière, moins de traînées.
 VARIANTS: dict[str, imaging.PreprocessParams] = {
-    "doux": imaging.PreprocessParams(clahe_clip=1.0, gamma=1.0, sharpen=0.0, soften=0.2, face_weight=1.0),
-    "standard": imaging.PreprocessParams(clahe_clip=0.0, gamma=1.0, sharpen=0.5, soften=0.1, face_weight=1.0),
-    "contraste": imaging.PreprocessParams(clahe_clip=0.0, gamma=1.0, sharpen=0.5, soften=0.0, face_weight=1.0),
+    "doux": imaging.PreprocessParams(clahe_clip=1.0, gamma=1.0, sharpen=0.0, soften=0.2, face_weight=0.0),
+    "standard": imaging.PreprocessParams(clahe_clip=0.0, gamma=1.0, sharpen=0.5, soften=0.1, face_weight=0.0),
+    "contraste": imaging.PreprocessParams(clahe_clip=0.0, gamma=1.0, sharpen=0.5, soften=0.0, face_weight=0.0),
 }
+
+# v0.3.0 : visage traité comme le reste de l'image (rendu plus régulier, préféré à l'œil
+# par le propriétaire). Sans priorité visage, l'arrêt automatique tombe vers 1 300 à 1 700 fils,
+# trop clair : on pose au moins MIN_LINES fils (≈ le nombre obtenu en v0.3.0).
+MIN_LINES = 2300
 
 # Pénalité des zones claires propre à chaque variante (paramètre du solveur).
 VARIANT_LIGHT_PENALTY: dict[str, float] = {"doux": 0.1, "standard": 0.0, "contraste": 0.1}
@@ -29,7 +34,7 @@ VARIANT_LIGHT_PENALTY: dict[str, float] = {"doux": 0.1, "standard": 0.0, "contra
 
 def solver_for(variant: str, base: SolverParams = SolverParams()) -> SolverParams:
     """Paramètres du solveur adaptés à la variante choisie."""
-    return replace(base, light_penalty=VARIANT_LIGHT_PENALTY[variant])
+    return replace(base, light_penalty=VARIANT_LIGHT_PENALTY[variant], min_lines=max(base.min_lines, MIN_LINES))
 
 _CACHES: dict[tuple[str, int], LineCache] = {}
 

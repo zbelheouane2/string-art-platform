@@ -287,3 +287,15 @@ def test_variants_v03_settings():
     for name, pen in pipeline.VARIANT_LIGHT_PENALTY.items():
         s = pipeline.solver_for(name, base)
         assert s.light_penalty == pen and s.max_lines == 1234
+        assert s.min_lines == pipeline.MIN_LINES
+        assert pipeline.VARIANTS[name].face_weight == 0.0
+
+
+def test_min_lines_continues_past_auto_stop():
+    geo = BoardGeometry.load()
+    cache = LineCache(geo, 120)
+    target = np.zeros((120, 120), dtype=np.float32)  # image blanche : aucun fil n'améliore
+    imp = np.ones_like(target)
+    assert len(solve(target, imp, cache, SolverParams(max_lines=50)).sequence) == 1
+    res = solve(target, imp, cache, SolverParams(max_lines=50, min_lines=30))
+    assert len(res.sequence) == 31 and res.stopped_early

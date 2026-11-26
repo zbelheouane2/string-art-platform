@@ -43,6 +43,8 @@ Détecteur de visage : YuNet (OpenCV `FaceDetectorYN`, modèle ONNX 230 Ko, lice
 
 Écart minimal de 15 clous : aucun gain mesuré, on garde 20.
 
+**Visage traité comme le reste de l'image** (`face_weight` 0 dans les 3 styles). Banc à 2 300 fils sur 3 photos : visage ×2 ou ×3 et priorité progressive (façon méthode B) gagnent un peu à la mesure sur la finesse du visage, mais créent des traînées blanches ; renforcer les yeux et la bouche est moins bon partout. À l'œil, le propriétaire préfère nettement le visage non prioritaire : rendu plus régulier, proche d'alinedeco, et un 2ᵉ visage (couple) apparaît enfin. Sans priorité visage, l'arrêt automatique tombe vers 1 300 à 1 700 fils, trop clair : le solveur pose donc au moins `MIN_LINES` = 2 300 fils (nouveau paramètre `min_lines`), soit le nombre obtenu avant. Planche : `/mnt/project-files/comparaison-alinedeco/visage-normal-3-styles.png`.
+
 ## Constat important du prototype
 Avec un modèle physique cohérent (le poids du fil dans l'algorithme = sa couverture réelle d'un pixel), **l'algorithme s'arrête de lui-même entre 1 700 et 2 300 fils** pour un fil de 0,12 mm : au-delà, il assombrirait l'image. Les 3 500 fils de la référence impliquent un fil plus fin ou un rendu plus sombre. **Le nombre de fils doit être calibré avec l'épaisseur réelle du fil choisi**, sur la planche physique (phase 1c).
 
