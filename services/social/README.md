@@ -53,6 +53,8 @@ python -m deekra_social auto --creneau midi --sortie lots             # tâche p
 pytest
 ```
 
+**Créneaux (depuis le 25/11/2026) :** deux posts par jour, 17 h 30 (`apres_midi`) et 21 h 30 (`soir`), publiés à la main. Voir `creneaux` et `semaine_type` dans `config/social.json`.
+
 ## Tâche planifiée
 
 > **Désactivée depuis le 25/11/2026** : le propriétaire publie lui-même deux posts par jour. Le bloc `schedule` du workflow est mis en commentaire ; le lancement manuel (`workflow_dispatch`) reste disponible.
