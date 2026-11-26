@@ -267,3 +267,14 @@ def test_document_records_crop_and_face(astronaut):
     doc = out.document
     assert len(doc["crop_box"]) == 3 and doc["face"] is not None
     assert all(0 <= v <= 1 for v in doc["face"]["box_rel"][2:])
+
+
+def test_soften_compresses_tones():
+    params = imaging.PreprocessParams(resolution=120, auto_crop=False, background="keep")
+    base = imaging.prepare_pil(_portrait(), params)
+    soft = imaging.prepare_pil(_portrait(), imaging.PreprocessParams(resolution=120, auto_crop=False, background="keep", soften=0.2))
+    m = base.mask
+    assert soft.target[m].min() >= 0.2 - 1e-6
+    assert soft.target[m].max() <= 0.8 + 1e-6
+    assert soft.target[m].std() < base.target[m].std()
+    np.testing.assert_allclose(soft.target[m], 0.2 + 0.6 * base.target[m], atol=1e-5)

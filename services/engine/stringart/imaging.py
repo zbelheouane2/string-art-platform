@@ -36,6 +36,7 @@ class PreprocessParams:
     sharpen: float = 0.5           # renforcement des contours (masque flou), 0 = désactivé
     background: str = "light"      # "light" (fond éclairci derrière la personne) ou "keep"
     background_level: float = 0.35 # part de noirceur conservée dans le fond si "light"
+    soften: float = 0.0            # compression des tons (0..0.3) : noirs éclaircis, blancs grisés, fils mieux répartis
 
 
 @dataclass
@@ -237,6 +238,8 @@ def prepare_pil(
         darkness = 1.0 - darkness
     if params.gamma != 1.0:
         darkness = np.power(darkness, 1.0 / params.gamma)
+    if params.soften > 0:
+        darkness = params.soften + darkness * (1.0 - 2.0 * params.soften)
 
     if params.background == "light" and work_face is not None:
         subject = subject_mask(rgb, work_face)
