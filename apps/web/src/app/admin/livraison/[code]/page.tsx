@@ -11,7 +11,7 @@ import { RateImport } from "./RateImport";
 export const dynamic = "force-dynamic";
 
 export default async function CarrierPage({ params, searchParams }: { params: Promise<{ code: string }>; searchParams: Promise<{ ok?: string; erreur?: string }> }) {
-  await requireAdmin();
+  await requireAdmin("delivery");
   const { code } = await params;
   const q = await searchParams;
   const carrier = await db().carrier.findUnique({ where: { code } });

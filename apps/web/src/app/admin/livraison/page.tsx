@@ -7,7 +7,7 @@ import { AdminShell, Flash, dateFr } from "../AdminShell";
 export const dynamic = "force-dynamic";
 
 export default async function CarriersPage({ searchParams }: { searchParams: Promise<{ ok?: string; erreur?: string }> }) {
-  await requireAdmin();
+  await requireAdmin("delivery");
   const q = await searchParams;
   const carriers = await db().carrier.findMany({ orderBy: { createdAt: "asc" } });
   const methods = await db().deliveryMethod.findMany({ include: { _count: { select: { rates: true } } } });

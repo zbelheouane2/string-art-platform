@@ -766,3 +766,54 @@ test.describe("fiche du kit", () => {
     });
   }
 });
+
+test.describe("anti-spam des commandes (sans captcha)", () => {
+  test.skip(({ isMobile }) => isMobile, "un seul passage suffit");
+
+  async function fillOrder(page: Page, name: string) {
+    await page.goto("/fr/commander");
+    await page.getByLabel("Nom et prénom").fill(name);
+    await page.getByLabel("Téléphone mobile").fill(`0661${String(Date.now()).slice(-6)}`);
+    await page.getByLabel("Wilaya", { exact: true }).selectOption("16");
+    await page.getByLabel("Commune", { exact: true }).selectOption("Bab Ezzouar");
+    await page.getByLabel("Au bureau de livraison").check();
+  }
+
+  test("champ piège : invisible pour le client, une commande de robot est refusée", async ({ page }) => {
+    await fillOrder(page, "Robot Spam");
+    const trap = page.locator('input[name="website"]');
+    await expect(trap).toHaveAttribute("tabindex", "-1");
+    expect(await trap.evaluate((el) => el.parentElement!.getBoundingClientRect().width)).toBeLessThanOrEqual(1);
+    await trap.evaluate((el) => ((el as HTMLInputElement).value = "http://spam.example"));
+    await page.getByRole("button", { name: "Valider ma commande" }).click();
+    await expect(page.getByText("Vérifiez les champs signalés.")).toBeVisible();
+    await expect(page).toHaveURL(/\/fr\/commander$/);
+    const n = execFileSync("psql", [process.env.DATABASE_URL!, "-qtAc", `SELECT count(*) FROM "Order" o JOIN "Customer" c ON c.id = o."customerId" WHERE c."fullName" = 'Robot Spam'`]).toString().trim();
+    expect(n).toBe("0");
+  });
+
+  test("trop de commandes depuis le même appareil : refusées avec un message clair", async ({ page }) => {
+    // Appareil propre au test : adresse IP de documentation, empreinte calculée comme le site.
+    const ip = `203.0.113.${Math.floor(Math.random() * 250) + 1}`;
+    await page.setExtraHTTPHeaders({ "x-forwarded-for": ip });
+    const { createHash } = await import("node:crypto");
+    const fp = createHash("sha256").update(`${process.env.SESSION_SECRET ?? "dev"}:${ip}`).digest("hex").slice(0, 32);
+    const max = Number(process.env.ORDER_LIMIT_PER_HOUR) || 5;
+    sql(`DELETE FROM "AuditLog" WHERE action = 'order.device' AND target = '${fp}'`);
+    sql(`INSERT INTO "AuditLog" (id, actor, action, target) SELECT 'spam-' || md5(random()::text), 'system', 'order.device', '${fp}' FROM generate_series(1, ${max})`);
+    await fillOrder(page, "Client Pressé");
+    await page.getByRole("button", { name: "Valider ma commande" }).click();
+    await expect(page.getByText("Trop de commandes depuis cet appareil.", { exact: false })).toBeVisible();
+    await expect(page).toHaveURL(/\/fr\/commander$/);
+    // Fenêtre écoulée (lignes retirées) : la commande passe.
+    sql(`DELETE FROM "AuditLog" WHERE action = 'order.device' AND target = '${fp}'`);
+    await fillOrder(page, "Client Pressé");
+    await page.getByRole("button", { name: "Valider ma commande" }).click();
+    await expect(page).toHaveURL(/\/fr\/commande\/DK-[0-9A-Z]{6}$/);
+  });
+});
+
+test("HTTPS imposé au navigateur (HSTS)", async ({ request }) => {
+  const res = await request.get("/fr");
+  expect(res.headers()["strict-transport-security"]).toBe("max-age=63072000; includeSubDomains");
+});

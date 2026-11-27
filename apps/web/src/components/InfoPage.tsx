@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { brand } from "@/config/brand";
+import { getContacts } from "@/lib/settings";
 import { INFO_PAGES, type InfoPageKey } from "@/config/infoPages";
 import { policies } from "@/config/policies";
 import { Link } from "@/i18n/navigation";
 import { displayPhone, ltr, whatsappUrl } from "@/lib/contact";
-import { pageMetadata } from "@/lib/seo";
+import { seoMetadata } from "@/lib/seoServer";
 import { WhatsAppIcon } from "./ContactIcons";
 import { PageShell } from "./PageShell";
 
@@ -30,7 +31,7 @@ function formatDate(iso: string, locale: string): string {
 
 export async function infoPageMetadata(locale: string, page: InfoPageKey): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: `legal.${page}` });
-  return pageMetadata({ locale, path: INFO_PAGES[page], title: `${t("title")} — ${brand.name}`, description: t("lead") });
+  return seoMetadata({ locale, path: INFO_PAGES[page], title: `${t("title")} — ${brand.name}`, description: t("lead") });
 }
 
 /** Gabarit commun : titre, sections, vendeur, contact, autres pages. */
@@ -38,13 +39,14 @@ export async function InfoPage({ page, locale }: { page: InfoPageKey; locale: st
   const t = await getTranslations("legal");
   const tf = await getTranslations("footer.infoLinks");
   const sections = t.raw(`${page}.sections`) as Section[];
-  const wa = whatsappUrl();
+  const c = await getContacts();
+  const wa = whatsappUrl(c.whatsapp);
   const seller = [
     ["brand", brand.name],
     ["status", t("seller.statusValue")],
-    ["anpdp", brand.legal.anpdp],
-    ["email", brand.supportEmail],
-    ["sales", wa ? ltr(displayPhone()) : ""],
+    ["anpdp", c.anpdp],
+    ["email", c.supportEmail],
+    ["sales", wa ? ltr(displayPhone(c.whatsapp)) : ""],
   ].filter(([, v]) => v);
 
   return (

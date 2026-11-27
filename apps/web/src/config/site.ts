@@ -3,7 +3,9 @@
  * NEXT_PUBLIC_SITE_URL (ex. https://deekra.dz) : elle sert aux liens absolus
  * des aperçus WhatsApp/Facebook, au sitemap et aux balises canoniques.
  */
-const raw = (process.env.NEXT_PUBLIC_SITE_URL ?? "").trim().replace(/\/+$/, "");
+// Repli : adresse fournie par Render à l'exécution (RENDER_EXTERNAL_URL), pour que
+// les aperçus de liens ne pointent jamais vers localhost si la variable a été oubliée.
+const raw = (process.env.NEXT_PUBLIC_SITE_URL || process.env.RENDER_EXTERNAL_URL || "").trim().replace(/\/+$/, "");
 
 export const site = {
   url: raw || "http://localhost:3000",

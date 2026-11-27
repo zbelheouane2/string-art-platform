@@ -5537,3 +5537,24 @@ h1 em {
     font-size: 0.72rem;
   }
 }
+
+/* Avis client (suivi de commande livrée) : étoiles à choisir. */
+.review-form h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.25rem;
+}
+.review-stars-input {
+  display: grid;
+  gap: 0.35rem;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.review-stars-input label {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  color: #c9962b;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}

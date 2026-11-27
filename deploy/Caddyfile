@@ -1,7 +1,12 @@
 # Caddy obtient et renouvelle seul le certificat HTTPS (Let's Encrypt) et redirige http:// vers https://.
 {$DOMAIN}, www.{$DOMAIN} {
 	encode zstd gzip
-	# HSTS : le navigateur n'utilise plus que https pour ce site pendant 1 an.
-	header Strict-Transport-Security "max-age=31536000"
-	reverse_proxy web:3000
+	# HSTS : le site l'envoie déjà (next.config.ts) ; Caddy l'ajoute seulement s'il manque (pages d'erreur).
+	header ?Strict-Transport-Security "max-age=63072000; includeSubDomains"
+	reverse_proxy web:3000 {
+		# Adresse du visiteur : seul Caddy la donne. On retire les en-têtes qu'un
+		# visiteur pourrait inventer pour contourner les limites d'essais.
+		header_up -Cf-Connecting-Ip
+		header_up -True-Client-Ip
+	}
 }

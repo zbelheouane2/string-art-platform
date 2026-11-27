@@ -18,6 +18,11 @@ export const commerce = {
   codeSessionDays: 30,
   /** Anti force brute : essais de codes inconnus autorisés par appareil et par fenêtre. */
   codeAttempts: { max: 8, windowMinutes: 15 },
+  /**
+   * Anti-spam des commandes : commandes acceptées par appareil (empreinte de l'IP)
+   * et par fenêtre. Réglable par ORDER_LIMIT_PER_HOUR (les tests en passent beaucoup).
+   */
+  orderLimit: { max: Number(process.env.ORDER_LIMIT_PER_HOUR) || 5, windowMinutes: 60 },
   /** Nombre de portraits qu'un code peut calculer avant d'en valider un. */
   maxGenerationsPerCode: 10,
   /** Conservation de la photo : elle n'est pas stockée (0 jour), seule son empreinte reste. */

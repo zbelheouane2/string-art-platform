@@ -1,8 +1,20 @@
 import { getTranslations } from "next-intl/server";
-import { reviews as allReviews, type Review } from "@/config/reviews";
+import { reviews as configReviews, type Review } from "@/config/reviews";
+import { db } from "@/lib/db";
 
-/** Avis clients : rien n'est affiché tant que la liste (config/reviews.ts) est vide. */
-export async function Reviews({ reviews = allReviews }: { reviews?: readonly Review[] }) {
+/** Avis validés dans l'admin (12 plus récents), puis ceux de la configuration. */
+async function publishedReviews(): Promise<Review[]> {
+  try {
+    const rows = await db().customerReview.findMany({ where: { status: "APPROVED" }, orderBy: { createdAt: "desc" }, take: 12 });
+    return [...rows.map((r) => ({ name: r.name, place: r.place ?? undefined, rating: Math.min(5, Math.max(1, r.rating)) as Review["rating"], text: r.text, photo: r.photoUrl ?? undefined })), ...configReviews];
+  } catch {
+    return [...configReviews];
+  }
+}
+
+/** Avis clients : rien n'est affiché tant qu'aucun avis n'est validé. */
+export async function Reviews({ reviews }: { reviews?: readonly Review[] }) {
+  reviews ??= await publishedReviews();
   if (reviews.length === 0) return null;
   const t = await getTranslations("reviews");
   return (

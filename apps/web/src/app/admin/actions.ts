@@ -8,14 +8,18 @@ import { clientFingerprint } from "@/lib/clientIp";
 import { db } from "@/lib/db";
 import {
   ADMIN_COOKIE,
+  OWNER_UID,
   adminEnabled,
-  clearLoginFailures,
-  encodeAdminSession,
   loginBlocked,
-  passwordMatches,
+  newSessionToken,
+  ownerPasswordMatches,
+  ownerSessionVersion,
   recordLoginFailure,
   requireAdmin,
 } from "@/lib/admin/auth";
+import { normalizeLogin, verifyPassword } from "@/lib/admin/passwords";
+import { decrementStock, restoreStock } from "@/lib/admin/stock";
+import { syncOrderStatusToSheet } from "@/lib/notify/orderSheet";
 import { createCodeBatch, MAX_BATCH, BATCH_RE } from "@/lib/admin/codeBatches";
 import { normalizePromo } from "@/lib/promoRules";
 import { parseRateFile, type RateRow } from "@/lib/shipping/rateFile";
@@ -23,7 +27,7 @@ import { currentRates, diffRates, saveRates, type RateChange } from "@/lib/shipp
 import { rateFileToCsv } from "@/lib/shipping/spreadsheet";
 import { WILAYAS } from "@/config/wilayas";
 
-const audit = (action: string, target: string, meta: object = {}) => db().auditLog.create({ data: { actor: "admin", action, target, meta } });
+const audit = (actor: string, action: string, target: string, meta: object = {}) => db().auditLog.create({ data: { actor, action, target, meta } });
 const go = (path: string, msg: { ok?: string; erreur?: string }): never => redirect(`${path}?${new URLSearchParams(msg as Record<string, string>)}`);
 /** Le site public relit prix, options et tarifs à chaque page : on vide les caches. */
 const refreshSite = () => revalidatePath("/", "layout");
@@ -31,23 +35,38 @@ const refreshSite = () => revalidatePath("/", "layout");
 /* ---------------- Connexion ---------------- */
 
 export async function loginAction(_: string | null, form: FormData): Promise<string | null> {
-  if (!adminEnabled()) return "L'espace admin n'est pas activé (mot de passe non configuré sur le serveur).";
   const fp = await clientFingerprint();
-  if (loginBlocked(fp)) return "Trop d'essais. Réessayez dans 15 minutes.";
-  if (!passwordMatches(String(form.get("password") ?? ""))) {
-    recordLoginFailure(fp);
-    await audit("admin.login_failed", "admin");
-    return "Mot de passe incorrect.";
+  const login = normalizeLogin(String(form.get("login") ?? "")).slice(0, 60);
+  const password = String(form.get("password") ?? "").slice(0, 200);
+  if (await loginBlocked(fp, login || "admin")) return "Trop d'essais. Réessayez dans 15 minutes.";
+  let token: string | null = null;
+  let actor = "admin";
+  if (login === "" || login === "admin") {
+    if (!adminEnabled()) return "L'accès du propriétaire n'est pas activé (mot de passe non configuré sur le serveur).";
+    if (ownerPasswordMatches(password)) token = newSessionToken(OWNER_UID, "ADMIN", ownerSessionVersion());
+  } else {
+    const u = await db().adminUser.findUnique({ where: { login } });
+    // Même temps de calcul que le compte existe ou non.
+    const ok = verifyPassword(password, u?.passwordHash ?? "c2VsLXZpZGU:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    if (u && ok) {
+      if (!u.active) return "Ce compte est désactivé. Demandez à l'administrateur de le réactiver.";
+      token = newSessionToken(u.id, u.role, u.sessionVersion);
+      actor = `admin:${u.login}`;
+      await db().adminUser.update({ where: { id: u.id }, data: { lastLoginAt: new Date() } });
+    }
   }
-  clearLoginFailures(fp);
-  (await cookies()).set(ADMIN_COOKIE, encodeAdminSession(), {
+  if (!token) {
+    await recordLoginFailure(fp, login || "admin");
+    return login ? "Identifiant ou mot de passe incorrect." : "Mot de passe incorrect.";
+  }
+  (await cookies()).set(ADMIN_COOKIE, token, {
     httpOnly: true,
     sameSite: "strict",
     secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: 12 * 3600,
   });
-  await audit("admin.login", "admin");
+  await audit(actor, "admin.login", actor);
   redirect("/admin");
 }
 
@@ -61,13 +80,20 @@ export async function logoutAction(): Promise<void> {
 const STATUSES = ["PENDING", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED", "RETURNED"] as const;
 
 export async function setOrderStatusAction(form: FormData): Promise<void> {
-  await requireAdmin();
+  const me = await requireAdmin("orders");
   const number = String(form.get("number") ?? "");
   const status = z.enum(STATUSES).safeParse(form.get("status"));
   if (!status.success || !/^DK-[0-9A-Z]{6}$/.test(number)) go("/admin/commandes", { erreur: "État invalide." });
+  const before = await db().order.findUnique({ where: { number }, select: { status: true } });
+  if (!before) go("/admin/commandes", { erreur: "Commande introuvable." });
   await db().order.update({ where: { number }, data: { status: status.data! } });
-  await audit("order.status", number, { status: status.data });
-  go("/admin/commandes", { ok: `Commande ${number} mise à jour.` });
+  // Stock : la confirmation d'une commande retire les articles du stock suivi.
+  if (before!.status === "PENDING" && status.data === "CONFIRMED") await decrementStock(db(), number);
+  if (before!.status === "CONFIRMED" && status.data === "CANCELLED") await restoreStock(db(), number);
+  await audit(me.actor, "order.status", number, { status: status.data });
+  await syncOrderStatusToSheet(number, status.data!);
+  const back = String(form.get("back") ?? "");
+  go(back.startsWith("/admin/commandes") ? back.split("?")[0] : "/admin/commandes", { ok: `Commande ${number} mise à jour.` });
 }
 
 /* ---------------- Prix et options ---------------- */
@@ -75,7 +101,7 @@ export async function setOrderStatusAction(form: FormData): Promise<void> {
 const priceInput = z.coerce.number().int().min(0).max(10_000_000);
 
 export async function savePricesAction(form: FormData): Promise<void> {
-  await requireAdmin();
+  const me = await requireAdmin("prices");
   const market = await db().market.findUniqueOrThrow({ where: { code: "DZ" } });
   const products = await db().product.findMany({ where: { kind: { in: ["KIT", "ACCESSORY"] } } });
   for (const p of products) {
@@ -93,7 +119,7 @@ export async function savePricesAction(form: FormData): Promise<void> {
     }
     if (p.kind === "ACCESSORY") await db().product.update({ where: { id: p.id }, data: { active } });
   }
-  await audit("prices.saved", "DZ");
+  await audit(me.actor, "prices.saved", "DZ");
   refreshSite();
   go("/admin/prix", { ok: "Prix enregistrés. Le site affiche déjà les nouveaux prix." });
 }
@@ -119,7 +145,7 @@ const optInt = (v: string | undefined) => (v && v.trim() !== "" ? Math.max(0, Ma
 const optDate = (v: string | undefined, endOfDay = false) => (v ? new Date(`${v}T${endOfDay ? "23:59:59" : "00:00:00"}+01:00`) : null);
 
 export async function createPromoAction(form: FormData): Promise<void> {
-  await requireAdmin();
+  const me = await requireAdmin("promos");
   const parsed = promoSchema.safeParse(Object.fromEntries(form.entries()));
   if (!parsed.success) go("/admin/promos", { erreur: parsed.error!.issues[0].message });
   const p = parsed.data!;
@@ -143,18 +169,18 @@ export async function createPromoAction(form: FormData): Promise<void> {
       note: p.note || null,
     },
   });
-  await audit("promo.created", p.code);
+  await audit(me.actor, "promo.created", p.code);
   go("/admin/promos", { ok: `Code ${p.code} créé.` });
 }
 
 export async function togglePromoAction(form: FormData): Promise<void> {
-  await requireAdmin();
+  const me = await requireAdmin("promos");
   const code = normalizePromo(String(form.get("code") ?? ""));
   if (!code) go("/admin/promos", { erreur: "Code inconnu." });
   const p = await db().promoCode.findUnique({ where: { code: code! } });
   if (!p) go("/admin/promos", { erreur: "Code inconnu." });
   await db().promoCode.update({ where: { code: code! }, data: { active: !p!.active } });
-  await audit(p!.active ? "promo.disabled" : "promo.enabled", code!);
+  await audit(me.actor, p!.active ? "promo.disabled" : "promo.enabled", code!);
   go("/admin/promos", { ok: `Code ${code} ${p!.active ? "désactivé" : "activé"}.` });
 }
 
@@ -163,7 +189,7 @@ export async function togglePromoAction(form: FormData): Promise<void> {
 const carrierCode = z.string().regex(/^[a-z][a-z0-9]{1,29}$/, "Identifiant : lettres minuscules et chiffres, sans espace (ex. « yalidine »).");
 
 export async function addCarrierAction(form: FormData): Promise<void> {
-  await requireAdmin();
+  const me = await requireAdmin("delivery");
   const code = carrierCode.safeParse(String(form.get("code") ?? "").trim().toLowerCase());
   const name = String(form.get("name") ?? "").trim().slice(0, 60);
   const logo = String(form.get("logoUrl") ?? "").trim();
@@ -182,12 +208,12 @@ export async function addCarrierAction(form: FormData): Promise<void> {
       }),
     ),
   ]);
-  await audit("carrier.created", code.data!);
+  await audit(me.actor, "carrier.created", code.data!);
   go(`/admin/livraison/${code.data}`, { ok: `${name} ajoutée (inactive). Ajoutez ses tarifs puis activez-la.` });
 }
 
 export async function updateCarrierAction(form: FormData): Promise<void> {
-  await requireAdmin();
+  const me = await requireAdmin("delivery");
   const code = carrierCode.safeParse(String(form.get("code") ?? ""));
   if (!code.success) go("/admin/livraison", { erreur: "Société inconnue." });
   const c = await db().carrier.findUnique({ where: { code: code.data! } });
@@ -206,14 +232,14 @@ export async function updateCarrierAction(form: FormData): Promise<void> {
   await db().carrier.update({ where: { code: c!.code }, data: { name, logoUrl: logo || null, active } });
   await db().deliveryMethod.updateMany({ where: { provider: c!.code, code: { endsWith: "_home" } }, data: { active: home } });
   await db().deliveryMethod.updateMany({ where: { provider: c!.code, code: { endsWith: "_desk" } }, data: { active: desk } });
-  await audit("carrier.updated", c!.code, { active, home, desk });
+  await audit(me.actor, "carrier.updated", c!.code, { active, home, desk });
   refreshSite();
   go(back, { ok: "Société enregistrée." });
 }
 
 /** Tableau des tarifs modifié à la main (69 wilayas × domicile / bureau). */
 export async function saveRatesTableAction(form: FormData): Promise<void> {
-  await requireAdmin();
+  const me = await requireAdmin("delivery");
   const code = carrierCode.safeParse(String(form.get("code") ?? ""));
   if (!code.success || !(await db().carrier.findUnique({ where: { code: code.data } }))) go("/admin/livraison", { erreur: "Société inconnue." });
   const back = `/admin/livraison/${code.data}`;
@@ -231,7 +257,7 @@ export async function saveRatesTableAction(form: FormData): Promise<void> {
     rows.push({ zone: w.code, home, desk });
   }
   const r = await saveRates(db(), code.data!, rows, "admin");
-  await audit("rates.saved", code.data!, r);
+  await audit(me.actor, "rates.saved", code.data!, r);
   refreshSite();
   go(back, { ok: `Tarifs enregistrés (${r.set} montants).` });
 }
@@ -242,7 +268,7 @@ export type RatePreview =
 
 /** Étape 1 de l'import : lit le fichier et montre les changements, sans rien enregistrer. */
 export async function previewRateFileAction(_: RatePreview | null, form: FormData): Promise<RatePreview> {
-  await requireAdmin();
+  await requireAdmin("delivery");
   const code = carrierCode.safeParse(String(form.get("code") ?? ""));
   const file = form.get("file");
   if (!code.success) return { ok: false, errors: ["Société inconnue."] };
@@ -263,7 +289,7 @@ export async function previewRateFileAction(_: RatePreview | null, form: FormDat
 
 /** Étape 2 de l'import : enregistre les lignes vérifiées à l'étape 1. */
 export async function applyRateFileAction(form: FormData): Promise<void> {
-  await requireAdmin();
+  const me = await requireAdmin("delivery");
   const code = carrierCode.safeParse(String(form.get("code") ?? ""));
   if (!code.success) go("/admin/livraison", { erreur: "Société inconnue." });
   const back = `/admin/livraison/${code.data}`;
@@ -273,7 +299,7 @@ export async function applyRateFileAction(form: FormData): Promise<void> {
     .safeParse(JSON.parse(String(form.get("rows") ?? "[]")));
   if (!rows.success) go(back, { erreur: "Import invalide, recommencez." });
   const r = await saveRates(db(), code.data!, rows.data!, `fichier:${String(form.get("fileName") ?? "").slice(0, 80)}`);
-  await audit("rates.imported", code.data!, r);
+  await audit(me.actor, "rates.imported", code.data!, r);
   refreshSite();
   go(back, { ok: `Import terminé : ${r.set} montants enregistrés, ${r.cleared} supprimés.` });
 }
@@ -281,12 +307,12 @@ export async function applyRateFileAction(form: FormData): Promise<void> {
 /* ---------------- Codes d'activation ---------------- */
 
 export async function createCodesAction(form: FormData): Promise<void> {
-  await requireAdmin();
+  const me = await requireAdmin("codes");
   const count = Number(String(form.get("count") ?? "").trim());
   const batch = String(form.get("batch") ?? "").trim();
   if (!BATCH_RE.test(batch)) go("/admin/codes", { erreur: "Nom de lot invalide (lettres, chiffres et tirets seulement)." });
   if (!Number.isInteger(count) || count < 1 || count > MAX_BATCH) go("/admin/codes", { erreur: `Indiquez un nombre de codes entre 1 et ${MAX_BATCH}.` });
   const created = await createCodeBatch(db(), batch, count);
-  await audit("codes.created", batch, { created });
+  await audit(me.actor, "codes.created", batch, { created });
   go("/admin/codes", { ok: `${created} codes créés dans le lot ${batch}.` });
 }

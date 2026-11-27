@@ -1082,9 +1082,11 @@
       "promoInvalid": "Ce code promo n'existe pas.",
       "promoExpired": "Ce code promo n'est plus valable.",
       "promoUnavailable": "Vérification impossible pour le moment, réessayez.",
+      "promoTooMany": "Trop de codes essayés. Réessayez dans un quart d'heure.",
       "promoMinimum": "Le montant minimal pour ce code promo n'est pas atteint.",
       "promoPerPhone": "Ce code promo a déjà été utilisé avec ce numéro.",
-      "deliveryArea": "Livraison pas encore disponible dans cette wilaya avec ce mode."
+      "deliveryArea": "Livraison pas encore disponible dans cette wilaya avec ce mode.",
+      "tooMany": "Trop de commandes depuis cet appareil. Réessayez dans une heure ou écrivez-nous sur WhatsApp."
     },
     "feePickWilaya": "Choisissez votre wilaya pour voir les frais de livraison.",
     "feeKnown": "Frais de livraison : {fee}.",
@@ -1223,7 +1225,24 @@
   "reviews": {
     "title": "Ils ont tendu leur portrait",
     "rating": "Note : {n} sur 5",
-    "photoAlt": "Portrait réalisé par {name}"
+    "photoAlt": "Portrait réalisé par {name}",
+    "form": {
+      "formTitle": "Votre avis sur le portrait",
+      "formLead": "Votre commande est livrée : dites-nous ce que vous en pensez. Votre avis sera publié après relecture, avec votre prénom seulement.",
+      "name": "Prénom affiché",
+      "place": "Wilaya ou ville (facultatif)",
+      "ratingLabel": "Votre note",
+      "star": "{n} sur 5",
+      "text": "Votre avis",
+      "submit": "Envoyer mon avis",
+      "sending": "Envoi…",
+      "thanks": "Merci ! Votre avis sera publié après relecture.",
+      "errors": {
+        "invalid": "Indiquez votre prénom, une note et un avis de 10 caractères au moins.",
+        "notAllowed": "Un avis ne peut être laissé que pour une commande livrée.",
+        "already": "Un avis a déjà été envoyé pour cette commande. Merci !"
+      }
+    }
   },
   "cart": {
     "title": "Panier",

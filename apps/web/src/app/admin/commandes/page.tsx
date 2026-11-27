@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/auth";
+import { can } from "@/lib/admin/permissions";
+import type { Prisma } from "@/generated/prisma/client";
 import { db } from "@/lib/db";
 import { wilayaName } from "@/config/wilayas";
 import { confirmationLink } from "@/lib/admin/orderConfirmation";
@@ -8,15 +10,29 @@ import { AdminShell, Flash, STATUS_FR, da, dateFr } from "../AdminShell";
 
 export const dynamic = "force-dynamic";
 
+/** Recherche : numéro de commande, nom ou téléphone (client ou destinataire). */
+function searchWhere(term: string): Prisma.OrderWhereInput {
+  const digits = term.replace(/\D/g, "");
+  return {
+    OR: [
+      { number: { contains: term.toUpperCase() } },
+      { customer: { fullName: { contains: term, mode: "insensitive" } } },
+      { shippingAddress: { path: ["recipient", "fullName"], string_contains: term } },
+      ...(digits.length >= 4 ? [{ customer: { phone: { contains: digits } } }, { shippingAddress: { path: ["recipient", "phone"], string_contains: digits } }] : []),
+    ],
+  };
+}
+
 type Address = { recipient?: { fullName?: string; phone?: string }; wilaya?: string; commune?: string; note?: string; gift?: { message?: string } | null };
 
 /** Commandes (100 dernières), filtrables par état. Données personnelles visibles ici seulement. */
-export default async function OrdersPage({ searchParams }: { searchParams: Promise<{ etat?: string; ok?: string; erreur?: string }> }) {
-  await requireAdmin();
+export default async function OrdersPage({ searchParams }: { searchParams: Promise<{ etat?: string; q?: string; ok?: string; erreur?: string }> }) {
+  const me = await requireAdmin("orders");
   const q = await searchParams;
   const etat = q.etat && q.etat in STATUS_FR ? q.etat : undefined;
+  const search = (q.q ?? "").trim().slice(0, 60);
   const orders = await db().order.findMany({
-    where: etat ? { status: etat as never } : {},
+    where: { ...(etat ? { status: etat as never } : {}), ...(search ? searchWhere(search) : {}) },
     orderBy: { createdAt: "desc" },
     take: 100,
     include: { customer: true, deliveryMethod: true, items: { include: { product: true } } },
@@ -25,6 +41,23 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
   return (
     <AdminShell title="Commandes" current="/admin/commandes">
       <Flash ok={q.ok} error={q.erreur} />
+      <div className="a-toolbar">
+        <form className="a-inline" role="search">
+          {etat && <input type="hidden" name="etat" value={etat} />}
+          <label className="visually-hidden" htmlFor="order-search">
+            Rechercher une commande
+          </label>
+          <input id="order-search" name="q" type="search" className="a-input" defaultValue={search} placeholder="Numéro, nom ou téléphone" />
+          <button type="submit" className="a-btn a-btn-sm">
+            Rechercher
+          </button>
+        </form>
+        {can(me.role, "ordersExport") && (
+          <a className="a-btn a-btn-sm a-btn-ghost" href={`/admin/commandes/export.xlsx${etat ? `?etat=${etat}` : ""}`}>
+            Exporter en Excel
+          </a>
+        )}
+      </div>
       <nav className="a-filters" aria-label="Filtrer par état">
         <Link href="/admin/commandes" aria-current={!etat ? "page" : undefined}>
           Toutes

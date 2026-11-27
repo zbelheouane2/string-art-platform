@@ -150,11 +150,12 @@
    "refs": [
     "produit-boite",
     "produit-planche",
-    "produit-devidoir"
+    "produit-devidoir",
+    "produit-support-telephone"
    ],
    "cta": "commande",
    "brief": "Ce que contient le kit : planche, clous posés, fil, support, code.",
-   "prompt": "Knolling arrangement on a pale plaster background: a white square board with brass nails in a circle, a spool of black thread on a wooden unwinder, a wooden phone stand, a small instruction booklet, a small card with a code, all neatly aligned with equal spacing, soft even light."
+   "prompt": "Knolling arrangement on a pale plaster background: a white square board with brass nails in a circle, a spool of black thread on a wooden unwinder, a wooden phone stand, a small card with a code, all neatly aligned with equal spacing, soft even light."
   },
   {
    "id": "pack-livreur",
@@ -308,7 +309,11 @@
    "rendu": "gemini",
    "cta": "commentaire",
    "brief": "Quelques heures de calme : un loisir apaisant.",
-   "prompt": "A young Algerian man in a hoodie calmly weaving black thread on a white board with brass nails at his desk, earbuds in, phone on a wooden stand beside him, lamp light at night, focused and peaceful atmosphere."
+   "prompt": "A young Algerian man in a hoodie calmly weaving black thread on the white board with brass nails, which stands in its open kraft box on his desk with the birch unwinder on top, earbuds in, phone on a wooden stand beside him, lamp light at night, focused and peaceful atmosphere.",
+   "refs": [
+    "produit-planche-montee",
+    "produit-support-telephone"
+   ]
   },
   {
    "id": "guide-voix",

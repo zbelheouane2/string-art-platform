@@ -1082,9 +1082,11 @@
       "promoInvalid": "This promo code doesn't exist.",
       "promoExpired": "This promo code is no longer valid.",
       "promoUnavailable": "We can't check the code right now, please try again.",
+      "promoTooMany": "Too many codes tried. Please try again in 15 minutes.",
       "promoMinimum": "The minimum amount for this promo code isn't reached.",
       "promoPerPhone": "This promo code has already been used with this number.",
-      "deliveryArea": "Delivery is not yet available to this wilaya with this option."
+      "deliveryArea": "Delivery is not yet available to this wilaya with this option.",
+      "tooMany": "Too many orders from this device. Please try again in an hour or message us on WhatsApp."
     },
     "feePickWilaya": "Choose your wilaya to see the delivery fee.",
     "feeKnown": "Delivery fee: {fee}.",
@@ -1223,7 +1225,24 @@
   "reviews": {
     "title": "They made their portrait",
     "rating": "Rating: {n} out of 5",
-    "photoAlt": "Portrait made by {name}"
+    "photoAlt": "Portrait made by {name}",
+    "form": {
+      "formTitle": "Your review of the portrait",
+      "formLead": "Your order has been delivered: tell us what you think. Your review is published after a quick check, with your first name only.",
+      "name": "First name to display",
+      "place": "Province or city (optional)",
+      "ratingLabel": "Your rating",
+      "star": "{n} out of 5",
+      "text": "Your review",
+      "submit": "Send my review",
+      "sending": "Sending…",
+      "thanks": "Thank you! Your review will be published after a quick check.",
+      "errors": {
+        "invalid": "Please give your first name, a rating and a review of at least 10 characters.",
+        "notAllowed": "Reviews can only be left for a delivered order.",
+        "already": "A review has already been sent for this order. Thank you!"
+      }
+    }
   },
   "cart": {
     "title": "Cart",

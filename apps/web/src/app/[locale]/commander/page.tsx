@@ -29,7 +29,9 @@ export default async function OrderPage({
   const gift = query.cadeau === "1";
   setRequestLocale(locale);
   const t = await getTranslations("order");
-  const options = kitOffer.orderingOpen ? await checkoutOptions() : null;
+  const all = kitOffer.orderingOpen ? await checkoutOptions() : null;
+  // Kit en rupture de stock (admin) : la page affiche « commandes fermées ».
+  const options = all && !all.soldOut ? all : null;
   return (
     <PageShell>
       <header className="flow-head">
