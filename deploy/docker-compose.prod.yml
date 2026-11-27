@@ -1,4 +1,5 @@
-# Production sur un serveur VPS (ex. Octenium VPS 2) : base, moteur, site et HTTPS automatique.
+# Production sur un serveur VPS (ex. Octenium VPS Starter) : base, moteur, site et HTTPS automatique.
+# Installation guidée en une commande : deploy/vps/installer.sh (docs/hebergement-vps-octenium.md).
 # Depuis le dossier deploy/ :
 #   cp .env.prod.example .env   (puis remplir)
 #   docker compose -f docker-compose.prod.yml up -d --build
@@ -14,6 +15,10 @@ x-public: &public
   NEXT_PUBLIC_FACEBOOK_URL: ${NEXT_PUBLIC_FACEBOOK_URL:-}
   NEXT_PUBLIC_TIKTOK_URL: ${NEXT_PUBLIC_TIKTOK_URL:-}
   NEXT_PUBLIC_LEGAL_ANPDP: ${NEXT_PUBLIC_LEGAL_ANPDP:-}
+  NEXT_PUBLIC_SITE_URL: https://${DOMAIN:?DOMAIN manquant}
+  NEXT_PUBLIC_GA4_ID: ${NEXT_PUBLIC_GA4_ID:-}
+  NEXT_PUBLIC_META_PIXEL_ID: ${NEXT_PUBLIC_META_PIXEL_ID:-}
+  NEXT_PUBLIC_TIKTOK_PIXEL_ID: ${NEXT_PUBLIC_TIKTOK_PIXEL_ID:-}
 
 x-server: &server
   DATABASE_URL: postgresql://deekra:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD manquant}@db:5432/deekra
@@ -27,7 +32,8 @@ x-server: &server
 
 services:
   db:
-    image: postgres:16
+    # 16 par défaut (installations existantes) ; le script VPS choisit 17 (POSTGRES_VERSION dans .env).
+    image: postgres:${POSTGRES_VERSION:-16}
     restart: unless-stopped
     environment:
       POSTGRES_USER: deekra
